@@ -1,0 +1,580 @@
+<?php
+
+    /*
+    
+        GreyOS - ALPHA CMS
+        
+        Version: 10.0
+        
+        File name: admin_languages.phtml
+        Description: This file contains the admin languages HTML.
+        
+        Coded by George Delaportas (G0D)
+        
+        GreyOS
+        Copyright © 2013
+    
+    */
+    
+    
+    
+    $my_lang = ALPHA_CMS::Get_Language();
+    
+    $langs = array();
+    $records = array();
+    
+    echo ALPHA_CMS::Load_Content('langs_content', 'content', $my_lang);
+    
+    if (!empty($_POST['del_lang_id']) && $_SESSION['ALPHA_CMS_USER_TYPE'] < 2)
+    {
+    
+        $result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_protected` 
+                                                  FROM `alpha_languages` 
+                                                  WHERE `id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+        
+        if ($result[0][0] == 1)
+        {
+        
+            if ($_SESSION['ALPHA_CMS_USER'] == 'admin')
+            {
+            
+                $result = ALPHA_CMS::Delete_Language($_POST['del_lang_id']);
+                
+                $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
+                                                          FROM `alpha_common` 
+                                                          WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                
+                $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
+                                                          FROM `alpha_content` 
+                                                          WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                
+                $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
+                                                          FROM `alpha_menu` 
+                                                          WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+            
+            }
+        
+        }
+        
+        else
+        {
+        
+            $result = ALPHA_CMS::Delete_Language($_POST['del_lang_id']);
+            
+            $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
+                                                      FROM `alpha_common` 
+                                                      WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+            
+            $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
+                                                      FROM `alpha_content` 
+                                                      WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+            
+            $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
+                                                      FROM `alpha_menu` 
+                                                      WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+        
+        }
+        
+        $_POST['del_lang_id'] = 0;
+    
+    }
+    
+    $records = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) 
+                                               FROM `alpha_languages`', 1);
+    
+    ALPHA_CMS::Load_Extension('search_bar', 'php');
+    ALPHA_CMS::Load_Extension('gutenberg', 'php');
+
+?>
+
+<script type="text/javascript">
+
+    // Order
+    function Do_Order()
+    {
+    
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // New language
+    function New_Lang()
+    {
+    
+        var ajax = new bull();
+        var langs_content = null;
+        
+        langs_content = ajax.response('/cms/site/back_end/php/actions/new_lang.php', 
+                                      'new=1' + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('langs_details').innerHTML = langs_content;
+        
+        document.getElementById('langs_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('langs_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('langs_shadow').style.width = screen.width + 'px';
+        document.getElementById('langs_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('langs_shadow').style.display = 'block';
+        document.getElementById('langs_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // Edit language
+    function Edit_Lang(lang_id)
+    {
+    
+        var ajax = new bull();
+        var langs_content = null;
+        
+        if (lang_id === null || lang_id <= 0)
+            return 0;
+        
+        langs_content = ajax.Response('/cms/site/back_end/php/actions/edit_lang.php', 
+                                      'edit=1&lang_id=' + lang_id + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('langs_details').innerHTML = langs_content;
+        
+        document.getElementById('langs_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('langs_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('langs_shadow').style.width = screen.width + 'px';
+        document.getElementById('langs_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('langs_shadow').style.display = 'block';
+        document.getElementById('langs_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+
+    // Delete language
+    function Delete_Lang(lang_id)
+    {
+    
+        var ajax = new bull();
+        var langs_content = null;
+        
+        if (lang_id === null || lang_id <= 0)
+            return 0;
+        
+        langs_content = ajax.response('/cms/site/back_end/php/actions/control/lang_delete.php', 
+                                      'delete=1&lang_id=' + lang_id + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('langs_details').innerHTML = langs_content;
+        
+        document.getElementById('langs_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('langs_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('langs_shadow').style.width = screen.width + 'px';
+        document.getElementById('langs_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('langs_shadow').style.display = 'block';
+        document.getElementById('langs_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // Insert new language
+    function Insert_This_Lang()
+    {
+    
+        var objects_values = new Array();
+        var result = null;
+        
+        objects_values[0] = 'insert_lang_code';
+        objects_values[1] = 'insert_language';
+        objects_values[2] = 'insert_sort_order';
+        objects_values[3] = 'insert_default';
+        objects_values[4] = 'insert_protected_content';
+        
+        result = Form_Validator('insert_lang_form', objects_values);
+        
+        if (result === false)
+            return 0;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Update this language
+    function Update_This_Lang(lang_id)
+    {
+    
+        var objects_values = new Array();
+        var result = null;
+        
+        if (lang_id === null || lang_id <= 0)
+            return 0;
+        
+        objects_values[0] = lang_id;
+        
+        objects_values[1] = 'edit_lang_code';
+        objects_values[2] = 'edit_language';
+        objects_values[3] = 'edit_sort_order';
+        objects_values[4] = 'edit_default';
+        objects_values[5] = 'edit_protected_content';
+        
+        result = Form_Validator('update_lang_form', objects_values);
+        
+        if (result === false)
+            return 0;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Delete this language
+    function Delete_This_Lang(lang_id)
+    {
+    
+        document.getElementById('del_lang_id').value = lang_id;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Close language details
+    function Close_Lang_Details()
+    {
+    
+        document.getElementById('langs_shadow').style.display = 'none';
+        document.getElementById('langs_details').style.display = 'none';
+        
+        return 1;
+    
+    }
+
+</script>
+
+<div class="class_content_area">
+    <div id="langs_area">
+        <input id="del_lang_id" name="del_lang_id" type="hidden" value="" />
+        <div id="table_controls">
+            <div id="langs_controls">
+                <div class="class_records">
+                    <?php echo ALPHA_CMS::Load_Content('records', 'content', $my_lang) . ' ' . $records[0][0]; ?>
+                </div>
+                <?php if ($_SESSION['ALPHA_CMS_USER_TYPE'] < 2): ?>
+                <input id="new_lang" onclick="New_Lang();" class="button" 
+                       type="button" value="<?php echo ALPHA_CMS::Load_Content('new_lang_label', 'content', $my_lang); ?>" />
+                <?php else: ?>
+                <input id="new_lang" onclick="New_Lang();" class="button" style="color: #BFBFBF;" disabled 
+                       type="button" value="<?php echo ALPHA_CMS::Load_Content('new_lang_label', 'content', $my_lang); ?>" />
+                <?php endif; ?>
+                <?php
+               
+                    if ($records[0][0] > 0)
+                        Search_Bar::Show();
+                    
+                    else
+                        Search_Bar::Show(false);
+                
+                ?>
+                <div id="sorting">
+                    <div id="sort_label"><?php echo ALPHA_CMS::Load_Content('sort_label', 'content', $my_lang); ?>&nbsp;</div>
+                    <?php
+                    
+                        if ($records[0][0] < 2)
+                            echo '<select id="sort_type" name="sort_type" disabled>';
+                        
+                        else
+                            echo '<select id="sort_type" name="sort_type" onchange="Do_Order();">';
+                        
+                        if (empty($_POST['sort_type']) || $_POST['sort_type'] == 'ASC')
+                        {
+
+                            echo '<option selected value="ASC">' . 
+                                 ALPHA_CMS::Load_Content('asc_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="DESC">' . 
+                                 ALPHA_CMS::Load_Content('desc_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['sort_type'] == 'DESC')
+                        {
+
+                            echo '<option value="ASC">' . 
+                                 ALPHA_CMS::Load_Content('asc_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="DESC">' . 
+                                 ALPHA_CMS::Load_Content('desc_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+                        
+                        echo '</select>';
+                    
+                    ?>
+                </div>
+                <div id="ordering">
+                    <div id="order_label"><?php echo ALPHA_CMS::Load_Content('order_label', 'content', $my_lang); ?>&nbsp;</div>
+                    <?php
+                    
+                        if ($records[0][0] < 2)
+                            echo '<select id="order_type" name="order_type" disabled>';
+                        
+                        else
+                            echo '<select id="order_type" name="order_type" onchange="Do_Order();">';
+                        
+                        if (empty($_POST['order_type']) || $_POST['order_type'] == 'id')
+                        {
+
+                            echo '<option selected value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_code">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="language">' . 
+                                 ALPHA_CMS::Load_Content('language_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="sort_order">' . 
+                                 ALPHA_CMS::Load_Content('sort_order_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_default">' . 
+                                 ALPHA_CMS::Load_Content('default_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'lang_code')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="lang_code">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="language">' . 
+                                 ALPHA_CMS::Load_Content('language_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="sort_order">' . 
+                                 ALPHA_CMS::Load_Content('sort_order_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_default">' . 
+                                 ALPHA_CMS::Load_Content('default_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'language')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_code">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="language">' . 
+                                 ALPHA_CMS::Load_Content('language_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="sort_order">' . 
+                                 ALPHA_CMS::Load_Content('sort_order_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_default">' . 
+                                 ALPHA_CMS::Load_Content('default_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'sort_order')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_code">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="language">' . 
+                                 ALPHA_CMS::Load_Content('language_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="sort_order">' . 
+                                 ALPHA_CMS::Load_Content('sort_order_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_default">' . 
+                                 ALPHA_CMS::Load_Content('default_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'is_default')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_code">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="language">' . 
+                                 ALPHA_CMS::Load_Content('language_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="sort_order">' . 
+                                 ALPHA_CMS::Load_Content('sort_order_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="is_default">' . 
+                                 ALPHA_CMS::Load_Content('default_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'is_protected')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_code">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="language">' . 
+                                 ALPHA_CMS::Load_Content('language_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="sort_order">' . 
+                                 ALPHA_CMS::Load_Content('sort_order_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_default">' . 
+                                 ALPHA_CMS::Load_Content('default_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+                        
+                        echo '</select>';
+                    
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div id="langs_content">
+            <table id="langs_table">
+                <tr class="class_table_header">
+                    <td><?php echo ALPHA_CMS::Load_Content('id_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('language_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('sort_order_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('default_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('options_label', 'content', $my_lang); ?></td>
+                </tr>
+            <?php
+            
+                if (!empty($_POST['search_bar']))
+                {
+                
+                    if (empty($_POST['order_type']) || empty($_POST['sort_type']))
+                        $langs = Search_Bar::Search('langs', $_POST['search_bar']);
+                    
+                    else
+                        $langs = Search_Bar::Search('langs', $_POST['search_bar'], $_POST['order_type'], $_POST['sort_type']);
+                    
+                    if (is_bool($langs))
+                        exit;
+                    
+                    if (empty($_SESSION['G_RESET_SEARCH']))
+                    {
+                    
+                        Gutenberg('languages', $langs, 22, $_POST['offset'], 1);
+                        
+                        $_SESSION['G_RESET_SEARCH'] = 1;
+                        $_SESSION['PREVIOUS_SEARCH_STR'] = $_POST['search_bar'];
+                    
+                    }
+                    
+                    else
+                    {
+                    
+                        if ($_POST['search_bar'] != $_SESSION['PREVIOUS_SEARCH_STR'])
+                            Gutenberg('languages', $langs, 22, $_POST['offset'], 1);
+                        
+                        else
+                            Gutenberg('languages', $langs, 22, $_POST['offset']);
+                        
+                        $_SESSION['G_RESET_OFFSET'] = 1;
+                        $_SESSION['PREVIOUS_SEARCH_STR'] = $_POST['search_bar'];
+                    
+                    }
+                
+                }
+                
+                else
+                {
+                
+                    if (empty($_POST['order_type']) || empty($_POST['sort_type']))
+                    {
+
+                        $langs = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `lang_code`, `language`, 
+                                                                        `sort_order`, `is_default`, `is_protected` 
+                                                                 FROM `alpha_languages` 
+                                                                 ORDER BY `id` ASC', 1);
+
+                    }
+
+                    else
+                    {
+
+                        $langs = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `lang_code`, `language`, 
+                                                                        `sort_order`, `is_default`, `is_protected` 
+                                                                 FROM `alpha_languages` 
+                                                                 ORDER BY `' . $_POST['order_type'] . '` ' . $_POST['sort_type'], 1);
+
+                    }
+                    
+                    if (is_bool($langs))
+                        exit;
+                    
+                    if (!empty($_SESSION['G_RESET_OFFSET']))
+                    {
+                    
+                        Gutenberg('languages', $langs, 22, $_POST['offset'], 1);
+                        
+                        $_SESSION['G_RESET_OFFSET'] = 0;
+                    
+                    }
+                    
+                    else
+                        Gutenberg('languages', $langs, 22, $_POST['offset']);
+                    
+                    $_SESSION['G_RESET_SEARCH'] = 0;
+                
+                }
+            
+            ?>
+    </div>
+    <div id="langs_details"></div>
+    <div id="langs_shadow"></div>
+</div>

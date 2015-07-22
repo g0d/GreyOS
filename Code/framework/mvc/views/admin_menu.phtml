@@ -1,0 +1,445 @@
+<?php
+
+    /*
+    
+        GreyOS - ALPHA CMS
+        
+        Version: 10.0
+        
+        File name: admin_menu.phtml
+        Description: This file contains the admin menu HTML.
+        
+        Coded by George Delaportas (G0D)
+        
+        GreyOS
+        Copyright © 2013
+    
+    */
+    
+    
+    
+    $my_lang = ALPHA_CMS::Get_Language();
+    
+    $records = array();
+    
+    echo ALPHA_CMS::Load_Content('menu_content', 'content', $my_lang);
+    
+    if (!empty($_POST['del_menu_id']) && $_SESSION['ALPHA_CMS_USER_TYPE'] < 2)
+    {
+    
+        $result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_protected` 
+                                                  FROM `alpha_menu` 
+                                                  WHERE `id` = ' . mysql_real_escape_string($_POST['del_menu_id']), 1);
+        
+        if ($result[0][0] == 1)
+        {
+        
+            if ($_SESSION['ALPHA_CMS_USER'] == 'admin')
+            {
+            
+                $result = ALPHA_CMS::Delete_Menu($_POST['del_menu_id']);
+
+                if (!empty($_POST['del_page']))
+                {
+
+                    $rest_routes_result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_route` 
+                                                                          FROM `alpha_content` 
+                                                                          WHERE (`is_route` = 1 AND 
+                                                                                 `page` = ' . '\'' . 
+                                                                          mysql_real_escape_string($_POST['del_page']) . '\')', 1);
+
+                    if (empty($rest_routes_result))
+                    {
+
+                        if (file_exists(realpath('framework/mvc/models/') . '/' . $_POST['del_page'] . '.php'))
+                        {
+
+                            $file_result = unlink(realpath('framework/mvc/models/') . '/' . $_POST['del_page'] . '.php');
+
+                        }
+
+                        if (file_exists(realpath('framework/mvc/views/') . '/' . $_POST['del_page'] . '.phtml'))
+                        {
+
+                            $file_result = unlink(realpath('framework/mvc/views/') . '/' . $_POST['del_page'] . '.phtml');
+
+                        }
+
+                    }
+
+                }
+            
+            }
+        
+        }
+        
+        else
+        {
+        
+            $result = ALPHA_CMS::Delete_Menu($_POST['del_menu_id']);
+            
+            if (!empty($_POST['del_page']))
+            {
+
+                $rest_routes_result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_route` 
+                                                                      FROM `alpha_content` 
+                                                                      WHERE (`is_route` = 1 AND 
+                                                                             `page` = ' . '\'' . 
+                                                                      mysql_real_escape_string($_POST['del_page']) . '\')', 1);
+                
+                if (empty($rest_routes_result))
+                {
+                
+                    if (file_exists(realpath('framework/mvc/models/') . '/' . $_POST['del_page'] . '.php'))
+                    {
+
+                        $file_result = unlink(realpath('framework/mvc/models/') . '/' . $_POST['del_page'] . '.php');
+
+                    }
+                    
+                    if (file_exists(realpath('framework/mvc/views/') . '/' . $_POST['del_page'] . '.phtml'))
+                    {
+
+                        $file_result = unlink(realpath('framework/mvc/views/') . '/' . $_POST['del_page'] . '.phtml');
+
+                    }
+
+                }
+            
+            }
+        
+        }
+        
+        $_POST['del_menu_id'] = 0;
+    
+    }
+    
+    $records = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) 
+                                               FROM `alpha_menu`', 1);
+    
+    ALPHA_CMS::Load_Extension('search_bar', 'php');
+    ALPHA_CMS::Load_Extension('loop_menu', 'php');
+
+?>
+
+
+
+<script type="text/javascript">
+
+    // New menu
+    function New_Menu()
+    {
+    
+        var ajax = new bull();
+        var menus_content = null;
+        
+        menus_content = ajax.response('/cms/site/back_end/php/actions/new_menu.php', 
+                                      'new=1' + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('menus_details').innerHTML = menus_content;
+        
+        document.getElementById('menus_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('menus_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('menus_shadow').style.width = screen.width + 'px';
+        document.getElementById('menus_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('menus_shadow').style.display = 'block';
+        document.getElementById('menus_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // Edit menu
+    function Edit_Menu(menu_id)
+    {
+    
+        var ajax = new bull();
+        var menus_content = null;
+        
+        if (menu_id === null || menu_id <= 0)
+            return 0;
+        
+        menus_content = ajax.response('/cms/site/back_end/php/actions/edit_menu.php', 
+                                      'edit=1&menu_id=' + menu_id + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('menus_details').innerHTML = menus_content;
+        
+        document.getElementById('menus_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('menus_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('menus_shadow').style.width = screen.width + 'px';
+        document.getElementById('menus_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('menus_shadow').style.display = 'block';
+        document.getElementById('menus_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // Delete menu
+    function Delete_Menu(menu_id)
+    {
+    
+        var ajax = new bull();
+        var menus_content = null;
+        
+        if (menu_id === null || menu_id <= 0)
+            return 0;
+        
+        menus_content = ajax.response('/cms/site/back_end/php/actions/control/menu_delete.php', 
+                                      'delete=1&menu_id=' + menu_id + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('menus_details').innerHTML = menus_content;
+        
+        document.getElementById('menus_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('menus_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('menus_shadow').style.width = screen.width + 'px';
+        document.getElementById('menus_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('menus_shadow').style.display = 'block';
+        document.getElementById('menus_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // Insert new menu
+    function Insert_This_Menu()
+    {
+    
+        var objects_values = new Array();
+        var result = null;
+        
+        objects_values[0] = 'insert_select_caller';
+        objects_values[1] = 'insert_caller';
+        objects_values[2] = 'insert_select_parent_menu_id';
+        objects_values[3] = 'insert_parent_menu_id';
+        objects_values[4] = 'insert_menu_name';
+        objects_values[5] = 'insert_select_menu_link';
+        objects_values[6] = 'insert_select_lang_code';
+        objects_values[7] = 'insert_sort_order';
+        objects_values[8] = 'insert_protected_content';
+        
+        result = Form_Validator('insert_menu_form', objects_values);
+        
+        if (result === false)
+            return 0;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Update this menu
+    function Update_This_Menu(menu_id)
+    {
+    
+        var objects_values = new Array();
+        var result = null;
+        
+        if (menu_id === null || menu_id <= 0)
+            return 0;
+        
+        objects_values[0] = menu_id;
+        objects_values[1] = 'edit_select_caller';
+        objects_values[2] = 'edit_caller';
+        objects_values[3] = 'edit_select_parent_menu_id';
+        objects_values[4] = 'edit_menu_name';
+        objects_values[5] = 'edit_select_menu_link';
+        objects_values[6] = 'edit_select_lang_code';
+        objects_values[7] = 'edit_sort_order';
+        objects_values[8] = 'edit_protected_content';
+        
+        result = Form_Validator('update_menu_form', objects_values);
+        
+        if (result === false)
+            return 0;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Delete this menu content
+    function Delete_This_Menu(menu_id, menu_name)
+    {
+    
+        document.getElementById('del_menu_id').value = menu_id;
+        document.getElementById('del_page').value = menu_name;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Close menu details
+    function Close_Menu_Details()
+    {
+    
+        document.getElementById('menus_shadow').style.display = 'none';
+        document.getElementById('menus_details').style.display = 'none';
+        
+        return 1;
+    
+    }
+    
+    // Caller status (enabled / disabled)
+    function Caller_Status(obj_id)
+    {
+    
+        if (obj_id.options[obj_id.selectedIndex].value == 0)
+        {
+        
+            try
+            {
+            
+                document.getElementById('insert_caller').removeAttribute('style');
+                document.getElementById('insert_caller').removeAttribute('disabled');
+            
+            }
+            
+            catch(any_error)
+            {
+            
+                document.getElementById('edit_caller').removeAttribute('style');
+                document.getElementById('edit_caller').removeAttribute('disabled');
+            
+            }
+            
+        }
+        
+        else
+        {
+        
+            try
+            {
+            
+                document.getElementById('insert_caller').setAttribute('style', 'background-color: gray;');
+                document.getElementById('insert_caller').setAttribute('disabled', '');
+            
+            }
+            
+            catch(any_error)
+            {
+            
+                document.getElementById('edit_caller').setAttribute('style', 'background-color: gray;');
+                document.getElementById('edit_caller').setAttribute('disabled', '');
+            
+            }
+        
+        }
+        
+        return 1;
+    
+    }
+    
+    // Parent status (enabled / disabled)
+    function Parent_Status(obj_id)
+    {
+    
+        if (obj_id.options[obj_id.selectedIndex].value == 0)
+        {
+        
+            document.getElementById('insert_parent_menu_id').removeAttribute('style');
+            document.getElementById('insert_parent_menu_id').removeAttribute('disabled');
+        
+        }
+        
+        else
+        {
+        
+            document.getElementById('insert_parent_menu_id').setAttribute('style', 'background-color: gray;');
+            document.getElementById('insert_parent_menu_id').setAttribute('disabled', '');
+        
+        }
+        
+        return 1;
+    
+    }
+
+</script>
+
+<div class="class_content_area">
+    <div id="menus_area">
+        <input id="del_menu_id" name="del_menu_id" type="hidden" value="" />
+        <input id="del_page" name="del_page" type="hidden" value="" />
+        <div id="table_controls">
+            <div id="menus_controls">
+                <div class="class_records">
+                    <?php echo ALPHA_CMS::Load_Content('records', 'content', $my_lang) . ' ' . $records[0][0]; ?>
+                </div>
+                <?php if ($_SESSION['ALPHA_CMS_USER_TYPE'] < 2): ?>
+                <input id="new_menu" onclick="New_Menu();" class="button" 
+                       type="button" value="<?php echo ALPHA_CMS::Load_Content('new_menu_label', 'content', $my_lang); ?>" />
+                <?php else: ?>
+                <input id="new_menu" onclick="New_Menu();" class="button" style="color: #BFBFBF;" disabled 
+                       type="button" value="<?php echo ALPHA_CMS::Load_Content('new_menu_label', 'content', $my_lang); ?>" />
+                <?php endif; ?>
+                <?php
+               
+                    if ($records[0][0] > 0)
+                        Search_Bar::Show();
+                    
+                    else
+                        Search_Bar::Show(false);
+                
+                ?>
+            </div>
+        </div>
+        <div id="menus_content">
+            <div class="class_menu_title">
+                <?php echo ALPHA_CMS::Load_Content('main_menu_structure_label', 'content', $my_lang); ?>
+            </div>
+            <div id="menu_structure">
+            <?php
+            
+                // Draw the editable dynamic menu
+                if (!empty($_POST['search_bar']))
+                {
+                
+                    $caller = Search_Bar::Search('menu', $_POST['search_bar']);
+                    
+                    if (!empty($caller))
+                        Loop_Menu($caller[0][0], 0, '*', 0, 'caller, lang_code, alpha_menu.sort_order', 'ASC');
+                
+                }
+                
+                else
+                    Loop_Menu('*', 0, '*', 0, 'caller, lang_code, alpha_menu.sort_order', 'ASC');
+            
+            ?>
+            </div>
+            <div class="class_menu_title">
+                <?php echo ALPHA_CMS::Load_Content('orphan_menu_items_label', 'content', $my_lang); ?>
+            </div>
+            <div id="orphan_menu_items">
+            <?php
+            
+                // Draw the editable orphan items of menu
+                if (!empty($_POST['search_bar']))
+                {
+                
+                    $caller = Search_Bar::Search('orphan', $_POST['search_bar']);
+                    
+                    if (!empty($caller))
+                        Loop_Menu($caller[0][0], 0, '*', 1, 'caller, lang_code, alpha_menu.sort_order', 'ASC');
+                
+                }
+                
+                else
+                    Loop_Menu('*', 0, '*', 1, 'caller, lang_code, alpha_menu.sort_order', 'ASC');
+            
+            ?>
+            </div>
+            <div id="menus_details"></div>
+            <div id="menus_shadow"></div>
+        </div>
+    </div>
+</div>

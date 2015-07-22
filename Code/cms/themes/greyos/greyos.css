@@ -1,0 +1,803 @@
+/*
+
+    GreyOS - GreyOS theme
+    
+    Version: 1.0
+    
+    File name: greyos.css
+    Description: This file contains the GreyOS theme CSS.
+    
+    Coded by George Delaportas (G0D)
+    
+    GreyOS
+    Copyright © 2013
+
+*/
+
+
+
+/* Body */
+body
+{
+
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 18px;
+    background-color: #FFFFFF;
+    background-image: url('pix/misc/site_bg.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+}
+
+/* Anchor */
+a
+{
+
+    text-decoration: none;
+    color: #A070A0;
+
+}
+
+/* Anchor [Hover] */
+a:hover
+{
+
+    text-decoration: none;
+    color: #9C95A1;
+
+}
+
+/* Input */
+input
+{
+
+    border: 1px solid #CFCFCF;
+
+}
+
+/* Image */
+img
+{
+
+    border: none;
+
+}
+
+/* List */
+li
+{
+
+    font-weight: normal;
+    list-style: disc;
+    margin-bottom: 10px;
+
+}
+
+/* Option */
+option
+{
+
+    width: 107px;
+
+}
+
+/* Keywords area ID */
+#keywords_area
+{
+
+    display: none;
+
+}
+
+#greyos
+{
+
+    width: 100%;
+    height: 100%;
+
+}
+
+#top_panel
+{
+
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    padding-top: 2px;
+
+}
+
+#logo
+{
+
+    float: left;
+    clear: left;
+    background-color: #FFFFFF;
+    background-image: url('pix/greyos_logo.png');
+    width: 173px;
+    height: 36px;
+    margin-left: 35px;
+    margin-top: 10px;
+
+}
+
+#user_profile
+{
+
+    float: right;
+    clear: right;
+    width: 182px;
+    margin-top: 5px;
+
+}
+
+#notifications_num
+{
+
+    cursor: pointer;
+    background: none repeat scroll 0 0 #9C95A1;
+    border-radius: 50% 50% 50% 50%;
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-left: 4px;
+    margin-right: 10px;
+    padding: 5px;
+
+}
+
+#profile_access
+{
+
+    float: left;
+
+}
+
+#small_avatar
+{
+
+    float: left;
+    clear: left;
+    cursor: pointer;
+    background-image: url('pix/profile/avatar_small.jpg');
+    width: 27px;
+    height: 27px;
+    border: 1px solid #C5C5C5;
+    margin-top: 2px;
+
+}
+
+#my
+{
+
+    float: left;
+    clear: right;
+    cursor: pointer;
+    color: #5C5C5C;
+    font-size: 16px;
+    margin-left: 10px;
+    margin-top: 5px;
+
+}
+
+#my:hover
+{
+
+    color: #9C95A1;
+
+}
+
+#user_profile_pop_up
+{
+
+    position: absolute;
+    border: 1px solid #C5C5C5;
+    background-color: #FFFFFF;
+    width: 530px;
+    height: 178px;
+    right: 99000px;
+    margin-top: 45px;
+    z-index: 999999999;
+
+}
+
+#user_profile_pop_up:before
+{
+
+    border-color: #C5C5C5 transparent;
+    border-style: solid;
+    border-width: 0 12px 12px;
+    bottom: auto;
+    content: "";
+    display: block;
+    position: absolute;
+    right: 25px;
+    top: -12px;
+    width: 0;
+
+}
+
+#user_profile_pop_up:after
+{
+
+   border-color: #FFFFFF transparent;
+    border-style: solid;
+    border-width: 0 10px 10px;
+    bottom: auto;
+    content: "";
+    display: block;
+    position: absolute;
+    right: 27px;
+    top: -10px;
+    width: 0;
+
+}
+
+#profile_left_side
+{
+
+    clear: left;
+    float: left;
+
+}
+
+#profile_right_side
+{
+
+    clear: right;
+    float: left;
+
+}
+
+#info
+{
+
+    clear: left;
+    float: left;
+    width: 270px;
+    margin-top: 20px;
+    padding: 25px;
+
+}
+
+#big_avatar
+{
+
+    float: left;
+    clear: left;
+    cursor: pointer;
+    background-image: url('pix/profile/avatar_big.jpg');
+    width: 96px;
+    height: 96px;
+    border: 1px solid #C5C5C5;
+    margin-top: -2px;
+
+}
+
+#user_data
+{
+
+    clear: right;
+    float: left;
+    margin-left: 10px;
+
+}
+
+#user_full_name
+{
+
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: -4px;
+    margin-bottom: 4px;
+
+}
+
+#user_email
+{
+
+    color: #777777;
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 6px;
+
+}
+
+#user_account
+{
+
+    float: left;
+    clear: left;
+    cursor: pointer;
+    color: #9C95A1;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 5px;
+
+}
+
+#user_account:hover
+{
+
+    color: #5C5C5C;
+
+}
+
+#user_settings
+{
+
+    float: left;
+    clear: right;
+    cursor: pointer;
+    color: #9C95A1;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 5px;
+
+}
+
+#user_settings:hover
+{
+
+    color: #5C5C5C;
+
+}
+
+#separator
+{
+
+    float: left;
+    clear: none;
+    color: #9C95A1;
+    margin-top: -2px;
+
+}
+
+#user_share_location
+{
+
+    float: left;
+    clear: both;
+    cursor: pointer;
+    background-color: #5C5C5C;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+    height: 18px;
+    line-height: 16px;
+    margin-top: 4px;
+    padding: 6px 12px;
+
+}
+
+#user_share_location:hover
+{
+
+    background-color: #9C95A1;
+
+}
+
+#notifications
+{
+
+    clear: right;
+    float: left;
+    width: 210px;
+
+}
+
+#total_notifications
+{
+
+    float: left;
+    clear: both;
+    border-left: #C5C5C5 solid 1px;
+    border-bottom: #C5C5C5 solid 1px;
+    width: 202px;
+    padding: 4px;
+
+}
+
+#notifications_list
+{
+
+    float: left;
+    clear: both;
+    font-size: 13px;
+    width: 210px;
+    height: 113px;
+    overflow: hidden;
+
+}
+
+#messages_icon
+{
+
+    background-image: url('pix/icons/profile/messages.png');
+    width: 20px;
+    height: 16px;
+
+}
+
+#alerts_icon
+{
+
+    background-image: url('pix/icons/profile/alerts.png');
+    width: 17px;
+    height: 19px;
+
+}
+
+#log_off
+{
+
+    clear: left;
+    float: right;
+    border-top: 1px solid #C5C5C5;
+    width: 201px;
+    padding: 4px;
+
+}
+
+#log_off_icon
+{
+
+    float: left;
+    clear: left;
+    cursor: pointer;
+    background-image: url('pix/icons/profile/log_off.png');
+    width: 20px;
+    height: 20px;
+    margin-left: 136px;
+
+}
+
+#log_off_text
+{
+
+    float: left;
+    clear: right;
+    cursor: pointer;
+    color: #5C5C5C;
+    font-size: 11px;
+    margin-top: 2px;
+    margin-left: 5px;
+
+}
+
+#action_icons
+{
+
+    clear: both;
+    float: left; 
+    width: 220px;
+    height: 40px;
+
+}
+
+#view
+{
+
+    margin-left: 35px;
+    margin-top: 10px;
+    width: 100px;
+    height: 20px;
+
+}
+
+#all_windows
+{
+
+    background-image: url('pix/icons/actions/view/all_hover.png');
+    width: 29px;
+
+}
+
+#all_windows:hover
+{
+
+    background-image: url('pix/icons/actions/view/all_hover.png');
+
+}
+
+#only_boxes
+{
+
+    background-image: url('pix/icons/actions/view/boxes.png');
+    width: 32px;
+
+}
+
+#only_boxes:hover
+{
+
+    background-image: url('pix/icons/actions/view/boxes_hover.png');
+
+}
+
+#only_widgets
+{
+
+    background-image: url('pix/icons/actions/view/widgets.png');
+    width: 19px;
+
+}
+
+#only_widgets:hover
+{
+
+    background-image: url('pix/icons/actions/view/widgets_hover.png');
+
+}
+
+#placement
+{
+
+    margin-left: 23px;
+    margin-top: 10px;
+    width: 60px;
+    height: 20px;
+
+}
+
+#snap_to_grid
+{
+
+    background-image: url('pix/icons/actions/placement/snap.png');
+    width: 21px;
+
+}
+
+#snap_to_grid:hover
+{
+
+    background-image: url('pix/icons/actions/placement/snap_hover.png');
+
+}
+
+#stack_all
+{
+
+    background-image: url('pix/icons/actions/placement/stack.png');
+    width: 24px;
+
+}
+
+#stack_all:hover
+{
+
+    background-image: url('pix/icons/actions/placement/stack_hover.png');
+
+}
+
+#dynamic_container
+{
+
+    background-color: #F4F4F4;
+    background-image: url('pix/top_panel/diagonal.jpg');
+    background-position: left center;
+    background-repeat: no-repeat;
+    height: 40px;
+    margin-top: 45px;
+
+}
+
+#eureka
+{
+
+    float: right;
+    margin-right: 35px;
+
+}
+
+#eye
+{
+
+    float: left;
+    clear: left;
+    background-image: url('pix/icons/philos/eye.png');
+    width: 30px;
+    height: 15px;
+    margin-top: 12px;
+    margin-right: 10px;
+
+}
+
+#search_area
+{
+
+    float: left;
+    clear: right;
+
+}
+
+#eureka_search_box
+{
+
+    font-size: 12px;
+    height: 25px;
+    padding: 0 7px;
+    width: 235px;
+    margin-top: 5px;
+
+}
+
+#desktop
+{
+
+    float: none;
+    clear: both;
+    color: #000000;
+    min-height: 550px;
+    overflow: auto;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.actions
+{
+
+    float: left;
+    clear: none;
+
+}
+
+.view_icons
+{
+
+    float: left;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    height: 20px;
+    margin-right: 5px;
+
+}
+
+.placement_icons
+{
+
+    float: left;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    height: 20px;
+    margin-right: 5px;
+
+}
+
+.alt_eye
+{
+
+    margin-left: 10px !important;
+
+}
+
+.alt_notifications
+{
+
+    float: right !important;
+    margin-right: 22px !important;
+
+}
+
+.notification_list_item
+{
+
+    float: left;
+    clear: both;
+    cursor: pointer;
+    color: #5C5C5C;
+    border-left: #C5C5C5 solid 1px;
+    border-right: 1px solid #C5C5C5;
+    border-bottom: #C5C5C5 solid 1px;
+    width: 184px;
+    padding: 4px;
+
+}
+
+.notification_list_item:hover
+{
+
+    color: #FFFFFF;
+    background-color: #9C95A1;
+
+}
+
+.alt_list_item
+{
+
+    border-bottom: none;
+
+}
+
+
+.list_item_icon
+{
+
+    float: left;
+    margin-right: 5px;
+
+}
+
+.list_item_text
+{
+
+    float: left;
+    margin-top: 0px;
+
+}
+
+.list_item_notifications
+{
+
+    float: right !important;
+    background: none repeat scroll 0 0 #FFFFFF !important;
+    border: 1px solid #C5C5C5;
+    color: #9C95A1 !important;
+    margin-right: 4px !important;
+
+}
+
+.item_details
+{
+
+    float: left;
+    margin-top: 10px;
+    margin-left: 5px;
+
+}
+
+.error
+{
+
+    background-color: #EAC0AE !important;
+
+}
+
+.verify_msg
+{
+
+    text-align: center;
+    font-size: 20px;
+    color: #5C5C5C;
+    width: 500px;
+    border-bottom: solid 4px #35BAB2;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 10px;
+
+}
+
+.cancel_user_select
+{
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+::selection
+{
+
+    color: #FFFFFF;
+    background: #D5D5D5;
+
+}
+
+::-moz-selection
+{
+
+    color: #FFFFFF;
+    background: #D5D5D5;
+
+}

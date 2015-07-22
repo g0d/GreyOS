@@ -1,0 +1,103 @@
+/*
+
+    GreyOS Inc. - Banana (Default theme)
+    
+    Version: 1.0
+    
+    File name: default.css
+    Description: This file contains the Banana - Default theme.
+    
+    Coded by George Delaportas (G0D)
+    
+    GreyOS Inc.
+    Copyright © 2013
+
+*/
+
+
+
+#banana
+{
+
+    position: absolute;
+    right: -205px;
+    top: 40%;
+    color: #FFF;
+    background: #9C95A1;
+    text-align: center;
+    width: 220px;
+    height: 200px;
+    box-shadow: -3px 1px 4px rgba(0, 0, 0, 0.4);
+    z-index: 999999998;
+
+}
+
+.banana_trigger
+{
+
+    float: left;
+    clear: left;
+    font-size: 14px;
+    width: 15px;
+    height: 100%;
+    cursor: pointer;
+    background-color: #5C5C5C;
+
+}
+
+.banana_trigger:hover
+{
+
+    background-color: #6D6D6D;
+
+}
+
+.banana_body
+{
+
+    width: 215px;
+    height: 100%;
+    padding: 5px;
+
+}
+
+.banana_title
+{
+
+    margin-bottom: 5px;
+
+}
+
+.banana_box
+{
+
+    margin-bottom: 10px;
+
+}
+
+#banana_suggestion
+{
+
+    width: 180px;
+    height: 100px;
+    resize: none;
+    margin-bottom: 5px;
+
+}
+
+#banana_send
+{
+
+    width: 100px;
+    height: 24px;
+    cursor: pointer;
+
+}
+
+#banana_info
+{
+
+    font-size: 14px;
+    margin-top: 2px;
+
+}

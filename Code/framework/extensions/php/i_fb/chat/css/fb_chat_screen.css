@@ -1,0 +1,16 @@
+@charset "utf-8";
+
+html, body {
+    padding:0px;
+    margin:0px; /* FF hack: or we'll have double scrollbar showing on the browser */
+    overflow:hidden;  /* hide browser's main scrollbar */
+}
+
+#FBChatMain {
+    width:100%;
+    background: transparent; /* DO NOT REMOVE THIS; or you'll have issue w/ the scrollbar, when the mouse pointer is on a white space */
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height:100%;	/* this will make sure that the height will extend at the bottom */
+    position:absolute; /* container div must be absolute, for our fixed bar to work */
+}

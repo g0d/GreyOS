@@ -1,0 +1,354 @@
+/*
+
+    GreyOS Inc. - TALOS (Default theme)
+    
+    Version: 2.0
+    
+    File name: default.css
+    Description: This file contains the TALOS - Default theme.
+    
+    Coded by George Delaportas (G0D)
+    
+    GreyOS Inc.
+    Copyright © 2013
+
+*/
+
+
+
+body
+{
+
+    background-image: url('/framework/extensions/php/talos/themes/pix/talos_bg.jpg');
+    background-repeat: round;
+    overflow: auto;
+
+}
+
+.talos_header
+{
+
+    position: fixed;
+    float: none;
+    clear: none;
+    top: 0px;
+    background-image: url('/framework/extensions/php/talos/themes/pix/talos_header_bg.png');
+    width: 100%;
+    height: 98px;
+
+}
+
+.talos_header .header_middle
+{
+
+    float: none;
+    clear: none;
+    background-image: url('/framework/extensions/php/talos/themes/pix/talos_header_middle_bg.png');
+    background-repeat: no-repeat;
+    width: 631px;
+    height: 99px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10px;
+
+}
+
+.talos_header .header_middle .greyos_logo
+{
+
+    float: none;
+    clear: none;
+    background-image: url('/framework/extensions/php/talos/themes/pix/greyos.png');
+    background-repeat: no-repeat;
+    width: 330px;
+    height: 78px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.talos_header .header_middle .demo
+{
+
+    float: right;
+    margin-top: -15px;
+    margin-right: 60px;
+    color: #D5D5D5;
+    font-weight: bold;
+
+}
+
+.talos_content, .talos_forms
+{
+
+    float: none;
+    clear: both;
+    width: 800px;
+    min-height: 400px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 125px;
+
+}
+
+.talos_content .register_form
+{
+
+    float: left;
+    clear: left;
+    color: #FFFFFF;
+    background-color: #9C95A1;
+    box-shadow: #D0D0D0 1px 1px 1px;
+    width: 305px;
+    height: 300px;
+    padding: 10px 40px 70px;
+
+}
+
+.talos_content .login_form
+{
+
+    float: right;
+    clear: right;
+    color: #5C5C5C;
+    background-color: #FFFFFF;
+    box-shadow: #D0D0D0 1px 1px 1px;
+    width: 305px;
+    height: 300px;
+    padding: 10px 40px 70px;
+
+}
+
+.talos_content .register_form .header
+{
+
+    font-size: 48px;
+    letter-spacing: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+
+}
+
+.talos_content .register_form .sub_header
+{
+
+    font-size: 14px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+    margin-top: 2px;
+    margin-bottom: 25px;
+
+}
+
+.talos_content .register_form .fields
+{
+
+    font-size: 20px;
+    text-indent: 10px;
+    color: #5C5C5C;
+    width: 240px;
+    height: 40px;
+    margin-bottom: 10px;
+
+}
+
+#talos_signup_button
+{
+
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #5C5C5C;
+    border-style: none;
+    border-radius: 4px 4px 4px 4px;
+    cursor: pointer;
+    height: 35px;
+    width: 150px;
+
+}
+
+#talos_signup_button:hover
+{
+
+    background-color: #757575;
+
+}
+
+.terms_conditions
+{
+
+    float: right;
+    font-size: 11px;
+    margin-top: 2px;
+    margin-right: -35px;
+
+}
+
+.terms_conditions a
+{
+
+    color: #DCD3E2;
+
+}
+
+.terms_conditions a:hover
+{
+
+    color: #FFFFFF;
+
+}
+
+.talos_content .login_form .header
+{
+
+    font-size: 30px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+    margin-bottom: 48px;
+    margin-top: 15px;
+
+}
+
+.talos_content .login_form .fields
+{
+
+    font-size: 20px;
+    text-indent: 10px;
+    color: #5C5C5C;
+    width: 240px;
+    height: 40px;
+    margin-bottom: 10px;
+
+}
+
+#talos_login_button
+{
+
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #9C95A1;
+    border-style: none;
+    border-radius: 4px 4px 4px 4px;
+    cursor: pointer;
+    height: 35px;
+    width: 150px;
+
+}
+
+#talos_login_button:hover
+{
+
+    background-color: #AFA8B5;
+
+}
+
+.forgot_password
+{
+
+    float: right;
+    font-size: 11px;
+    margin-top: -8px;
+    margin-bottom: 10px;
+    margin-right: 32px;
+
+}
+
+.forgot_password
+{
+
+    color: #5C5C5C;
+    cursor: pointer;
+
+}
+
+.forgot_password:hover
+{
+
+    color: #9C95A1;
+
+}
+
+#talos_forgot_password_form
+{
+
+    display: none;
+    position: fixed;
+    width: 242px;
+    height: 45px;
+    margin-left: 98px;
+    margin-top: -40px;
+    background-color: #9C95A1;
+    border-style: none;
+    border-radius: 4px 4px 4px 4px;
+    padding: 5px;
+
+}
+
+#talos_info
+{
+
+    clear: both;
+    float: none;
+    color: #FFFFFF;
+    background-color: #5C5C5C;
+    box-shadow: #D0D0D0 1px 1px 1px;
+    height: 25px;
+    margin-bottom: 70px;
+
+}
+
+.talos_footer
+{
+
+    position: fixed;
+    float: none;
+    clear: none;
+    color: #FFFFFF;
+    background-color: #9C95A1;
+    box-shadow: #D0D0D0 1px -1px 1px;
+    font-size: 12px;
+    width: 100%;
+    height: 60px;
+    bottom: 0px;
+
+}
+
+.talos_footer .copyright
+{
+
+    float: left;
+    clear: left;
+    margin-top: 25px;
+    margin-left: 100px;
+
+}
+
+.talos_footer .contact
+{
+
+    float: left;
+    clear: right;
+    margin-top: 25px;
+
+}
+
+.talos_footer .greyos_logo
+{
+
+    float: right;
+    clear: right;
+    background-image: url('/framework/extensions/php/talos/themes/pix/footer_greyos.png');
+    background-repeat: no-repeat;
+    width: 143px;
+    height: 42px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: 100px;
+
+}
+
+.talos_footer a
+{
+
+    color: #FFFFFF;
+
+}

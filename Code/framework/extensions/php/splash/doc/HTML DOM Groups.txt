@@ -1,0 +1,354 @@
+===== HTML DOM GROUPS =====
+
+
+
+STANDARD ATTRIBUTES (All Tags)
+------------------------------
+id
+class
+style
+title
+dir
+lang
+accesskey
+tabindex
+contenteditable
+draggable
+spellcheck
+data-*
+
+
+
+STANDARD MOUSE EVENTS (All Tags)
+--------------------------------
+onclick
+ondblclick
+onmousedown
+onmousemove
+onmouseout
+onmouseover
+onmouseup
+
+
+
+STANDARD KEY EVENTS (All Tags)
+------------------------------
+onkeydown
+onkeypress
+onkeyup
+
+
+
+OBJECTS
+-------
+
+TAG: <a> (Link)
+---------------
+
+EXTRA ATTRIBUTES
+----------------
+href
+target
+rel
+
+EXTRA EVENTS
+------------
+onfocus
+onblur
+
+
+
+TAG: <div>
+----------
+
+EXTRA ATTRIBUTES
+----------------
+
+EXTRA EVENTS
+------------
+-
+
+
+
+TAG: <fieldset>
+---------------
+
+EXTRA ATTRIBUTES
+----------------
+legend (inner tag)
+name
+form
+disabled
+
+EXTRA EVENTS
+------------
+
+
+
+TAG: <img>
+----------
+
+EXTRA ATTRIBUTES
+----------------
+alt
+src
+width
+height
+ismap
+usemap
+
+EXTRA EVENTS
+------------
+abort
+
+
+
+TAG: <input>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+name
+alt
+checked
+maxlength
+form
+formaction
+formtarget
+formenctype
+formmethod
+formnovalidate
+accept
+size
+src
+type
+value
+multiple
+min
+max
+step
+pattern
+width
+height
+placeholder
+autocomplete
+autofocus
+required
+readonly
+disabled
+
+EVENTS
+------
+onfocus
+onblur
+onchange
+onselect
+
+
+
+TAG: <textarea>
+---------------
+
+EXTRA ATTRIBUTES
+----------------
+cols
+rows
+name
+form
+maxlength
+placeholder
+wrap
+autofocus
+readonly
+required
+disabled
+
+EXTRA EVENTS
+------------
+onfocus
+onblur
+onchange
+onselect
+
+
+
+TAG: <label>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+for
+form
+
+EXTRA EVENTS
+------------
+-
+
+
+
+TAG: <select>
+-------------
+
+EXTRA ATTRIBUTES
+----------------
+name
+multiple
+size
+form
+autofocus
+required
+disabled
+
+EXTRA EVENTS
+------------
+onfocus
+onblur
+onchange
+
+
+
+TAG: <table>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+border
+
+EXTRA EVENTS
+------------
+-
+
+
+
+TAG: <map>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+name
+
+EXTRA EVENTS
+------------
+onfocus
+onblur
+
+
+
+TAG: <canvas>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+width
+height
+
+EXTRA EVENTS
+------------
+onfocus
+onblur
+
+
+
+TAG: <audio>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+controls
+autoplay
+loop
+muted
+preload
+src
+
+EXTRA EVENTS
+------------
+onfocus
+onblur
+onabort
+oncanplay
+oncanplaythrough
+ondurationchange
+onemptied
+onended
+onerror
+onloadeddata
+onloadedmetadata
+onloadstart
+onpause
+onplay
+onplaying
+onprogress
+onratechange
+onreadystatechange
+onseeked
+onseeking
+onstalled
+onsuspend
+ontimeupdate
+onvolumechange
+onwaiting
+
+
+
+TAG: <video>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+controls
+autoplay
+loop
+muted
+preload
+src
+width
+height
+
+EXTRA EVENTS
+------------
+onfocus
+onblur
+onabort
+oncanplay
+oncanplaythrough
+ondurationchange
+onemptied
+onended
+onerror
+onloadeddata
+onloadedmetadata
+onloadstart
+onpause
+onplay
+onplaying
+onprogress
+onratechange
+onreadystatechange
+onseeked
+onseeking
+onstalled
+onsuspend
+ontimeupdate
+onvolumechange
+onwaiting
+
+
+
+TAG: <form>
+------------
+
+EXTRA ATTRIBUTES
+----------------
+accept
+accept-charset
+action
+enctype
+method
+target
+name
+autocomplete
+novalidate
+
+EXTRA EVENTS
+------------

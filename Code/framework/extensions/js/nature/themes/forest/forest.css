@@ -1,0 +1,397 @@
+/*
+
+    GreyOS Inc. - N@TuRe (Forest theme)
+    
+    Version: 1.0
+    
+    File name: forest.css
+    Description: This file contains the N@TuRe - Forest theme.
+    
+    Coded by George Delaportas (G0D)
+    
+    GreyOS Inc.
+    Copyright © 2013
+
+*/
+
+
+
+.forest
+{
+
+    position: absolute;
+	left: 0px;
+	top: 87px;
+	margin-left: -298px;
+    z-index: 999999998;
+
+}
+
+.forest .trigger_bar
+{
+
+    position: absolute;
+	background: #B33C3C url('pix/trigger_bar.png') no-repeat 5px 50%;
+	box-shadow: 3px 1px 4px rgba(0, 0, 0, 0.4);
+    border-left: 3px solid #B83636;
+	left: 298px;
+    top: 0;
+	bottom: 0;
+	cursor: pointer;
+	width: 28px;
+
+}
+
+.forest .trigger_bar:hover
+{
+
+    background-color: #B83636;
+
+}
+
+.top_list, .cat_list
+{
+
+    position: relative;
+    width: 298px;
+	text-align: center;
+	background: #504D52;
+
+}
+
+.top_list
+{
+
+	height: 90px;
+
+}
+
+.top_list a.create_cat
+{
+
+    display: inline-block;
+    font-size: 14px;
+	color: #FFFFFF;
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+    background: url('pix/new_cat.png') no-repeat 15px 10px;
+	border: 5px dashed #D967A8;
+	border-radius: 5px;
+	margin: 20px 0 0 16px;
+    padding: 11px 83px 13px 50px;
+
+}
+
+.cat_list .mCSB_container
+{
+
+    width: 100%;
+
+}
+
+.cat
+{
+
+    width: 230px;
+
+}
+
+.cat_list .cat
+{
+
+	text-align: left;
+    min-height: 56px;
+    margin-bottom: -4px;
+
+}
+
+.cat_list .cat a
+{
+
+    display: inline-block;
+    font-size: 14px;
+	color: #FFFFFF;
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+	width: 100%;
+    overflow: hidden;
+	text-indent: 20px;
+    text-decoration: none;
+    text-overflow: ellipsis;
+	background: #69CDC8;
+    outline:none;
+	margin-bottom: 1px;
+	padding: 17px 10px;
+    padding-left: 35px;
+
+}
+
+.cat_list .cat a:hover
+{
+
+    background-color: #5C5C5C;
+
+}
+
+.cat_list .cat a.active
+{
+
+    background-color: #5C5C5C;
+
+}
+
+.cat_list .cat a.active span
+{
+
+    background: #FFFFFF;
+	color: #5C5C5C;
+
+}
+
+.cat_list .common a
+{
+
+    background: #A296AB url('pix/books.png') no-repeat 10px;
+
+}
+
+.cat_list .apps a
+{
+
+    background: #A296AB url('pix/apps.png') no-repeat 10px;
+
+}
+
+.cat_list .social a
+{
+
+    background: #A296AB url('pix/social_nets.png') no-repeat 10px;
+
+}
+
+.cat_list .games a
+{
+
+    background: #A296AB url('pix/games.png') no-repeat 10px;
+
+}
+
+.cat_list .cat a span
+{
+
+    float: right;
+	background: #5C5C5C;
+	border-radius: 25px;
+	text-indent: 0;
+    margin-top: -3px;
+    padding: 4px 8px;
+
+}
+
+.cat_list .cat a:hover span
+{
+
+    background: #FFFFFF;
+	color: #5C5C5C;
+
+}
+
+.cat_list .cat ul
+{
+
+    margin-top: -4px;
+    margin-bottom: 0px;
+
+}
+
+.cat_list .cat ul li
+{
+
+    list-style: none;
+    margin-left: -40px;
+    margin-bottom: -2px;
+
+}
+
+.cat_list .cat li a
+{
+
+	position: relative;
+    background: #FFFFFF;
+	margin-bottom: -1px;
+	color: #878D95;
+    text-shadow: none;
+
+}
+
+.cat_list .cat li a:hover
+{
+
+    color: #FFFFFF;
+
+}
+
+.cat_list .cat li a:before
+{
+
+	display: inline-block;
+	position: absolute;
+    content: "";
+	left: 16px;
+	top: 20px;
+    width: 0; 
+	height: 0; 
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 5px solid #BCBCBF;
+
+}
+
+.cat_list .cat li a.expanded
+{
+
+    margin-bottom: 1px;
+
+}
+
+.cat_list .cat li a.expanded:before
+{
+
+    top: 23px;
+    border-right: 5px solid transparent;
+	border-left: 5px solid transparent;
+	border-top: 5px solid #BCBCBF;
+
+}
+
+.cat_list .cat li a span
+{
+
+    background: #FFFFFF;
+	color: #5C5C5C;
+	border: 1px solid #DDDDDF;
+
+}
+
+.cat_list .cat li.create_new a
+{
+
+    color: #35BAB2;
+    margin-bottom: 1px;
+
+}
+
+.cat_list .cat li.create_new a:before
+{
+
+    content: "";
+	border: none;
+	background: url('pix/new_cat_hover.png') no-repeat left;
+	top: 16px;
+	left: 12px;
+    width: 20px;
+	height: 20px;
+
+}
+
+.cat_list .cat li li a
+{
+
+    text-indent: 0px;
+    background: #EEEEEE;
+    border-top: 1px solid #E9E9EB;
+	border-bottom: none;
+
+}
+
+.cat_list .cat li li a:last-child
+{
+
+    
+
+}
+
+.cat_list .cat li li a:before
+{
+
+    border: none;
+
+}
+
+/* Scroll styling */
+.forest .cat_list .mCSB_container
+{
+
+    margin-right: 0;
+	margin-left: 20px;
+
+}
+
+.forest .cat_list .mCustomScrollBox > .mCSB_scrollTools
+{
+
+	left: 0;
+	top: -4px;
+
+}
+
+.forest .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar
+{
+
+    background-color: #FFFFFF;
+
+}
+
+.drawer
+{
+
+	text-align: left;
+    min-height: 56px;
+    background: #218D88;
+
+}
+
+.drawer .search_box
+{
+
+    float: left;
+    clear: both;
+    color: #5C5C5C;
+    width: 280px;
+    height: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+.drawer a
+{
+
+	display: inline-block;
+    float: left;
+    clear: both;
+    font-size: 14px;
+	color: #FFFFFF;
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+	width: 253px;
+    background: #613F6C url('pix/storage.png') no-repeat 10px;
+    overflow: hidden;
+	text-indent: 20px;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    outline: none;
+	margin-bottom: 1px;
+	padding: 17px 10px;
+    padding-left: 35px;
+
+}
+
+.drawer a span
+{
+
+	float: right;
+	background: #5C5C5C;
+	border-radius: 25px;
+	text-indent: 0;
+    margin-top: -3px;
+    padding: 4px 8px;
+
+}

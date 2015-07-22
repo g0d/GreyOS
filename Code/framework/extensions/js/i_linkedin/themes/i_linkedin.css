@@ -1,0 +1,51 @@
+/*
+
+    GreyOS Inc. - Integrated LinkedIn theme
+    
+    Version: 1.0
+    
+    File name: i_linkedin.css
+    Description: This file contains the Integrated LinkedIn theme CSS.
+    
+    Coded by Arron Bailiss (abailiss)
+    
+    GreyOS Inc.
+    Copyright © 2014
+
+*/
+
+
+
+/**** Linkedin Bee Styling ****/
+
+.i_linkedin_icon
+{
+
+    background-image: url('/framework/extensions/js/i_linkedin/themes/pix/logo.png') !important;
+    margin-left: 0px;
+    margin-top: 0px;
+    height: 30px;
+    width: 30px;
+
+}
+
+.i_linkedin_status_bar
+{
+
+    background-color: #2CC0B8;
+
+}
+
+.i_linkedin_msg
+{
+
+    color: #FFFFFF !important;
+
+}
+
+.linkedin_network_update_row_div
+{
+
+    margin-bottom: .5em;
+
+}

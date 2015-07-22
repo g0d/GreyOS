@@ -1,0 +1,346 @@
+<?php
+
+    /*
+    
+        GreyOS - ALPHA CMS
+        
+        Version: 10.0
+        
+        File name: setup.phtml
+        Description: This is the setup view.
+        
+        Coded by George Delaportas (G0D)
+        
+        GreyOS
+        Copyright © 2013
+    
+    */
+    
+    
+    
+    if (!defined('ALPHA_CMS'))
+        die('ERROR: Unable to load ALPHA CMS!');
+    
+    require_once('cms/alpha_cms.php');
+    require_once('framework/alpha.php');
+    
+    require_once('cms/site/common/php/doc_type.php');
+    
+    // Initialize session support
+    session_start();
+    
+    // Recursive ChMod
+    function Recursive_ChMod($path, $file_perm = 0666, $dir_perm = 0755, $file_type = 'xml')
+    {
+    
+        if(!file_exists($path))
+            return false;
+        
+        if(is_file($path))
+            chmod($path, $file_perm);
+        
+        elseif(is_dir($path))
+        {
+        
+            $folders_files = scandir($path);
+            
+            $entries = array_slice($folders_files, 2);
+            
+            foreach($entries as $entry)
+            {
+            
+                if (strrpos($entry, $file_type, strlen($entry) - 3))
+                    Recursive_ChMod($path . '/' . $entry , $file_perm, $dir_perm, $file_type);
+            
+            }
+            
+            chmod($path, $dir_perm);
+        
+        }
+        
+        return true;
+    
+    }
+
+?>
+
+    <html>
+    
+    <head>
+    
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="robots" content="index, nofollow">
+        <link rel="Icon" type="image/ico" href="/cms/themes/default/pix/alpha_cms.ico">
+        <link rel="StyleSheet" href="/cms/themes/default/setup.css" type="text/css" media="screen">
+        
+        <title>ALPHA CMS</title>
+    
+    </head>
+    
+    <body>
+    
+        <form id="dynamic_form" method="post">
+        
+            <div id="setup_main_content">
+            
+                <div id="setup_content_header">
+
+                    <div id="setup_header_text">ALPHA CMS - Setup Wizard</div>
+
+                </div>
+
+                <div id="setup_dynamic_area">
+                
+                    <div id="setup_dynamic_content">
+                    
+                        <?php
+
+                            if (!empty($_POST['setup']))
+                            {
+                            
+                                echo '<script type="text/javascript" src="/cms/site/common/js/setup_validator.js"></script>';
+                                
+                                if ($_POST['setup'] == '1')
+                                {
+
+                        ?>
+                        
+                                    <script type="text/javascript">
+                                    
+                                        var setup_objects = new Array();
+                                        
+                                        setup_objects[0] = 'domain_input';
+                                        setup_objects[1] = 'port_input';
+                                        setup_objects[2] = 'db_input';
+                                        setup_objects[3] = 'username_input';
+                                        setup_objects[4] = 'db_password_input';
+                                    
+                                    </script>
+                                    
+                                    <div>
+                                        Please enter the domain name and the credentials for the MySQL server.
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <div id="setup_labels">
+                                            <div class="star">*</div><div class="setup_label">Domain:</div><br>
+                                            <div class="star">*</div><div class="setup_label">Port:</div><br>
+                                            <div class="star">*</div><div class="setup_label">Data base:</div><br>
+                                            <div class="star">*</div><div class="setup_label">Username:</div><br>
+                                            <div class="star">&nbsp;</div><div class="setup_label">Password:</div><br>
+                                        </div>
+                                        <div id="setup_inputs">
+                                            <input id="domain_input" type="text" 
+                                                   name="domain_input" maxlength="50" value="localhost" />
+                                            <br>
+                                            <input id="port_input" type="text" name="port_input"
+                                                   value="3306" maxlength="5" />
+                                            <br>
+                                             <input id="db_input" type="text" name="db_input"
+                                                    value="ALPHA_CMS" maxlength="50" />
+                                            <br>
+                                            <input id="username_input" type="text" name="username_input"
+                                                   value="root" maxlength="30" />
+                                            <br>
+                                            <input id="db_password_input" type="password" name="db_password_input"
+                                                   maxlength="30" />
+                                            <br>
+                                        </div>
+                                        <div style="float: left; clear: both; margin-top: 10px;">Please click "Next" to continue...</div>
+                                    </div>
+                                    <div id="setup_links_div" style="margin-top: 23px;">
+
+                                        <a id="setup_link" href="javascript:void(0);" 
+                                        onmouseup="Validate(setup_objects);">Next</a>
+
+                                    </div>
+                                    <input id="setup" type="hidden" name="setup" value="2" />
+                            
+                            <?php
+
+                            }
+
+                            elseif ($_POST['setup'] == '2')
+                            {
+
+                                $_SESSION['ALPHA_DOMAIN'] = $_POST['domain_input'];
+                                $_SESSION['ALPHA_PORT'] = $_POST['port_input'];
+                                $_SESSION['ALPHA_DB'] = $_POST['db_input'];
+                                $_SESSION['ALPHA_USER'] = $_POST['username_input'];
+                                $_SESSION['ALPHA_PASS'] = $_POST['db_password_input'];
+
+                            ?>
+                           
+                                <script type="text/javascript">
+                                
+                                    var setup_objects = new Array();
+                                    
+                                    setup_objects[0] = 'password_input';
+                                    setup_objects[1] = 'pass_confirm_input';
+                                
+                                </script>
+                                
+                                <div>
+                                    Please enter the admin panel (back-end) password.
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div id="setup_labels">
+                                        <div class="star">&nbsp;</div><div class="setup_label">Username:</div><br>
+                                        <div class="star">*</div><div class="setup_label">Password:</div><br>
+                                        <div class="star">*</div><div class="setup_label">Confirm</div><br>
+                                    </div>
+                                    <div id="setup_inputs">
+                                        <div style="margin-bottom: 10px;">admin</div>
+                                        <input id="password_input" type="password" 
+                                               name="password_input" maxlength="30" value="" />
+                                        <br>
+                                        <input id="pass_confirm_input" type="password" name="pass_confirm_input"
+                                               value="" maxlength="30" />
+                                        <br>
+                                    </div>
+                                    <div style="float: left; clear: both; margin-top: 10px;">Please click "Install" to configure ALPHA CMS...</div>
+                                </div>
+                                <div id="setup_links_div" style="margin-top: 75px;">
+
+                                    <a id="setup_link" href="javascript:void(0);" 
+                                    onmouseup="Validate(setup_objects);">Install</a>
+
+                                </div>
+                                <input id="setup" type="hidden" name="setup" value="3" />
+
+                            <?php
+
+                            }
+
+                            elseif ($_POST['setup'] == '3')
+                            {
+
+                                Recursive_ChMod('/cms/config/db.cfg', 0666, 0755, 'cfg');
+                                Recursive_ChMod('/cms/config/setup.cfg', 0666, 0755, 'cfg');
+
+                                $store_result = ALPHA_CMS::Store_DB_Connection($_SESSION['ALPHA_USER'], $_SESSION['ALPHA_PASS'], 
+                                                                               $_SESSION['ALPHA_DOMAIN'], $_SESSION['ALPHA_DB'], 
+                                                                               $_SESSION['ALPHA_PORT'], 'cms/config/db.cfg');
+
+                                if ($store_result === false)
+                                    die('Error: Unable to write database configuration file!');
+
+                                $db_con = mysql_connect($_SESSION['ALPHA_DOMAIN'], $_SESSION['ALPHA_USER'], $_SESSION['ALPHA_PASS']);
+
+                                $mysql_result = mysql_query('CREATE DATABASE `' . $_SESSION['ALPHA_DB'] . '`', $db_con);
+
+                                if ($mysql_result === false)
+                                    die('Error: Unable to create ALPHA CMS database!');
+
+                                $mysql_result = ALPHA_CMS::Execute_SQL_Command('USE `' . $_SESSION['ALPHA_DB'] . '`', 1);
+
+                                if ($mysql_result === false)
+                                    die('Error: Unable to select ALPHA CMS database!');
+
+                                $mysql_result = ALPHA_CMS::Execute_SQL_Script_File('cms/database/alpha_cms_db.sql');
+
+                                if ($mysql_result === false)
+                                    die('Error: Unable to setup ALPHA CMS database!');
+
+                                $mysql_result = ALPHA_CMS::Execute_SQL_Command('UPDATE `' . $_SESSION['ALPHA_DB'] . '`.`alpha_users` 
+                                                                                SET `password` = ' . '\'' . 
+                                                                                md5(mysql_real_escape_string($_POST['password_input'])) . '\'' . ' 
+                                                                                WHERE `username` = ' . '\'' . 'admin' . '\'', 1);
+
+                                if ($mysql_result === false)
+                                    die('Error: Unable to set ALPHA CMS admin password!');
+
+                                $file_handler = fopen('cms/config/setup.cfg', 'w');
+
+                                if ($file_handler === false)
+                                    die('Error: Unable to write setup configuration file!');
+
+                                $access = fputs($file_handler, '1');
+
+                                fclose($file_handler);
+
+                                if ($access === false)
+                                    die('Error: Unable to setup configuration!');
+
+                                Recursive_ChMod('/framework/extensions');
+                                Recursive_ChMod('/framework/mvc');
+
+                                Recursive_ChMod('/cms/config/db.cfg', 0666, 0755, 'cfg');
+                                Recursive_ChMod('/cms/config/setup.cfg', 0666, 0755, 'cfg');
+
+                                Recursive_ChMod('/framework/config.xml');
+
+                                Recursive_ChMod('/tmp');
+
+                            ?>
+
+                                    <div>
+                                    Congratulations!
+                                    <br>
+                                    Installation was successful.
+                                    <br>
+                                    <br>
+                                    <br>
+                                    Please click "Finish" to load ALPHA CMS...
+                                    </div>
+
+                                    <div id="setup_links_div" style="margin-top: 147px;">
+                                        <a id="setup_link" href="javascript:void(0);" 
+                                           onmouseup="window.location.href='/';">Finish</a>
+                                    </div>
+
+                            <?php
+
+                            }
+
+                            else
+                                die('Error: Malformed setup!');
+
+                        }
+
+                        else
+                        {
+
+                        ?>
+
+                            <div>
+                                Welcome to ALPHA CMS Setup Wizard!
+                                <br>
+                                <br>
+                                <br>
+                                You are running ALPHA CMS for the first time. The setup wizard will guide you
+                                through a few steps in order to setup ALPHA CMS on this server.
+                                <br>
+                                <br>
+                                Please click "Configure" to move on...
+                            </div>
+                            <div id="setup_links_div">
+                                <a id="setup_link" href="javascript:void(0);"
+                                   onmouseup="document.getElementById('dynamic_form').submit();">Configure</a>
+                            </div>
+                            <input id="setup" type="hidden" name="setup" value="1" />
+
+                        <?php
+
+                        }
+
+                        ?>
+                        
+                        <?php require_once('cms/site/front_end/php/localhost_logo.php'); ?>
+                    
+                    </div>
+
+                </div>
+                
+                <div id="footer">
+                    <p>GreyOS - Copyright &copy; 2013</p>
+                </div>
+            
+            </div>
+        
+        </form>
+    
+    </body>
+
+</html>

@@ -1,0 +1,665 @@
+/*
+
+    GreyOS Inc. - N@TuRe (Dock theme)
+    
+    Version: 1.0
+    
+    File name: dock.css
+    Description: This file contains the N@TuRe - Dock theme CSS.
+    
+    Coded by John Inglessis (negle) & George Delaportas (G0D)
+    
+    GreyOS Inc.
+    Copyright © 2014
+
+*/
+
+
+
+/* --- For DEMO purposes --- */
+
+[draggable] 
+{
+
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+
+}
+
+#favorite_apps
+{
+
+    float: left;
+    clear: right;
+    margin-left: 60px;
+    margin-top: 2px;
+
+}
+
+.favorites
+{
+    
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    border: 1px solid transparent;
+    float: left;
+    margin-right: 20px;
+    cursor: pointer;
+
+}
+
+.dock_replace
+{
+
+	border: 1px solid white;
+	border-radius: 5px;
+	-moz-box-shadow: inset 2px 2px 3px #c9c9c9;
+	-webkit-box-shadow: inset 2px 2px 3px #c9c9c9;
+	box-shadow: inset 2px 2px 3px #c9c9c9;
+
+}
+
+.dock_replace_outer
+{
+
+	border: 1px solid #9C95A1;
+	border-radius: 5px;
+	-moz-box-shadow: 2px 2px 2px 1px #bababa;
+	-webkit-box-shadow: 2px 2px 2px 1px #bababa;
+	box-shadow: 2px 2px 2px 1px #bababa;
+
+}
+
+.dock_replace_outer_move
+{
+
+	border: 2px solid white;
+	border-radius: 5px;
+	-moz-box-shadow: 2px 2px 2px 1px #bababa;
+	-webkit-box-shadow: 2px 2px 2px 1px #bababa;
+	box-shadow: 2px 2px 2px 1px #bababa;
+
+}
+
+#apps_rooster
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_clock.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_rooster:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_clock.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_rooster_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_clock.png') !important;
+
+}
+
+.apps_rooster_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_clock.png') !important;
+	
+}
+
+#apps_greyos_cloud
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_cloud.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+ 
+}
+
+#apps_greyos_cloud:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_cloud.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_greyos_cloud_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_cloud.png') !important;
+
+}
+
+.apps_greyos_cloud_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_cloud.png') !important;
+	
+}
+
+#apps_coyote_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_coyote.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#apps_coyote_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_coyote.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_coyote_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_coyote.png') !important;
+
+}
+
+.apps_coyote_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_coyote.png') !important;
+	
+}
+
+#apps_greyos_mail_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_email.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#apps_greyos_mail_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_email.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_greyos_mail_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_email.png') !important;
+
+}
+
+.apps_greyos_mail_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_email.png') !important;
+	
+}
+
+#apps_i_youtube_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_youtube.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_i_youtube_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_youtube.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_i_youtube_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_youtube.png') !important;
+
+}
+
+.apps_i_youtube_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_youtube.png') !important;
+	
+}
+
+#apps_i_fb_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_facebook.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_i_fb_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_facebook.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_i_fb_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_facebook.png') !important;
+
+}
+
+.apps_i_fb_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_facebook.png') !important;
+
+}
+
+#apps_twitter_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_twitter.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_twitter_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_twitter.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_twitter_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_twitter.png') !important;
+
+}
+
+.apps_twitter_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_twitter.png') !important;
+	
+}
+
+#apps_disqus_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_disqus.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_disqus_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_disqus.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_disqus_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_disqus.png') !important;
+
+}
+
+.apps_disqus_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_disqus.png') !important;
+	
+}
+
+#apps_i_linkedin_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_linkedin.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_i_linkedin_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_linkedin.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_i_linkedin_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_linkedin.png') !important;
+
+}
+
+.apps_i_linkedin_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_linkedin.png') !important;
+	
+}
+
+#apps_radio_dude_app
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_radio.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_radio_dude_app:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_radio.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+	
+}
+
+.apps_radio_dude_app_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_radio.png') !important;
+
+}
+
+.apps_radio_dude_app_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_radio.png') !important;
+	
+}
+
+#apps_games
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_games.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_games:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_games.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_games_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_games.png') !important;
+
+}
+
+.apps_games_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_games.png') !important;
+	
+}
+
+#apps_map_fuzion
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_maps.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_map_fuzion:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_maps.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+	
+}
+
+.apps_map_fuzion_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_maps.png') !important;
+
+}
+
+.apps_map_fuzion_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_maps.png') !important;
+	
+}
+
+#apps_greyos_talk
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_chat.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_greyos_talk:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_chat.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_greyos_talk_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_chat.png') !important;
+
+}
+
+.apps_greyos_talk_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_chat.png') !important;
+	
+}
+
+#apps_other
+{
+
+    width: 10px;
+
+}
+
+#apps_bookmarks
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_star.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+
+}
+
+#apps_bookmarks:hover
+{
+
+    background-image: url('pix/favorites/hover/icon_white_star.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+
+}
+
+.apps_bookmarks_on
+{
+
+    background-image: url('pix/favorites/active/icon_green_star.png') !important;
+
+}
+
+.apps_bookmarks_off
+{
+
+    background-image: url('pix/favorites/inactive/icon_grey_star.png') !important;
+	
+}
+
+.games_list
+{
+
+    display: none;
+    position: relative;
+    float: left;
+    clear: both;
+    font-size: 14px;
+    width: 140px;
+    height: 68px;
+    cursor: pointer;
+    background-color: #FFF;
+    margin-top: 30px;
+    padding: 4px;
+    color: #FFFFFF;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    z-index: 999999999;
+
+}
+
+.game_option
+{
+
+    background-color: #35BAB2;
+    height: 18px;
+    margin-bottom: 1px;
+    padding: 2px;
+
+}
+
+.game_option:hover
+{
+
+    color: #FFFFFF;
+    background-color: #5C5C5C;
+
+}
+
+/* ---------- End Of DEMO ---------- */

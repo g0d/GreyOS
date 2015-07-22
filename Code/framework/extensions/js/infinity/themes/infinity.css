@@ -1,0 +1,40 @@
+/*
+
+    GreyOS Inc. - Infinity (Default theme)
+    
+    Version: 1.0
+    
+    File name: infinity.css
+    Description: This file contains the Infinity - Default theme CSS.
+    
+    Coded by George Delaportas (G0D)
+    
+    GreyOS Inc.
+    Copyright © 2013
+
+*/
+
+
+
+.infinity
+{
+
+    float: left;
+    width: 100%;
+    height: 100%;
+    background-color: #F5F5F5;
+    opacity: 0.8;
+
+}
+
+.progress_indicator
+{
+
+    float: none;
+    width: 80px;
+    height: 50px;
+    background-image: url('/framework/extensions/js/infinity/pix/infinity.gif');
+    margin-left: auto;
+    margin-right: auto;
+
+}

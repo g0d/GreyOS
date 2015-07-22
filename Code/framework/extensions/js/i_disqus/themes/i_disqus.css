@@ -1,0 +1,750 @@
+/*
+
+    GreyOS Inc. - Integrated Disqus theme
+
+    Version: 1.0
+
+    File name: i_disquss.css
+    Description: This file contains the Integrated Disqus theme CSS.
+
+    Coded by Marko Janosevic and George Delaportas (G0D)
+
+    GreyOS Inc.
+    Copyright © 2013
+
+*/
+
+
+
+/* Disqus Login Area */
+
+#disqus #disqus_login_div
+{
+   
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    
+}
+
+#disqus div#disqus_login_login_greyos
+{
+   
+    margin: 0 auto;
+    background-image: url(/framework/extensions/js/i_disqus/themes/pix/greyos_disqus.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 40%;
+    width: 100%;
+    
+}
+
+#disqus div#disqus_login_button_div
+{
+    
+    margin: 0 auto;
+    height: 80px;
+    width: 100%;
+    background-color: #ECECEC;
+    text-align: center;
+    position: absolute;
+    left: 0; 
+    
+}
+
+#disqus button#disqus_access_token
+{
+    
+    color: #FFFFFF; /* text color */
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0 1px 1px rgba(22,107,128,.2); /* drop shadow */
+    border: 1px solid rgba(146,146,146,.44); /* stroke */
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px; /* border radius */
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box; /* prevents bg color from leaking outside the border */
+    background-color: #5C5C5C; /* layer fill content + color overlay */
+    width: 155px;
+    height: 40px;
+    margin-top: 20px;
+    outline: none;
+    cursor: pointer;
+    
+}
+
+#disqus button#disqus_access_token:hover
+{
+    
+    opacity: 0.8;
+    
+}
+
+#disqus img#disqus_access_token_background
+{
+    
+    position: absolute;   
+    
+}
+
+/* END OF Disqus Login Area */
+
+.disqus_status_bar 
+{
+    
+    background-color: #2CC0B8;
+    
+}
+
+#disqus_msg
+{
+    
+    color: #FFFFFF !important;
+    
+}
+
+
+#disqus div#disqus_status_bar_menu_icon
+{
+    
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    
+}
+
+#disqus img#disqus_status_bar_bullets
+{
+    
+    cursor: pointer;
+    background-color: #FFFFFF;
+    
+}
+
+#disqus img#disqus_status_bar_bullets:hover
+{
+  
+    background-color: #078980;
+    
+}
+
+/* disqus Main Response Data Styling */
+.disqus_icon
+{
+    
+    background-image: url('/framework/extensions/js/i_disqus/themes/pix/logo.png') !important;
+    margin-left: 0px;
+    margin-top: 0px;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    
+}
+
+#disqus #disqus_token
+{
+
+    display: none;
+
+}
+
+#disqus #disqus_main_response_data
+{
+
+    height: 290px;
+    font-family : 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    line-height: 16px;
+
+}
+
+#disqus nav ul 
+{
+
+    list-style: none;
+    padding: 0px; 
+    margin: 0px;
+
+}
+
+#disqus nav ul li 
+{
+
+    display: inline-block;
+    margin: 0px;
+    padding-top: 1px;
+    float: left;
+
+}
+
+#disqus nav ul li a 
+{
+    
+    display: block;
+    padding: 5px;
+    
+}
+
+#disqus nav ul li:hover a 
+{
+
+    background-color: #5C5C5C;
+    border-radius: 4px;
+
+}
+
+#disqus nav ul li .activated
+{
+
+    background-color: #5C5C5C;
+    border-radius: 4px;
+
+}
+
+#disqus .logout
+{
+
+    float: right;
+    margin-right: 6px;
+    
+}
+
+#disqus #twitter_login_div
+{
+
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 110px;
+
+}
+
+#disqus .disqus_feed_row
+{
+
+    width: 100%;
+    float: left;    
+    border-bottom: 1px solid #F0F0F0;
+    cursor: pointer;
+    padding-bottom: 10px;
+
+}
+
+#disqus .disqus_feed_row:hover
+{
+
+    background-color: #F0F0F0;
+    border-radius: 5px;
+
+}
+
+#disqus .disqus_feed_row a
+{
+
+    color: #35BAB2;
+
+}
+
+#disqus .disqus_feed_row a:hover
+{
+
+    opacity: 0.8;
+
+}
+
+#disqus div.disqus_post
+{
+
+    padding: 10px;
+
+}
+
+#disqus div.disqus_post img 
+{
+
+    border-radius: 5px;
+    border: 1px solid #FFFFFF;
+    float: left;
+
+}
+
+#disqus div.disqus_post div.disqus_author_name
+{
+
+    font-weight: bold;
+    float: left;
+    margin-left: 5px;
+    font-size: 14px;
+
+}
+
+
+#disqus div.disqus_post div.disqus_forum_name
+{
+
+    font-weight: bold;
+    margin-left: 5px;
+    font-size: 14px;
+
+}
+
+#disqus div.disqus_post div.disqus_post
+{
+
+    float: left;
+    margin-left: 5px;
+    font-size: 12px;
+
+}
+
+#disqus div.disqus_content
+{
+
+    margin-top: 0px;
+    margin-left: 65px;
+    padding-right: 5px;
+
+}
+
+#disqus div.disqus_threads_content
+{
+
+    margin-top: 0px;
+    margin-left: 15px;
+    padding-right: 5px;
+
+}
+
+#disqus div.disqus_created_at
+{
+
+    opacity: 0.7;
+    position: absolute;
+    right: 8px;
+
+}
+
+#disqus div.disqus_user_profile_header
+{
+
+    text-align: center;
+    border-radius: 5px 5px 0px 0px;
+    width: auto;
+    min-height: 130px;
+    margin: 20px auto 0px auto;
+    background-image: url(https://abs.twimg.com/a/1379971261/t1/img/grey_header_web.jpg);
+
+}
+
+#disqus div.disqus_user_profile_header p.user
+{
+
+    margin: 0 auto;
+    width: 320px;
+
+}
+
+#disqus_user_profile_image
+{
+
+    border: 2px solid #FFFFFF;
+    margin-top: 10px;
+    border-radius: 5px;
+
+}
+
+#disqus_user_profile_image:hover
+{
+
+    border-color: #35BAB2;
+
+}
+
+#disqus div.disqus_user_profile_header p
+{
+
+    border-bottom: 1px solid #5C5C5C;
+    padding-bottom: 12px;
+
+}
+
+#disqus div.disqus_user_profile_header p.user .name
+{
+
+    color: #FFFFFF;
+
+}    
+
+#disqus div.disqus_header_statistics
+{
+
+    width: auto;
+    margin: 0 auto;
+    background-color: #EAEAEA;
+    border-radius: 0px 0px 5px 5px;
+    border-top: 4px solid #2BBDB2;
+
+}
+
+#disqus div.disqus_header_statistics
+{
+
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+
+}
+
+#disqus div.disqus_header_statistics table
+{
+
+    width: 100%;
+
+}
+
+#disqus div.disqus_header_statistics table tr td
+{
+
+    padding: 10px;
+    border-right: 1px solid #2BBDB2;
+
+}
+
+#disqus div.disqus_header_statistics table tr td.border_none
+{
+
+    padding: 10px;
+    border-right: none;
+
+}
+
+#disqus h1
+{
+
+    font-size: 14px;
+    padding: 10px 0px 10px 0px;
+    clear:both;
+
+}
+
+#disqus .disqus_alert_text
+{
+    
+    padding:10px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    
+}
+
+#disqus div.disqus_user_actions 
+{
+    
+    float: right;
+    padding: 0px 0px 0px 5px;
+    margin-right: 10px;
+    visibility: hidden;
+    height: 10px;
+    margin-top: 0px;
+    font-weight: normal;
+    
+}
+
+#disqus .disqus_feed_row:hover div.disqus_user_actions
+{
+    
+    visibility: visible;
+    
+}
+
+#disqus div.disqus_user_actions a.disqus_user_action:hover
+{
+    
+    text-decoration: underline;
+    
+}
+
+#disqus .disqus_feed_row:hover div.disqus_user_actions a
+{
+    
+    font-weight: normal;
+    
+}
+
+#disqus .disqus_feed_row:hover div.disqus_user_actions a img
+{
+   
+    height: 10px;
+    margin-right: 2px;
+    
+}
+
+#disqus div.disqus_reply_post_form
+{
+    
+    display: none;
+    
+}
+
+#disqus textarea.disqus_reply_post_text
+{
+    
+    border-radius: 6px;
+    border: 1px solid #35BAB2;
+    height: 60px;
+    margin: 5px auto;
+    width: 98%;
+    outline: none;
+    color: #000000;
+    font-size: 12px;
+    resize: none;
+    font-family : 'Helvetica Neue', Arial, sans-serif;
+    
+}
+
+#disqus textarea.disqus_edit_post_text
+{
+    
+    border-radius: 6px;
+    border: 1px solid #35BAB2;
+    height: 200px;
+    margin: 5px auto;
+    width: 98%;
+    outline: none;
+    color: #000000;
+    font-size: 12px;
+    resize: none;
+    font-family : 'Helvetica Neue', Arial, sans-serif;
+    
+}
+
+#disqus input.disqus_submit_reply_post
+{
+    
+    border-radius: 6px;
+    border: 2px solid #35BAB2;
+    color: #35BAB2;
+    font-size: 12px;
+    padding: 5px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    float: right
+        
+}
+
+#disqus input.disqus_submit_reply_post:hover
+{
+    
+    color: #fff;
+    background-color: #35BAB2;
+    
+}
+
+#disqus button.disqus_close_reply_form
+{
+    
+    border-radius: 6px;
+    border: 2px solid #35BAB2;
+    color: #35BAB2;
+    font-size: 12px;
+    padding: 5px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    outline: none;
+    
+}
+ 
+#disqus button.disqus_close_reply_form:hover
+{
+ 
+    color: #fff;
+    background-color: #35BAB2;
+    
+}
+    
+#disqus nav#disqus_main_menu
+{
+    
+    position: absolute;
+    display: none;
+    bottom: 28px;
+    width: 100%;
+    height: 31px;
+    left: 0px;
+    background-color: #71D5CE;
+    padding: 1px 0px 0px 2px;
+    
+}
+
+#disqus li#disqus_menu_separator_li 
+{
+    
+    float: right;
+    margin-right: 8px;
+    
+}
+
+#disqus nav #disqus_menu_separator_div 
+{
+    
+    margin-top: 5px;
+    width: 1px;
+    background-color: #FFFFFF;
+    height: 19px;
+
+}
+
+#disqus .disqus_search
+{
+    
+    height: 31px;
+    background: #C2ECEA;
+    border: 1px solid #C2ECEA;
+    margin-bottom: 5px;
+    padding: 5px;
+    
+}
+
+#disqus #disqus_search_input
+{
+
+    outline: none;
+    color: #999;
+    border: 1px solid #C2ECEA;
+    border-radius: 0px;
+    width: 337px;
+    padding: 5px;
+    padding-right: 26px;
+
+}
+
+#disqus #disqus_search_button
+{
+
+    position: relative;
+    float: right;
+    margin-right: 5px;
+    top: -1.7em;
+    border: none;
+    border-radius: 0px;
+    -webkit-appearance: none;
+
+}
+
+#disqus #disqus_discussions_result
+{
+    
+    position: relative;
+    width: 382px;
+    height: 244px;
+
+}
+
+#disqus #disqus_threads_result
+{
+    
+    position: relative;
+    display: block;
+    height: 287px;
+    
+}
+
+#disqus .disqus_pagination
+{
+    
+    position: relative;
+    padding: 5px;
+    clear: both;
+    
+}
+
+#disqus #disqus_prev 
+{
+    
+    background-color: #35BAB2;
+    padding: 5px;
+    color: #FFFFFF;
+    float: left;
+    font-weight: normal;
+    margin: 9px 0px;
+    border-radius: 5px;
+    float: left;
+}
+
+#disqus #disqus_next 
+{
+    
+    background-color: #35BAB2;
+    padding: 5px;
+    color: #FFFFFF;
+    float: left;
+    font-weight: normal;
+    margin: 9px 0px;
+    border-radius: 5px;
+    float: right;
+    
+}
+
+#disqus #disqus_next:hover, #disqus_prev:hover  
+{
+    
+    opacity: 0.6;
+    
+}
+
+#disqus #disqus_overlay
+{
+    
+   height: 324px;
+   font-family : 'Helvetica Neue', Arial, sans-serif;
+   font-size: 12px;
+   line-height: 16px;
+    
+}
+
+#disqus .disqus_b_class
+{
+    
+    float: right;
+    color: #35BAB2;
+    
+}
+
+#disqus .disqus_b_class:hover
+{
+    
+    text-decoration: underline;
+    
+}
+
+#disqus a.disqus_unfollow 
+{
+    
+    background-color: #35BAB2;
+    padding: 5px;
+    color: #FFFFFF;
+    float: left;
+    font-weight: normal;
+    margin: 9px 0px;
+    border-radius: 5px;
+    float: right;
+    
+}
+
+.disqus_user_posts
+{
+
+    width: 120px !important;
+    margin-right: 0px !important;
+
+}
+
+#disqus_discussions_result .mCustomScrollBox.mCS-light
+{
+
+    width: 100%;
+
+}

@@ -1,0 +1,48 @@
+CKFinder ChangeLog
+==================
+http://ckfinder.com
+Copyright (C) 2007-2012, CKSource - Frederico Knabben. All rights reserved.
+
+### Version 2.0.2
+- Added a way to programmatically close a popup window: closePopup().
+- Added new translation: Finnish.
+- Updated syntax highlighting component used in the fileeditor plugin.
+- Fixed compatibility issues with IE9 RC.
+- Fixed: CKFinder does not scroll correctly to the uploaded file.
+- Fixed: Invalid height of the editing window in the File Editor dialog window.
+- Fixed: CKFinder.dom.element.getWindows method is not available.
+- Fixed: [Opera] Context menu does not work in the files pane.
+- Fixed: When CKFinder is opened in a popup window, after pressing the Cancel button CKFinder asks for confirmation in a wrong window.
+- Fixed: Download does not work in IE8 in a popup window.
+- Fixed: It is impossible to upload a file when CKFinder is running in a popup window.
+- Fixed: File editor does not work in a popup window.
+[PHP] - Fixed: CKFinder loses PNG image transparency on thumbnails.
+[PHP] - Fixed: thumbnails are corrupted when files calling ob_start() are included in config.php.
+
+### Version 2.0.1
+- Default view settings are now configurable.
+- Minimum height for CKFinder has been set to 200px.
+- CKFINDER.version and CKFINDER.revision variables are now available.
+- Updated and added new translations: French, Hebrew, Japanese, Russian.
+- Callback function can now be defined also in the configuration file.
+- CKFinder will now remember client settings in a cookie.
+- Files are now selected automatically after upload.
+- Fixed: Permission denied error in IE 8 when using CKFinder in a popup.
+- Fixed: Upload progress bar was broken in FF 3.5+.
+- Fixed: CKFinder does not work in a frameset.
+- Fixed: RTL support in the files pane.
+- Fixed: SSL support in IE6 and Firefox 3.0.
+- Fixed: application ID was not passed to the server connector.
+- Fixed: CKFinder.setupCKEditor was not working when null was passed as the first argument.
+- Fixed: dialogs in an iframe in IE8 quirks mode are rendered incorrectly.
+- Fixed: dialogs in IE in quirks mode looked bad.
+- Fixed: right click triggered drag&drop in Safari.
+- Fixed: content was selected during resizing in Safari.
+- Fixed: dialog borders in V1 skin in IE6.
+- Fixed: "Empty folder" message disappeared after changing files view mode.
+- Fixed: context menu in Firefox on a Mac does not work.
+- Fixed: changing file extension caused issues with renaming file for the second time.
+- Fixed issue with caching thumbnails.
+
+### Version 2.0
+- First public release of 2.x version of CKFinder.

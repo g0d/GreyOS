@@ -1,0 +1,85 @@
+# HTACCESS configuration file (Version: 10.0)
+
+
+
+Options All -Indexes
+Options +FollowSymLinks
+
+IndexIgnore *
+
+DirectorySlash on
+
+DirectoryIndex index.php
+
+RewriteEngine on
+
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !(.*)/$
+
+# Fix trailing slash
+RewriteRule ^(.*)$ http://%{HTTP_HOST}/$1/ [R=301,L]
+
+# Redirect [www.name.domain] to [name.domain]
+RewriteCond %{HTTP_HOST} ^www.greyos.gr [nocase]
+RewriteRule ^(.*) http://greyos.gr/ [R=301,L]
+
+# Manage languages and pages
+RewriteRule ^(.*)/$ index.php?req=$1 [QSA,L]
+
+# Prevent viewing of .htaccess
+<Files .htaccess>
+    order allow,deny
+    deny from all
+</Files>
+
+<Files ~ "\.(cfg)$">
+    order allow,deny
+    deny from all
+</Files>
+
+<Files ~ "\.(xml)$">
+    order allow,deny
+    deny from all
+</Files>
+
+<Files ~ "sitemap\.(xml)$">
+    order allow,deny
+    allow from all
+</Files>
+
+<Files ~ "\.(sql)$">
+    order allow,deny
+    deny from all
+</Files>
+
+<Files ~ "\.(phtml)$">
+    order allow,deny
+    deny from all
+</Files>
+
+# Add application cache support
+AddType text/cache-manifest .appcache
+
+# Enable compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript text/css text/javascript text/html text/x-js
+</IfModule>
+
+# Enable caching for media
+#<IfModule mod_headers.c>
+#    <filesMatch "\.(ico|jpg|jpeg|png|gif|pdf|css|js)$">
+#        Header set Cache-Control "max-age=3600, public"
+#    </filesMatch>
+#</IfModule>
+
+# Automatically correct simple spelling errors
+<IfModule mod_speling.c>
+    CheckSpelling on
+</IfModule>
+
+
+
+# ----- End -----

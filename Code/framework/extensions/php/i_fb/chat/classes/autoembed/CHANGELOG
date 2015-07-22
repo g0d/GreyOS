@@ -1,0 +1,185 @@
+Version 1.8
+------------
+API
+ - Added support for HTML5 iframe players
+
+
+Version 1.7.1
+-------------
+Stubs
+   - Fixed direct mp3 embed
+
+Version 1.7
+-----------
+API
+  - Added getObjectAttribs() (thanks Chris Jackson)
+
+Stubs
+  - Added
+    TwitVid
+    Blip.tv (thanks Bryan Copeland)
+
+
+Version 1.6
+-----------
+API
+  - Added data attribute to object tag to bring
+  back Firefox support
+
+Stubs
+  - Corrected
+    Youtube (broken in Firefox)
+    Yahoo Video
+    videoJug
+    VidMax
+    Trilulilu
+    StupidVideos
+    iReport
+
+  - Removed
+    videoNuz (no longer allow embeding of their content)
+    vidiac (rehost videos from other sources)
+    musopen (no longer relevant)
+    metatube (unable to derive video src)
+    CarPix TV (dead site)
+    Deezer (not a consistant way of displaying embeded items)
+    GotGame (dying site)
+    9You (can't format player size)
+    Blip (site provided embed code doesn't work)
+    SportsLine (no longer allow of embedding video)
+
+
+Version 1.5
+-----------
+API
+  - Embed code output is now valid XHTML
+
+Stubs
+  - Added support for direct URLs to MP3s using 
+  Google audio player
+
+  - Corrected
+    CNet TV
+    EbaumsWorld (Audio & Video)
+    ESPN
+    Last.FM
+    Ted.com
+
+  - Removed
+    bored (no longer hosts video)
+    ClipLife (dead)
+    GotGame (dead)
+    iTV (dead)
+    iMeem (dead) (bought by myspace)
+    Joost (no easy way to get video url)
+    Jubii Tv (dead)
+    JumpCut (dead)
+    Milliyet (dead)
+    MoFile (dead)
+    SeeHaHa (dead)
+    SeequPod (dead)
+    Tm-Tube (poor site)
+    UUME (dead)
+    MSN (changed to bing video)
+    AOL Video (do not host video just restream from other sites)
+    MSN (Changed to bing)
+
+Version 1.4
+-----------
+API
+  - Removed all PHP warnings
+
+Stubs
+  - Corrected
+    The Daily Show (Clips & Full Episodes)
+    CBSNews
+    AOL Video
+    Blip
+    Bored
+    Clarin
+
+  - Removed
+    Veoh
+    Clip.vn
+    BoingBoing TV (site no longer exists)
+    Carpix.TV (site no longer exists)
+
+Version 1.3
+-----------
+API
+  - Added thumbnail support
+  - Added function setObjectAttrib which will allow
+  for setting specific attributes on the embeded object
+
+Stubs
+  - Added support for sites
+    Bored
+    MetaCafe
+    The Onion Video
+    Tumblr (Music)
+
+  - Removed
+    BBC News
+
+Thumbnail
+  - Added support for sites
+    Youtube
+    Dailymotion
+
+
+
+Version 1.2
+-----------
+API
+  - Added ability to embed local content
+  - Strip out all non-ascii chars from the source of a
+  fetched url to help preg_match. 
+
+Stubs
+  - Added support for sites
+    BoingBoing TV
+    Blastro
+    Today's Big Thing
+    Ted.com
+    Streetfire
+    Webshots (Slideshows)
+    Fandome
+    Photobucket
+    VideoJug
+
+  - Removed
+    ABC News (not able to embed)
+    PikNikTube (site no longer exists)
+    Cold-Link (not able to embed)
+    Boomp3 (not able to embed)
+
+Version 1.1
+-----------
+API
+  - Added support for parsing HTML of URLs to create embed code for sites
+  that we are unable to create from a URL alone.
+
+Stubs
+  - Added support for sites
+    Hulu 
+    CBS News
+    CNet TV
+    MSNBC
+    EbaumsWorld
+    Break
+    TrailerAddict
+    Atom 
+    Imeem (Music, Videos and Playlists)
+    Glumbert
+    BoFunk
+    Flickr Video
+    iReport
+
+  - Correct stub
+    Blip
+
+
+Version 1.0
+-----------
+- First initial release introduces basic pattern matching for determining a
+video's embed code.

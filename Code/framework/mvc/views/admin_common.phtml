@@ -1,0 +1,815 @@
+<?php
+
+    /*
+    
+        GreyOS - ALPHA CMS
+        
+        Version: 10.0
+        
+        File name: admin_common.phtml
+        Description: This file contains the admin common HTML.
+        
+        Coded by George Delaportas (G0D)
+        
+        GreyOS
+        Copyright © 2013
+    
+    */
+    
+    
+    
+    $my_lang = ALPHA_CMS::Get_Language();
+    
+    $commons = array();
+    $records = array();
+    
+    echo ALPHA_CMS::Load_Content('common_content', 'content', $my_lang);
+    
+    if (!empty($_POST['del_common_id']) && $_SESSION['ALPHA_CMS_USER_TYPE'] < 2)
+    {
+    
+        $result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_protected` 
+                                                  FROM `alpha_common` 
+                                                  WHERE `id` = ' . mysql_real_escape_string($_POST['del_common_id']), 1);
+        
+        if ($result[0][0] == 1)
+        {
+        
+            if ($_SESSION['ALPHA_CMS_USER'] == 'admin')
+            {
+            
+                $result = ALPHA_CMS::Delete_Common($_POST['del_common_id']);
+            
+            }
+        
+        }
+        
+        else
+            $result = ALPHA_CMS::Delete_Common($_POST['del_common_id']);
+        
+        $_POST['del_common_id'] = 0;
+    
+    }
+    
+    $records = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) 
+                                               FROM `alpha_common`', 1);
+    
+    ALPHA_CMS::Load_Extension('search_bar', 'php');
+    ALPHA_CMS::Load_Extension('gutenberg', 'php');
+
+?>
+
+<script type="text/javascript">
+
+    // Order
+    function Do_Order()
+    {
+    
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Show common details
+    function Show_Common_Details(common_id)
+    {
+    
+        var ajax = new bull();
+        var commons_content = null;
+        
+        if (common_id === null || common_id <= 0)
+            return 0;
+        
+        commons_content = ajax.response('/cms/site/back_end/php/actions/common_details.php', 
+                                        'common=1&common_id=' + common_id + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('commons_details').innerHTML = commons_content;
+        
+        document.getElementById('commons_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('commons_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('commons_shadow').style.width = screen.width + 'px';
+        document.getElementById('commons_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('commons_shadow').style.display = 'block';
+        document.getElementById('commons_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // New common content
+    function New_Common()
+    {
+    
+        var ajax = new bull();
+        var commons_content = null;
+        
+        commons_content = ajax.response('/cms/site/back_end/php/actions/new_common.php', 
+                                        'new=1' + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('commons_details').innerHTML = commons_content;
+        
+        document.getElementById('commons_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('commons_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('commons_shadow').style.width = screen.width + 'px';
+        document.getElementById('commons_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('commons_shadow').style.display = 'block';
+        document.getElementById('commons_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // Edit common content
+    function Edit_Common(common_id)
+    {
+    
+        var ajax = new bull();
+        var commons_content = null;
+        
+        if (common_id === null || common_id <= 0)
+            return 0;
+        
+        commons_content = ajax.response('/cms/site/back_end/php/actions/edit_common.php', 
+                                        'edit=1&common_id=' + common_id + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('commons_details').innerHTML = commons_content;
+        
+        document.getElementById('commons_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('commons_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('commons_shadow').style.width = screen.width + 'px';
+        document.getElementById('commons_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('commons_shadow').style.display = 'block';
+        document.getElementById('commons_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+
+    // Delete common content
+    function Delete_Common(common_id)
+    {
+    
+        var ajax = new bull();
+        var commons_content = null;
+        
+        if (common_id === null || common_id <= 0)
+            return 0;
+        
+        commons_content = ajax.response('/cms/site/back_end/php/actions/control/common_delete.php', 
+                                        'delete=1&common_id=' + common_id + '&lang_code=<?php echo $my_lang; ?>', 1);
+        
+        document.getElementById('commons_details').innerHTML = commons_content;
+        
+        document.getElementById('commons_details').style.top = document.body.clientTop + 420 + 'px';
+        document.getElementById('commons_details').style.left = (document.body.clientWidth / 2) - 250 + 'px';
+        
+        document.getElementById('commons_shadow').style.width = screen.width + 'px';
+        document.getElementById('commons_shadow').style.height = screen.height + 'px';
+        
+        document.getElementById('commons_shadow').style.display = 'block';
+        document.getElementById('commons_details').style.display = 'block';
+        
+        return 1;
+    
+    }
+    
+    // Insert new common content
+    function Insert_This_Common()
+    {
+    
+        var objects_values = new Array();
+        var result = null;
+        
+        objects_values[0] = 'insert_site_title';
+        objects_values[1] = 'insert_site_description';
+        objects_values[2] = 'insert_site_keywords';
+        objects_values[3] = 'insert_company_name';
+        objects_values[4] = 'insert_company_site';
+        objects_values[5] = 'insert_footer_info';
+        objects_values[6] = 'insert_select_route';
+        objects_values[7] = 'insert_select_lang_code';
+        objects_values[8] = 'insert_protected_content';
+        
+        result = Form_Validator('insert_common_form', objects_values);
+        
+        if (result === false)
+            return 0;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Update this common content
+    function Update_This_Common(common_id)
+    {
+    
+        var objects_values = new Array();
+        var result = null;
+        
+        if (common_id === null || common_id <= 0)
+            return 0;
+        
+        objects_values[0] = common_id;
+        objects_values[1] = 'edit_site_title';
+        objects_values[2] = 'edit_site_description';
+        objects_values[3] = 'edit_site_keywords';
+        objects_values[4] = 'edit_company_name';
+        objects_values[5] = 'edit_company_site';
+        objects_values[6] = 'edit_footer_info';;
+        objects_values[7] = 'edit_select_route';
+        objects_values[8] = 'edit_select_lang_code';
+        objects_values[9] = 'edit_protected_content'
+        
+        result = Form_Validator('update_common_form', objects_values);
+        
+        if (result === false)
+            return 0;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Delete this common content
+    function Delete_This_Common(common_id)
+    {
+    
+        document.getElementById('del_common_id').value = common_id;
+        
+        document.getElementById('admin_form_dhtml').submit();
+        
+        return 1;
+    
+    }
+    
+    // Close common details
+    function Close_Common_Details()
+    {
+    
+        document.getElementById('commons_shadow').style.display = 'none';
+        document.getElementById('commons_details').style.display = 'none';
+        
+        return 1;
+    
+    }
+
+</script>
+
+<div class="class_content_area">
+    <div id="commons_area">
+        <input id="del_common_id" name="del_common_id" type="hidden" value="" />
+        <div id="table_controls">
+            <div id="commons_controls">
+                <div class="class_records">
+                    <?php echo ALPHA_CMS::Load_Content('records', 'content', $my_lang) . ' ' . $records[0][0]; ?>
+                </div>
+                <?php if ($_SESSION['ALPHA_CMS_USER_TYPE'] < 2): ?>
+                <input id="new_common" onclick="New_Common();" class="button" 
+                       type="button" value="<?php echo ALPHA_CMS::Load_Content('new_common_label', 'content', $my_lang); ?>" />
+                <?php else: ?>
+                <input id="new_common" class="button" style="color: #BFBFBF;" disabled 
+                       type="button" value="<?php echo ALPHA_CMS::Load_Content('new_common_label', 'content', $my_lang); ?>" />
+                <?php endif; ?>
+                <?php
+               
+                    if ($records[0][0] > 0)
+                        Search_Bar::Show();
+                    
+                    else
+                        Search_Bar::Show(false);
+                
+                ?>
+                <div id="sorting">
+                    <div id="sort_label"><?php echo ALPHA_CMS::Load_Content('sort_label', 'content', $my_lang); ?>&nbsp;</div>
+                    <?php
+                    
+                        if ($records[0][0] < 2)
+                            echo '<select id="sort_type" name="sort_type" disabled>';
+                        
+                        else
+                            echo '<select id="sort_type" name="sort_type" onchange="Do_Order();">';
+                        
+                        if (empty($_POST['sort_type']) || $_POST['sort_type'] == 'ASC')
+                        {
+
+                            echo '<option selected value="ASC">' . 
+                                 ALPHA_CMS::Load_Content('asc_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="DESC">' . 
+                                 ALPHA_CMS::Load_Content('desc_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['sort_type'] == 'DESC')
+                        {
+
+                            echo '<option value="ASC">' . 
+                                 ALPHA_CMS::Load_Content('asc_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="DESC">' . 
+                                 ALPHA_CMS::Load_Content('desc_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+                        
+                        echo '</select>';
+                    
+                    ?>
+                </div>
+                <div id="ordering">
+                    <div id="order_label"><?php echo ALPHA_CMS::Load_Content('order_label', 'content', $my_lang); ?>&nbsp;</div>
+                    <?php
+                    
+                        if ($records[0][0] < 2)
+                            echo '<select id="order_type" name="order_type" disabled>';
+                        
+                        else
+                            echo '<select id="order_type" name="order_type" onchange="Do_Order();">';
+                        
+                        if (empty($_POST['order_type']) || $_POST['order_type'] == 'id')
+                        {
+
+                            echo '<option selected value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'site_title')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'site_description')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'site_keywords')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'company_name')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'company_site')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'footer_info')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'binded_route')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'lang_id')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+
+                        elseif ($_POST['order_type'] == 'is_protected')
+                        {
+
+                            echo '<option value="id">' . 
+                                 ALPHA_CMS::Load_Content('id_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_title">' . 
+                                 ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_description">' . 
+                                 ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="site_keywords">' . 
+                                 ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_name">' . 
+                                 ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="company_site">' . 
+                                 ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="footer_info">' . 
+                                 ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="binded_route">' . 
+                                 ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option value="lang_id">' . 
+                                 ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang) . 
+                                 '</option>
+                                 <option selected value="is_protected">' . 
+                                 ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang) . 
+                                 '</option>';
+
+                        }
+                        
+                        echo '</select>';
+                    
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div id="commons_content">
+            <table id="commons_table">
+                <tr class="class_table_header">
+                    <td><?php echo ALPHA_CMS::Load_Content('id_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('site_title_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('site_description_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('site_keywords_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('company_name_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('company_site_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('footer_info_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('binded_route_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('lang_code_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('protected_content_label', 'content', $my_lang); ?></td>
+                    <td><?php echo ALPHA_CMS::Load_Content('options_label', 'content', $my_lang); ?></td>
+                </tr>
+            <?php
+            
+                if (!empty($_POST['search_bar']))
+                {
+                
+                    if (empty($_POST['order_type']) || empty($_POST['sort_type']))
+                        $commons = Search_Bar::Search('common', $_POST['search_bar']);
+                    
+                    else
+                        $commons = Search_Bar::Search('common', $_POST['search_bar'], $_POST['order_type'], $_POST['sort_type']);
+                    
+                    if (is_bool($commons))
+                        exit;
+                    
+                    if (empty($_SESSION['G_RESET_SEARCH']))
+                    {
+                    
+                        Gutenberg('common', $commons, 22, $_POST['offset'], 1);
+                        
+                        $_SESSION['G_RESET_SEARCH'] = 1;
+                        $_SESSION['PREVIOUS_SEARCH_STR'] = $_POST['search_bar'];
+                    
+                    }
+                    
+                    else
+                    {
+                    
+                        if ($_POST['search_bar'] != $_SESSION['PREVIOUS_SEARCH_STR'])
+                            Gutenberg('common', $commons, 22, $_POST['offset'], 1);
+                        
+                        else
+                            Gutenberg('common', $commons, 22, $_POST['offset']);
+                        
+                        $_SESSION['G_RESET_OFFSET'] = 1;
+                        $_SESSION['PREVIOUS_SEARCH_STR'] = $_POST['search_bar'];
+                    
+                    }
+                
+                }
+                
+                else
+                {
+                
+                    if (empty($_POST['order_type']) || empty($_POST['sort_type']))
+                    {
+
+                        $commons = ALPHA_CMS::Execute_SQL_Command('SELECT `alpha_common`.`id`, `site_title`, `site_description`, 
+                                                                   `site_keywords`, `company_name`, `company_site`, `footer_info`, 
+                                                                   `binded_route`, `lang_code`, `alpha_common`.`is_protected` 
+                                                                   FROM `alpha_common` 
+                                                                   INNER JOIN `alpha_languages` 
+                                                                   ON `alpha_common`.`lang_id` = `alpha_languages`.`id` 
+                                                                   ORDER BY `alpha_common`.`id` ASC', 1);
+
+                    }
+
+                    else
+                    {
+
+                        $commons = ALPHA_CMS::Execute_SQL_Command('SELECT `alpha_common`.`id`, `site_title`, `site_description`, 
+                                                                   `site_keywords`, `company_name`, `company_site`, `footer_info`, 
+                                                                   `binded_route`, `lang_code`, `alpha_common`.`is_protected` 
+                                                                   FROM `alpha_common` 
+                                                                   INNER JOIN `alpha_languages` 
+                                                                   ON `alpha_common`.`lang_id` = `alpha_languages`.`id` 
+                                                                   ORDER BY `alpha_common`.`' . 
+                                                                   $_POST['order_type'] . '` ' . $_POST['sort_type'], 1);
+
+                    }
+                    
+                    if (is_bool($commons))
+                        exit;
+                    
+                    if (!empty($_SESSION['G_RESET_OFFSET']))
+                    {
+                    
+                        Gutenberg('common', $commons, 22, $_POST['offset'], 1);
+                        
+                        $_SESSION['G_RESET_OFFSET'] = 0;
+                    
+                    }
+                    
+                    else
+                        Gutenberg('common', $commons, 22, $_POST['offset']);
+                    
+                    $_SESSION['G_RESET_SEARCH'] = 0;
+                
+                }
+            
+            ?>
+    
+    </div>
+    <div id="commons_details"></div>
+    <div id="commons_shadow"></div>
+</div>
