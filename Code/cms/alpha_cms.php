@@ -126,7 +126,7 @@
                                            `alpha_menu`.`sort_order` 
                                     FROM `alpha_menu` 
                                     WHERE `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ' 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ' 
                                     ORDER BY `alpha_menu`.`sort_order` ASC';
                     }
 
@@ -138,7 +138,7 @@
                                            `alpha_menu`.`sort_order` 
                                     FROM `alpha_menu` 
                                     WHERE `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . '
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . '
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ASC';
 
                     }
@@ -151,7 +151,7 @@
                                            `alpha_menu`.`sort_order` 
                                     FROM `alpha_menu` 
                                     WHERE `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ' 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ' 
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ' . $sort_type;
 
                     }
@@ -171,9 +171,9 @@
                                     INNER JOIN `alpha_languages` 
                                     ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                     WHERE (`lang_code` = ' . '\'' . 
-                                    mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
+                                    mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`sort_order` ASC';
                     }
 
@@ -187,9 +187,9 @@
                                     INNER JOIN `alpha_languages` 
                                     ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                     WHERE (`lang_code` = ' . '\'' . 
-                                    mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
+                                    mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ASC';
 
                     }
@@ -204,9 +204,9 @@
                                     INNER JOIN `alpha_languages` 
                                     ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                     WHERE (`lang_code` = ' . '\'' . 
-                                    mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
+                                    mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ' . $sort_type;
 
                     }
@@ -228,9 +228,9 @@
                                            `alpha_menu`.`menu_name`, `alpha_menu`.`menu_link`, `alpha_menu`.`lang_id`, 
                                            `alpha_menu`.`sort_order` 
                                     FROM `alpha_menu` 
-                                    WHERE (`caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                    WHERE (`caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`sort_order` ASC';
 
                     }
@@ -242,9 +242,9 @@
                                            `alpha_menu`.`menu_name`, `alpha_menu`.`menu_link`, `alpha_menu`.`lang_id`, 
                                            `alpha_menu`.`sort_order` 
                                     FROM `alpha_menu` 
-                                    WHERE (`caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                    WHERE (`caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                     AND `parent_menu_id` = ' .  
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ASC';
 
                     }
@@ -256,9 +256,9 @@
                                            `alpha_menu`.`menu_name`, `alpha_menu`.`menu_link`, `alpha_menu`.`lang_id`, 
                                            `alpha_menu`.`sort_order` 
                                     FROM `alpha_menu` 
-                                    WHERE (`caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                    WHERE (`caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ' . $sort_type;
 
                     }
@@ -278,10 +278,10 @@
                                     INNER JOIN `alpha_languages` 
                                     ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                     WHERE (`lang_code` = ' . '\'' . 
-                                    mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
-                                    AND `caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                    mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
+                                    AND `caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`sort_order` ASC';
 
                     }
@@ -296,10 +296,10 @@
                                     INNER JOIN `alpha_languages` 
                                     ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                     WHERE (`lang_code` = ' . '\'' . 
-                                    mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
-                                    AND `caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                    mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
+                                    AND `caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ASC';
 
                     }
@@ -314,10 +314,10 @@
                                     INNER JOIN `alpha_languages` 
                                     ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                     WHERE (`lang_code` = ' . '\'' . 
-                                    mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
-                                    AND `caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                    mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
+                                    AND `caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                     AND `parent_menu_id` = ' . 
-                                    mysql_real_escape_string($parent_menu_id, $mysql_con) . ') 
+                                    mysqli_real_escape_string($mysql_con, $parent_menu_id) . ') 
                                     ORDER BY `alpha_menu`.`' . $order_field . '` ' . $sort_type;
 
                     }
@@ -326,9 +326,9 @@
             
             }
             
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
 
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
 
                 $mysql_result = self::DB_Disconnect($mysql_con);
@@ -339,7 +339,7 @@
             
             $mysql_row = array();
             
-            while ($mysql_row = mysql_fetch_array($mysql_result))
+            while ($mysql_row = mysqli_fetch_array($mysql_result))
             {
 
                 self::$__menu_elements[$mysql_row['parent_menu_id']]['name']
@@ -383,7 +383,7 @@
                 $sql_com = 'SELECT `language` 
                             FROM `alpha_languages` 
                             WHERE `lang_code` = ' .
-                            '\'' . mysql_real_escape_string($lang_code, $mysql_con) . '\'' .
+                            '\'' . mysqli_real_escape_string($mysql_con, $lang_code) . '\'' .
                             ' ORDER BY `sort_order`';
 
             }
@@ -397,9 +397,9 @@
 
             }
             
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
 
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
 
                 self::DB_Disconnect($mysql_con);
@@ -413,7 +413,7 @@
 
             $i = 0;
             
-            while ($mysql_row = mysql_fetch_array($mysql_result))
+            while ($mysql_row = mysqli_fetch_array($mysql_result))
                 $langs[$i++] = $mysql_row['language'];
 
             self::DB_Disconnect($mysql_con);
@@ -441,12 +441,12 @@
                         FROM `alpha_common` 
                         INNER JOIN `alpha_languages` 
                         ON `alpha_common`.`lang_id` = `alpha_languages`.`id` 
-                        WHERE (`binded_route` = ' . '\'' . mysql_real_escape_string($binded_route, $mysql_con) . '\'' . ' AND 
-                               `alpha_languages`.`lang_code` = ' . '\'' . mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ')';
+                        WHERE (`binded_route` = ' . '\'' . mysqli_real_escape_string($mysql_con, $binded_route) . '\'' . ' AND 
+                               `alpha_languages`.`lang_code` = ' . '\'' . mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ')';
 
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
 
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
 
                 self::DB_Disconnect($mysql_con);
@@ -457,7 +457,7 @@
 
             $mysql_row = array();
 
-            $mysql_row = mysql_fetch_array($mysql_result);
+            $mysql_row = mysqli_fetch_array($mysql_result);
 
             self::DB_Disconnect($mysql_con);
 
@@ -501,13 +501,13 @@
                         INNER JOIN `alpha_languages` 
                         ON `alpha_content`.`lang_id` = `alpha_languages`.`id` 
                         WHERE (`alpha_languages`.`lang_code` = ' .
-                        '\'' . mysql_real_escape_string($lang_code, $mysql_con) . 
+                        '\'' . mysqli_real_escape_string($mysql_con, $lang_code) . 
                         '\'' . ' AND `page` = ' .
-                        '\'' . mysql_real_escape_string($page, $mysql_con) . '\'' . ')';
+                        '\'' . mysqli_real_escape_string($mysql_con, $page) . '\'' . ')';
 
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
 
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
 
                 self::DB_Disconnect($mysql_con);
@@ -518,7 +518,7 @@
 
             $mysql_row = array();
             
-            $mysql_row = mysql_fetch_array($mysql_result);
+            $mysql_row = mysqli_fetch_array($mysql_result);
 
             self::DB_Disconnect($mysql_con);
 
@@ -547,9 +547,9 @@
             if ($option == '*')
                 return self::Execute_SQL_Command($sql_com, 1);
             
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
 
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
 
                 self::DB_Disconnect($mysql_con);
@@ -560,7 +560,7 @@
 
             $mysql_row = array();
 
-            $mysql_row = mysql_fetch_array($mysql_result);
+            $mysql_row = mysqli_fetch_array($mysql_result);
 
             self::DB_Disconnect($mysql_con);
 
@@ -597,11 +597,11 @@
             
             $sql_com = 'INSERT INTO `alpha_languages` (`lang_code`, `language`, `sort_order`, `is_default`, `is_protected`)
                         VALUES (' . 
-                                '\'' . mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ', ' .
-                                '\'' . mysql_real_escape_string($language, $mysql_con) . '\'' . ', ' . 
-                                mysql_real_escape_string($sort_order, $mysql_con) . ', ' . 
-                                mysql_real_escape_string($is_default, $mysql_con) . ', ' . 
-                                mysql_real_escape_string($is_protected, $mysql_con) . ')';
+                                '\'' . mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ', ' .
+                                '\'' . mysqli_real_escape_string($mysql_con, $language) . '\'' . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $sort_order) . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $is_default) . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $is_protected) . ')';
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -636,15 +636,15 @@
                                                     `company_name`, `company_site`, `footer_info`, 
                                                     `binded_route`, `lang_id`, `is_protected`)
                         VALUES (' . 
-                                '\'' . mysql_real_escape_string($site_title, $mysql_con) . '\'' . ', ' . 
-                                '\'' . mysql_real_escape_string($site_description, $mysql_con) . '\'' .  ', ' . 
-                                '\'' . mysql_real_escape_string($site_keywords, $mysql_con) . '\'' . ', ' . 
-                                '\'' . mysql_real_escape_string($company_name, $mysql_con) . '\'' . ', ' . 
-                                '\'' . mysql_real_escape_string($company_site, $mysql_con) . '\'' . ', ' . 
-                                '\'' . mysql_real_escape_string($footer_info, $mysql_con) . '\'' . ', ' . 
-                                '\'' . mysql_real_escape_string($binded_route, $mysql_con) . '\'' . ', ' . 
-                                mysql_real_escape_string($lang_id, $mysql_con) . ', ' . 
-                                mysql_real_escape_string($is_protected, $mysql_con) . ')';
+                                '\'' . mysqli_real_escape_string($mysql_con, $site_title) . '\'' . ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $site_description) . '\'' .  ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $site_keywords) . '\'' . ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $company_name) . '\'' . ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $company_site) . '\'' . ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $footer_info) . '\'' . ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $binded_route) . '\'' . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $lang_id) . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $is_protected) . ')';
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -678,13 +678,13 @@
             $sql_com = 'INSERT INTO `alpha_menu` (`caller`, `parent_menu_id`, `menu_name`, `menu_link`, 
                                                   `lang_id`, `sort_order`, `is_protected`)
                         VALUES (' . 
-                                '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ', ' .
+                                '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ', ' .
                                 $parent_menu_id . ', ' .
-                                '\'' . mysql_real_escape_string($menu_name, $mysql_con) . '\'' . ', ' .
-                                '\'' . mysql_real_escape_string($menu_link, $mysql_con) . '\'' . ', ' .
-                                mysql_real_escape_string($lang_id, $mysql_con) . ', ' . 
-                                mysql_real_escape_string($sort_order, $mysql_con) . ', ' . 
-                                mysql_real_escape_string($is_protected, $mysql_con) . ')';
+                                '\'' . mysqli_real_escape_string($mysql_con, $menu_name) . '\'' . ', ' .
+                                '\'' . mysqli_real_escape_string($mysql_con, $menu_link) . '\'' . ', ' .
+                                mysqli_real_escape_string($mysql_con, $lang_id) . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $sort_order) . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $is_protected) . ')';
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -722,12 +722,12 @@
             
             $sql_com = 'INSERT INTO `alpha_content` (`page`, `content`, `keywords`, `lang_id`, `is_protected`, `is_route`)
                         VALUES (' . 
-                                '\'' . mysql_real_escape_string($page, $mysql_con) . '\'' . ', ' . 
-                                '\'' . mysql_real_escape_string($content, $mysql_con) . '\'' . ', ' . 
-                                '\'' . mysql_real_escape_string($keywords, $mysql_con) . '\'' . ', ' .  
-                                mysql_real_escape_string($lang_id, $mysql_con) . ', ' . 
-                                mysql_real_escape_string($is_protected, $mysql_con) . ', ' . 
-                                mysql_real_escape_string($is_route, $mysql_con) . ')';
+                                '\'' . mysqli_real_escape_string($mysql_con, $page) . '\'' . ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $content) . '\'' . ', ' . 
+                                '\'' . mysqli_real_escape_string($mysql_con, $keywords) . '\'' . ', ' .  
+                                mysqli_real_escape_string($mysql_con, $lang_id) . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $is_protected) . ', ' . 
+                                mysqli_real_escape_string($mysql_con, $is_route) . ')';
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -752,8 +752,8 @@
             
             $sql_com = 'SELECT `id` 
                         FROM `alpha_users` 
-                        WHERE (`username` = ' . '\'' . mysql_real_escape_string($username, $mysql_con) . '\'' . ' OR 
-                               `email` = ' . '\'' . mysql_real_escape_string($email, $mysql_con) . '\'' . ')';
+                        WHERE (`username` = ' . '\'' . mysqli_real_escape_string($mysql_con, $username) . '\'' . ' OR 
+                               `email` = ' . '\'' . mysqli_real_escape_string($mysql_con, $email) . '\'' . ')';
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
             
@@ -761,10 +761,10 @@
                 return -1;
             
             $sql_com = 'INSERT INTO `alpha_users`(`username`, `email`, `password`, `type`) 
-                        VALUES(' . '\'' . mysql_real_escape_string($username, $mysql_con) . '\'' . ', 
-                               ' . '\'' . mysql_real_escape_string($email, $mysql_con) . '\'' . ', 
-                               ' . '\'' . md5(mysql_real_escape_string($password, $mysql_con)) . '\'' . ', 
-                               ' . mysql_real_escape_string($type, $mysql_con) . ')';
+                        VALUES(' . '\'' . mysqli_real_escape_string($mysql_con, $username) . '\'' . ', 
+                               ' . '\'' . mysqli_real_escape_string($mysql_con, $email) . '\'' . ', 
+                               ' . '\'' . md5(mysqli_real_escape_string($mysql_con, $password)) . '\'' . ', 
+                               ' . mysqli_real_escape_string($mysql_con, $type) . ')';
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
             
@@ -800,12 +800,12 @@
                 $is_protected = 1;
             
             $sql_com = 'UPDATE `alpha_languages`
-                        SET `lang_code` = ' . '\'' . mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ', 
-                            `language` =  ' .  '\'' . mysql_real_escape_string($language, $mysql_con) . '\'' . ', 
-                            `sort_order` = ' . mysql_real_escape_string($sort_order, $mysql_con) . ', 
-                            `is_default` = ' . mysql_real_escape_string($is_default, $mysql_con) . ', 
-                            `is_protected` = ' . mysql_real_escape_string($is_protected, $mysql_con) . ' 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        SET `lang_code` = ' . '\'' . mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ', 
+                            `language` =  ' .  '\'' . mysqli_real_escape_string($mysql_con, $language) . '\'' . ', 
+                            `sort_order` = ' . mysqli_real_escape_string($mysql_con, $sort_order) . ', 
+                            `is_default` = ' . mysqli_real_escape_string($mysql_con, $is_default) . ', 
+                            `is_protected` = ' . mysqli_real_escape_string($mysql_con, $is_protected) . ' 
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -837,16 +837,16 @@
                 $is_protected = 1;
             
             $sql_com = 'UPDATE `alpha_common` 
-                        SET `site_title` = ' . '\'' . mysql_real_escape_string($site_title, $mysql_con) . '\'' . ', 
-                            `site_description` = ' . '\'' . mysql_real_escape_string($site_description, $mysql_con) . '\'' . ', 
-                            `site_keywords` = ' . '\'' . mysql_real_escape_string($site_keywords, $mysql_con) . '\'' . ', 
-                            `company_name` = ' . '\'' . mysql_real_escape_string($company_name, $mysql_con) . '\'' . ', 
-                            `company_site` = ' . '\'' . mysql_real_escape_string($company_site, $mysql_con) . '\'' . ', 
-                            `footer_info` = ' . '\'' . mysql_real_escape_string($footer_info, $mysql_con) . '\'' . ', 
-                            `binded_route` = ' . '\'' . mysql_real_escape_string($binded_route, $mysql_con) . '\'' . ', 
-                            `lang_id` = ' . mysql_real_escape_string($lang_id, $mysql_con) . ', 
-                            `is_protected` = ' . mysql_real_escape_string($is_protected, $mysql_con) . ' 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        SET `site_title` = ' . '\'' . mysqli_real_escape_string($mysql_con, $site_title) . '\'' . ', 
+                            `site_description` = ' . '\'' . mysqli_real_escape_string($mysql_con, $site_description) . '\'' . ', 
+                            `site_keywords` = ' . '\'' . mysqli_real_escape_string($mysql_con, $site_keywords) . '\'' . ', 
+                            `company_name` = ' . '\'' . mysqli_real_escape_string($mysql_con, $company_name) . '\'' . ', 
+                            `company_site` = ' . '\'' . mysqli_real_escape_string($mysql_con, $company_site) . '\'' . ', 
+                            `footer_info` = ' . '\'' . mysqli_real_escape_string($mysql_con, $footer_info) . '\'' . ', 
+                            `binded_route` = ' . '\'' . mysqli_real_escape_string($mysql_con, $binded_route) . '\'' . ', 
+                            `lang_id` = ' . mysqli_real_escape_string($mysql_con, $lang_id) . ', 
+                            `is_protected` = ' . mysqli_real_escape_string($mysql_con, $is_protected) . ' 
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -878,14 +878,14 @@
                 $is_protected = 1;
             
             $sql_com = 'UPDATE `alpha_menu` 
-                        SET `caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ', 
+                        SET `caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ', 
                             `parent_menu_id` = ' . $parent_menu_id . ', 
-                            `menu_name` = ' . '\'' . mysql_real_escape_string($menu_name, $mysql_con) . '\'' . ', 
-                            `menu_link` = ' . '\'' . mysql_real_escape_string($menu_link, $mysql_con) . '\'' . ', 
-                            `lang_id` = ' . mysql_real_escape_string($lang_id, $mysql_con) . ', 
-                            `sort_order` = ' . mysql_real_escape_string($sort_order, $mysql_con) . ', 
-                            `is_protected` = ' . mysql_real_escape_string($is_protected, $mysql_con) . ' 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                            `menu_name` = ' . '\'' . mysqli_real_escape_string($mysql_con, $menu_name) . '\'' . ', 
+                            `menu_link` = ' . '\'' . mysqli_real_escape_string($mysql_con, $menu_link) . '\'' . ', 
+                            `lang_id` = ' . mysqli_real_escape_string($mysql_con, $lang_id) . ', 
+                            `sort_order` = ' . mysqli_real_escape_string($mysql_con, $sort_order) . ', 
+                            `is_protected` = ' . mysqli_real_escape_string($mysql_con, $is_protected) . ' 
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -922,13 +922,13 @@
                 $is_route = 1;
             
             $sql_com = 'UPDATE `alpha_content` 
-                        SET `page` = ' . '\'' . mysql_real_escape_string($page, $mysql_con) . '\'' . ', 
-                            `content` = ' . '\'' . mysql_real_escape_string($content, $mysql_con) . '\'' . ', 
-                            `keywords` = ' . '\'' . mysql_real_escape_string($keywords, $mysql_con). '\'' . ', 
-                            `lang_id` = ' . mysql_real_escape_string($lang_id, $mysql_con) . ', 
-                            `is_protected` = ' . mysql_real_escape_string($is_protected, $mysql_con) . ', 
-                            `is_route` = ' . mysql_real_escape_string($is_route, $mysql_con) . ' 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        SET `page` = ' . '\'' . mysqli_real_escape_string($mysql_con, $page) . '\'' . ', 
+                            `content` = ' . '\'' . mysqli_real_escape_string($mysql_con, $content) . '\'' . ', 
+                            `keywords` = ' . '\'' . mysqli_real_escape_string($mysql_con, $keywords). '\'' . ', 
+                            `lang_id` = ' . mysqli_real_escape_string($mysql_con, $lang_id) . ', 
+                            `is_protected` = ' . mysqli_real_escape_string($mysql_con, $is_protected) . ', 
+                            `is_route` = ' . mysqli_real_escape_string($mysql_con, $is_route) . ' 
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -953,11 +953,11 @@
                 return false;
             
             $sql_com = 'UPDATE `alpha_users` 
-                        SET `username` = ' . '\'' . mysql_real_escape_string($username, $mysql_con) . '\'' . ', 
-                            `email` = ' . '\'' . mysql_real_escape_string($email, $mysql_con) . '\'' . ', 
-                            `password` = ' . '\'' . md5(mysql_real_escape_string($password, $mysql_con)) . '\'' . ', 
-                            `type` = ' . mysql_real_escape_string($type, $mysql_con) . ' 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        SET `username` = ' . '\'' . mysqli_real_escape_string($mysql_con, $username) . '\'' . ', 
+                            `email` = ' . '\'' . mysqli_real_escape_string($mysql_con, $email) . '\'' . ', 
+                            `password` = ' . '\'' . md5(mysqli_real_escape_string($mysql_con, $password)) . '\'' . ', 
+                            `type` = ' . mysqli_real_escape_string($mysql_con, $type) . ' 
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
             
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
             
@@ -1060,7 +1060,7 @@
                 return false;
 
             $sql_com = 'DELETE FROM `alpha_languages` 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
 
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -1084,7 +1084,7 @@
                 return false;
 
             $sql_com = 'DELETE FROM `alpha_common` 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
 
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -1108,7 +1108,7 @@
                 return false;
 
             $sql_com = 'DELETE FROM `alpha_menu` 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
 
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -1132,7 +1132,7 @@
                 return false;
 
             $sql_com = 'DELETE FROM `alpha_content` 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
 
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -1156,7 +1156,7 @@
                 return false;
             
             $sql_com = 'DELETE FROM `alpha_users` 
-                        WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
 
             $mysql_result = self::Execute_SQL_Command($sql_com, 1);
 
@@ -1226,8 +1226,8 @@
                 elseif ($log_type == 'mysql')
                 {
                 
-                    $error_log['type'] = mysql_errno($mysql_con);
-                    $error_log['message'] = mysql_error($mysql_con);
+                    $error_log['type'] = mysqli_errno($mysql_con);
+                    $error_log['message'] = mysqli_error($mysql_con);
                     $error_log['file'] = __FILE__;
                     $error_log['line'] = -1;
                 
@@ -1250,8 +1250,8 @@
             else
                 $sql_com .= '\'' . $_SESSION['ALPHA_CMS_USER'] . '\'' . ', ';
             
-            $sql_com .= '\'' . mysql_real_escape_string($error_log['message'], $mysql_con) . '\'' . ', ' . 
-                        '\'' . mysql_real_escape_string($error_log['file'], $mysql_con) . '\'' . ', ' . 
+            $sql_com .= '\'' . mysqli_real_escape_string($mysql_con, $error_log['message']) . '\'' . ', ' . 
+                        '\'' . mysqli_real_escape_string($mysql_con, $error_log['file']) . '\'' . ', ' . 
                         '\'' . $error_log['line'] . '\'' . ', ' . 
                         '\'' . gmdate('Y-m-d H:i:s') . '\'' . ')';
             
@@ -1295,7 +1295,7 @@
                     
                         $sql_com = 'SELECT * 
                                     FROM `alpha_logs` 
-                                    WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                                    WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
                     
                     }
                 
@@ -1326,7 +1326,7 @@
                     
                         $sql_com = 'SELECT * 
                                     FROM `alpha_logs` 
-                                    WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con) . ' 
+                                    WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id) . ' 
                                     ORDER BY `' . $order_field . '` ASC';
                     
                     }
@@ -1350,7 +1350,7 @@
                     
                         $sql_com = 'SELECT * 
                                     FROM `alpha_logs` 
-                                    WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con) . ' 
+                                    WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id) . ' 
                                     ORDER BY `' . $order_field . '` ' . $sort_type;
                     
                     }
@@ -1365,9 +1365,9 @@
             else
             {
             
-                $mysql_result = mysql_query($sql_com, $mysql_con);
+                $mysql_result = mysqli_query($mysql_con, $sql_com);
 
-                if (mysql_error($mysql_con) != '')
+                if (mysqli_error($mysql_con) != '')
                 {
 
                     self::DB_Disconnect($mysql_con);
@@ -1378,7 +1378,7 @@
                 
                 $mysql_row = array();
 
-                $mysql_row = mysql_fetch_array($mysql_result);
+                $mysql_row = mysqli_fetch_array($mysql_result);
 
                 self::DB_Disconnect($mysql_con);
 
@@ -1417,7 +1417,7 @@
                 {
                 
                     $sql_com = 'DELETE FROM `alpha_logs` 
-                                WHERE `id` = ' . mysql_real_escape_string($id, $mysql_con);
+                                WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $id);
                 
                 }
                 
@@ -1425,8 +1425,8 @@
                 {
                 
                     $sql_com = 'DELETE FROM `alpha_logs` 
-                                WHERE `date_time` BETWEEN ' . '\'' . mysql_real_escape_string($from, $mysql_con) . '\'' . ' 
-                                                      AND ' . '\'' . mysql_real_escape_string($to, $mysql_con) . '\'';
+                                WHERE `date_time` BETWEEN ' . '\'' . mysqli_real_escape_string($mysql_con, $from) . '\'' . ' 
+                                                      AND ' . '\'' . mysqli_real_escape_string($mysql_con, $to) . '\'';
                 
                 }
             
@@ -1480,7 +1480,7 @@
                             INNER JOIN `alpha_languages` 
                             ON `alpha_content`.`lang_id` = `alpha_languages`.`id`
                             WHERE (`is_route` = 1 AND `lang_code` = ' . '\'' . 
-                            mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ');';
+                            mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ');';
             
             }
             
@@ -1512,7 +1512,7 @@
                             INNER JOIN `alpha_languages` 
                             ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                             WHERE (`is_route` = 1 AND `lang_code` = ' . '\'' . 
-                            mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ');';
+                            mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ');';
             
             }
             
@@ -1524,9 +1524,9 @@
             $sql_com = 'SELECT DISTINCT `route` 
                         FROM `all_routes`;';
             
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
 
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
 
                 self::DB_Disconnect($mysql_con);
@@ -1540,7 +1540,7 @@
             
             $i = 0;
             
-            while ($mysql_row = mysql_fetch_array($mysql_result))
+            while ($mysql_row = mysqli_fetch_array($mysql_result))
                 $routes[$i++] = str_replace ('-', '_', $mysql_row['route']);
             
             self::DB_Disconnect($mysql_con);

@@ -67,7 +67,7 @@
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_protected` 
                                                   FROM `alpha_common` 
                                                   WHERE `id` = ' . 
-                                                  mysql_real_escape_string($_POST['common_id'], $db_con), 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['common_id']), 1);
         
         if (!empty($result) && $result[0][0] == 1 && $_SESSION['ALPHA_CMS_USER'] != 'admin')
         {
@@ -83,11 +83,11 @@
                                                   INNER JOIN `alpha_languages` 
                                                   ON `alpha_common`.`lang_id` = `alpha_languages`.`id` 
                                                   WHERE (`binded_route` = ' . 
-                                                         '\'' . mysql_real_escape_string($_POST['binded_route'], $db_con) . '\'' . ' AND 
+                                                         '\'' . mysqli_real_escape_string($db_con, $_POST['binded_route']) . '\'' . ' AND 
                                                          `lang_code` = ' . '\'' . 
-                                                         mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'' . ' AND 
+                                                         mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'' . ' AND 
                                                          `alpha_common`.`id` <> ' . 
-                                                         mysql_real_escape_string($_POST['common_id'], $db_con) . ')', 1);
+                                                         mysqli_real_escape_string($db_con, $_POST['common_id']) . ')', 1);
         
         if ($result)
         {
@@ -101,7 +101,7 @@
         $lang_id = ALPHA_CMS::Execute_SQL_Command('SELECT `id` 
                                                    FROM `alpha_languages` 
                                                    WHERE `lang_code` = ' . '\'' . 
-                                                   mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'', 1);
+                                                   mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'', 1);
         
         $result = ALPHA_CMS::Update_Common($_POST['common_id'], $_POST['site_title'], $_POST['site_descr'], $_POST['site_keys'], 
                                            $_POST['company_name'], $_POST['company_site'], $_POST['footer_info'], 

@@ -67,7 +67,7 @@
                                                  INNER JOIN `alpha_languages` 
                                                  ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                                  WHERE `alpha_menu`.`id` = ' . 
-                                                 mysql_real_escape_string($_POST['menu_id'], $db_con), 1);
+                                                 mysqli_real_escape_string($db_con, $_POST['menu_id']), 1);
 
         $callers = ALPHA_CMS::Execute_SQL_Command('SELECT DISTINCT `caller` 
                                                    FROM `alpha_menu` 

@@ -30,7 +30,7 @@
     
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_protected` 
                                                   FROM `alpha_content` 
-                                                  WHERE `id` = ' . mysql_real_escape_string($_POST['del_content_id']), 1);
+                                                  WHERE `id` = ' . mysqli_real_escape_string($db_con, $_POST['del_content_id']), 1);
         
         if ($result[0][0] == 1)
         {
@@ -43,7 +43,7 @@
                                                            ON `alpha_content`.`page` = `alpha_menu`.`menu_link` 
                                                            SET `menu_link` = \'\' 
                                                            WHERE `alpha_content`.`id` = ' . 
-                                                           mysql_real_escape_string($_POST['del_content_id']), 1);
+                                                           mysqli_real_escape_string($db_con, $_POST['del_content_id']), 1);
 
                 $result = ALPHA_CMS::Delete_Content($_POST['del_content_id']);
 
@@ -51,7 +51,7 @@
                                                                       FROM `alpha_content` 
                                                                       WHERE (`is_route` = 1 AND 
                                                                              `page` = ' . '\'' . 
-                                                                      mysql_real_escape_string($_POST['del_page']) . '\')', 1);
+                                                                      mysqli_real_escape_string($db_con, $_POST['del_page']) . '\')', 1);
 
                 if (empty($rest_routes_result))
                 {
@@ -84,7 +84,7 @@
                                                        ON `alpha_content`.`page` = `alpha_menu`.`menu_link` 
                                                        SET `menu_link` = \'\' 
                                                        WHERE `alpha_content`.`id` = ' . 
-                                                       mysql_real_escape_string($_POST['del_content_id']), 1);
+                                                       mysqli_real_escape_string($db_con, $_POST['del_content_id']), 1);
 
             $result = ALPHA_CMS::Delete_Content($_POST['del_content_id']);
 
@@ -92,7 +92,7 @@
                                                                   FROM `alpha_content` 
                                                                   WHERE (`is_route` = 1 AND 
                                                                          `page` = ' . '\'' . 
-                                                                  mysql_real_escape_string($_POST['del_page']) . '\')', 1);
+                                                                  mysqli_real_escape_string($db_con, $_POST['del_page']) . '\')', 1);
 
             if (empty($rest_routes_result))
             {

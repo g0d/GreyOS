@@ -89,7 +89,7 @@
 
             $sql_com = 'SELECT `id`, `username`, `email`, `type`, `is_active`
                         FROM `users`
-                        WHERE `id` = ' . mysql_real_escape_string($user_id, $mysql_con);
+                        WHERE `id` = ' . mysqli_real_escape_string($mysql_con, $user_id);
 
             $result = ALPHA_CMS::Execute_SQL_Command($sql_com);
 
@@ -135,7 +135,7 @@
 
                 $sql_com = 'SELECT `name`, `surname`
                             FROM `users_info`
-                            WHERE `user_id` = ' . mysql_real_escape_string($user_id, $mysql_con);
+                            WHERE `user_id` = ' . mysqli_real_escape_string($db_con, $user_id, $mysql_con);
 
                 $result = ALPHA_CMS::Execute_SQL_Command($sql_com);
 

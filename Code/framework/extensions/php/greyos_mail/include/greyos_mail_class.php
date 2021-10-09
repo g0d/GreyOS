@@ -222,8 +222,8 @@
 
 					ALPHA_CMS::Execute_SQL_Command($query);
 
-					if (mysql_affected_rows() === 1)
-						return mysql_insert_id();
+					if (mysqli_affected_rows() === 1)
+						return mysqli_insert_id();
 
 					else
 					{
@@ -280,7 +280,7 @@
 													WHERE  `id`=\''.$id.'\' 
 													AND `user_id`=\''.$user_id.'\'');
 
-			if (mysql_affected_rows() === 1)
+			if (mysqli_affected_rows() === 1)
 			{
 
 				session_destroy();
@@ -433,13 +433,13 @@
 			{
 
 				ALPHA_CMS::Execute_SQL_Command('UPDATE `mail_identities` SET
-												`password`=\''.$this->Encrypt_Decrypt('encrypt',$pass).'\'
-												WHERE `id`='.$id);
+											   `password`=\''.$this->Encrypt_Decrypt('encrypt',$pass).'\'
+											   WHERE `id`='.$id);
 
-				if (mysql_affected_rows() !== 1)
+				if (mysqli_affected_rows() !== 1)
 				{
 
-						$this->error = 'database failure [update_mail_identities]'.mysql_info();
+						$this->error = 'database failure [update_mail_identities]' . mysqli_info();
 						return false;
 
 				}
@@ -608,7 +608,7 @@
 												`password` = NULL
 												WHERE `id` ='.$identity_id);
 
-				if (mysql_affected_rows() === 1)
+				if (mysqli_affected_rows() === 1)
 				{
 
 					session_destroy();
@@ -702,7 +702,7 @@
 
 					ALPHA_CMS::Execute_SQL_Command($query);
 
-					if (mysql_affected_rows() !== 1)
+					if (mysqli_affected_rows() !== 1)
 					{
 
 						$this->error = 'database failure 2';

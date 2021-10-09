@@ -51,7 +51,7 @@
         $langs = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `language`, `is_protected` 
                                                  FROM `alpha_languages` 
                                                  WHERE `id` = ' . 
-                                                 mysql_real_escape_string($_POST['lang_id'], $db_con), 1);
+                                                 mysqli_real_escape_string($db_con, $_POST['lang_id']), 1);
         
         if (!empty($langs[0][2]) && $_SESSION['ALPHA_CMS_USER'] != 'admin')
             return 0;

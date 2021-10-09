@@ -614,7 +614,7 @@
                 // Store access_token in DB
                 ALPHA_CMS::Execute_SQL_Command(
                     'UPDATE `oauth_linkedin`
-                     SET `access_token` = "' . mysql_real_escape_string(Get_Access_Token(), $db) . '",
+                     SET `access_token` = "' . mysqli_real_escape_string($db_con, Get_Access_Token(), $db) . '",
                              `expires` = "' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'). ' +' . $access_token->expires_in . ' seconds')) . '"
                              `ip` = "' . $_SERVER['REMOTE_ADDR'] . '"
                              WHERE `talos_id` = "' . $_SESSION['TALOS']['id'] . '"',
@@ -632,7 +632,7 @@
                      (`talos_id`, `ip`, `access_token`, `expires`, `active`)
                      VALUES ("' . $_SESSION['TALOS']['id'] . '", "' .
                     $_SERVER['REMOTE_ADDR'] . '", "' .
-                    mysql_real_escape_string($access_token->access_token, $db) . '", "' .
+                    mysqli_real_escape_string($db_con, $access_token->access_token, $db) . '", "' .
                     date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'). ' +' . $access_token->expires_in . ' seconds')) . '",
                              1)',
                     1

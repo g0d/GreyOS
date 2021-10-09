@@ -64,7 +64,7 @@
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `username` 
                                                   FROM `alpha_users` 
                                                   WHERE `username` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['username'], $db_con) . '\'', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['username']) . '\'', 1);
         
         if ($_SESSION['ALPHA_CMS_USER'] != 'admin' && $users[0][1] == 'admin')
             return 0;
@@ -81,7 +81,7 @@
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `id` 
                                                   FROM `alpha_users` 
                                                   WHERE `email` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['email'], $db_con) . '\'', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['email']) . '\'', 1);
 
         if (!empty($result) && $_POST['user_id'] != $result[0][0])
         {
@@ -97,13 +97,13 @@
 
             $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `alpha_users` 
                                                       SET `username` = ' . '\'' . 
-                                                      mysql_real_escape_string($_POST['username'], $db_con) . '\'' . ', 
+                                                      mysqli_real_escape_string($db_con, $_POST['username']) . '\'' . ', 
                                                           `email` = ' . '\'' . 
-                                                      mysql_real_escape_string($_POST['email'], $db_con) . '\'' . ', 
+                                                      mysqli_real_escape_string($db_con, $_POST['email']) . '\'' . ', 
                                                           `type` = ' . '\'' . 
-                                                      mysql_real_escape_string($_POST['type'], $db_con) . '\'' . ' 
+                                                      mysqli_real_escape_string($db_con, $_POST['type']) . '\'' . ' 
                                                       WHERE `id` = ' . 
-                                                      mysql_real_escape_string($_POST['user_id'], $db_con), 1);
+                                                      mysqli_real_escape_string($db_con, $_POST['user_id']), 1);
 
         }
 

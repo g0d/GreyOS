@@ -51,7 +51,7 @@
         $users = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `username`, `email`, `type` 
                                                  FROM `alpha_users` 
                                                  WHERE `id` = ' . 
-                                                 mysql_real_escape_string($_POST['user_id'], $db_con), 1);
+                                                 mysqli_real_escape_string($db_con, $_POST['user_id']), 1);
         
         echo '<div id="users_details_title">' . ALPHA_CMS::Load_Content('edit_user_label', 'content', $_POST['lang_code']) . 
                 '<div id="users_details_x" onclick="Close_User_Details();">X</div>

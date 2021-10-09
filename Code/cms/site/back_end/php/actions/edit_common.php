@@ -58,7 +58,7 @@
                                                    INNER JOIN `alpha_languages` 
                                                    ON `alpha_common`.`lang_id` = `alpha_languages`.`id` 
                                                    WHERE `alpha_common`.`id` = ' . 
-                                                   mysql_real_escape_string($_POST['common_id'], $db_con), 1);
+                                                   mysqli_real_escape_string($db_con, $_POST['common_id']), 1);
         
         $routes = ALPHA_CMS::Execute_SQL_Command('SELECT DISTINCT `page` 
                                                   FROM `alpha_content` 

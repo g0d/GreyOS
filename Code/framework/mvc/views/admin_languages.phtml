@@ -30,7 +30,7 @@
     
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_protected` 
                                                   FROM `alpha_languages` 
-                                                  WHERE `id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                                                  WHERE `id` = ' . mysqli_real_escape_string($db_con, $_POST['del_lang_id']), 1);
         
         if ($result[0][0] == 1)
         {
@@ -42,15 +42,15 @@
                 
                 $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
                                                           FROM `alpha_common` 
-                                                          WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                                                          WHERE `lang_id` = ' . mysqli_real_escape_string($db_con, $_POST['del_lang_id']), 1);
                 
                 $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
                                                           FROM `alpha_content` 
-                                                          WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                                                          WHERE `lang_id` = ' . mysqli_real_escape_string($db_con, $_POST['del_lang_id']), 1);
                 
                 $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
                                                           FROM `alpha_menu` 
-                                                          WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                                                          WHERE `lang_id` = ' . mysqli_real_escape_string($db_con, $_POST['del_lang_id']), 1);
             
             }
         
@@ -63,15 +63,15 @@
             
             $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
                                                       FROM `alpha_common` 
-                                                      WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                                                      WHERE `lang_id` = ' . mysqli_real_escape_string($db_con, $_POST['del_lang_id']), 1);
             
             $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
                                                       FROM `alpha_content` 
-                                                      WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                                                      WHERE `lang_id` = ' . mysqli_real_escape_string($db_con, $_POST['del_lang_id']), 1);
             
             $result = ALPHA_CMS::Execute_SQL_Command('DELETE 
                                                       FROM `alpha_menu` 
-                                                      WHERE `lang_id` = ' . mysql_real_escape_string($_POST['del_lang_id']), 1);
+                                                      WHERE `lang_id` = ' . mysqli_real_escape_string($db_con, $_POST['del_lang_id']), 1);
         
         }
         

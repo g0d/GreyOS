@@ -35,17 +35,17 @@
             if (empty($user) || empty($domain) || empty($db))
                 return false;
             
-            $mysql_con = mysql_connect($domain . ':' . $port, $user, $pass);
+            $mysql_con = mysqli_connect($domain . ':' . $port, $user, $pass);
             
             if ($mysql_con === false)
                 return false;
             
-            $mysql_result = mysql_set_charset('utf8', $mysql_con);
+            $mysql_result = mysqli_set_charset($mysql_con, 'utf8');
             
             if ($mysql_result === false)
                 return false;
             
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
             
                 self::Disconnect($mysql_con);
@@ -54,7 +54,7 @@
             
             }
             
-            $mysql_db = mysql_select_db($db);
+            $mysql_db = mysqli_select_db($mysql_con, $db);
             
             if ($mysql_db === false)
             {
@@ -78,7 +78,7 @@
             if (empty($connection_id))
                 return false;
             
-            $mysql_dis = mysql_close($connection_id);
+            $mysql_dis = mysqli_close($connection_id);
             
             if ($mysql_dis === false)
                 return false;
@@ -246,12 +246,12 @@
             if ($mysql_con === false)
                 return false;
             
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
             
             if ($mysql_result === false)
                 return false;
             
-            if (mysql_error($mysql_con) != '')
+            if (mysqli_error($mysql_con) != '')
             {
             
                 self::Disconnect($mysql_con);
@@ -265,7 +265,7 @@
             if (!is_bool($mysql_result))
             {
             
-                while ($mysql_row = mysql_fetch_array($mysql_result))
+                while ($mysql_row = mysqli_fetch_array($mysql_result))
                     $final_result[] = $mysql_row;
             
             }

@@ -72,11 +72,11 @@
                                                   INNER JOIN `alpha_languages` 
                                                   ON `alpha_content`.`lang_id` = `alpha_languages`.`id` 
                                                   WHERE (`alpha_content`.`id` <> ' . 
-                                                  mysql_real_escape_string($_POST['content_id'], $db_con) . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['content_id']) . ' AND 
                                                   `page` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['page'], $db_con) . '\'' . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['page']) . '\'' . ' AND 
                                                   `lang_code` = ' . '\'' .  
-                                                  mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'' . ')', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'' . ')', 1);
         
         if (!empty($result) && $result[0][1] == 1  && $_SESSION['ALPHA_CMS_USER'] != 'admin')
         {
@@ -102,7 +102,7 @@
             $route_result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_route` 
                                                             FROM `alpha_content` 
                                                             WHERE `id` = ' . 
-                                                            mysql_real_escape_string($_POST['content_id'], $db_con), 1);
+                                                            mysqli_real_escape_string($db_con, $_POST['content_id']), 1);
             
             if ($route_result[0][0] == 1)
             {
@@ -112,9 +112,9 @@
                                                           INNER JOIN `alpha_languages` 
                                                           ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                                           WHERE (`menu_link` = ' . '\'' . 
-                                                          mysql_real_escape_string($_POST['page'], $db_con) . '\'' . ' AND 
+                                                          mysqli_real_escape_string($db_con, $_POST['page']) . '\'' . ' AND 
                                                                  `lang_code` = ' . '\'' .  
-                                                          mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'' . ')', 1);
+                                                          mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'' . ')', 1);
                 
                 if (file_exists(realpath('../../../../../../framework/mvc/models/') . '/' . str_replace('-', '_', $result[0][0]  . '_' . $_POST['page']) . '.php'))
                 {
@@ -153,7 +153,7 @@
                                                           ON `alpha_content`.`page` = `alpha_menu`.`menu_link` 
                                                           SET `menu_link` = \'\' 
                                                           WHERE `alpha_content`.`id` = ' . 
-                                                          mysql_real_escape_string($_POST['content_id'], $db_con), 1);
+                                                          mysqli_real_escape_string($db_con, $_POST['content_id']), 1);
                 
                 if ($result === false)
                 {
@@ -171,7 +171,7 @@
         $lang_id = ALPHA_CMS::Execute_SQL_Command('SELECT `id` 
                                                    FROM `alpha_languages` 
                                                    WHERE `lang_code` = ' . '\'' . 
-                                                   mysql_real_escape_string($_POST['lang_code'], $db_con). '\'', 1);
+                                                   mysqli_real_escape_string($db_con, $_POST['lang_code']). '\'', 1);
         
         if (!empty($_POST['is_route']) && $_POST['is_route'] <> 0)
         {

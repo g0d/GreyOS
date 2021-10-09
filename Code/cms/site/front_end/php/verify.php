@@ -32,8 +32,8 @@
     $result = ALPHA_CMS::Execute_SQL_Command('SELECT `email` 
                                               FROM `talos` 
                                               WHERE (`verification_code` = ' . 
-                                              '\'' . mysql_real_escape_string(substr($_SERVER['QUERY_STRING'], 14, 
-                                                                              strlen($_SERVER['QUERY_STRING']) - 1), $db_con) . '\'' . 
+                                              '\'' . mysqli_real_escape_string($db_con, substr($_SERVER['QUERY_STRING'], 14, 
+                                                                              strlen($_SERVER['QUERY_STRING']) - 1)) . '\'' . 
                                               ' AND `active` = 0)', 1);
 
     if ($result === false || empty($result))
@@ -51,8 +51,8 @@
     $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `talos` 
                                               SET `active` = 1 
                                               WHERE `verification_code` = ' . 
-                                              '\'' . mysql_real_escape_string(substr($_SERVER['QUERY_STRING'], 14, 
-                                                                              strlen($_SERVER['QUERY_STRING']) - 1), $db_con) . '\'', 1);
+                                              '\'' . mysqli_real_escape_string($db_con, substr($_SERVER['QUERY_STRING'], 14, 
+                                                                              strlen($_SERVER['QUERY_STRING']) - 1)) . '\'', 1);
 
     if ($result === false)
     {

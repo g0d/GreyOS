@@ -30,7 +30,7 @@
     
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `is_protected` 
                                                   FROM `alpha_common` 
-                                                  WHERE `id` = ' . mysql_real_escape_string($_POST['del_common_id']), 1);
+                                                  WHERE `id` = ' . mysqli_real_escape_string($db_con, $_POST['del_common_id']), 1);
         
         if ($result[0][0] == 1)
         {

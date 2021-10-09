@@ -56,7 +56,7 @@
                                                     LEFT JOIN `alpha_menu` 
                                                     ON `alpha_content`.`page` = `alpha_menu`.`menu_link` 
                                                     WHERE `alpha_content`.`id` = ' . 
-                                                    mysql_real_escape_string($_POST['content_id'], $db_con), 1);
+                                                    mysqli_real_escape_string($db_con, $_POST['content_id']), 1);
         
         if (!empty($contents[0][3]) && $_SESSION['ALPHA_CMS_USER'] != 'admin')
             return 0;

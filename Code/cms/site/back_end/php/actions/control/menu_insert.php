@@ -73,13 +73,13 @@
                                                   INNER JOIN `alpha_languages` 
                                                   ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                                   WHERE (`parent_menu_id` = ' . 
-                                                  mysql_real_escape_string($_POST['pid'], $db_con) . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['pid']) . ' AND 
                                                          `caller` = ' . '\'' .  
-                                                  mysql_real_escape_string($_POST['caller'], $db_con) . '\''  . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['caller']) . '\''  . ' AND 
                                                          `menu_link` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['menu_link'], $db_con) . '\'' . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['menu_link']) . '\'' . ' AND 
                                                          `lang_code` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'' . ')', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'' . ')', 1);
         
         if (!empty($result) && $result[0][0])
         {
@@ -95,11 +95,11 @@
                                                   INNER JOIN `alpha_languages` 
                                                   ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                                   WHERE (`parent_menu_id` = ' . 
-                                                  mysql_real_escape_string($_POST['pid'], $db_con) . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['pid']) . ' AND 
                                                          `caller` = ' . '\'' .  
-                                                  mysql_real_escape_string($_POST['caller'], $db_con) . '\''  . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['caller']) . '\''  . ' AND 
                                                          `lang_code` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'' . ')', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'' . ')', 1);
         
         foreach ($result as $this_row)
         {
@@ -123,7 +123,7 @@
         $lang_id = ALPHA_CMS::Execute_SQL_Command('SELECT `id` 
                                                    FROM `alpha_languages` 
                                                    WHERE `lang_code` = ' . '\'' . 
-                                                   mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'', 1);
+                                                   mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'', 1);
         
         if (!empty($_POST['menu_link']) && 
             !file_exists(realpath('../../../../../../framework/mvc/models/') . '/' . str_replace('-', '_', $_POST['caller']  . '_' . $_POST['menu_link']) . '.php') && 

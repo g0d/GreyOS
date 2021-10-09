@@ -73,7 +73,7 @@
             if ($mysql_con === false)
                 return false;
 
-            $search_str = mysql_real_escape_string(htmlentities(trim($search_str), ENT_NOQUOTES, 'utf-8'), $mysql_con);
+            $search_str = mysqli_real_escape_string($mysql_con, htmlentities(trim($search_str), ENT_NOQUOTES, 'utf-8'));
 
             // --- Your code from here ---
 

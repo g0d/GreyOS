@@ -57,9 +57,9 @@
             $result = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `username`, `email` 
                                                       FROM `talos` 
                                                       WHERE (`username` = ' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['user']), $db_con) . '\'' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['user'])) . '\'' . 
                                                       ' AND `password` = ' . 
-                                                      '\'' . mysql_real_escape_string(md5(trim($_POST['pass'])), $db_con) . '\'' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, md5(trim($_POST['pass']))) . '\'' . 
                                                       ' AND `active` = 1)', 1);
 
             if ($result === false || empty($result))
@@ -95,18 +95,18 @@
             $result = ALPHA_CMS::Execute_SQL_Command('SELECT `id` 
                                                       FROM `talos` 
                                                       WHERE (`username` = ' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['user']), $db_con) . '\'' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['user'])) . '\'' . 
                                                       ' OR `email` = ' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['email']), $db_con) . '\')', 1);
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['email'])) . '\')', 1);
 
             if ($result === false || !empty($result[0][0]))
                 return false;
 
             $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `talos`(`username`, `email`, `password`, `verification_code`) 
                                                       VALUES (' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['user']), $db_con) . '\'' . ', ' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['email']), $db_con) . '\'' . ', ' . 
-                                                      '\'' . mysql_real_escape_string(md5(trim($_POST['pass'])), $db_con) . '\'' . ', ' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['user'])) . '\'' . ', ' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['email'])) . '\'' . ', ' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, md5(trim($_POST['pass']))) . '\'' . ', ' . 
                                                       '\'' . $verification_code . '\')', 1);
 
             if ($result === false)
@@ -115,9 +115,9 @@
             $result = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `username`, `email` 
                                                       FROM `talos` 
                                                       WHERE (`username` = ' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['user']), $db_con) . '\'' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['user'])) . '\'' . 
                                                       ' AND `password` = ' . 
-                                                      '\'' . mysql_real_escape_string(md5(trim($_POST['pass'])), $db_con) . '\')', 1);
+                                                      '\'' . mysqli_real_escape_string($db_con, md5(trim($_POST['pass']))) . '\')', 1);
 
             if ($result === false || empty($result))
                 return false;
@@ -197,9 +197,9 @@
             $result = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `email` 
                                                       FROM `talos` 
                                                       WHERE (`username` = ' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['user_or_email']), $db_con) . '\'' . 
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['user_or_email'])) . '\'' . 
                                                       ' OR `email` = ' . 
-                                                      '\'' . mysql_real_escape_string(trim($_POST['user_or_email']), $db_con) . '\')', 1);
+                                                      '\'' . mysqli_real_escape_string($db_con, trim($_POST['user_or_email'])) . '\')', 1);
 
             if ($result === false || !empty($result[0][0]))
                 return false;
@@ -213,7 +213,7 @@
                            chr(rand(128, 255)) . chr(rand(0, 255));
 
             $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `talos`(`password`) 
-                                                      VALUES (' . '\'' . mysql_real_escape_string(md5($random_pass), $db_con) . '\'' . '\') 
+                                                      VALUES (' . '\'' . mysqli_real_escape_string($db_con, md5($random_pass)) . '\'' . '\') 
                                                       WHERE id = ' . $user_id, 1);
 
             if ($result === false)

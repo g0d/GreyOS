@@ -71,9 +71,9 @@
                                                   INNER JOIN `alpha_languages` 
                                                   ON `alpha_content`.`lang_id` = `alpha_languages`.`id` 
                                                   WHERE (`lang_code` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'' . ' AND 
+                                                  mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'' . ' AND 
                                                          `page` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['page'], $db_con) . '\'' . ')', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['page']) . '\'' . ')', 1);
         
         if ($result)
         {
@@ -87,7 +87,7 @@
         $lang_id = ALPHA_CMS::Execute_SQL_Command('SELECT `id` 
                                                    FROM `alpha_languages` 
                                                    WHERE `lang_code` = ' . '\'' . 
-                                                   mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'', 1);
+                                                   mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'', 1);
         
         if (!empty($_POST['is_route']) && $_POST['is_route'] <> 0)
         {

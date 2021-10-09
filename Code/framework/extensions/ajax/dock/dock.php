@@ -108,7 +108,7 @@
 
                 $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `dock` (`user_id`, `applications`) ' . 
                                                          'VALUES (' . $_SESSION['TALOS']['id'] . ', "' . 
-                                                                      mysql_real_escape_string($apps, $db_con) . '")', 1);
+                                                                      mysqli_real_escape_string($db_con, $apps) . '")', 1);
 
                 if ($result === false)
                     exit();
@@ -145,7 +145,7 @@
             if (isset($_POST['applications']))
             {
 
-                $apps = mysql_real_escape_string($_POST['applications']);
+                $apps = mysqli_real_escape_string($db_con, $_POST['applications']);
 
                 $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `dock` SET `applications` = "' .  $apps . '" ' . 
                                                          'WHERE `user_id` = ' . $_SESSION['TALOS']['id'], 1);

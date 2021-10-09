@@ -75,7 +75,7 @@
                                 INNER JOIN `alpha_languages` 
                                 ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                 WHERE (`lang_code` = ' . '\'' . 
-                                mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
+                                mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
                                 AND `parent_menu_id` = ' . $parent_menu_id . ') 
                                 ORDER BY `alpha_menu`.`sort_order` ASC';
 
@@ -93,7 +93,7 @@
                                 FROM `alpha_menu` 
                                 INNER JOIN `alpha_languages` 
                                 ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
-                                WHERE (`caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                WHERE (`caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                 AND `parent_menu_id` = ' . $parent_menu_id . ') 
                                 ORDER BY `alpha_menu`.`sort_order` ASC';
 
@@ -107,8 +107,8 @@
                                     INNER JOIN `alpha_languages` 
                                     ON `alpha_menu`.`lang_id` = `alpha_languages`.`id` 
                                     WHERE (`lang_code` = ' . '\'' . 
-                                    mysql_real_escape_string($lang_code, $mysql_con) . '\'' . ' 
-                                    AND `caller` = ' . '\'' . mysql_real_escape_string($caller, $mysql_con) . '\'' . ' 
+                                    mysqli_real_escape_string($mysql_con, $lang_code) . '\'' . ' 
+                                    AND `caller` = ' . '\'' . mysqli_real_escape_string($mysql_con, $caller) . '\'' . ' 
                                     AND `parent_menu_id` = ' . $parent_menu_id . ') 
                                     ORDER BY `alpha_menu`.`sort_order` ASC';
 
@@ -116,14 +116,14 @@
 
             }
 
-            $mysql_result = mysql_query($sql_com, $mysql_con);
+            $mysql_result = mysqli_query($mysql_con, $sql_com);
 
             if (!$mysql_result)
                 return false;
 
             $mysql_row = array();
 
-            while ($mysql_row = mysql_fetch_array($mysql_result))
+            while ($mysql_row = mysqli_fetch_array($mysql_result))
             {
 
                 self::$__PID = $parent_menu_id;

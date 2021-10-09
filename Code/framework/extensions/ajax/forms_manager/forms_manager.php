@@ -44,8 +44,8 @@
                     return 0;
             
             $sql_com = 'SELECT `id` FROM `users` 
-                        WHERE (`username` = ' . '\'' . mysql_real_escape_string($_POST['user'], $db_con) . '\' OR 
-                               `email` = '. '\'' . mysql_real_escape_string($_POST['email'], $db_con) . '\')';
+                        WHERE (`username` = ' . '\'' . mysqli_real_escape_string($db_con, $_POST['user']) . '\' OR 
+                               `email` = '. '\'' . mysqli_real_escape_string($db_con, $_POST['email']) . '\')';
             
             $result = ALPHA_CMS::Execute_SQL_Command($sql_com, 1);
             
@@ -53,9 +53,9 @@
                 return 0;
             
             $sql_com = 'INSERT INTO `users` (`username`, `email`, `password`) 
-                        VALUES (' . '\'' . mysql_real_escape_string($_POST['user'], $db_con) . '\'' . ', ' .
-                                '\'' . mysql_real_escape_string($_POST['email'], $db_con) . '\'' . ', ' .
-                                '\'' . md5(mysql_real_escape_string($_POST['pass'], $db_con)) . '\')';
+                        VALUES (' . '\'' . mysqli_real_escape_string($db_con, $_POST['user']) . '\'' . ', ' .
+                                '\'' . mysqli_real_escape_string($db_con, $_POST['email']) . '\'' . ', ' .
+                                '\'' . md5(mysqli_real_escape_string($db_con, $_POST['pass'])) . '\')';
             
             $result = ALPHA_CMS::Execute_SQL_Command($sql_com, 1);
             
@@ -84,8 +84,8 @@
             @session_start();
             
             $sql_com = 'SELECT `id`, `type` FROM `alpha_users` 
-                        WHERE (`username` = ' . '\'' . mysql_real_escape_string($_POST['user'], $db_con) . '\' AND 
-                               `password` = '. '\'' . md5(mysql_real_escape_string($_POST['pass'], $db_con)) . '\')';
+                        WHERE (`username` = ' . '\'' . mysqli_real_escape_string($db_con, $_POST['user']) . '\' AND 
+                               `password` = '. '\'' . md5(mysqli_real_escape_string($db_con, $_POST['pass'])) . '\')';
             
             $result = ALPHA_CMS::Execute_SQL_Command($sql_com, 1);
             

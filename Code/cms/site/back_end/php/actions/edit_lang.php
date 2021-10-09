@@ -51,7 +51,7 @@
         $langs = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `lang_code`, `language`, `sort_order`, `is_default`, `is_protected` 
                                                  FROM `alpha_languages` 
                                                  WHERE `id` = ' . 
-                                                 mysql_real_escape_string($_POST['lang_id'], $db_con), 1);
+                                                 mysqli_real_escape_string($db_con, $_POST['lang_id']), 1);
         
         echo '<div id="langs_details_title">' . ALPHA_CMS::Load_Content('edit_lang_label', 'content', $_POST['lang_code']) . 
                 '<div id="langs_details_x" onclick="Close_Lang_Details();">X</div>

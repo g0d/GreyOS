@@ -48,7 +48,7 @@
         $users = ALPHA_CMS::Execute_SQL_Command('SELECT `id`, `username` 
                                                  FROM `alpha_users` 
                                                  WHERE `id` = ' . 
-                                                 mysql_real_escape_string($_POST['user_id'], $db_con), 1);
+                                                 mysqli_real_escape_string($db_con, $_POST['user_id']), 1);
         
         if (($_SESSION['ALPHA_CMS_USER'] != 'admin' && $users[0][1] == 'admin') || ($_SESSION['ALPHA_CMS_USER'] == $users[0][1]))
             return 0;

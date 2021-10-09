@@ -122,7 +122,7 @@
 				ALPHA_CMS::Execute_SQL_Command($sql);
 
 				// if anything happened
-				if (mysql_affected_rows()) 
+				if (mysqli_affected_rows()) 
 					return true;
 
 			} 
@@ -140,7 +140,7 @@
 				ALPHA_CMS::Execute_SQL_Command($sql);
 
 				// if anything happened
-				if (mysql_affected_rows())
+				if (mysqli_affected_rows())
 					return '';
 
 			}

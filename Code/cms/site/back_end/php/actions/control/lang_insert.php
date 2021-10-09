@@ -64,7 +64,7 @@
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `lang_code` 
                                                   FROM `alpha_languages` 
                                                   WHERE `lang_code` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'', 1);
         
         if ($result)
         {
@@ -78,7 +78,7 @@
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `language` 
                                                   FROM `alpha_languages` 
                                                   WHERE `language` = ' . '\'' . 
-                                                  mysql_real_escape_string($_POST['lang'], $db_con). '\'', 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['lang']). '\'', 1);
         
         if ($result)
         {
@@ -92,7 +92,7 @@
         $result = ALPHA_CMS::Execute_SQL_Command('SELECT `sort_order` 
                                                   FROM `alpha_languages` 
                                                   WHERE `sort_order` = ' . 
-                                                  mysql_real_escape_string($_POST['sort'], $db_con), 1);
+                                                  mysqli_real_escape_string($db_con, $_POST['sort']), 1);
         
         if ($result)
         {
@@ -136,7 +136,7 @@
             $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `alpha_languages` 
                                                       SET `is_default` = 1 
                                                       WHERE `lang_code` = ' . '\'' . 
-                                                      mysql_real_escape_string($_POST['lang_code'], $db_con) . '\'', 1);
+                                                      mysqli_real_escape_string($db_con, $_POST['lang_code']) . '\'', 1);
             
             if ($result === false)
             {

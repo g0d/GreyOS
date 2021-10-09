@@ -226,9 +226,9 @@
                                 if ($store_result === false)
                                     die('Error: Unable to write database configuration file!');
 
-                                $db_con = mysql_connect($_SESSION['ALPHA_DOMAIN'], $_SESSION['ALPHA_USER'], $_SESSION['ALPHA_PASS']);
+                                $db_con = mysqli_connect($_SESSION['ALPHA_DOMAIN'], $_SESSION['ALPHA_USER'], $_SESSION['ALPHA_PASS']);
 
-                                $mysql_result = mysql_query('CREATE DATABASE `' . $_SESSION['ALPHA_DB'] . '`', $db_con);
+                                $mysql_result = mysqli_query($mysql_con, 'CREATE DATABASE `' . $_SESSION['ALPHA_DB'] . '`');
 
                                 if ($mysql_result === false)
                                     die('Error: Unable to create ALPHA CMS database!');
@@ -245,7 +245,7 @@
 
                                 $mysql_result = ALPHA_CMS::Execute_SQL_Command('UPDATE `' . $_SESSION['ALPHA_DB'] . '`.`alpha_users` 
                                                                                 SET `password` = ' . '\'' . 
-                                                                                md5(mysql_real_escape_string($_POST['password_input'])) . '\'' . ' 
+                                                                                md5(mysqli_real_escape_string($db_con, $_POST['password_input'])) . '\'' . ' 
                                                                                 WHERE `username` = ' . '\'' . 'admin' . '\'', 1);
 
                                 if ($mysql_result === false)

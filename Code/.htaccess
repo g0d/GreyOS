@@ -23,8 +23,8 @@ RewriteCond %{REQUEST_URI} !(.*)/$
 RewriteRule ^(.*)$ http://%{HTTP_HOST}/$1/ [R=301,L]
 
 # Redirect [www.name.domain] to [name.domain]
-RewriteCond %{HTTP_HOST} ^www.greyos.gr [nocase]
-RewriteRule ^(.*) http://greyos.gr/ [R=301,L]
+#RewriteCond %{HTTP_HOST} ^www.greyos.gr [nocase]
+#RewriteRule ^(.*) http://greyos.gr/ [R=301,L]
 
 # Manage languages and pages
 RewriteRule ^(.*)/$ index.php?req=$1 [QSA,L]
@@ -64,9 +64,9 @@ RewriteRule ^(.*)/$ index.php?req=$1 [QSA,L]
 AddType text/cache-manifest .appcache
 
 # Enable compression
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE application/javascript application/x-javascript text/css text/javascript text/html text/x-js
-</IfModule>
+#<IfModule mod_deflate.c>
+#    AddOutputFilterByType DEFLATE application/javascript application/x-javascript text/css text/javascript text/html text/x-js
+#</IfModule>
 
 # Enable caching for media
 #<IfModule mod_headers.c>
