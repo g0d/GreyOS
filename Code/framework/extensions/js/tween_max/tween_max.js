@@ -20,7 +20,7 @@
     var dynamic_object = document.createElement('script');
 
     dynamic_object.setAttribute('type', 'text/javascript');
-    dynamic_object.setAttribute('src', 'http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.4/TweenMax.min.js');
+    dynamic_object.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.4/TweenMax.min.js');
 
     document.getElementsByTagName('head')[0].appendChild(dynamic_object);
 

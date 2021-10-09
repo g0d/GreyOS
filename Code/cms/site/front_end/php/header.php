@@ -51,7 +51,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <link rel="icon" type="image/ico" href="/cms/themes/greyos/pix/greyos.ico">
         <link rel="styleSheet" href="/cms/themes/greyos/greyos.css" type="text/css" media="screen">
-        <link href="http://fonts.googleapis.com/css?family=Ubuntu:400,500&subset=latin,greek" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500&subset=latin,greek" rel="stylesheet" type="text/css">
 
         <?php
 
@@ -61,10 +61,10 @@
 
         ?>
 
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
         <script type="text/javascript" src="/framework/extensions/ajax/forms_manager/input_controller.js"></script>
         <script type="text/javascript" src="/framework/extensions/ajax/forms_manager/form_validator.js"></script>
         <script type="text/javascript" src="/cms/site/common/js/misc.js"></script>
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
         <title><?php echo $title; ?></title>

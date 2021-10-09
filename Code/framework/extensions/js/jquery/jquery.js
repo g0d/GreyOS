@@ -20,7 +20,7 @@
     var dynamic_object = document.createElement('script');
 
     dynamic_object.setAttribute('type', 'text/javascript');
-    dynamic_object.setAttribute('src', 'http://code.jquery.com/jquery-latest.min.js');
+    dynamic_object.setAttribute('src', 'https://code.jquery.com/jquery-latest.min.js');
 
     document.getElementsByTagName('head')[0].appendChild(dynamic_object);
 
