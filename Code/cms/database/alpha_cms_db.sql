@@ -691,7 +691,7 @@ CREATE TABLE IF NOT EXISTS `talos` (
 --
 
 INSERT INTO `talos` (`id`, `username`, `email`, `password`, `verification_code`, `active`) VALUES
-(1, 'demo', 'contact@greyos.gr', '4c7a34d25eff9121c49658dbceadf694', '00000000000000000000000000000000', 1);
+(1, 'demo', 'demo@greyos.gr', '5f4dcc3b5aa765d61d8327deb882cf99', '00000000000000000000000000000000', 1);
 
 --
 -- Indexes for dumped tables
