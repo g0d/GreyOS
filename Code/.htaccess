@@ -23,8 +23,8 @@ RewriteCond %{REQUEST_URI} !(.*)/$
 RewriteRule ^(.*)$ http://%{HTTP_HOST}/$1/ [R=301,L]
 
 # Redirect [www.name.domain] to [name.domain]
-#RewriteCond %{HTTP_HOST} ^www.greyos.gr [nocase]
-#RewriteRule ^(.*) http://greyos.gr/ [R=301,L]
+RewriteCond %{HTTP_HOST} ^www.greyos.gr [nocase]
+RewriteRule ^(.*) https://greyos.gr/ [R=301,L]
 
 # Manage languages and pages
 RewriteRule ^(.*)/$ index.php?req=$1 [QSA,L]

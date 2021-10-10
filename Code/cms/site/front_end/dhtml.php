@@ -32,7 +32,7 @@
     {
 
         if (!in_array($this_route, $routes))
-            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/');
+            header('Location: https://' . $_SERVER['HTTP_HOST'] . '/');
 
     }
 
@@ -42,10 +42,10 @@
         session_destroy();
 
         if ($this_lang === 'en')
-            header('Location: http://' . $_SERVER['HTTP_HOST']);
+            header('Location: https://' . $_SERVER['HTTP_HOST']);
 
         else
-            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $this_lang);
+            header('Location: https://' . $_SERVER['HTTP_HOST'] . '/' . $this_lang);
 
         exit();
 
@@ -88,6 +88,8 @@
             ALPHA_CMS::Load_Extension('dragon', 'php');
 
             DRAGON::Put('your_action', 'your_route');
+
+            ALPHA_CMS::Load_Extension('tweenmax', 'js');
 
             if (substr($_SERVER['QUERY_STRING'], 7, 6) !== 'verify')
             {

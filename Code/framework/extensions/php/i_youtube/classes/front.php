@@ -83,7 +83,7 @@
 
             $namespaces = $video->GetNameSpaces(true);
             $stats = $video->children($namespaces['yt']);
-            $kids = $video->children('http://search.yahoo.com/mrss/');
+            $kids = $video->children('https://search.yahoo.com/mrss/');
             $group = $kids->group->children($namespaces['yt']);
             $attributes = $kids->group->content[0]->attributes();
             $attributes = $kids->group->player->attributes();

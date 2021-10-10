@@ -42,7 +42,7 @@ function radio_dude()
 
             radio_dude_bee.settings.data.window.content('<div class="radio_dude_player">' + 
                                                         '  <audio id="radio_dude_ctlr" width="300" height="32" controls="controls" ' + 
-                                                        '         src="http://95.141.24.117:80/;">' + 
+                                                        '         src="http://127.0.0.1:80/;">' + 
                                                         '  </audio>' + 
                                                         '</div>' + 
                                                         '<div class="radio_dude_list">' + 
@@ -50,21 +50,9 @@ function radio_dude()
                                                         '      <div id="radio_dude_stream_genres">' + 
                                                         '          <div data-stream="1" class="radio_dude_selected_stream">Pop</div>' + 
                                                         '          <div data-stream="3">Rock</div>' + 
-                                                        '          <div data-stream="5">Country</div>' + 
-                                                        '          <div data-stream="7">Jazz</div>' + 
-                                                        '          <div data-stream="9">Blues</div>' + 
-                                                        '          <div data-stream="11">Latin</div>' + 
-                                                        '          <div data-stream="13">Folk</div>' + 
-                                                        '          <div data-stream="15">Metal</div>' + 
-                                                        '          <div data-stream="17">New Age</div>' + 
-                                                        '          <div data-stream="19">Disco</div>' + 
-                                                        '          <div data-stream="21">Dance/House</div>' + 
-                                                        '          <div data-stream="23">Electro</div>' + 
-                                                        '          <div data-stream="25">R&B</div>' + 
-                                                        '          <div data-stream="27">Hip Hop</div>' + 
-                                                        '          <div data-stream="29">Reggae</div>' + 
-                                                        '          <div data-stream="31">Ambient</div>' + 
-                                                        '          <div data-stream="33">Classic</div>' + 
+                                                        '          <div data-stream="3">Country</div>' + 
+                                                        '          <div data-stream="4">Jazz</div>' + 
+                                                        '          <div data-stream="5">Blues</div>' + 
                                                         '      </div>' + 
                                                         '  </div>' + 
                                                         '</div>');
@@ -83,23 +71,11 @@ function radio_dude()
 
             var streams = [];
 
-            streams[1] = 'http://95.141.24.117:80;';
-            streams[3] = 'http://67.213.213.143:8048/;';
-            streams[5] = 'http://66.197.229.245:8082/;';
-            streams[7] = 'http://173.244.199.249:80/;';
-            streams[9] = 'http://74.208.98.253:8220/;';
-            streams[11] = 'http://37.187.79.56:10870/;';
-            streams[13] = 'http://46.165.232.50:80/;';
-            streams[15] = 'http://66.90.104.41:8248/;';
-            streams[17] = 'http://206.190.129.220:8606/;';
-            streams[19] = 'http://91.121.104.123:80/;';
-            streams[21] = 'http://37.58.52.47:80/;';
-            streams[23] = 'http://91.250.77.13:8000/stream/3/;';
-            streams[25] = 'http://108.61.73.119:14022/;';
-            streams[27] = 'http://108.61.30.179:4010/;';
-            streams[29] = 'http://188.165.60.91:8300/;';
-            streams[31] = 'http://50.7.96.138:8053/;';
-            streams[33] = 'http://50.7.173.162:8010/;';
+            streams[1] = 'http://127.0.0.1:80;';
+            streams[2] = 'http://127.0.0.1:80;';
+            streams[3] = 'http://127.0.0.1:80;';
+            streams[4] = 'http://127.0.0.1:80;';
+            streams[5] = 'http://127.0.0.1:80;';
 
             config.player.src = streams[stream_id];
             config.player.play();

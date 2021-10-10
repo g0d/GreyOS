@@ -19,7 +19,7 @@
     
     
     // Disable error reporting
-    error_reporting('E_ALL');
+    error_reporting(-1);
     
     // Define ALPHA CMS flag
     define('ALPHA_CMS', 1);

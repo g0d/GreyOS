@@ -26,7 +26,7 @@
     $func_name = ALPHA_CMS::MVC_Get_Route('1');
     
     if ($func_name == 'admin' && !empty($_SESSION['ALPHA_CMS_USER_ID']))
-        header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $dhtml_lang . '/admin/dashboard/');
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . '/' . $dhtml_lang . '/admin/dashboard/');
     
     if ($func_name != 'admin' && $func_name != 'admin_dashboard' && 
         $func_name != 'admin_common' && $func_name != 'admin_content' && 
@@ -36,10 +36,10 @@
     {
     
         if (empty($_SESSION['ALPHA_CMS_USER_ID']))
-            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $dhtml_lang . '/admin/');
+            header('Location: https://' . $_SERVER['HTTP_HOST'] . '/' . $dhtml_lang . '/admin/');
         
         else
-            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $dhtml_lang . '/admin/dashboard/');
+            header('Location: https://' . $_SERVER['HTTP_HOST'] . '/' . $dhtml_lang . '/admin/dashboard/');
     
     }
     

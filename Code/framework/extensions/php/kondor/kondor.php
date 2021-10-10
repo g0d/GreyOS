@@ -40,7 +40,7 @@
                                 <br>
                                 <br>
                                 ' . ALPHA_CMS::Load_Content('new_user_reg_email_body_content', 'content', $user_lang_code) . '<br><br>
-                                <a href="http://' . $_SERVER['HTTP_HOST'] . '/' . $user_lang_code . '/reg-confirm/' . $confirm_code . '/">
+                                <a href="https://' . $_SERVER['HTTP_HOST'] . '/' . $user_lang_code . '/reg-confirm/' . $confirm_code . '/">
                                     <strong>' . ALPHA_CMS::Load_Content('new_user_reg_email_activation_label', 'content', $user_lang_code) . '</strong>
                                 </a>
                                 <br>
