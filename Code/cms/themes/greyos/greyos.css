@@ -22,10 +22,7 @@ body
 
     font-family: 'Ubuntu', sans-serif;
     font-size: 18px;
-    background-color: #FFFFFF;
-    background-image: url('pix/misc/site_bg.jpg');
-    background-repeat: repeat;
-    background-attachment: fixed;
+    background-color: #777B7C;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -104,8 +101,8 @@ option
 {
 
     background-color: #FFFFFF;
-    border-bottom: 1px solid #E0E0E0;
     padding-top: 2px;
+    box-shadow: #fff 0px 0px 108px
 
 }
 
@@ -137,7 +134,7 @@ option
 {
 
     cursor: pointer;
-    background: none repeat scroll 0 0 #9C95A1;
+    background: none repeat scroll 0 0 #45C8D5;
     border-radius: 50% 50% 50% 50%;
     color: #FFFFFF;
     display: block;
@@ -294,6 +291,7 @@ option
     font-weight: bold;
     margin-top: -4px;
     margin-bottom: 4px;
+    color: #14a2e7;
 
 }
 
@@ -363,7 +361,7 @@ option
     float: left;
     clear: both;
     cursor: pointer;
-    background-color: #5C5C5C;
+    background-color: #45C8D5;
     border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
     font-size: 14px;
@@ -378,7 +376,7 @@ option
 #user_share_location:hover
 {
 
-    background-color: #9C95A1;
+    background-color: #4AD7E5;
 
 }
 
@@ -704,7 +702,7 @@ option
 {
 
     color: #FFFFFF;
-    background-color: #9C95A1;
+    background-color: #364344;
 
 }
 

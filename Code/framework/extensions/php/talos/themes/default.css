@@ -34,8 +34,8 @@ body
     top: 0px;
     background-image: url('/framework/extensions/php/talos/themes/pix/talos_header_bg.png');
     width: 100%;
-    height: 98px;
-
+    height: 74px;
+    box-shadow: #7BAEDA 0px 0px 108px;
 }
 
 .talos_header .header_middle
@@ -88,7 +88,7 @@ body
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 125px;
+    margin-top: 13%;
 
 }
 
@@ -98,12 +98,11 @@ body
     float: left;
     clear: left;
     color: #FFFFFF;
-    background-color: #9C95A1;
-    box-shadow: #D0D0D0 1px 1px 1px;
+    background-color: #45C8D5;
     width: 305px;
     height: 300px;
     padding: 10px 40px 70px;
-
+    border-radius: 12px;
 }
 
 .talos_content .login_form
@@ -113,17 +112,16 @@ body
     clear: right;
     color: #5C5C5C;
     background-color: #FFFFFF;
-    box-shadow: #D0D0D0 1px 1px 1px;
     width: 305px;
     height: 300px;
     padding: 10px 40px 70px;
-
+    border-radius: 12px;
 }
 
 .talos_content .register_form .header
 {
 
-    font-size: 48px;
+    font-size: 32px;
     letter-spacing: 5px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 
@@ -148,6 +146,7 @@ body
     width: 240px;
     height: 40px;
     margin-bottom: 10px;
+    border-radius: 6px;
 
 }
 
@@ -159,7 +158,7 @@ body
     color: #FFFFFF;
     background-color: #5C5C5C;
     border-style: none;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 6px;
     cursor: pointer;
     height: 35px;
     width: 150px;
@@ -178,33 +177,32 @@ body
 
     float: right;
     font-size: 11px;
-    margin-top: 2px;
-    margin-right: -35px;
+    margin-top: 18px;
+    margin-right: -28px;
 
 }
 
 .terms_conditions a
 {
 
-    color: #DCD3E2;
+    color: #FFFFFF;
 
 }
 
 .terms_conditions a:hover
 {
 
-    color: #FFFFFF;
+    color: #000000;
 
 }
 
 .talos_content .login_form .header
 {
 
-    font-size: 30px;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+    font-size: 32px;
+    letter-spacing: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     margin-bottom: 48px;
-    margin-top: 15px;
-
 }
 
 .talos_content .login_form .fields
@@ -216,6 +214,7 @@ body
     width: 240px;
     height: 40px;
     margin-bottom: 10px;
+    border-radius: 6px;
 
 }
 
@@ -225,19 +224,19 @@ body
     font-size: 16px;
     font-weight: bold;
     color: #FFFFFF;
-    background-color: #9C95A1;
+    background-color: #45C8D5;
     border-style: none;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 6px;
     cursor: pointer;
     height: 35px;
     width: 150px;
-
+    margin-top: 89px;
 }
 
 #talos_login_button:hover
 {
 
-    background-color: #AFA8B5;
+    background-color: #4AD7E5;
 
 }
 
@@ -272,13 +271,13 @@ body
 
     display: none;
     position: fixed;
-    width: 242px;
+    width: 246px;
     height: 45px;
-    margin-left: 98px;
-    margin-top: -40px;
-    background-color: #9C95A1;
+    margin-left: 130px;
+    margin-top: -130px;
+    background-color: #ABB9B9;
     border-style: none;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 6px;
     padding: 5px;
 
 }
@@ -288,12 +287,10 @@ body
 
     clear: both;
     float: none;
-    color: #FFFFFF;
-    background-color: #5C5C5C;
-    box-shadow: #D0D0D0 1px 1px 1px;
+    color: #417D7D;
     height: 25px;
     margin-bottom: 70px;
-
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .talos_footer
@@ -303,8 +300,8 @@ body
     float: none;
     clear: none;
     color: #FFFFFF;
-    background-color: #9C95A1;
-    box-shadow: #D0D0D0 1px -1px 1px;
+    background-color: #364344;
+    box-shadow: #829B9C 1px -1px 108px;
     font-size: 12px;
     width: 100%;
     height: 60px;

@@ -29,16 +29,16 @@
     border-width: 2px;
     border-color: #EAEAEA;
     border-radius: 6px;
-    box-shadow: 0px 0px 10px #888888;
     min-width: 260px;
     min-height: 130px;
+    box-shadow: 0 0 12px #585e5e;
 
 }
 
 .gui:hover
 {
 
-    box-shadow: 0 0 10px #9076B8;
+    
 
 }
 
@@ -272,7 +272,7 @@
 {
 
     color: #FFFFFF;
-    background-color: #9C95A1;
+    background-color: #739DA7;
 
 }
 
@@ -379,10 +379,10 @@
     border-style: solid;
     border-width: 2px;
     border-color: #D3D3D3;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    box-shadow: 0px 0px 10px #888888;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 0 12px #585e5e;
 
 }
 
@@ -390,7 +390,7 @@
 {
 
     color: #FFFFFF;
-    background: #9C95A1;
+    background: #355056;
     height: 32px;
     font-size: 16px;
     text-align: left;
@@ -405,10 +405,10 @@
 {
 
     color: #8E8E8E;
-    background-color: #6E4848;
+    background-color: #FFFFFF;
     height: 100%;
     padding: 4px;
-    padding-left: 8px;
+    padding-left: 12px;
     overflow: hidden;
 
 }
@@ -417,7 +417,7 @@
 {
 
     color: #FFFFFF;
-    background: #9C95A1;
+    background: #484b4b;
     height: 48px;
     font-size: 14px;
     margin-top: -84px;

@@ -269,6 +269,7 @@ li#yt_menu_separator_li:hover
     padding: 5px;
     width: 96%;
     color: #8E8E8E;
+    border-radius: 6px;
 
 }
 
@@ -281,6 +282,7 @@ li#yt_menu_separator_li:hover
     margin-bottom: 5px;
     padding: 5px;
     z-index: 999;
+    border-radius: 12px;
 
 }
 

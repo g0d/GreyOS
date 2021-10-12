@@ -31,9 +31,9 @@
 {
 
     position: absolute;
-	background: #B33C3C url('pix/trigger_bar.png') no-repeat 5px 50%;
-	box-shadow: 3px 1px 4px rgba(0, 0, 0, 0.4);
-    border-left: 3px solid #B83636;
+	background: #B33C6E url('pix/trigger_bar.png') no-repeat 5px 50%;
+	box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
+    border-left: 3px solid #D0378D;
 	left: 298px;
     top: 0;
 	bottom: 0;
@@ -45,7 +45,7 @@
 .forest .trigger_bar:hover
 {
 
-    background-color: #B83636;
+    background-color: #C5437A;
 
 }
 

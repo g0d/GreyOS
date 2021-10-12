@@ -23,12 +23,12 @@
     right: -205px;
     top: 40%;
     color: #FFF;
-    background: #9C95A1;
+    background: #41314D;
     text-align: center;
     width: 220px;
     height: 200px;
-    box-shadow: -3px 1px 4px rgba(0, 0, 0, 0.4);
     z-index: 999999998;
+    border-radius: 12px 0px 0px 12px;
 
 }
 
@@ -41,14 +41,15 @@
     width: 15px;
     height: 100%;
     cursor: pointer;
-    background-color: #5C5C5C;
-
+    color: #000000;
+    background-color: #FFB300;
+    border-radius: 12px 0px 0px 12px;
 }
 
 .banana_trigger:hover
 {
 
-    background-color: #6D6D6D;
+    background-color: #FFD36C;
 
 }
 
@@ -82,6 +83,7 @@
     height: 100px;
     resize: none;
     margin-bottom: 5px;
+    border-radius: 6px;
 
 }
 
@@ -91,6 +93,7 @@
     width: 100px;
     height: 24px;
     cursor: pointer;
+    border-radius: 6px;
 
 }
 
