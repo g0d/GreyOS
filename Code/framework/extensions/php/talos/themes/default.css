@@ -19,8 +19,9 @@
 body
 {
 
-    background-image: url('/framework/extensions/php/talos/themes/pix/talos_bg.jpg');
-    background-repeat: round;
+    background-image: url(/framework/extensions/php/talos/themes/pix/talos_bg.jfif);
+    overflow: auto;
+    background-attachment: fixed;
     overflow: auto;
 
 }
@@ -287,7 +288,7 @@ body
 
     clear: both;
     float: none;
-    color: #417D7D;
+    color: #99e9e9;
     height: 25px;
     margin-bottom: 70px;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
@@ -300,7 +301,7 @@ body
     float: none;
     clear: none;
     color: #FFFFFF;
-    background-color: #364344;
+    background-color: #243132bd;
     box-shadow: #829B9C 1px -1px 108px;
     font-size: 12px;
     width: 100%;
