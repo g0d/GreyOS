@@ -50,7 +50,7 @@ abstract class FB_BASE
   
     public function __construct($config)
     {
-      
+    
         if (!function_exists('curl_init')) throw new Exception ("PHP CURL Function Needed.");
         
         $this->Set_App_Id($config['app_id']);
@@ -66,7 +66,7 @@ abstract class FB_BASE
 
         if (!empty($State))
             $this->State = $State;
-   
+    
     }
     
     public function Call_Curl($Url, $Data)

@@ -33,8 +33,8 @@
         public function __construct()
         {
 
-            $config = array('app_id' => '387173768076606',
-                            'secret' => '57755e15e6f130509e91d9b2f29075a3');
+            $config = array('app_id' => '611181349076417',
+                            'secret' => '30a98c12450c059f6c0fe878307374c0');
 
             parent::__construct($config);
 

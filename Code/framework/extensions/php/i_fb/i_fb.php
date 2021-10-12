@@ -35,9 +35,9 @@
         {
             
             $login_url = $this->Get_Login_Url(array('display' => 'popup',
-                                                    'scope' => 'read_friendlists, read_stream, read_mailbox, read_insights, read_requests, xmpp_login,
-                                                                status_update, publish_stream, user_groups, manage_pages, manage_notifications,
-                                                                user_photos, friends_photos'));
+                                                    'scope' => 'email, user_friends, user_photos, user_posts, user_videos, user_gender, user_link, 
+                                                                user_likes, user_location, user_messenger_contact, read_insights,
+                                                                publish_to_groups, publish_video, groups_access_member_info'));
             
             return $login_url;
             
