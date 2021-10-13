@@ -8,8 +8,7 @@ You may give it a try at https://greyos.gr/ (Credentials: demo/password)
 
 For a test video see https://www.youtube.com/watch?v=85iX7HXmOak
 
-For a excited engineers or early adopters there is also a DEMO online to test such capabilities
-Credentials: demo / password
+
 
 
 
