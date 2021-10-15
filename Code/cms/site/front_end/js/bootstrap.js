@@ -169,10 +169,7 @@
             prime_aether.init();
 
             // Initialize Eagle
-            //prime_eagle.init(16, 9);
-
-            // Initialize MAX Screen
-            //prime_max_screen.init('test_div', function() {  });
+            prime_eagle.init(16, 9);
 
             var user_profile = document.getElementById('user_profile');
 
@@ -196,11 +193,6 @@
 
             document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
             // document.addEventListener('contextmenu', function(event){ event.preventDefault(); }, false);
-
-            //    if (prime_max_screen.status.full_screen() === false)
-            //        prime_max_screen.init('greyos', function() { init_all(); });
-            //
-            //    else
 
             init_all();
 
