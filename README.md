@@ -1,5 +1,6 @@
 # GreyOS (Ver.1.1 alpha)
-GreyOS is a browser-based O/S entirely developed in PHP, JS and HTML5.  
+GreyOS is a new kind of OS, a Meta-OS.
+GreyOS introduces a new era of unimited possibilities with the concept of Cloud Computer (CC). 
 You may give it a try at https://greyos.gr/ (Credentials: demo/password)
 
 ![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/GreyOS%20-%20Login.PNG)
