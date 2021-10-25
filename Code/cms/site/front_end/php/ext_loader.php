@@ -1,5 +1,4 @@
 <?php
-
     /*
     
         GreyOS Inc. - Extensions Loader
@@ -64,9 +63,11 @@
     ALPHA_CMS::Load_Extension('i_disqus', 'js');
     ALPHA_CMS::Load_Extension('i_youtube', 'js');
     ALPHA_CMS::Load_Extension('radio_dude', 'js');
+    ALPHA_CMS::Load_Extension('cloud_edit', 'js');
     ALPHA_CMS::Load_Extension('e_games', 'js');
+    ALPHA_CMS::Load_Extension('ckeditor', 'js');
+    //ALPHA_CMS::Load_Extension('ace', 'js');
     ALPHA_CMS::Load_Extension('banana', 'ajax');
     ALPHA_CMS::Load_Extension('content_fetcher', 'ajax');
     ALPHA_CMS::Load_Extension('splash', 'php');
-
 ?>

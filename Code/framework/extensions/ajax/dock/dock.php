@@ -102,7 +102,11 @@
                                       array('app_id' => 'greyos_talk',
                                             'reference_name' => 'greyos_talk',
                                             'position' => 11,
-                                            'title' => 'GreyOS talk :: Chat and speak with Dudes for FREE. Coming soon...'));
+                                            'title' => 'GreyOS talk :: Chat and speak with Dudes for FREE. Coming soon...'),
+                                    array('app_id' => 'cloud_edit_app',
+                                            'reference_name' => 'cloud_edit',
+                                            'position' => 12,
+                                            'title' => 'Cloud Edit :: Integrated code editor for GreyOS. Click me!'));
 
                 $apps = json_encode($applications);
 

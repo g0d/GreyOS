@@ -73,7 +73,7 @@ function boo()
             if (__splash)
                 __splash.play();
 
-            $(function() { TweenMax.to($('.load_indicator'), 1.2, {opacity:0.0, yoyo:true, repeat:-1, delay:0.5}); });
+            //$(function() { TweenMax.to($('.load_indicator'), 1.2, {opacity:0.0, yoyo:true, repeat:-1, delay:0.5}); });
 
             return true;
 

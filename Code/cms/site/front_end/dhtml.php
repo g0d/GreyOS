@@ -89,7 +89,7 @@
 
             DRAGON::Put('your_action', 'your_route');
 
-            ALPHA_CMS::Load_Extension('tweenmax', 'js');
+            //ALPHA_CMS::Load_Extension('tweenmax', 'js');
 
             if (substr($_SERVER['QUERY_STRING'], 7, 6) !== 'verify')
             {
@@ -114,6 +114,9 @@
                 {
 
         ?>
+        <script src="/framework/extensions/js/ace/src/ace-min.js"></script>
+        <script src="/framework/extensions/js/ace/src/ext-language_tools.js"></script>
+        <script src="/framework/extensions/js/ace/src/ext-settings_menu.js"></script>
         <script type="text/javascript" src="/cms/site/front_end/js/bootstrap.js"></script>
         <div id="greyos" class="cancel_user_select">
             <div id="top_panel">

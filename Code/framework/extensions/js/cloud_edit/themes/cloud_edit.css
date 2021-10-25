@@ -1,0 +1,38 @@
+/*
+    GreyOS Inc. - Cloud Edit theme
+    
+    Version: 1.0
+    
+    File name: cloud_edit.css
+    Description: This file contains the Cloud Edit theme CSS.
+    
+    Coded by George Delaportas (G0D)
+    
+    GreyOS Inc.
+    Copyright © 2021
+*/
+
+
+
+.cloud_edit_icon
+{
+    background-image: url('/framework/extensions/js/cloud_edit/themes/pix/cloud_edit.png') !important;
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+}
+
+.cloud_edit_content
+{
+    
+}
+
+.cloud_edit_status_bar
+{
+    background-color: #35BAB2;
+}
+
+.cloud_edit_msg
+{
+
+}

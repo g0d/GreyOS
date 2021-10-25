@@ -26,7 +26,7 @@ function coyote()
         this.gui_init = function()
         {
 
-            config.db[0] = 'http://greyos.gr';
+            config.db[0] = 'https://probotek.eu/';
 
             utils.draw();
             utils.draw_full_screen();
@@ -58,11 +58,11 @@ function coyote()
                                                     '      <div id="coyote_page_info" class="page_info browser_button" ' + 
                                                     '           title="Sorry, page information is not available in the DEMO!">' + 
                                                     '      </div>' + 
-                                                    '      <input type="text" id="coyote_address_box" class="address_box" value="http://greyos.gr" placeholder="Enter an address...">' + 
+                                                    '      <input type="text" id="coyote_address_box" class="address_box" value="https://probotek.eu/" placeholder="Enter an address...">' + 
                                                     '  </div>' + 
                                                     '</div>' + 
                                                     '<div id="coyote_overlay"></div>' + 
-                                                    '<iframe id="coyote_frame" class="coyote_frame" src="http://greyos.gr"></iframe>');
+                                                    '<iframe id="coyote_frame" class="coyote_frame" src="https://probotek.eu/"></iframe>');
 
             vulcan.objects.by_id('coyote_frame').style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
 

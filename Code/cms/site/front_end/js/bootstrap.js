@@ -1,5 +1,4 @@
 /*
-
     GreyOS Inc. - Bootstrap for GreyOS
     
     File name: bootstrap.js (Version: 2.5)
@@ -9,7 +8,6 @@
     
     GreyOS Inc.
     Copyright © 2013
-
 */
 
 
@@ -17,7 +15,6 @@
 // e-cosystem
 (function()
 {
-
     // Initialize Boo
     boo.start();
 
@@ -27,7 +24,6 @@
     // Main script
     var main_script = function()
     {
-
         // Utilities
         var my_vulcan = new vulcan();
 
@@ -80,24 +76,20 @@
         my_dev_box.push([fx, sketch_pad, parrot, infinity, scrollbar, bee]);
 
         // App Box - Integrated/User Applications container
-        my_app_box.push([coyote, greyos_mail, i_fb, i_twitter, i_disqus, i_youtube, i_linkedin, radio_dude]);
+        my_app_box.push([coyote, greyos_mail, radio_dude, cloud_edit]); //i_fb, i_twitter, i_youtube, i_linkedin
 
         function Profile_Pop_Up()
         {
-
             if (document.getElementById('user_profile_pop_up').style.display === 'block')
                 document.getElementById('user_profile_pop_up').style.display = 'none';
-
             else
                 document.getElementById('user_profile_pop_up').style.display = 'block';
 
             return true;
-
         }
 
         function desktop()
         {
-
             prime_tik_tok.init('clock');
             prime_forest.init('desktop');
             prime_swarm.init('desktop', 47, 100, window.innerWidth - 70, window.innerHeight - 120);
@@ -113,29 +105,13 @@
             prime_dock.init();
 
             return true;
-
         }
 
         function jquery_helpers()
         {
-
             scroll_bar_fix('forest_cat_list');
 
             $("ul.expanded").hide();
-
-            //    $('.cat > a').click(function(e){
-            //        $(this).toggleClass("active");
-            //        $("ul.expanded").toggle();
-            //        e.preventDefault();
-            //    });
-            //
-            //    $("ul.expanded ul").hide();
-            //    $('ul.expanded li a').click(function(e){
-            //        $(this).toggleClass("expanded");
-            //        $("ul.expanded ul").toggle();
-            //        e.preventDefault();
-            //    });
-
             $('#notifications_list').mCustomScrollbar({ autoDraggerLength: false });
             $('#user_profile_pop_up').css('display', 'none');
             $('#user_profile_pop_up').css('right', '35px');
@@ -156,12 +132,10 @@
             });
 
             return true;
-
         }
 
         function init_all()
         {
-
             // Calculate Snail index
             prime_snail.run(10000000);
 
@@ -169,7 +143,7 @@
             prime_aether.init();
 
             // Initialize Eagle
-            prime_eagle.init(16, 9);
+            //prime_eagle.init(16, 9);
 
             var user_profile = document.getElementById('user_profile');
 
@@ -185,14 +159,12 @@
             setTimeout(function() { console.log('Snail index: ' + prime_snail.index()); }, 5000);
 
             return true;
-
         }
 
         function init_environment()
         {
-
             document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
-            // document.addEventListener('contextmenu', function(event){ event.preventDefault(); }, false);
+            document.addEventListener('contextmenu', function(event){ event.preventDefault(); }, false);
 
             init_all();
 
@@ -201,7 +173,6 @@
         }
 
         window.onload = function() { init_environment(); };
-
     };
 
     // Push scripts in Scenario and execute them
@@ -210,5 +181,4 @@
 
     // Terminate Boo
     setTimeout(function() { boo.stop(); }, 3000);
-
 })();

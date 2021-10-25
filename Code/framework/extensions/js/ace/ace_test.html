@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Code Editor</title>
+    <style type="text/css" media="screen">
+      body {
+          overflow: hidden;
+      }
+      
+      #editor { 
+          margin: 0;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="editor"></pre>
+    <script src="src/ace-min.js"></script>
+    <script src="src/ext-language_tools.js"></script>
+    <script src="src/ext-settings_menu.js"></script>
+    <script>
+        var editor = ace.edit("editor");
+        ace.require('ace/ext/settings_menu').init(editor);
+        editor.setTheme("ace/theme/tomorrow_night");
+        editor.session.setMode("ace/mode/javascript");
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true,
+            printMargin: false,
+            vScrollBarAlwaysVisible: true,
+            fontSize: "14"
+        });
+        editor.commands.addCommands(
+          [{
+            name: "showSettingsMenu",
+            bindKey: {win: "Ctrl-q", mac: "Ctrl-q"},
+            exec: function(editor) {
+              editor.showSettingsMenu();
+            }
+          }]);
+    </script>
+  </body>
+</html>
