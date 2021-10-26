@@ -119,6 +119,11 @@ function coyote()
 
     }
 
+    this.id = function()
+    {
+        return 'coyote';
+    };
+
     this.get_bee = function()
     {
 

@@ -138,6 +138,11 @@ function radio_dude()
 
     }
 
+    this.id = function()
+    {
+        return 'radio_dude';
+    };
+
     this.get_bee = function()
     {
 

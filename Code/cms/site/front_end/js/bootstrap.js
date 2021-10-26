@@ -65,6 +65,7 @@
 
         // Attach plugs to Cosmos and run
         my_cosmos.hub.attach(my_plugs);
+        my_cosmos.backtrace(true);
         my_cosmos.run();
 
         // Matrix - System services container

@@ -187,7 +187,7 @@ function dock()
 
                                     __bee.show();
 
-                                    utils.close(__bee, app['id']);
+                                    utils.close(__bee, app['app_id']);
 
                                 }
 

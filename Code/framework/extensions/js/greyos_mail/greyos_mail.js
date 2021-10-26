@@ -3090,6 +3090,11 @@ function greyos_mail()
 
 	}
 
+	this.id = function()
+    {
+        return 'greyos_mail';
+    };
+
 	this.get_bee = function()
     {
 
@@ -3102,11 +3107,9 @@ function greyos_mail()
 
 	function config_model()
 	{
-
 		this.identity_id = 0;
         this.app_msg = null;
 		this.id = 'greyos_mail';
-		
 	}
 	
 	function flags_model()

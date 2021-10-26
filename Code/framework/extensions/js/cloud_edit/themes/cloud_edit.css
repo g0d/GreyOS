@@ -36,3 +36,21 @@
 {
 
 }
+
+#ce_run
+{
+    float: right;
+    width: 66px;
+    margin-top: -2px;
+    background-color: #3d9aff;
+    color: white;
+    border-radius: 6px;
+    border-style: none;
+    cursor: pointer;
+    height: 18px;
+}
+
+#ce_run:hover
+{
+    background-color: #5aa9ff;
+}
