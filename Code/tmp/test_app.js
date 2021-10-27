@@ -42,6 +42,11 @@ function test_app()
 
             return true;
         };
+        
+        this.reflection = function()
+        {
+            return '<div style="height: 100%; overflow: auto;"><pre>' + test_app + '</pre></div>';
+        };
     }
 
     function config_model()
@@ -81,8 +86,9 @@ function test_app()
 
         // Declare bee's settings
         test_app_bee.init(cosmos, config.id, 1);
-        test_app_bee.settings.data.window.labels.title('GreyOS :: Test App');
+        test_app_bee.settings.data.window.labels.title('GreyOS :: Test App *** Dude ***');
         test_app_bee.settings.data.window.labels.status_bar('My first truly integrated app!');
+        test_app_bee.settings.data.window.content(utils.reflection());
         test_app_bee.gui.position.left(920);
         test_app_bee.gui.position.top(170);
         test_app_bee.gui.size.width(720);
