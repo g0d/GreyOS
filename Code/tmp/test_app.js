@@ -1,4 +1,18 @@
-// Test app
+/*
+    GreyOS Inc. - Test App for Cloud Edit
+    
+    File name: test_app.js (Version: 1.0)
+    Description: This file contains a test app for development purposes on Cloud Edit.
+    
+    Coded by George Delaportas (G0D)
+    
+    GreyOS Inc.
+    Copyright © 2021
+*/
+
+
+
+// Test App
 function test_app()
 {
     var self = this;
@@ -66,11 +80,11 @@ function test_app()
         config.id = 'test_app'; //+ pythia.generate();
 
         // Declare bee's settings
-        test_app_bee.init(cosmos, config.id, 2);
+        test_app_bee.init(cosmos, config.id, 1);
         test_app_bee.settings.data.window.labels.title('GreyOS :: Test App');
-        test_app_bee.settings.data.window.labels.status_bar('My first integrated app!');
-        test_app_bee.gui.position.left(420);
-        test_app_bee.gui.position.top(180);
+        test_app_bee.settings.data.window.labels.status_bar('My first truly integrated app!');
+        test_app_bee.gui.position.left(920);
+        test_app_bee.gui.position.top(170);
         test_app_bee.gui.size.width(720);
         test_app_bee.gui.size.height(480);
         test_app_bee.gui.size.min.width(560);
@@ -80,15 +94,23 @@ function test_app()
         test_app_bee.on('open', function() { test_app_bee.gui.fx.fade.into(); });
         test_app_bee.on('opened', function() { return utils.gui_init(); });
         test_app_bee.on('dragging', function()
-                                      {
-                                          test_app_bee.gui.fx.opacity.settings.set(0.7);
-                                          test_app_bee.gui.fx.opacity.apply();
-                                      });
+                                    {
+                                        test_app_bee.gui.fx.opacity.settings.set(0.7);
+                                        test_app_bee.gui.fx.opacity.apply();
+                                    });
         test_app_bee.on('dragged', function() { test_app_bee.gui.fx.opacity.reset(); });
         //test_app_bee.on('resizing', function() {  });
         //test_app_bee.on('resize', function() {  });
         //test_app_bee.on('resized', function() {  });
-        test_app_bee.on('close', function() { test_app_bee.gui.fx.fade.out(); });
+        test_app_bee.on('close', function()
+                                 {
+                                    test_app_bee.gui.fx.fade.out();
+                                    
+                                    var __run_button = null;
+                                    __run_button = vulcan.objects.by_id('ce_run');
+                                    __run_button.value = 'Run';
+                                    __run_button.classList.remove('ce_run_stop');
+                                 });
 
         return true;
     };

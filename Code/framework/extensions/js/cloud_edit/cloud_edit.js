@@ -71,20 +71,43 @@ function cloud_edit()
         {
             var __code = null,
                 __this_app = null,
-                __this_bee = null;
+                __this_bee = null,
+                __run_button = null;
 
             if (event_object === undefined)
                 return false;
 
             __code = ce_component.getValue();
 
-            if (__code === null)
+            if (__code === '')
                 return false;
+
+            __run_button = vulcan.objects.by_id('ce_run');
+
+            if (app_bee !== null)
+            {
+                for (var i = 0; i < swarm.bees.num(); i++)
+                {
+                    if (swarm.bees.list()[i] === app_bee.settings.general.id())
+                    {
+                        app_bee.gui.actions.close(event_object);
+
+                        __run_button.value = 'Run';
+                        __run_button.classList.remove('ce_run_stop');
+
+                        return false;
+                    }
+                }
+            }
+
+            __run_button.value = 'Stop';
+            __run_button.classList.add('ce_run_stop');
 
             eval(__code);
 
             __this_app = eval('new ' + __code);
 
+            app_box.remove(__this_app.id());
             app_box.push([eval(__this_app.id())]);
 
             __this_app = app_box.get(__this_app.id());
@@ -95,6 +118,8 @@ function cloud_edit()
             swarm.bees.insert(__this_bee);
 
             __this_bee.show();
+
+            app_bee = __this_bee;
 
             return true;
         }
@@ -129,22 +154,22 @@ function cloud_edit()
         cloud_edit_bee = dev_box.get('bee');
         infinity = dev_box.get('infinity');
         fx = dev_box.get('fx');
-        fx.init(cosmos);  
+        fx.init(cosmos);
 
         vulcan.graphics.apply_theme('/framework/extensions/js/cloud_edit/themes', 'cloud_edit');
 
         config.id = 'cloud_edit'; //+ pythia.generate();
 
         // Declare bee's settings
-        cloud_edit_bee.init(cosmos, config.id, 1);
+        cloud_edit_bee.init(cosmos, config.id, 2);
         cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
         cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS <input id="ce_run" type="button" value="Run">');
         cloud_edit_bee.gui.position.left(330);
         cloud_edit_bee.gui.position.top(100);
-        cloud_edit_bee.gui.size.width(720);
-        cloud_edit_bee.gui.size.height(480);
-        cloud_edit_bee.gui.size.min.width(560);
-        cloud_edit_bee.gui.size.min.height(400);
+        cloud_edit_bee.gui.size.width(800);
+        cloud_edit_bee.gui.size.height(530);
+        //cloud_edit_bee.gui.size.min.width(560);
+        //cloud_edit_bee.gui.size.min.height(400);
         cloud_edit_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         cloud_edit_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         cloud_edit_bee.on('open', function() { cloud_edit_bee.gui.fx.fade.into(); });
@@ -201,6 +226,7 @@ function cloud_edit()
         fx = null,
         cloud_edit_bee = null,
         ce_component = null,
+        app_bee = null,
         config = new config_model(),
         utils = new utilities();
 }

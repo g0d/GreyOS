@@ -37,6 +37,16 @@
 
 }
 
+.ce_run_stop
+{
+    background-color: #ff3d8b !important;
+}
+
+.ce_run_stop:hover
+{
+    background-color: #ff5ab4 !important;
+}
+
 #ce_run
 {
     float: right;
@@ -48,6 +58,7 @@
     border-style: none;
     cursor: pointer;
     height: 18px;
+    margin-right: 6px;
 }
 
 #ce_run:hover
