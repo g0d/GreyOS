@@ -23,6 +23,7 @@ body
     overflow: auto;
     background-attachment: fixed;
     overflow: auto;
+    background-position: bottom;
 
 }
 
