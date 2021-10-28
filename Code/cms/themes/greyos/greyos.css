@@ -23,12 +23,12 @@ body
     font-family: 'Ubuntu', sans-serif;
     font-size: 18px;
     background-color: #777B7C;
-    background-image: url(/cms/themes/greyos/pix/desktop.jfif);
+    background-image: url(/cms/themes/greyos/pix/desktop.jpg);
     background-attachment: fixed;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-position: bottom;
+    background-position: top;
 
 }
 
