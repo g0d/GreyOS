@@ -1,7 +1,7 @@
 /*
-    GreyOS Inc. - Test App (Alternative) for Cloud Edit
+    GreyOS Inc. - Test App (Alternative 1) for Cloud Edit
     
-    File name: test_app_alt.js (Version: 1.0)
+    File name: test_app_alt1.js (Version: 1.0)
     Description: This file contains a test app for development purposes on Cloud Edit.
     
     Coded by George Delaportas (G0D)
@@ -42,11 +42,6 @@ function test_app()
 
             return true;
         };
-        
-        this.reflection = function()
-        {
-            return '<div style="height: 100%; overflow: auto;"><pre>' + test_app + '</pre></div>';
-        };
     }
 
     function config_model()
@@ -86,8 +81,8 @@ function test_app()
 
         // Declare bee's settings
         test_app_bee.init(cosmos, config.id, 1);
-        test_app_bee.settings.data.window.labels.title('GreyOS :: Test App II with 3rd app spawning test');
-        test_app_bee.settings.data.window.labels.status_bar('My secon truly integrated app!');
+        test_app_bee.settings.data.window.labels.title('GreyOS :: Test App (Alternative 1) with 3rd app spawning test');
+        test_app_bee.settings.data.window.labels.status_bar('My 2nd truly integrated app!');
         test_app_bee.settings.data.window.content('This app spawns Coyote GreyOS web browser on load and ' + 
                                                   'closes it upon termination of this window.');
         test_app_bee.gui.position.left(920);
