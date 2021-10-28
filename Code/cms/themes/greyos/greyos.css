@@ -29,6 +29,8 @@ body
     padding: 0;
     overflow: hidden;
     background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
 
 }
 
