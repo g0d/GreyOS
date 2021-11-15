@@ -11,9 +11,9 @@ For detailed information on GreyOS you may check the [White Paper](https://githu
 
 Also, you may give it a try at https://greyos.gr/ (Credentials: demo/password)
 
-![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/GreyOS%20-%20Login.PNG)
+![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/GreyOS%20-%20Login%20(Old).PNG)
 
-![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/GreyOS%20-%20Desktop.PNG)  
+![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/GreyOS%20-%20Desktop%20(Old).PNG)  
 
 For a test video see https://www.youtube.com/watch?v=85iX7HXmOak
 
