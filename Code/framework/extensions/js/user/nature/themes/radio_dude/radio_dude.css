@@ -1,0 +1,56 @@
+/*
+    N@TuRe - Radio Dude theme
+
+    File name: radio_dude.css
+    Description: This file contains the Radio Dude theme CSS.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2013 - 2021
+    Open Software License (OSL 3.0)
+*/
+
+.radio_dude_icon
+{
+    background-image: url('pix/radio_dude.png') !important;
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+}
+
+.radio_dude_list
+{
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    height: 125px;
+}
+
+.stream_genres
+{
+    cursor: pointer;
+    padding-left: 2px;
+}
+
+.stream_genres div
+{
+    list-style: none;
+    color: #FFF;
+    background-color: #35BAB2;
+    margin-bottom: 1px;
+    padding: 8px;
+}
+
+.stream_genres div:hover
+{
+    background-color: #5C5C5C;
+}
+
+.radio_dude_selected_stream
+{
+    color: #5C5C5C;
+    background-color: #C2ECEA;
+}
+
+.radio_dude_status_bar
+{
+    background-color: #35BAB2;
+}

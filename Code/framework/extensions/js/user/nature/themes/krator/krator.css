@@ -1,0 +1,97 @@
+/*
+    N@TuRe - Krator theme
+
+    File name: krator.css
+    Description: This file contains the Krator theme CSS.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2021
+    Open Software License (OSL 3.0)
+*/
+
+.gui
+{
+    background-color: #FFFFFF !important;
+    border-color: #EAEAEA !important;
+}
+
+.edit_win_title
+{
+    color: #5C5C5C !important;
+}
+
+.status_bar
+{
+    background-color: #ECECEC !important;
+}
+
+.status_msg
+{
+    color: #5C5C5C !important;
+    margin-top: 4px !important;
+}
+
+.casement
+{
+    background-color: #FFFFFF !important;
+    border-color: #D3D3D3 !important;
+}
+
+.casement_title
+{
+    color: #FFFFFF;
+}
+
+.casement_data
+{
+    background-color: #FFFFFF !important;
+}
+
+.casement_status
+{
+    color: #FFFFFF !important;
+    background-color: #80878e !important;
+}
+
+.krator_controls
+{
+    font-size: 14px;
+}
+
+.krator_controls .controls
+{
+    text-align: center;
+    padding: 8px;
+}
+
+.krator_controls .control_item
+{
+    margin-bottom: 8px;
+}
+
+.control_item .text
+{
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.control_item .button
+{
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    color: #1f1f1f;
+    background-color: #fff061;
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+.control_item .button:hover
+{
+    background-color: #fff48d;
+}
+
+#registration_control
+{
+    margin-top: 5px;
+}

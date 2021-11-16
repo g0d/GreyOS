@@ -1,85 +1,128 @@
-# HTACCESS configuration file (Version: 10.0)
-
-
+# HTACCESS configuration file
+# Copyright (C) 2016 - 2020
+# Open Software License (OSL 3.0)
 
 Options All -Indexes
 Options +FollowSymLinks
 
 IndexIgnore *
-
 DirectorySlash on
-
 DirectoryIndex index.php
-
 RewriteEngine on
-
 RewriteBase /
 
+#RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !(.*)/$
 
-# Fix trailing slash
+# Fix trailing slash (HTTP)
 RewriteRule ^(.*)$ http://%{HTTP_HOST}/$1/ [R=301,L]
 
-# Redirect [www.name.domain] to [name.domain]
-RewriteCond %{HTTP_HOST} ^www.greyos.gr [nocase]
-RewriteRule ^(.*) https://greyos.gr/ [R=301,L]
+# !!! ENABLE FOR HTTPS AND DISABLE THE ONE ABOVE :: Fix trailing slash (HTTPS) !!!
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1/ [R=301,L]
 
-# Manage languages and pages
+# Manage pages
 RewriteRule ^(.*)/$ index.php?req=$1 [QSA,L]
+
+# Add types aliases for web fonts
+AddType application/vnd.ms-fontobject .eot
+AddType font/ttf .ttf
+AddType font/otf .otf
+AddType application/x-font-woff .woff
+
+# Check for headers module
+<ifModule mod_headers.c>
+  # Enable CORS for AJAX requests (Web services)
+  Header set Access-Control-Allow-Origin "*"
+
+  # Enable CSP
+  #Header set Content-Security-Policy "script-src * 'self' 'unsafe-inline' 'unsafe-eval';"
+
+  # Enable X-FRAME protection
+  Header always set X-Frame-Options SAMEORIGIN
+
+  # Enable XSS protection
+  Header set X-XSS-Protection "1; mode=block"
+
+  # !!! Enable Cookie protection (Only HTTPS) !!!
+  #Header set Set-Cookie HttpOnly;Secure
+
+  # Support varying encoding for compressed served files (GZip)
+  <FilesMatch ".(js|css|xml|html?|gz)$">
+    Header append Vary: Accept-Encoding
+  </FilesMatch>
+
+  # Expire multimedia (1 day)
+  <filesMatch "\.(ico|jpe?g|png|gif|mp4|webm)$">
+    Header set Cache-Control "max-age=86400, public"
+  </filesMatch>
+
+  # Enable CORS for web fonts
+	<FilesMatch "\.(ttf|ttc|otf|eot|woff|svg)$">
+		Header add Access-Control-Allow-Origin "*"
+	</FilesMatch>
+
+  # Expire CSS (1 day)
+  <filesMatch "\.(css)$">
+    Header set Cache-Control "max-age=86400, public"
+  </filesMatch>
+
+  # Expire JS (1 day)
+  <filesMatch "\.(js)$">
+    Header set Cache-Control "max-age=86400, private"
+  </filesMatch>
+
+  # Expire HTM(L) & PHP (1 day)
+  <filesMatch "\.(html?|php)$">
+    Header set Cache-Control "max-age=86400, private, must-revalidate"
+  </filesMatch>
+</ifModule>
+
+# Use caching with expiration module (1 day)
+<ifModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 day"
+    ExpiresByType image/x-icon "access plus 86400 seconds"
+    ExpiresByType image/jpg "access plus 86400 seconds"
+    ExpiresByType image/jpeg "access plus 86400 seconds"
+    ExpiresByType image/png "access plus 86400 seconds"
+    ExpiresByType image/gif "access plus 86400 seconds"
+    ExpiresByType video/mp4 "access plus 86400 seconds"
+    ExpiresByType video/webm "access plus 86400 seconds"
+    ExpiresByType text/css "access plus 86400 seconds"
+    ExpiresByType text/javascript "access plus 86400 seconds"
+    ExpiresByType application/javascript "access plus 86400 seconds"
+    ExpiresByType application/x-javascript "access plus 86400 seconds"
+    ExpiresByType text/html "access plus 86400 seconds"
+    ExpiresByType application/xhtml+xml "access plus 86400 seconds"
+</ifModule>
+
+# Enable compression of files
+<ifModule mod_deflate.c>
+  # Common files
+  <filesMatch "\.(php|html?|js|css)$">
+    SetOutputFilter DEFLATE
+  </filesMatch>
+
+  # Special files
+  #AddOutputFilterByType DEFLATE font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype
+</ifModule>
+
+<IfModule mod_php5.c>
+  php_value short_open_tag 1
+</IfModule>
+
+# Prevent viewing of phtml files
+<Files ~ "\.(phtml|cfg|log)$">
+    order allow,deny
+    deny from all
+</Files>
 
 # Prevent viewing of .htaccess
 <Files .htaccess>
     order allow,deny
     deny from all
 </Files>
-
-<Files ~ "\.(cfg)$">
-    order allow,deny
-    deny from all
-</Files>
-
-<Files ~ "\.(xml)$">
-    order allow,deny
-    deny from all
-</Files>
-
-<Files ~ "sitemap\.(xml)$">
-    order allow,deny
-    allow from all
-</Files>
-
-<Files ~ "\.(sql)$">
-    order allow,deny
-    deny from all
-</Files>
-
-<Files ~ "\.(phtml)$">
-    order allow,deny
-    deny from all
-</Files>
-
-# Add application cache support
-AddType text/cache-manifest .appcache
-
-# Enable compression
-#<IfModule mod_deflate.c>
-#    AddOutputFilterByType DEFLATE application/javascript application/x-javascript text/css text/javascript text/html text/x-js
-#</IfModule>
-
-# Enable caching for media
-#<IfModule mod_headers.c>
-#    <filesMatch "\.(ico|jpg|jpeg|png|gif|pdf|css|js)$">
-#        Header set Cache-Control "max-age=3600, public"
-#    </filesMatch>
-#</IfModule>
-
-# Automatically correct simple spelling errors
-<IfModule mod_speling.c>
-    CheckSpelling on
-</IfModule>
-
-
 
 # ----- End -----

@@ -1,6 +1,0 @@
-User-agent: * 
-Allow: /
-Disallow: /cms
-Disallow: /doc
-Disallow: /framework
-Disallow: /tmp

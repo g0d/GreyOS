@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
- <status>on</status>
- <protected>yes</protected>
- <Directory>/framework/extensions/</Directory>
- <Order>0</Order>
- <Sort>0</Sort>
-</config>

@@ -1,0 +1,154 @@
+/*
+    MsgBox (CSS)
+
+    File name: style.css
+    Description: This file contains the MsgBox - CSS.
+
+    Coded by George Delaportas (G0D) 
+    Copyright (C) 2017 - 2021
+    Open Software License (OSL 3.0)
+*/
+
+#msgbox
+{
+    visibility: hidden;
+}
+
+.mb_screen
+{
+    background: rgb(30 30 30 / 70%);
+    opacity: 0.0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 86px;
+    z-index: 2147483647;
+}
+
+.msg_window
+{
+    float: none;
+    color: #FFFFFF;
+    background-color: #353535;
+    font-size: 14px;
+    border-radius: 6px;
+    box-shadow: 0 0 12px #282c2c5e !important;
+    width: 440px;
+    height: 195px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 280px;
+    padding: 8px;
+    z-index: 2147483647;
+}
+
+#msgbox_title
+{
+    text-align: center;
+    background-color: #4d94b3;
+    border-radius: 6px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    padding: 10px 0 10px 0;
+}
+
+#msgbox_content
+{
+    text-align: justify;
+    min-height: 100px;
+    margin-bottom: 10px;
+}
+
+#msgbox_button
+{
+    color: #d8d8d8;
+    background-color: #45454a;
+    text-align: center;
+    border: solid 1px #479e44;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 24%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px;
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+#msgbox_button:hover
+{
+    background-color: #5b5a63;
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+.mb_fade_in
+{
+    animation: info_fade_in 0.25s ease-in forwards;
+    -moz-animation: info_fade_in 0.25s ease-in forwards;
+    -webkit-animation: info_fade_in 0.25s ease-in forwards;
+}
+
+@keyframes info_fade_in
+{
+    from { opacity: 0.0; } to { opacity: 1.0; }
+}
+
+@-moz-keyframes info_fade_in
+{
+    from { opacity: 0.0; } to { opacity: 1.0; }
+}
+
+@-webkit-keyframes info_fade_in
+{
+    from { opacity: 0.0; } to { opacity: 1.0; }
+}
+
+.mb_fade_out
+{
+    animation: info_fade_out 0.25s ease-in forwards;
+    -moz-animation: info_fade_out 0.25s ease-in forwards;
+    -webkit-animation: info_fade_out 0.25s ease-in forwards;
+}
+
+@keyframes info_fade_out
+{
+    from { opacity: 1.0; } to { opacity: 0.0; }
+}
+
+@-moz-keyframes info_fade_out
+{
+    from { opacity: 1.0; } to { opacity: 0.0; }
+}
+
+@-webkit-keyframes info_fade_out
+{
+    from { opacity: 1.0; } to { opacity: 0.0; }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 719px) and (orientation: portrait)
+{
+    #msgbox_content
+    {
+        min-height: 120px;
+    }
+
+    .msg_window
+    {
+        font-size: 26px;
+        width: 600px;
+        height: 225px;
+        margin-top: 620px;
+        padding: 20px;
+    }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 719px) and (orientation: landscape)
+{
+    
+}

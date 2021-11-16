@@ -1,0 +1,30 @@
+/*
+    N@TuRe - Infinity theme
+
+    File name: infinity.css
+    Description: This file contains the Infinity theme CSS.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2013 - 2021
+    Open Software License (OSL 3.0)
+*/
+
+.infinity
+{
+    display: none;
+    float: left;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    opacity: 0.7;
+}
+
+.progress_indicator
+{
+    float: none;
+    width: 80px;
+    height: 50px;
+    background-image: url('pix/infinity.gif');
+    margin-left: auto;
+    margin-right: auto;
+}

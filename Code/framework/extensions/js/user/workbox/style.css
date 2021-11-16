@@ -1,0 +1,156 @@
+/*
+    WorkBox
+
+    File name: style.css
+    Description: This file contains the WorkBox - CSS.
+
+    Coded by George Delaportas (G0D) 
+    Copyright (C) 2017
+    Open Software License (OSL 3.0)
+*/
+
+#workbox
+{
+    visibility: hidden;
+}
+
+#workbox_title
+{
+    font-weight: bold;
+    text-align: center;
+    color: #FFFFFF;
+    background-color: #3eb5d7;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    padding-top: 4px;
+    padding-bottom: 6px;
+}
+
+#workbox_content
+{
+    text-align: justify;
+    background-color: #525154;
+    height: 80.5%;
+    min-height: 320px;
+    margin-bottom: 10px;
+    overflow-y: hidden;
+}
+
+#workbox_button
+{
+    color: #d8d8d8;
+    background-color: #3e3737;
+    text-align: center;
+    border: solid 1px #E06297;
+    cursor: pointer;
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px;
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+#workbox_button:hover
+{
+    background-color: #424040;
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+
+.wb_screen
+{
+    background: rgba(245, 245, 245, 0.8);
+    opacity: 0.0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 99;
+}
+
+.work_window
+{
+    float: none;
+    color: #FFFFFF;
+    background-color: #413F44;
+    width: 520px;
+    height: 460px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 104px;
+    padding: 8px;
+    box-shadow: #747474 2px 2px 4px;
+    z-index: 99;
+}
+
+.wb_fade_in
+{
+    animation: info_fade_in 0.25s ease-in forwards;
+    -moz-animation: info_fade_in 0.25s ease-in forwards;
+    -webkit-animation: info_fade_in 0.25s ease-in forwards;
+}
+
+@keyframes info_fade_in
+{
+    from { opacity: 0.0; } to { opacity: 1.0; }
+}
+
+@-moz-keyframes info_fade_in
+{
+    from { opacity: 0.0; } to { opacity: 1.0; }
+}
+
+@-webkit-keyframes info_fade_in
+{
+    from { opacity: 0.0; } to { opacity: 1.0; }
+}
+
+.wb_fade_out
+{
+    animation: info_fade_out 0.25s ease-in forwards;
+    -moz-animation: info_fade_out 0.25s ease-in forwards;
+    -webkit-animation: info_fade_out 0.25s ease-in forwards;
+}
+
+@keyframes info_fade_out
+{
+    from { opacity: 1.0; } to { opacity: 0.0; }
+}
+
+@-moz-keyframes info_fade_out
+{
+    from { opacity: 1.0; } to { opacity: 0.0; }
+}
+
+@-webkit-keyframes info_fade_out
+{
+    from { opacity: 1.0; } to { opacity: 0.0; }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 719px) and (orientation: portrait)
+{
+    #workbox_content
+    {
+        min-height: 120px;
+    }
+
+    .work_window
+    {
+        font-size: 26px;
+        width: 480px;
+        height: 225px;
+        margin-top: 118px;
+        padding: 20px;
+    }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 719px) and (orientation: landscape)
+{
+    
+}

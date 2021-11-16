@@ -1,38 +1,25 @@
 <?php
-
     /*
-    
-        GreyOS - ALPHA CMS
-        
-        Version: 10.0
+        micro-MVC
         
         File name: root.php
-        Description: This file contains the ROOT MODEL class.
+        Description: This file contains the "ROOT MODEL" class.
         
         Coded by George Delaportas (G0D)
-        
-        GreyOS
-        Copyright © 2013
-    
+        Copyright (C) 2015
+        Open Software License (OSL 3.0)
     */
     
-    
+    // Check for direct access
+    if (!defined('micro_mvc'))
+        exit();
     
     // ROOT MODEL class
     class ROOT_MODEL
     {
-    
-        public static function Get_Data($option)
+        public static function Get_Data()
         {
-        
-            $this_lang = ALPHA_CMS::Get_Language();
-            
-            $result = ALPHA_CMS::Load_Content($option, 'content', $this_lang);
-            
-            return $result;
-        
+            return null;
         }
-    
     }
-
 ?>

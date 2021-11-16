@@ -1,0 +1,50 @@
+/*
+    N@TuRe - UI Controls theme
+
+    File name: ui_controls.css
+    Description: This file contains the UI Controls theme CSS.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2013 - 2021
+    Open Software License (OSL 3.0)
+*/
+
+#action_icons
+{
+    clear: both;
+    float: left;
+    width: 220px;
+    height: 40px;
+}
+
+#placement
+{
+    float: right;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60px;
+    height: 20px;
+}
+
+#snap_to_grid
+{
+    background-image: url('pix/snap.png');
+    width: 21px;
+}
+
+#snap_to_grid:hover
+{
+    background-image: url('pix/snap_hover.png');
+}
+
+#stack_all
+{
+    background-image: url('pix/stack.png');
+    width: 24px;
+}
+
+#stack_all:hover
+{
+    background-image: url('pix/stack_hover.png');
+}

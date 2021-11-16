@@ -1,0 +1,11 @@
+{
+    "adi"               :   "user",
+    "anti_hijack"       :   "user",
+    "ms_sql"            :   "user",
+    "portal"            :   "user",
+    "ra"                :   "user",
+    "splash"            :   "user",
+    "woody"             :   "user",
+    "ultra_cache"       :   "user",
+    "nusoap"            :   "user"
+}
