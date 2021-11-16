@@ -9,7 +9,7 @@ and not a final system to be deployed for business purposes.
 
 For detailed information on GreyOS you may check the [White Paper](https://github.com/g0d/GreyOS/blob/master/Tech%20Doc/GreyOS%20-%20Era%20of%20the%20Cloud%20Computer%20(White%20Paper).pdf) and the [Architecture](https://github.com/g0d/GreyOS/blob/master/Misc/GreyOS%20-%20Architecture.png).
 
-Also, you may give it a try at https://greyos.gr/ (Credentials: demo/password)
+Also, you may give it a try at https://greyos.gr/ (Credentials: demo/password | Version: 1.2 Alpha)
 
 ![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/GreyOS%20-%20Login%20(Old).PNG)
 
