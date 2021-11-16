@@ -22,7 +22,7 @@ Also, you may give it a try at https://greyos.gr/ (Credentials: demo@greyos.gr /
 
 Enjoy!
 
-George Delaportas (G0D/ViR4X)
-Copyright (C) 2015 - 2021 GreyOS
-Open Software License (OSL 3.0)
+George Delaportas (G0D/ViR4X)  
+Copyright (C) 2015 - 2021 GreyOS  
+Open Software License (OSL 3.0)  
 Supported by [PROBOTEK](https://probotek.eu/)
