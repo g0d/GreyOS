@@ -265,7 +265,9 @@ function krator()
             password_comfirm_object.disabled = true;
             register_button_object.disabled = true;
     
-            var data = 'gate=register&mode=reg&username=' + username.value + '&password=' + password.value + '&confirm=' + confirm_password.value;
+            var data = 'gate=register&mode=reg&username=' + username_object.value + 
+                       '&password=' + password_object.value + 
+                       '&confirm=' + password_comfirm_object.value;
     
             ajax_factory(data, function()
                                {
