@@ -16,7 +16,7 @@
     float: none;
     left: calc(100vw/2 - 250px);
     width: 492px;
-    height: 242px;
+    height: 240px;
     color: #ffffff;
     background-color: #3a68bd7a;
     text-align: center;
@@ -31,9 +31,10 @@
 {
     float: none;
     width: 467px;
-    height: 214px;
-    margin-top: 2px;
+    height: 204px;
+    margin-top: 12px;
     padding: 12px;
+    padding-top: 1px;
     overflow-y: overlay;
 }
 

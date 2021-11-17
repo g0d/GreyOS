@@ -157,6 +157,7 @@ function user_profile()
             utils_sys.events.attach('user_profile', utils_sys.objects.by_id('user_reboot'), 'click', function() { me.reboot_os(); });
             utils_sys.events.attach('user_profile', utils_sys.objects.by_id('logout'), 'click', function() { me.logout(); });
             utils_sys.events.attach('user_profile', utils_sys.objects.by_id('desktop'), 'click', function() { me.hide_pop_up(); });
+            utils_sys.events.attach('user_profile', document, 'keydown', function(event) { me.hide_pop_up_handler(event); });
 
             return true;
         };
@@ -184,15 +185,30 @@ function user_profile()
             return true;
         };
 
+        this.hide_pop_up_handler = function(event)
+        {
+            if (utils_sys.validation.misc.is_undefined(event))
+                return false;
+
+            key_control.scan(event);
+
+            if (key_control.get() !== key_control.constants().ESCAPE)
+                return false;
+
+            me.hide_pop_up();
+
+            return true;
+        };
+
         this.hide_pop_up = function()
         {
             var __user_profile_pop_up = utils_sys.objects.by_id(self.settings.id() + '_pop_up'),
                 __my_profile_label = utils_sys.objects.by_id('my');
 
-            is_pop_up_visible = false;
-
             __user_profile_pop_up.style.display = 'none';
             __my_profile_label.style.color = '#55b8ff';
+
+            is_pop_up_visible = false;
 
             return true;
         };
@@ -292,6 +308,7 @@ function user_profile()
         hive = null,
         nature = null,
         utils_sys = new vulcan(),
+        key_control = new key_manager(),
         msg_win = new msgbox(),
         cc_reload = new f5(),
         utils_int = new utilities();

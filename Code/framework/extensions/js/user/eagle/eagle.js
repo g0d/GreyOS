@@ -302,7 +302,9 @@ function eagle()
 
             if (picked_window % 6 === 0 && picked_window > 0)
             {
-                __eagle_apps.scrollTo(0, scroll_multiplier * 226);
+                var __scroll_distance = 224;
+
+                __eagle_apps.scrollTo(0, scroll_multiplier * __scroll_distance);
 
                 scroll_multiplier++;
             }

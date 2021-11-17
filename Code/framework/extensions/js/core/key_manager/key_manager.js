@@ -15,6 +15,7 @@ function key_manager()
     // Key Constants
     function key_constants() 
     {
+        this.ESCAPE = 27;
         this.ENTER = 13;
         this.BACKSPACE = 8;
         this.TAB = 9;
