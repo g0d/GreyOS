@@ -294,9 +294,6 @@ function bee()
             if (self.gui.size.width() > swarm.settings.right() || self.gui.size.height() > swarm.settings.bottom())
                 return false;
 
-            self.gui.size.max.width(swarm.settings.right());
-            self.gui.size.max.height(swarm.settings.bottom());
-
             ui_config.window.id = __bee_id;
             ui_config.window.class = 'gui ' + ui_config.window.id + '_gui';
 
@@ -3566,14 +3563,11 @@ function bee()
                          utils_sys.objects.by_id(ui_config.casement.id).style.height = utils_sys.objects.by_id(__bee_id).style.height;
                     }
 
-                    if (!utils_sys.validation.misc.is_undefined(utils_sys.objects.by_id(__bee_id).childNodes[2]))
-                    {
-                        if (self.settings.data.window.labels.status_bar().length * 7.0 < 
-                            utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.width) - 40)
-                            utils_sys.objects.by_id(__bee_id).childNodes[3].childNodes[1].childNodes[1].className = '';
-                        else
-                            utils_sys.objects.by_id(__bee_id).childNodes[3].childNodes[1].childNodes[1].className = 'marquee';
-                    }
+                    if (self.settings.data.window.labels.status_bar().length * 7.0 < 
+                        utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.width) - 40)
+                        utils_sys.objects.by_id(__bee_id + '_msg').childNodes[1].className = '';
+                    else
+                        utils_sys.objects.by_id(__bee_id + '_msg').childNodes[1].className = 'marquee';
 
                     bee_events_scheduler.execute('gui', 'mouse_clicked');
                     bee_events_scheduler.execute('gui', 'resizing');

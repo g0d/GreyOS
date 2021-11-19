@@ -32,7 +32,7 @@ function my_app()
 
         this.draw = function()
         {
-            // Drawing stuf...
+            // Drawing stuff...
 
             return true;
         };

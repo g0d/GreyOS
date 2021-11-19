@@ -23,15 +23,24 @@
         {
             // Default applications
             $applications = array(
+                                    array('app_id' => 'coyote',
+                                        'position' => 0,
+                                        'title' => 'Coyote :: A Web browser inside the browser ;-) Click me!'),
+                                    array('app_id' => 'radio_dude',
+                                        'position' => 1,
+                                        'title' => 'Radio Dude :: Put some tunes in your life. Click me!'),
+                                    array('app_id' => 'cloud_edit',
+                                        'position' => 2,
+                                        'title' => 'Cloud Edit :: Integrated code editor for GreyOS. Click me!'),
+                                    array('app_id' => 'i_bassoon',
+                                        'position' => 3,
+                                        'title' => 'iBassoon :: 3rd-party integrated DAW for fun. Click me!')
                             //     array('app_id' => 'rooster',
                             //           'position' => 0,
                             //           'title' => 'Rooster :: The ultimate tasks manager & scheduler. Coming soon...'),
                             //     array('app_id' => 'teal_cloud',
                             //           'position' => 1,
                             //           'title' => 'Teal Cloud :: Unlimited cloud storage for FREE. Coming soon...'),
-                                    array('app_id' => 'coyote',
-                                        'position' => 0,
-                                        'title' => 'Coyote :: A Web browser inside the browser ;-) Click me!'),
                             //     array('app_id' => 'teal_mail',
                             //           'position' => 3,
                             //           'title' => 'Teal M@il :: Integrated mail accounts. Click me!'),
@@ -47,18 +56,13 @@
                             //     array('app_id' => 'i_linkedin_app',
                             //           'position' => 7,
                             //           'title' => 'Linkedin :: Professional network with style. Click me!'),
-                                    array('app_id' => 'radio_dude',
-                                        'position' => 1,
-                                        'title' => 'Radio Dude :: Put some tunes in your life. Click me!'),
                             //     array('app_id' => 'map_fuzion',
                             //           'position' => 9,
                             //           'title' => 'Map FuZioN :: Navigate the world in detail. Coming soon...'),
                             //     array('app_id' => 'greyos_talk',
                             //           'position' => 10,
                             //           'title' => 'GreyOS talk :: Chat and speak with Dudes for FREE. Coming soon...'),
-                                    array('app_id' => 'cloud_edit',
-                                        'position' => 2,
-                                        'title' => 'Cloud Edit :: Integrated code editor for GreyOS. Click me!'));
+                                 );
 
             $apps = json_encode($applications);
 

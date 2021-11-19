@@ -41,7 +41,7 @@ function test_app()
 
         this.draw = function()
         {
-            // Drawing stuf...
+            // Drawing stuff...
 
             return true;
         };

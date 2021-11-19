@@ -59,6 +59,7 @@
     "i_twitter"         :   "user",
     "i_linkedin"        :   "user",
     "i_youtube"         :   "user",
+    "i_bassoon"         :   "user",
     "ace"               :   "user",
     "banana"            :   "user"
 }
