@@ -77,7 +77,7 @@ function my_app()
         infinity.init();
 
         // Declare bee's settings
-        my_app_bee.init(cosmos, config.id, 1);
+        my_app_bee.init(config.id, 1);
         my_app_bee.settings.general.backtrace(true);
         my_app_bee.settings.data.window.labels.title('GreyOS :: My App');
         my_app_bee.settings.data.window.labels.status_bar('My first integrated app on GreyOS!');
@@ -115,7 +115,7 @@ function my_app()
     // This is the main entry point for the IMC system (Required)
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

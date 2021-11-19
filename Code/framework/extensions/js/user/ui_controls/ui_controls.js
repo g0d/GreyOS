@@ -221,7 +221,7 @@ function ui_controls()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;
@@ -244,6 +244,7 @@ function ui_controls()
         hive = null,
         nature = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         config = new config_model(),
         utils_int = new utilities();
 

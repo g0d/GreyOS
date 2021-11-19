@@ -235,7 +235,7 @@ function cloud_edit()
         infinity.init();
 
         // Declare bee's settings
-        cloud_edit_bee.init(cosmos, config.id, 2);
+        cloud_edit_bee.init(config.id, 2);
         cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
         cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
         cloud_edit_bee.settings.data.window.content(config.content);
@@ -261,7 +261,7 @@ function cloud_edit()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

@@ -22,11 +22,17 @@ function colony()
 
     this.num = function()
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         return bees.num;
     };
 
     this.list = function(index)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (utils_sys.validation.misc.is_undefined(index))
             return bees.list;
 
@@ -38,6 +44,9 @@ function colony()
 
     this.get = function(bee_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (bees.num === 0)
             return null;
 
@@ -60,6 +69,9 @@ function colony()
 
     this.add = function(objects_array)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (!utils_sys.validation.misc.is_array(objects_array))
             return false;
 
@@ -100,6 +112,9 @@ function colony()
 
     this.remove = function(bee_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (bees.num === 0)
             return false;
 
@@ -128,6 +143,9 @@ function colony()
 
     this.clear = function()
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (bees.num === 0)
             return false;
 
@@ -142,6 +160,9 @@ function colony()
 
     this.contains = function(app_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (bees.num === 0)
             return null;
 
@@ -159,6 +180,9 @@ function colony()
 
     this.is_bee = function(object)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (!utils_sys.validation.misc.is_object(object))
             return false;
 
@@ -173,6 +197,9 @@ function colony()
 
     this.backtrace = function(val)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (!utils_sys.validation.misc.is_bool(val))
             return false;
 
@@ -183,13 +210,16 @@ function colony()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
+
+        cosmos = cosmos_object;
 
         return true;
     };
 
-    var backtrace = false, 
+    var backtrace = false,
+        cosmos = null,
         bees = new bees_model(),
         utils_sys = new vulcan();
 }

@@ -36,7 +36,8 @@ function boot_script()
         var containers_list = [matrix, dev_box, app_box, colony];
 
         // List of system services
-        var sys_services = [nature, infinity, owl, eagle, forest, swarm, hive, ui_controls, dock, user_profile, tik_tok];
+        var sys_services = [nature, infinity, owl, eagle, forest, swarm, hive, 
+                            ui_controls, dock, user_profile, tik_tok, parrot];
 
         // List of development tools
         var dev_tools = [bee];
@@ -82,7 +83,7 @@ function boot_script()
         {
             var data = 'gate=auth&mode=status';
     
-            ajax_factory(data, function(response)
+            ajax_factory(data, function()
                                {
                                	   load_desktop_ui();
                                },
@@ -109,6 +110,7 @@ function boot_script()
             // Load basic UI infrastructure
             var new_swarm = matrix_container.get('swarm');
             var new_nature = matrix_container.get('nature');
+            var new_parrot = matrix_container.get('parrot');
 
             // Preload (cache) Bee theme for better graphics performance on load
             new_nature.theme(['bee']);
@@ -116,6 +118,9 @@ function boot_script()
 
             // Apply desktop theme
             os_utils.graphics.apply_theme('/site/themes/' + global_theme, global_theme);
+
+            // Initialize only the sound service (no UI)
+            new_parrot.init();
 
             // Initialize the basic UI
             new_swarm.init('desktop', 47, 100, window.innerWidth - 70, window.innerHeight - 120);
@@ -127,7 +132,13 @@ function boot_script()
             //Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
-            setTimeout(function() { load_screen.hide(); }, 3000);
+            setTimeout(function()
+            {
+                // Play the splash screen sound
+                new_parrot.play('/site/themes/tomorrow/sounds/splash.mp3');
+
+                load_screen.hide();
+            }, 3000);
 
             return true;
         }
@@ -177,10 +188,11 @@ function boot_script()
             matrix_container.get('ui_controls').init('action_icons');
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
-            matrix_container.get('tik_tok').init('clock');
             matrix_container.get('forest').init('desktop');
             matrix_container.get('hive').init('desktop', 47, window.innerHeight - 87, 16, 4);
             matrix_container.get('eagle').init('desktop');
+            matrix_container.get('tik_tok').init('clock');
+            matrix_container.get('parrot').load('audio');
 
             // Show preloaded or saved bees (apps)
             matrix_container.get('swarm').bees.show();
@@ -190,7 +202,13 @@ function boot_script()
             //Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
-            setTimeout(function() { load_screen.hide(); }, 3000);
+            setTimeout(function()
+            {
+                // Play the login sound
+                matrix_container.get('parrot').play('/site/themes/tomorrow/sounds/login.mp3');
+
+                load_screen.hide();
+            }, 3000);
         }
 
         function load_desktop_ui()
@@ -205,11 +223,12 @@ function boot_script()
             var new_ui_controls = matrix_container.get('ui_controls');
             var new_dock = matrix_container.get('dock');
             var new_user_profile = matrix_container.get('user_profile');
-            var new_tik_tok = matrix_container.get('tik_tok');
             var new_forest = matrix_container.get('forest');
             var new_swarm = matrix_container.get('swarm');
             var new_hive = matrix_container.get('hive');
             var new_eagle = matrix_container.get('eagle');
+            var new_tik_tok = matrix_container.get('tik_tok');
+            var new_parrot = matrix_container.get('parrot');
             var new_nature = matrix_container.get('nature');
 
             // Preload (cache) Bee theme for better graphics performance on load
@@ -223,11 +242,12 @@ function boot_script()
             new_ui_controls.init('action_icons');
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
-            new_tik_tok.init('clock');
             new_forest.init('desktop');
             new_swarm.init('desktop', 47, 100, window.innerWidth - 70, window.innerHeight - 120);
             new_hive.init('desktop', 47, window.innerHeight - 87, 16, 4);
             new_eagle.init('desktop');
+            new_tik_tok.init('clock');
+            new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)
             new_swarm.bees.show();
@@ -237,7 +257,13 @@ function boot_script()
             //Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
-            setTimeout(function() { load_screen.hide(); }, 3000);
+            setTimeout(function()
+            {
+                // Play the login sound
+                new_parrot.play('/site/themes/tomorrow/sounds/login.mp3');
+
+                load_screen.hide();
+            }, 3000);
 
             return true;
         }
@@ -300,7 +326,8 @@ function boot_script()
         var containers_list = [matrix, dev_box, app_box, colony];
 
         // List of system services
-        var sys_services = [nature, infinity, owl, eagle, forest, swarm, hive, ui_controls, dock, user_profile, tik_tok];
+        var sys_services = [nature, infinity, owl, eagle, forest, swarm, hive, 
+                            ui_controls, dock, user_profile, tik_tok, parrot];
 
         // List of development tools
         var dev_tools = [bee];
@@ -367,11 +394,12 @@ function boot_script()
             var new_ui_controls = matrix_container.get('ui_controls');
             var new_dock = matrix_container.get('dock');
             var new_user_profile = matrix_container.get('user_profile');
-            var new_tik_tok = matrix_container.get('tik_tok');
             var new_forest = matrix_container.get('forest');
             var new_swarm = matrix_container.get('swarm');
             var new_hive = matrix_container.get('hive');
             var new_eagle = matrix_container.get('eagle');
+            var new_tik_tok = matrix_container.get('tik_tok');
+            var new_parrot = matrix_container.get('parrot');
             var new_nature = matrix_container.get('nature');
 
             // Preload (cache) Bee theme for better graphics performance on load
@@ -385,11 +413,12 @@ function boot_script()
             new_ui_controls.init('action_icons');
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
-            new_tik_tok.init('clock');
             new_forest.init('desktop');
             new_swarm.init('desktop', 47, 100, window.innerWidth - 70, window.innerHeight - 120);
             new_hive.init('desktop', 47, window.innerHeight - 87, 16, 4);
             new_eagle.init('desktop');
+            new_tik_tok.init('clock');
+            new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)
             new_swarm.bees.show();
@@ -399,7 +428,13 @@ function boot_script()
             //Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
-            setTimeout(function() { load_screen.hide(); }, 3000);
+            setTimeout(function()
+            {
+                // Play the login sound
+                new_parrot.play('/site/themes/tomorrow/sounds/login.mp3');
+
+                load_screen.hide();
+            }, 3000);
 
             return true;
         }

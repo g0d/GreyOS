@@ -1078,6 +1078,8 @@ function i_linkedin()
         if (is_init === true)
             return false;
 
+        is_init = true;
+
         vulcan.graphics.apply_theme('/framework/extensions/js/i_linkedin/themes', 'i_linkedin');
 
         scrollbar = dev_box.get('scrollbar');
@@ -1099,15 +1101,11 @@ function i_linkedin()
         linkedin_bee.on('opened', function() { return utils.draw.gui_init(); });
         linkedin_bee.on('dragging', function()
                                     {
-
                                         linkedin_bee.gui.fx.opacity.settings.set(0.7);
                                         linkedin_bee.gui.fx.opacity.apply();
-
                                     });
         linkedin_bee.on('dragged', function() { linkedin_bee.gui.fx.opacity.reset(); });
         linkedin_bee.on('close', function() { linkedin_bee.gui.fx.fade.out(); });
-
-        is_init = true;
 
         return true;
 

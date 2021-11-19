@@ -39,7 +39,7 @@ function app_box()
 
     this.num = function()
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         return apps.num;
@@ -47,7 +47,7 @@ function app_box()
 
     this.list = function(index)
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (utils_sys.validation.misc.is_undefined(index))
@@ -61,7 +61,7 @@ function app_box()
 
     this.get = function(app_id)
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (apps.num === 0)
@@ -90,7 +90,7 @@ function app_box()
 
     this.add = function(models_array)
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (!utils_sys.validation.misc.is_array(models_array))
@@ -137,7 +137,7 @@ function app_box()
 
     this.remove = function(app_id)
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (utils_sys.validation.alpha.is_symbol(app_id))
@@ -165,7 +165,7 @@ function app_box()
 
     this.clear = function()
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (apps.num === 0)
@@ -182,6 +182,9 @@ function app_box()
 
     this.backtrace = function(val)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (!utils_sys.validation.misc.is_bool(val))
             return false;
 
@@ -192,7 +195,7 @@ function app_box()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

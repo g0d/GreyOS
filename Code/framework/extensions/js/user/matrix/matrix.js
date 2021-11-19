@@ -1,5 +1,5 @@
 /*
-    GreyOS - Matrix (Version: 1.4)
+    GreyOS - Matrix (Version: 1.5)
     
     File name: matrix.js
     Description: This file contains the Matrix - System services container module.
@@ -41,7 +41,7 @@ function matrix()
 
     this.num = function()
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         return services.num;
@@ -49,7 +49,7 @@ function matrix()
 
     this.list = function(index)
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (utils_sys.validation.misc.is_undefined(index))
@@ -63,7 +63,7 @@ function matrix()
 
     this.get = function(service_id)
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (services.num === 0)
@@ -88,7 +88,7 @@ function matrix()
 
     this.put = function(models_array)
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (!utils_sys.validation.misc.is_array(models_array))
@@ -138,7 +138,7 @@ function matrix()
 
     this.clear = function()
     {
-        if (cosmos === null)
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (services.num === 0)
@@ -155,6 +155,9 @@ function matrix()
 
     this.backtrace = function(val)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (!utils_sys.validation.misc.is_bool(val))
             return false;
 
@@ -165,7 +168,7 @@ function matrix()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

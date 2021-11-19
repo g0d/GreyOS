@@ -797,10 +797,11 @@ function i_fb()
     
     this.init = function()
     {
-
         if (is_init === true)
             return false;
-        
+
+        is_init = true;
+
         config.bee = dev_box.get('bee');
         config.id = 'i_fb';
         config.content_id = 'i_fb_main_content';
@@ -810,7 +811,7 @@ function i_fb()
         fx.init(cosmos);
         scrollbar = dev_box.get('scrollbar');
         scrollbar.init(cosmos);
-        
+    
         vulcan.graphics.apply_theme('/framework/extensions/js/i_fb/themes', 'i_fb');
 
         // Declare bee's settings
@@ -827,24 +828,19 @@ function i_fb()
         config.bee.on('opened', function() { return utils.draw.gui_init(); });
         config.bee.on('dragging', function()
                                     {
-
                                         config.bee.gui.fx.opacity.settings.set(0.7);
                                         config.bee.gui.fx.opacity.apply();
-
                                     });
         config.bee.on('dragged', function() { config.bee.gui.fx.opacity.reset(); });
         config.bee.on('close', function() { config.bee.gui.fx.fade.out(); });
-        
+
         config.bee.settings.data.casement.content('Extra GUI...');
         config.bee.settings.data.casement.labels.title('FB Update');
         config.bee.settings.data.casement.labels.status('Helping (secondary) status bar messages...');
 
         console.log(config.bee);
-        
-        is_init = true;
-        
-        return true;
 
+        return true;
     };
 
     this.cosmos = function(cosmos_object)

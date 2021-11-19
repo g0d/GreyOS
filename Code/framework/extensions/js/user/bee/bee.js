@@ -4389,9 +4389,6 @@ function bee()
         var __bee_id = self.settings.general.id(),
             __app_id = self.settings.general.app_id();
 
-        if (cosmos === null || !__bee_id)
-            return false;
-
         if (bee_statuses.running())
             return false;
 
@@ -4423,15 +4420,15 @@ function bee()
         return true;
     };
 
-    this.init = function(cosmos_object, bee_id, type)
+    this.init = function(bee_id, type)
     {
         if (is_init === true)
             return false;
 
-        if (cosmos_object === undefined)
-            return false;
+        is_init = true;
 
-        cosmos = cosmos_object;
+        if (!self.settings.general.id(bee_id) || !self.settings.general.type(type))
+            return false;
 
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
@@ -4445,21 +4442,12 @@ function bee()
         nature.theme(['bee']);
         nature.apply('new');
 
-        is_init = true;
-
-        if (!self.settings.general.id(bee_id) || !self.settings.general.type(type))
-        {
-            is_init = false;
-
-            return false;
-        }
-
         return true;
     };
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

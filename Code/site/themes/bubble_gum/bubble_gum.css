@@ -165,10 +165,16 @@ option
     margin-top: 45px;
 }
 
-#eureka
+#search
 {
     float: right;
     margin-right: 35px;
+}
+
+#eureka
+{
+    float: left;
+    clear: right;
 }
 
 #eye
@@ -180,12 +186,6 @@ option
     height: 15px;
     margin-top: 12px;
     margin-right: 10px;
-}
-
-#search_area
-{
-    float: left;
-    clear: right;
 }
 
 #eureka_search_box
@@ -230,6 +230,21 @@ option
     background-repeat: no-repeat;
     height: 20px;
     margin-right: 5px;
+}
+
+.parrot
+{
+    margin-top: -3px !important;
+}
+
+.parrot .speaker
+{
+    filter: invert(0.5);
+}
+
+.parrot .volume
+{
+    color: #919191 !important;
 }
 
 .status_msg

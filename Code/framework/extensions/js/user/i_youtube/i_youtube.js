@@ -2744,9 +2744,10 @@ function i_youtube()
 
     this.init = function()
     {
-
         if (is_init === true)
             return false;
+
+        is_init = true;
 
         i_youtube_bee = dev_box.get('bee');
         config.id = 'i_youtube';
@@ -2775,19 +2776,14 @@ function i_youtube()
         i_youtube_bee.on('opened', function() { return utils.gui_init(); });
         i_youtube_bee.on('dragging', function()
                                 {
-
                                     i_youtube_bee.gui.fx.opacity.settings.set(0.7);
                                     i_youtube_bee.gui.fx.opacity.apply();
-
                                 });
 
         i_youtube_bee.on('dragged', function() { i_youtube_bee.gui.fx.opacity.reset(); });
         i_youtube_bee.on('close', function() { i_youtube_bee.gui.fx.fade.out(); });
 
-        is_init = true;
-
         return true;
-
     };
 
     this.cosmos = function(cosmos_object)

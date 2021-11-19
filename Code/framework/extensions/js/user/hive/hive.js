@@ -267,17 +267,17 @@ function hive()
 
         this.set_bees_per_honeycomb = function(current_stack_width)
         {
-            var __model_stack_width = 1012,
+            var __model_stack_width = 1162,
                 __bees_num = 0;
 
-            if (current_stack_width !== __model_stack_width)
+            if (current_stack_width > __model_stack_width)
             {
-                __bees_num = parseInt((8 * current_stack_width) / __model_stack_width, 10);
+                __bees_num = parseInt(9 * (current_stack_width / __model_stack_width), 10);
 
                 if (__bees_num % 2 !== 0)
                     __bees_num--;
 
-                if (self.settings.bees_per_honeycomb() > __bees_num && __bees_num >= 4)
+                if (self.settings.bees_per_honeycomb() > __bees_num && __bees_num >= 8)
                     self.settings.bees_per_honeycomb(__bees_num);
             }
 
@@ -465,12 +465,7 @@ function hive()
 
         this.prepare_draw = function(left, top, honeycombs_num, mode)
         {
-            if (!me.draw_hive(left, top))
-            {
-                is_init = false;
-
-                return false;
-            }
+            me.draw_hive(left, top);
 
             for (var i = 0; i < honeycombs_num; i++)
             {
@@ -828,7 +823,7 @@ function hive()
     {
         var __id = null,
             __container = null,
-            __bees_per_honeycomb = 4,
+            __bees_per_honeycomb = 8,
             __left = 0,
             __top = 0;
 
@@ -872,7 +867,7 @@ function hive()
             if (utils_sys.validation.misc.is_undefined(val))
                 return __bees_per_honeycomb;
 
-            if (!utils_sys.validation.numerics.is_integer(val) || val < 4)
+            if (!utils_sys.validation.numerics.is_integer(val) || val < 8)
                 return false;
 
             __bees_per_honeycomb = val;
@@ -1138,14 +1133,10 @@ function hive()
             if (status !== 'on' && status !== 'off')
                 return false;
 
-            var __hive_object = utils_sys.objects.by_id(self.settings.id()),
-                __z_index = swarm.status.z_index();
+            var __hive_object = utils_sys.objects.by_id(self.settings.id());
 
             if (status === 'on')
-            {
-                //__hive_object.style.zIndex = __z_index;
                 __hive_object.style.visibility = 'visible';
-            }
             else
                 __hive_object.style.visibility = 'hidden';
 
@@ -1285,7 +1276,7 @@ function hive()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

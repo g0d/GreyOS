@@ -230,15 +230,21 @@ option
     box-shadow: 0px 2px 8px rgb(0 0 0 / 40%);
 }
 
-#eye
+#search
 {
-    background-image: url('pix/icons/philos/eye.png') !important;
+    float: right;
+    margin-right: 35px;
 }
 
 #eureka
 {
-    float: right;
-    margin-right: 34px;
+    float: left;
+    clear: right;
+}
+
+#eye
+{
+    background-image: url('pix/icons/philos/eye.png');
 }
 
 #eureka_search_box
@@ -252,12 +258,6 @@ option
     color: white;
     background-color: #0000005e;
     border-color: #2f2f2f;
-}
-
-#search_area
-{
-    float: left;
-    clear: right;
 }
 
 #desktop
@@ -322,9 +322,8 @@ option
 
 .tik_tok
 {
-
     background-color: #0b3d3c8f !important;
-    height: 36px !important;
+    height: 37px !important;
     border: none !important;
     margin-top: 0px !important;
 }

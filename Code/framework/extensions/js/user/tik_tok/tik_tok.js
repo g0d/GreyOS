@@ -153,14 +153,16 @@ function tik_tok()
                 __container = utils_sys.objects.by_id(self.settings.container());
 
             __dynamic_object = document.createElement('div');
-            __dynamic_object.innerHTML = '<div id="' + __tik_tok_id + '" class="tik_tok">' + 
-                                         '<div id="' + __tik_tok_id + '_date" class="clock_date"></div>' + 
-                                         '<div id="' + __tik_tok_id + '_time" class="clock_time"></div>' + 
-                                         '</div>';
 
-            __container.innerHTML = __dynamic_object.innerHTML;
+            __dynamic_object.setAttribute('id', __tik_tok_id);
+            __dynamic_object.setAttribute('class', 'tik_tok');
 
-            utils_sys.objects.by_id(__tik_tok_id).style.display = 'block';
+            __dynamic_object.innerHTML = '<div id="' + __tik_tok_id + '_date" class="clock_date"></div>' + 
+                                         '<div id="' + __tik_tok_id + '_time" class="clock_time"></div>';
+
+            __dynamic_object.style.display = 'block';
+
+            __container.appendChild(__dynamic_object);
 
             clock.get_time_date(__tik_tok_id + '_time', __tik_tok_id + '_date');
 
@@ -170,14 +172,6 @@ function tik_tok()
 
     function status()
     {
-        this.theme = function()
-        {
-            if (is_init === false)
-                return false;
-
-            return self.settings.theme();
-        };
-
         this.time = function()
         {
             if (is_init === false)
@@ -206,8 +200,7 @@ function tik_tok()
     function settings()
     {
         var __id = null,
-            __container = null,
-            __theme = 'tik_tok';
+            __container = null;
 
         this.id = function(val)
         {
@@ -240,25 +233,9 @@ function tik_tok()
 
             return true;
         };
-
-        this.theme = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(val))
-                return __theme;
-
-            if (!utils_sys.validation.alpha.is_string(val))
-                return false;
-
-            __theme = val;
-
-            return true;
-        };
     }
 
-    this.init = function(container_id, theme)
+    this.init = function(container_id)
     {
         if (is_init === true)
             return false;
@@ -270,31 +247,22 @@ function tik_tok()
 
         is_init = true;
 
-        self.settings.id('tik_tok');
+        self.settings.id('tik_tok_' + random.generate());
         self.settings.container(container_id);
 
-        nature.theme(self.settings.id());
+        nature.theme('tik_tok');
         nature.apply('new');
-
-        self.settings.theme(self.settings.id);
 
         clock = new time_date_model();
 
-        if (!utils_int.draw(theme))
-        {
-            is_init = false;
-
-            clock = null;
-
-            return false;
-        }
+        utils_int.draw();
 
         return true;
     };
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;
@@ -312,6 +280,7 @@ function tik_tok()
         matrix = null,
         nature = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         utils_int = new utilities();
 
     this.status = new status();

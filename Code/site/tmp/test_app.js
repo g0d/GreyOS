@@ -88,7 +88,7 @@ function test_app()
         config.id = 'test_app';
 
         // Declare bee's settings
-        test_app_bee.init(cosmos, config.id, 1);
+        test_app_bee.init(config.id, 1);
         test_app_bee.settings.data.window.labels.title('GreyOS :: Test App');
         test_app_bee.settings.data.window.labels.status_bar('GreyOS - Test application');
         test_app_bee.settings.data.window.content(utils_int.say());
@@ -123,7 +123,7 @@ function test_app()
     
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

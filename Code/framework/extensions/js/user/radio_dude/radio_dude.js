@@ -140,7 +140,7 @@ function radio_dude()
         radio_dude_bee = dev_box.get('bee');
 
         // Declare bee's settings
-        radio_dude_bee.init(cosmos, config.id, 2);
+        radio_dude_bee.init(config.id, 2);
         radio_dude_bee.settings.data.window.labels.title('Radio Dude');
         radio_dude_bee.settings.data.window.labels.status_bar('Music babe... M U S I C!');
         radio_dude_bee.settings.general.single_instance(true);
@@ -165,7 +165,7 @@ function radio_dude()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

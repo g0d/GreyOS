@@ -312,7 +312,7 @@ function coyote()
         infinity.init();
 
         // Declare bee's settings
-        coyote_bee.init(cosmos, config.id, 1);
+        coyote_bee.init(config.id, 1);
         coyote_bee.settings.data.window.labels.title('Coyote');
         coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
         coyote_bee.gui.position.left(0);
@@ -356,7 +356,7 @@ function coyote()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

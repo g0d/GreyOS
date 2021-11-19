@@ -23,22 +23,13 @@ function infinity()
 
             return self.settings.in_progress();
         };
-
-        this.theme = function()
-        {
-            if (is_init === false)
-                return false;
-
-            return self.settings.theme();
-        };
     }
 
     function settings_model()
     {
         var __id = null,
             __container = null,
-            __in_progress = false,
-            __theme = 'infinity';
+            __in_progress = false;
 
         this.id = function(val)
         {
@@ -87,22 +78,6 @@ function infinity()
 
             return true;
         };
-
-        this.theme = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(val))
-                return __theme;
-
-            if (!utils_sys.validation.alpha.is_string(val))
-                return false;
-
-            __theme = val;
-
-            return true;
-        };
     }
 
     function utilities()
@@ -138,8 +113,9 @@ function infinity()
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.id = __infinity_id;
-            __dynamic_object.className = 'infinity';
+            __dynamic_object.setAttribute('id', __infinity_id);
+            __dynamic_object.setAttribute('class', 'infinity');
+
             __dynamic_object.innerHTML = '<div class="progress_indicator" ' + 
                                          'style="margin-top: ' + __top_pos + 'px;"></div>';
 
@@ -221,7 +197,7 @@ function infinity()
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

@@ -284,13 +284,12 @@ function scrollbar()
         return true;
     };
 
-    this.init = function(cosmos_object)
+    this.init = function()
     {
         if (is_init === true)
             return false;
 
-        if (cosmos_object === undefined)
-            return false;
+        is_init = true;
 
         vulcan = cosmos_object.hub.access('vulcan');
 
@@ -300,14 +299,12 @@ function scrollbar()
 
         vulcan.graphics.apply_theme('/framework/extensions/js/scrollbar/themes', 'scrollbar');
 
-        is_init = true;
-
         return true;
     };
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;

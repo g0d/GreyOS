@@ -887,9 +887,10 @@ function i_twitter()
 
     this.init = function()
     {
-
         if (is_init === true)
             return false;
+
+        is_init = true;
 
         config.bee = dev_box.get('bee');  
         config.id = 'twitter_app';
@@ -902,7 +903,7 @@ function i_twitter()
         scrollbar.init(cosmos);
 
         vulcan.graphics.apply_theme('/framework/extensions/js/i_twitter/themes', 'i_twitter');
-        
+
         config.bee.init(cosmos, config.id, 2);
         config.bee.settings.data.window.labels.title('Twitter');
         config.bee.settings.data.window.labels.status_bar('Sign in to view your tweets');
@@ -916,10 +917,8 @@ function i_twitter()
         config.bee.on('opened', function() { return utils.draw.gui_init(); });
         config.bee.on('dragging', function()
                                    {
-
                                        config.bee.gui.fx.opacity.settings.set(0.7);
                                        config.bee.gui.fx.opacity.apply();
-
                                    });
         config.bee.on('dragged', function() { config.bee.gui.fx.opacity.reset(); });
         config.bee.on('close', function() { config.bee.gui.fx.fade.out(); });
@@ -931,10 +930,7 @@ function i_twitter()
 
         console.log(config.bee);
 
-        is_init = true;
-
         return true;
-
     };
 
     this.cosmos = function(cosmos_object)

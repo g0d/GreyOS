@@ -2,7 +2,7 @@
     /*
         GreyOS - OZ (Version: 1.0)
         
-        File name: oz.js
+        File name: oz.php
         Description: This file contains the OZ - Dynamic app creation application.
         
         Coded by George Delaportas (G0D)
@@ -13,6 +13,7 @@
     // Start OZ
     if ($_POST['oz'])
     {
+        
 
         return true;
     }

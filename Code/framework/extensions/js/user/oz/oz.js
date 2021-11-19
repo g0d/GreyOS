@@ -10,7 +10,7 @@
 */
 
 // OZ
-function OZ()
+function oz()
 {
 
 

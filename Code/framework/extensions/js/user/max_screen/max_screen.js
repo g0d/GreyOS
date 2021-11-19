@@ -131,45 +131,25 @@ function max_screen()
 
     this.init = function(container_id, func, theme)
     {
-
         if (is_init === true)
             return false;
-
-        is_init = true;
 
         if (vulcan.validation.misc.is_undefined(container_id) || 
             vulcan.validation.alpha.is_symbol(container_id) || vulcan.objects.by_id(container_id) === null || 
             !vulcan.validation.misc.is_function(func))
-        {
-
-            is_init = false;
-
             return false;
-
-        }
 
         if (!self.settings.container(container_id))
-        {
-
-            is_init = false;
-
             return false;
-
-        }
 
         self.settings.callback_function(func);
 
         if (!utils.setup(theme))
-        {
-
-            is_init = false;
-
             return false;
 
-        }
+        is_init = true;
 
         return true;
-
     };
 
     this.cosmos = function(cosmos_object)
