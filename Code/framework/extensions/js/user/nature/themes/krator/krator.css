@@ -9,48 +9,16 @@
     Open Software License (OSL 3.0)
 */
 
-.gui
-{
-    background-color: #FFFFFF !important;
-    border-color: #EAEAEA !important;
-}
+
 
 .edit_win_title
 {
     color: #5C5C5C !important;
 }
 
-.status_bar
-{
-    background-color: #ECECEC !important;
-}
-
 .status_msg
 {
-    color: #5C5C5C !important;
     margin-top: 4px !important;
-}
-
-.casement
-{
-    background-color: #FFFFFF !important;
-    border-color: #D3D3D3 !important;
-}
-
-.casement_title
-{
-    color: #FFFFFF;
-}
-
-.casement_data
-{
-    background-color: #FFFFFF !important;
-}
-
-.casement_status
-{
-    color: #FFFFFF !important;
-    background-color: #80878e !important;
 }
 
 .krator_controls
@@ -94,4 +62,9 @@
 #registration_control
 {
     margin-top: 5px;
+}
+
+#register_link
+{
+    color: #c9ff72;
 }

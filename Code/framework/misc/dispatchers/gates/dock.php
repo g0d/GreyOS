@@ -85,8 +85,6 @@
             }
 
             echo $html;
-
-            exit();
         }
         else if ($_POST['action'] === 'save')
         {

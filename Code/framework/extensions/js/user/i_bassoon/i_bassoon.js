@@ -41,7 +41,12 @@ function i_bassoon()
 
         this.draw = function()
         {
-            // Drawing stuff...
+            config.content = '<div class="' + config.id + '">\
+                                 <div id="' + i_bassoon_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+                                 <iframe src="https://www.stef.be/bassoontracker/?file=demomods%2Fspacedeb.mod"></iframe>\
+                             </div>';
+
+            i_bassoon_bee.settings.data.window.content(config.content);
 
             return true;
         };
@@ -74,9 +79,6 @@ function i_bassoon()
         i_bassoon_bee = dev_box.get('bee');
 
         config.id = 'i_bassoon';
-        config.content = '<div class="' + config.id + '">\
-                              <iframe src="https://www.stef.be/bassoontracker/?file=demomods%2Fspacedeb.mod"></iframe>\
-                          </div>';
 
         nature.theme([config.id]);
         nature.apply('new');
@@ -86,7 +88,6 @@ function i_bassoon()
         i_bassoon_bee.init(config.id, 1);
         i_bassoon_bee.settings.data.window.labels.title('iBassoon (Integrated Bassoon Tracker)');
         i_bassoon_bee.settings.data.window.labels.status_bar('Online DAW for fun!');
-        i_bassoon_bee.settings.data.window.content(config.content);
         i_bassoon_bee.settings.general.single_instance(true);
         i_bassoon_bee.settings.actions.can_edit_title(false);
         i_bassoon_bee.settings.actions.can_use_menu(false);
@@ -101,15 +102,23 @@ function i_bassoon()
         i_bassoon_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_bassoon_bee.on('open', function() { i_bassoon_bee.gui.fx.fade.into(); });
         i_bassoon_bee.on('opened', function() { utils_int.gui_init(); });
+        i_bassoon_bee.on('drag', function()
+                                 {
+                                     utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'block';
+                                 });
         i_bassoon_bee.on('dragging', function()
                                     {
                                         i_bassoon_bee.gui.fx.opacity.settings.set(0.7);
                                         i_bassoon_bee.gui.fx.opacity.apply();
                                     });
-        i_bassoon_bee.on('dragged', function() { i_bassoon_bee.gui.fx.opacity.reset(); });
-        //i_bassoon_bee.on('resizing', function() {  });
-        //i_bassoon_bee.on('resize', function() {  });
-        //i_bassoon_bee.on('resized', function() {  });
+        i_bassoon_bee.on('dragged', function()
+                                    {
+                                        i_bassoon_bee.gui.fx.opacity.reset();
+
+                                        utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'none';
+                                    });
+        i_bassoon_bee.on('resize', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+        i_bassoon_bee.on('resized', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'none'; });
         i_bassoon_bee.on('close', function()
                                  {
                                     i_bassoon_bee.gui.fx.fade.out();

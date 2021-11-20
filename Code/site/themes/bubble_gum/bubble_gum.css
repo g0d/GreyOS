@@ -208,6 +208,11 @@ option
     margin-right: auto;
 }
 
+#register_link
+{
+    color: #23a2de !important;
+}
+
 .actions
 {
     float: left;

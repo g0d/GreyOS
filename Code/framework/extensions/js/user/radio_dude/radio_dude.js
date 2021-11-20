@@ -144,6 +144,7 @@ function radio_dude()
         radio_dude_bee.settings.data.window.labels.title('Radio Dude');
         radio_dude_bee.settings.data.window.labels.status_bar('Music babe... M U S I C!');
         radio_dude_bee.settings.general.single_instance(true);
+        radio_dude_bee.gui.position.static(true);
         radio_dude_bee.gui.position.left(930);
         radio_dude_bee.gui.position.top(120);
         radio_dude_bee.gui.size.width(320);

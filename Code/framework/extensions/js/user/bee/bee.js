@@ -2021,6 +2021,36 @@ function bee()
                 this.limits = new limits();
             }
 
+            function limits()
+            {
+                this.left = function(val)
+                {
+                    return validate(2, 'left', 'right', val);
+                };
+
+                this.top = function(val)
+                {
+                    return validate(2, 'top', 'bottom', val);
+                };
+
+                this.right = function(val)
+                {
+                    return validate(2, 'right', 'left', val);
+                };
+
+                this.bottom = function(val)
+                {
+                    return validate(2, 'bottom', 'top', val);
+                };
+            }
+
+            function randomize_pos(position)
+            {
+                var __new_pos = parseInt(position + (position * Math.random()), 10);
+
+                return __new_pos;
+            }
+
             function validate(mode, position, limit, val)
             {
                 if (is_init === false)
@@ -2039,8 +2069,16 @@ function bee()
 
                 if (limit === 'right' || limit === 'bottom')
                 {
-                    if (val >= __position_settings.limits[limit])
-                        return false;
+                    if (!bee_statuses.running() && __is_static === false)
+                    {
+                        if (val >= (__position_settings.limits[limit] - val))
+                            val = val / 2;
+                    }
+                    else
+                    {
+                        if (val >= __position_settings.limits[limit])
+                            return false;
+                    }
                 }
                 else if (limit === 'left' || limit === 'top')
                 {
@@ -2066,12 +2104,22 @@ function bee()
 
             this.left = function(val)
             {
-                return validate(1, 'left', 'right', val);
+                var __alt_val = val;
+
+                if (!bee_statuses.running() && __is_static === false)
+                    __alt_val = randomize_pos(val);
+
+                return validate(1, 'left', 'right', __alt_val);
             };
 
             this.top = function(val)
             {
-                return validate(1, 'top', 'bottom', val);
+                var __alt_val = val;
+
+                if (!bee_statuses.running() && __is_static === false)
+                    __alt_val = randomize_pos(val);
+
+                return validate(1, 'top', 'bottom', __alt_val);
             };
 
             this.z_index = function(val)
@@ -2079,30 +2127,21 @@ function bee()
                 return validate(1, 'z_index', 'z_index', val);
             };
 
-            function limits()
+            this.static = function(val)
             {
-                this.left = function(val)
-                {
-                    return validate(2, 'left', 'right', val);
-                };
+                if (utils_sys.validation.misc.is_undefined(val))
+                    return __is_static;
 
-                this.top = function(val)
-                {
-                    return validate(2, 'top', 'bottom', val);
-                };
+                if (!utils_sys.validation.misc.is_bool(val))
+                    return false;
 
-                this.right = function(val)
-                {
-                    return validate(2, 'right', 'left', val);
-                };
+                __is_static = val;
 
-                this.bottom = function(val)
-                {
-                    return validate(2, 'bottom', 'top', val);
-                };
-            }
+                return true;
+            };
 
-            var __position_settings = new pos_settings_object();
+            var __is_static = false,
+                __position_settings = new pos_settings_object();
 
             this.limits = new limits();
         }
@@ -2883,12 +2922,30 @@ function bee()
 
             function casement()
             {
-                this.deploy = function(event_object)
+                var __is_animating = false;
+
+                function execute_commands(callback)
+                {
+                    if (!utils_sys.validation.misc.is_undefined(callback))
+                        callback.call();
+
+                    return true;
+                }
+
+                this.deploy = function(event_object, callback)
                 {
                     function swipe_casement()
                     {
                         gfx.visibility.toggle(ui_config.casement.id, 1);
-                        gfx.animation.swipe(ui_config.casement.id, 1, 'right', __casement_width, 0, __speed, __step);
+                        gfx.animation.swipe(ui_config.casement.id, 1, 'right', __casement_width, 0, __speed, __step,
+                        function()
+                        {
+                            bee_statuses.casement_deployed(true);
+
+                            __is_animating = false;
+
+                            execute_commands(callback);
+                        });
 
                         return true;
                     }
@@ -2896,11 +2953,14 @@ function bee()
                     if (is_init === false)
                         return false;
 
-                    if (utils_sys.validation.misc.is_undefined(event_object))
+                    if (utils_sys.validation.misc.is_undefined(event_object) || 
+                        !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
                         return false;
 
-                    if (bee_statuses.casement_deployed() || !self.settings.actions.can_deploy_casement())
+                    if (__is_animating === true || !self.settings.actions.can_deploy_casement())
                         return false;
+
+                    __is_animating = true;
 
                     var __pos_x = me.position.left(),
                         __casement = utils_sys.objects.by_id(ui_config.casement.id),
@@ -2918,13 +2978,27 @@ function bee()
                     if (self.settings.actions.can_use_menu())
                         utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').innerHTML = 'Hide casement';
 
-                    bee_statuses.casement_deployed(true);
-
                     return true;
                 };
 
                 this.hide = function(event_object, callback)
                 {
+                    function swipe_casement()
+                    {
+                        gfx.animation.swipe(ui_config.casement.id, 1, 'left', 
+                        __casement_width, 0, __speed, __step, 
+                        function()
+                        {
+                            gfx.visibility.toggle(ui_config.casement.id, 1);
+
+                            __is_animating = false;
+
+                            bee_statuses.casement_deployed(false);
+
+                            execute_commands(callback);
+                        });
+                    }
+
                     if (is_init === false)
                         return false;
 
@@ -2932,16 +3006,10 @@ function bee()
                         !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
                         return false;
 
-                    if (!self.settings.actions.can_deploy_casement())
+                    if (__is_animating === true)
                         return false;
 
-                    function execute_callback()
-                    {
-                        if (!utils_sys.validation.misc.is_undefined(callback))
-                            callback.call();
-
-                        return true;
-                    }
+                    __is_animating = true;
 
                     var __casement = utils_sys.objects.by_id(ui_config.casement.id),
                         __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
@@ -2949,23 +3017,12 @@ function bee()
                         __speed = Math.ceil(__step / 3);
 
                     if (!bee_statuses.casement_deployed())
-                        execute_callback();
+                        execute_commands(callback);
                     else
-                    {
-                        gfx.animation.swipe(ui_config.casement.id, 1, 'left', 
-                                            __casement_width, 0, __speed, __step, 
-                                            function()
-                                            {
-                                                gfx.visibility.toggle(ui_config.casement.id, 1);
+                        swipe_casement();
 
-                                                execute_callback();
-                                            });
-
-                        if (self.settings.actions.can_use_menu())
-                            utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').innerHTML = 'Deploy casement';
-                    }
-
-                    bee_statuses.casement_deployed(false);
+                    if (self.settings.actions.can_use_menu())
+                        utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').innerHTML = 'Deploy casement';
 
                     return true;
                 };
@@ -3040,7 +3097,6 @@ function bee()
                 function remove_me(this_object)
                 {
                     var __bee_id = self.settings.general.id(),
-                        __app_id = self.settings.general.app_id(),
                         __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
                         __honeycomb_id = hive.status.bees.honeycomb_id(__bee_id);
 

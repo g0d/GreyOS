@@ -142,6 +142,14 @@ body
     margin-top: 80px;
 }
 
+#version
+{
+    float: right;
+    font-size: 10px;
+    color: #aaaaaac9;
+    margin-top: 14px;
+}
+
 #user_profile
 {
     float: right;

@@ -56,13 +56,13 @@
 
 .widget_ctrl_bar
 {
-    background-color: #F5F5F5;
+    background-color: #f0f0f0;
     border-color: #E5E5E5;
 }
 
 .widget_ctrl_bar:hover
 {
-    background-color: #FCFCFC;
+    background-color: #ffffff;
 }
 
 .icon
