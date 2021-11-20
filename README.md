@@ -12,9 +12,9 @@ For detailed information on GreyOS you may check the [White Paper](https://githu
 
 Also, you may give it a try at https://greyos.gr/ (Credentials: demo@greyos.gr / password)
 
-![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Login%20(Alpha%202.2).png)
+![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Login.png)
 
-![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Desktop%20(Alpha%202.2).png)  
+![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Desktop.png)  
 
 
 
