@@ -227,6 +227,9 @@
         public static function Check_Valid_Params($url)
         {
             $params_array = self::Config_Importer('params', '', ',');
+
+            if (empty($params_array[0]))
+                return $url;
             
             foreach ($params_array as $param)
             {

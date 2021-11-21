@@ -4472,6 +4472,9 @@ function bee()
 
     this.init = function(bee_id, type)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
             return false;
 

@@ -2,7 +2,7 @@
     GreyOS - Owl (Version: 2.0)
     
     File name: owl.js
-    Description: This file contains the Owl - Bee Tracer & Status Logger module.
+    Description: This file contains the Owl - Bee tracer & status logger module.
     
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
@@ -100,6 +100,9 @@ function owl()
         {
             this.by_id = function(bee_id)
             {
+                if (utils_sys.validation.misc.is_nothing(cosmos))
+                    return false;
+
                 if (collection.num === 0)
                     return null;
     
@@ -117,6 +120,9 @@ function owl()
 
             this.by_app_id = function(app_id, match_status)
             {
+                if (utils_sys.validation.misc.is_nothing(cosmos))
+                    return false;
+
                 if (collection.num === 0)
                     return null;
 
@@ -132,6 +138,9 @@ function owl()
 
         this.set = function(bee_id, app_id, status)
         {
+            if (utils_sys.validation.misc.is_nothing(cosmos))
+                return false;
+
             if (!colony.get(bee_id) || utils_sys.validation.alpha.is_symbol(status))
                 return false;
 
@@ -163,6 +172,9 @@ function owl()
 
         this.remove = function(bee_id)
         {
+            if (utils_sys.validation.misc.is_nothing(cosmos))
+                return false;
+
             if (collection.num === 0)
                 return null;
 
@@ -188,6 +200,9 @@ function owl()
 
         this.clear = function()
         {
+            if (utils_sys.validation.misc.is_nothing(cosmos))
+                return false;
+
             if (collection.num === 0)
                 return false;
 
@@ -201,11 +216,17 @@ function owl()
 
     this.num = function()
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         return collection.num;
     };
 
     this.list = function(match_status)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (utils_sys.validation.misc.is_undefined(match_status))
             return collection;
 
@@ -218,17 +239,34 @@ function owl()
         return utils_int.match_status(match_status);
     };
 
+    this.backtrace = function(val)
+    {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (!utils_sys.validation.misc.is_bool(val))
+            return false;
+
+        backtrace = val;
+
+        return true;
+    };
+
     this.cosmos = function(cosmos_object)
     {
         if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
-        colony = cosmos_object.hub.access('colony');
+        cosmos = cosmos_object;
+
+        colony = cosmos.hub.access('colony');
 
         return true;
     };
 
-    var colony = null,
+    var backtrace = false,
+        cosmos = null,
+        colony = null,
         utils_sys = new vulcan(),
         collection = new bees_collection(),
         utils_int = new utilities();

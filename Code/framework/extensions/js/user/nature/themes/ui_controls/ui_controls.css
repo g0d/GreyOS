@@ -13,8 +13,9 @@
 {
     clear: both;
     float: left;
-    width: 220px;
+    width: 294px;
     height: 40px;
+    padding-right: 18px;
 }
 
 #placement

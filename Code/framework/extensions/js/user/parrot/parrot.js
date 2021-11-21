@@ -17,9 +17,12 @@ function parrot()
     function audio_service_model()
     {
         var __audio_service_init = false,
+            __stream_contexts = ['sys', 'action', 'misc'],
             __sound_files = [],
+            __stream_context_in_use = null,
             __play_file = null,
-            __audio_player = utils_sys.objects.by_id(self.settings.id()).childNodes[0];
+            __audio_stream = null,
+            __audio_player = utils_sys.objects.by_id(self.settings.id());
 
         function set_sounds()
         {
@@ -110,10 +113,25 @@ function parrot()
             return ;
         };
 
-        this.play = function(sound_file, list = false, replay = false)
+        this.play = function(context, sound_file, list = false, replay = false)
         {
             if (__audio_service_init === false)
                 return false;
+
+            if (utils_sys.validation.misc.is_undefined(context) || utils_sys.validation.alpha.is_symbol(context))
+                return false;
+
+            if (__stream_contexts.indexOf(context) === -1)
+                return false;
+
+            __stream_context_in_use = context;
+
+            if (context === 'sys')
+                __audio_stream = __audio_player.childNodes[0];
+            else if (context === 'action')
+                __audio_stream = __audio_player.childNodes[2];
+            else
+                __audio_stream = __audio_player.childNodes[4];
 
             if (utils_sys.validation.misc.is_undefined(sound_file))
             {
@@ -121,9 +139,9 @@ function parrot()
                     return false;
 
                 if (replay === true)
-                    __audio_player.loop = true;
+                    __audio_stream.loop = true;
 
-                __audio_player.src = __play_file;
+                __audio_stream.src = __play_file;
             }
             else
             {
@@ -133,9 +151,9 @@ function parrot()
                 __play_file = sound_file;
 
                 if (replay === true)
-                    __audio_player.loop = true;
+                    __audio_stream.loop = true;
 
-                __audio_player.src = __play_file;
+                __audio_stream.src = __play_file;
             }
 
             return true;
@@ -146,7 +164,10 @@ function parrot()
             if (__audio_service_init === false)
                 return false;
 
-            __audio_player.pause();
+            if (__stream_context_in_use === null)
+                return false;
+
+            __audio_stream.pause();
 
             return true;
         };
@@ -156,9 +177,12 @@ function parrot()
             if (__audio_service_init === false)
                 return false;
 
+            if (__stream_context_in_use === null)
+                return false;
+
             audio.pause();
 
-            __audio_player.src = '';
+            __audio_stream.src = '';
 
             return true;
         };
@@ -172,6 +196,8 @@ function parrot()
 
             __sound_files = [];
             __play_file = null;
+            __audio_stream = null;
+            __stream_context_in_use = null;
 
             return true;
         };
@@ -225,8 +251,11 @@ function parrot()
 
             __dynamic_object.setAttribute('id', __parrot_id);
             __dynamic_object.setAttribute('class', 'parrot');
+            __dynamic_object.setAttribute('title', 'Manage system & apps sound');
 
-            __dynamic_object.innerHTML = '<audio id="' + __parrot_id + '_audio_service" autoplay></audio>';
+            __dynamic_object.innerHTML = '<audio id="' + __parrot_id + '_audio_service_sys" autoplay></audio>\
+                                          <audio id="' + __parrot_id + '_audio_service_actions" autoplay></audio>\
+                                          <audio id="' + __parrot_id + '_audio_service_misc" autoplay></audio>';
 
             __container.appendChild(__dynamic_object);
 
@@ -395,6 +424,9 @@ function parrot()
 
     this.init = function(container_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
             return false;
 

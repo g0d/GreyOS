@@ -26,8 +26,8 @@ function boot_script()
     var os_utils = greyos.utils();
 
     // Set global parameters
-    var global_boot_mode = 0;       // Boot modes: Normal (0) / Development (1)
-    var global_theme = 'tomorrow';  // Themes: 'bubble_gum', 'tomorrow'
+    var global_boot_mode = 0;           // Boot modes: Normal (0) / Development (1)
+    var global_theme = 'tomorrow';      // Themes: 'bubble_gum', 'tomorrow'
 
     // Initialization script
     var init_script = function()
@@ -36,8 +36,8 @@ function boot_script()
         var containers_list = [matrix, dev_box, app_box, colony];
 
         // List of system services
-        var sys_services = [nature, infinity, owl, eagle, forest, swarm, hive, 
-                            ui_controls, dock, user_profile, tik_tok, parrot];
+        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, 
+                            tik_tok, trinity, octopus, parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];
@@ -107,10 +107,18 @@ function boot_script()
             // Show the loading screen while everything is loading
             load_screen.show();
 
-            // Load basic UI infrastructure
-            var new_swarm = matrix_container.get('swarm');
-            var new_nature = matrix_container.get('nature');
+            // Load basic services and UI infrastructure
+            var new_trinity = matrix_container.get('trinity');
             var new_parrot = matrix_container.get('parrot');
+            var new_chameleon = matrix_container.get('chameleon');
+            var new_nature = matrix_container.get('nature');
+            var new_swarm = matrix_container.get('swarm');
+
+            // Initialize system monitoring service
+            new_trinity.init();
+
+            // Set the theme in use
+            new_chameleon.set(global_theme);
 
             // Preload (cache) Bee theme for better graphics performance on load
             new_nature.theme(['bee']);
@@ -122,7 +130,7 @@ function boot_script()
             // Initialize only the sound service (no UI)
             new_parrot.init();
 
-            // Initialize the basic UI
+            // Initialize desktop module
             new_swarm.init('desktop', 47, 100, window.innerWidth - 70, window.innerHeight - 120);
 
             // Show login/register windows
@@ -135,7 +143,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the splash screen sound
-                new_parrot.play('/site/themes/tomorrow/sounds/splash.mp3');
+                new_parrot.play('sys', '/site/themes/' + global_theme + '/sounds/splash.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -185,6 +193,7 @@ function boot_script()
             matrix_container.get('nature').remove('krator');
 
             // Load the full dektop UI infrastructure
+
             matrix_container.get('ui_controls').init('action_icons');
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
@@ -192,6 +201,7 @@ function boot_script()
             matrix_container.get('hive').init('desktop', 47, window.innerHeight - 87, 16, 4);
             matrix_container.get('eagle').init('desktop');
             matrix_container.get('tik_tok').init('clock');
+            matrix_container.get('octopus').init('device_manager');
             matrix_container.get('parrot').load('audio');
 
             // Show preloaded or saved bees (apps)
@@ -205,7 +215,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                matrix_container.get('parrot').play('/site/themes/tomorrow/sounds/login.mp3');
+                matrix_container.get('parrot').play('sys', '/site/themes/' + global_theme + '/sounds/login.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -219,7 +229,12 @@ function boot_script()
             // Show the loading screen while everything is loading
             load_screen.show();
 
-            // Load the full dektop UI infrastructure
+            // Load all services and full UI infrastructure
+            var new_trinity = matrix_container.get('trinity');
+            var new_octopus = matrix_container.get('octopus');
+            var new_parrot = matrix_container.get('parrot');
+            var new_chameleon = matrix_container.get('chameleon');
+            var new_nature = matrix_container.get('nature');
             var new_ui_controls = matrix_container.get('ui_controls');
             var new_dock = matrix_container.get('dock');
             var new_user_profile = matrix_container.get('user_profile');
@@ -228,8 +243,12 @@ function boot_script()
             var new_hive = matrix_container.get('hive');
             var new_eagle = matrix_container.get('eagle');
             var new_tik_tok = matrix_container.get('tik_tok');
-            var new_parrot = matrix_container.get('parrot');
-            var new_nature = matrix_container.get('nature');
+
+            // Initialize system monitoring service
+            new_trinity.init();
+
+            // Set the theme in use
+            new_chameleon.set(global_theme);
 
             // Preload (cache) Bee theme for better graphics performance on load
             new_nature.theme(['bee']);
@@ -247,6 +266,7 @@ function boot_script()
             new_hive.init('desktop', 47, window.innerHeight - 87, 16, 4);
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
+            new_octopus.init('device_manager');
             new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)
@@ -260,7 +280,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                new_parrot.play('/site/themes/tomorrow/sounds/login.mp3');
+                new_parrot.play('sys', '/site/themes/' + global_theme + '/sounds/login.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -326,8 +346,8 @@ function boot_script()
         var containers_list = [matrix, dev_box, app_box, colony];
 
         // List of system services
-        var sys_services = [nature, infinity, owl, eagle, forest, swarm, hive, 
-                            ui_controls, dock, user_profile, tik_tok, parrot];
+        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, 
+                            tik_tok, trinity, octopus, parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];
@@ -390,7 +410,8 @@ function boot_script()
             // Show the loading screen while everything is loading
             load_screen.show();
 
-            // Load the full dektop UI infrastructure
+            // Load all services and full UI infrastructure
+            var new_trinity = matrix_container.get('trinity');
             var new_ui_controls = matrix_container.get('ui_controls');
             var new_dock = matrix_container.get('dock');
             var new_user_profile = matrix_container.get('user_profile');
@@ -399,8 +420,16 @@ function boot_script()
             var new_hive = matrix_container.get('hive');
             var new_eagle = matrix_container.get('eagle');
             var new_tik_tok = matrix_container.get('tik_tok');
+            var new_octopus = matrix_container.get('octopus');
             var new_parrot = matrix_container.get('parrot');
+            var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
+
+            // Initialize system monitoring service
+            new_trinity.init();
+
+            // Set the theme in use
+            new_chameleon.set(global_theme);
 
             // Preload (cache) Bee theme for better graphics performance on load
             new_nature.theme(['bee']);
@@ -418,6 +447,7 @@ function boot_script()
             new_hive.init('desktop', 47, window.innerHeight - 87, 16, 4);
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
+            new_octopus.init('device_manager');
             new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)
@@ -431,7 +461,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                new_parrot.play('/site/themes/tomorrow/sounds/login.mp3');
+                new_parrot.play('sys', '/site/themes/' + global_theme + '/sounds/login.mp3');
 
                 load_screen.hide();
             }, 3000);

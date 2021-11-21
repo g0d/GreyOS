@@ -2,7 +2,7 @@
     GreyOS - Banana (Version: 1.2)
     
     File name: banana.js
-    Description: This file contains the Banana - Suggestions Manager widget.
+    Description: This file contains the Banana - Suggestions manager widget.
     
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021

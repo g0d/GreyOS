@@ -115,6 +115,11 @@ option
     margin-top: 18px;
 }
 
+#favorite_apps
+{
+    margin-left: 18px !important;
+}
+
 #my
 {
     color: #23a2de !important;
@@ -252,14 +257,37 @@ option
     color: #919191 !important;
 }
 
+.octopus
+{
+    margin-top: 6px !important;
+}
+
+.octopus .device
+{
+    filter: invert(0.5);
+}
+
+.octopus .notification
+{
+    background-color: #51a766c2 !important;
+    border: 2px solid #589c75d1 !important;
+    margin-top: 54px !important;
+    margin-left: 198px !important;
+}
+
 .status_msg
 {
     margin-top: 2px !important;
 }
 
+.casement_title
+{
+    background: #84cc30 !important;
+}
+
 .casement_status
 {
-    background: #484b4b !important;
+    background: #e91e63 !important;
 }
 
 .box_close

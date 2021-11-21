@@ -59,6 +59,9 @@ function my_app()
     // This is the main entry point for your application (Required)
     this.init = function(caller)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
             return false;
 

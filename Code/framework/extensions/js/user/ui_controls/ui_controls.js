@@ -198,6 +198,9 @@ function ui_controls()
 
     this.init = function(container_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
            return false;
 

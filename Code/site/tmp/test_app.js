@@ -73,6 +73,9 @@ function test_app()
 
     this.init = function(caller)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
             return false;
 

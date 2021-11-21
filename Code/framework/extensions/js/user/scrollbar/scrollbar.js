@@ -291,9 +291,9 @@ function scrollbar()
 
         is_init = true;
 
-        vulcan = cosmos_object.hub.access('vulcan');
+        vulcan = cosmos.hub.access('vulcan');
 
-        var __pythia = cosmos_object.hub.access('matrix').get('pythia');
+        var __pythia = cosmos.hub.access('matrix').get('pythia');
 
         config.id = 'scrollbar_' + __pythia.generate();
 

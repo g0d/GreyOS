@@ -156,6 +156,7 @@ function tik_tok()
 
             __dynamic_object.setAttribute('id', __tik_tok_id);
             __dynamic_object.setAttribute('class', 'tik_tok');
+            __dynamic_object.setAttribute('title', 'Time and calendar');
 
             __dynamic_object.innerHTML = '<div id="' + __tik_tok_id + '_date" class="clock_date"></div>' + 
                                          '<div id="' + __tik_tok_id + '_time" class="clock_time"></div>';
@@ -237,6 +238,9 @@ function tik_tok()
 
     this.init = function(container_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
             return false;
 

@@ -2,7 +2,7 @@
     GreyOS - Cloud Edit (Version: 1.5)
     
     File name: cloud_edit.js
-    Description: This file contains the Cloud Edit - GreyOS Code Editor application.
+    Description: This file contains the Cloud Edit - Code editor application.
     
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
@@ -218,6 +218,9 @@ function cloud_edit()
 
     this.init = function()
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
             return false;
 

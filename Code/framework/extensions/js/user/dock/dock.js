@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 1.5)
+    GreyOS - Dock (Version: 1.6)
     
     File name: dock.js
     Description: This file contains the Dock module.
@@ -96,17 +96,18 @@ function dock()
         function ajax_save(apps_array)
         {
             var __bull_config = {
-                                    "type"      :   "request",
-                                    "url"       :   "/",
-                                    "data"      :   "gate=dock&action=save&apps=" + apps_array
+                                    "type"          :   "request",
+                                    "url"           :   "/",
+                                    "data"          :   "gate=dock&action=save&apps=" + apps_array,
+                                    "ajax_mode"     :   "synchronous",
                                 };
 
-            return  ajax.run(__bull_config);
+            return ajax.run(__bull_config);
         }
 
         function create_dock_array()
         {
-            var __id = null,
+            var __app_id = null,
                 __position = null,
                 __title = null
                 __dock = utils_sys.objects.by_class('favorites'),
@@ -114,19 +115,14 @@ function dock()
 
             for (var __dock_app of __dock)
             {
-                __id = __dock_app.getAttribute('id').split('app_')[1],
+                __app_id = __dock_app.getAttribute('id').split('app_')[1],
                 __position = __dock_app.getAttribute('data-position'),
                 __title = __dock_app.getAttribute('title');
 
-                config.dock_array.push({"app_id":__id, "position": __position, "title": __title });
+                config.dock_array.push({ "app_id" : __app_id, "position" : __position, "title" : __title });
             }
 
             return true;
-        }
-
-        function get_button_sound()
-        {
-            sound_player = utils_sys.objects.by_id('button_sound');
         }
 
         function attach_events()
@@ -249,7 +245,8 @@ function dock()
                             if (is_dragging)
                                 return false;
 
-                            var __bee = colony.get(dock_app['app_id']);
+                            var __bee = colony.get(dock_app['app_id']),
+                                __sys_theme = chameleon.get();
 
                             if (__bee === null || __bee === false)
                             {
@@ -259,7 +256,7 @@ function dock()
 
                                 __bee = __app.get_bee();
 
-                                //sound_player.play();
+                                parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
 
                                 swarm.bees.insert(__bee);
 
@@ -274,7 +271,7 @@ function dock()
                             {
                                 if (!__bee.status.system.running())
                                 {
-                                    //sound_player.play();
+                                    parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
 
                                     __bee.show();
 
@@ -307,7 +304,6 @@ function dock()
             ajax_load(self.settings.container(), function()
                                                  {
                                                     create_dock_array();
-                                                    get_button_sound();
                                                     attach_events();
                                                     enable_drag();
                                                  });
@@ -317,16 +313,9 @@ function dock()
 
         this.save_dock = function()
         {   
-            var __dock_array = JSON.stringify(config.dock_array);
+            var __dock_array = encodeURIComponent(JSON.stringify(config.dock_array));
 
-            __dock_array = encodeURIComponent(__dock_array);
-
-            var __result = ajax_save(__dock_array);
-
-            if (__result)
-                return true;
-
-           return false;
+           return ajax_save(__dock_array);
         };
     }
 
@@ -348,6 +337,9 @@ function dock()
 
     this.init = function(container_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
            return false;
 
@@ -383,6 +375,8 @@ function dock()
         swarm = matrix.get('swarm');
         hive = matrix.get('swarm');
         owl = matrix.get('owl');
+        parrot = matrix.get('parrot');
+        chameleon = matrix.get('chameleon');
         nature = matrix.get('nature');
 
         return true;
@@ -397,8 +391,9 @@ function dock()
         app_box = null,
         colony = null,
         owl = null,
+        parrot = null,
+        chameleon = null,
         nature = null,
-        sound_player = null,
         last_button_clicked = 0,
         utils_sys = new vulcan(),
         ajax = new bull(),

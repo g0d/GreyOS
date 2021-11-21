@@ -1,5 +1,5 @@
 /*
-    GreyOS - Boot Screen (Version: 1.0)
+    GreyOS - Boot Screen (Version: 1.2)
     
     File name: boot_screen.js
     Description: This file contains the Boot Screen utility.
@@ -33,7 +33,31 @@ function boot_screen()
 
     this.init = function()
     {
-        if (window.innerWidth < 1366 || window.innerHeight < 700)
+        if (navigator.vendor.indexOf('Google') === -1)
+        {
+            utils_int.draw_boot_screen();
+
+            var __boot_message = utils_sys.objects.by_id('boot_screen_message');
+
+            __boot_message.innerHTML = 'Your browser is incompatible!' + 
+                                       '<br>' +
+                                       'Use Chrome or Chromium to access the Meta-OS.';
+
+            return false;
+        }
+        else if (navigator.onLine === false)
+        {
+            utils_int.draw_boot_screen();
+
+            var __boot_message = utils_sys.objects.by_id('boot_screen_message');
+
+            __boot_message.innerHTML = 'Your are offline!' + 
+                                       '<br>' +
+                                       'Check your Internet connection and reload.';
+
+            return false;
+        }
+        else if (window.innerWidth < 1366 || window.innerHeight < 700)
         {
             utils_int.draw_boot_screen();
 

@@ -2,7 +2,7 @@
     GreyOS - Radio Dude (Version: 2.5)
     
     File name: radio_dude.js
-    Description: This file contains the Radio Dude - GreyOS Radio Player application.
+    Description: This file contains the Radio Dude - Radio player application.
     
     Coded by George Delaportas (G0D) and John Inglessis (negle)
     Copyright © 2013 - 2021
@@ -125,6 +125,9 @@ function radio_dude()
 
     this.init = function()
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
             return false;
 

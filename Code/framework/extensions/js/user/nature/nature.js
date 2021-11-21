@@ -16,6 +16,9 @@ function nature()
 
     this.theme = function(themes)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (utils_sys.validation.misc.is_object(themes) && !utils_sys.validation.misc.is_array(themes))
             return false;
 
@@ -32,6 +35,9 @@ function nature()
 
     this.apply = function(mode)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (!utils_sys.validation.alpha.is_string(mode))
             return false;
 
@@ -78,6 +84,9 @@ function nature()
 
     this.exists = function(theme)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (!utils_sys.validation.alpha.is_string(theme))
             return false;
 
@@ -97,6 +106,9 @@ function nature()
 
     this.remove = function(theme)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         var __theme_link = self.exists(theme);
 
         if (__theme_link === false)

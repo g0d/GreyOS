@@ -93,7 +93,7 @@ function user_profile()
             if (__user_profile_div === null)
                 return false;
 
-            __user_profile_div.innerHTML = '<div id="' + self.settings.id() + '">\
+            __user_profile_div.innerHTML = '<div id="' + self.settings.id() + '" title="Manage profile">\
                                                 <div id="notifications_num">00</div>\
                                                 <div id="profile_access">\
                                                     <div id="small_avatar"></div>\
@@ -261,6 +261,9 @@ function user_profile()
 
     this.init = function(container_id)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
         if (is_init === true)
            return false;
 
