@@ -9,11 +9,14 @@
     Open Software License (OSL 3.0)
 */
 
+// Run high quality, secure and verified code
+"use strict";
+
 // GreyOS - Bootstrap script
 function boot_script()
 {
     // GreyOS
-    var greyos = new os();
+    var greyos = new meta_os();
 
     // Initialize required OS infrastructure for this script
     var os_boot = greyos.boot();

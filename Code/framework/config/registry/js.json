@@ -23,7 +23,7 @@
     "loading_screen"    :   "user",
     "f5"                :   "user",
     "frog"              :   "user",
-    "os"                :   "user",
+    "meta_os"           :   "user",
     "scenario"          :   "user",
     "multiverse"        :   "user",
     "cosmos"            :   "user",

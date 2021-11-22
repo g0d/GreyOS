@@ -63,3 +63,19 @@ console.log('USE MIC & CAMERA: ', navigator.mediaDevices.getUserMedia(
             height: 720
         }
     }));
+
+
+
+navigator.usb.getDevices()
+.then(devices =>
+{
+    console.log("Total devices: " + devices.length);
+
+    devices.forEach(device =>
+    {
+        console.log("Product name: " + device.productName + ", serial number " + device.serialNumber);
+    });
+});
+
+navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
+navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };

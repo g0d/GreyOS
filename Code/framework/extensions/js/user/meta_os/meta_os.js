@@ -1,22 +1,17 @@
 /*
-    GreyOS - Operating System [OS] (Version: 1.0)
+    GreyOS - Meta-OS (Version: 1.0)
     
-    File name: os.js
-    Description: This file contains the Operating System [OS] - Tools & services interface module.
+    File name: meta_os.js
+    Description: This file contains the Meta-OS - Interface module.
     
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)
 */
 
-// Operating System [OS]
-function os()
+// Meta-OS
+function meta_os()
 {
-    this.environment = function()
-    {
-        return new_browser;
-    };
-
     this.keyboard = function()
     {
         return new_keys;
@@ -82,8 +77,7 @@ function os()
         return new_boot;
     };
 
-    var //new_browser = new browser(),
-        new_keys = new key_manager(),
+    var new_keys = new key_manager(),
         //new_mouse = new mouse_manager(),
         new_vulcan = new vulcan(),
         new_fx = new fx(),

@@ -33,7 +33,7 @@
     UTIL::Load_Extension('loading_screen', 'js');
     UTIL::Load_Extension('f5', 'js');
     UTIL::Load_Extension('frog', 'js');
-    UTIL::Load_Extension('os', 'js');
+    UTIL::Load_Extension('meta_os', 'js');
     UTIL::Load_Extension('scenario', 'js');
     UTIL::Load_Extension('multiverse', 'js');
     UTIL::Load_Extension('cosmos', 'js');
