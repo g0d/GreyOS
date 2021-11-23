@@ -77,6 +77,11 @@ function meta_os()
         return new_boot;
     };
 
+    this.mode = function()
+    {
+        return new_linux_mode;
+    };
+
     var new_keys = new key_manager(),
         //new_mouse = new mouse_manager(),
         new_vulcan = new vulcan(),
@@ -89,5 +94,6 @@ function meta_os()
         new_vm = new cosmos(),
         new_hypervisor = new multiverse(),
         new_loader = new scenario(),
-        new_boot = new boot_screen();
+        new_boot = new boot_screen(),
+        new_linux_mode = new linux_mode();
 }

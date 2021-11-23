@@ -32,6 +32,7 @@
     UTIL::Load_Extension('boot_screen', 'js');
     UTIL::Load_Extension('loading_screen', 'js');
     UTIL::Load_Extension('f5', 'js');
+    UTIL::Load_Extension('linux_mode', 'js');
     UTIL::Load_Extension('frog', 'js');
     UTIL::Load_Extension('meta_os', 'js');
     UTIL::Load_Extension('scenario', 'js');

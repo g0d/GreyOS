@@ -1,0 +1,40 @@
+/*
+    GreyOS - Linux CSS
+
+    File name: linux.css
+    Description: This file contains the GreyOS - Linux CSS.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2021
+    Open Software License (OSL 3.0)
+*/
+
+#version
+{
+    margin-top: 10px !important;
+}
+
+.control_item .text
+{
+    letter-spacing: -1px !important;
+}
+
+.parrot .speaker
+{
+    height: 30px !important;
+}
+
+.tik_tok .clock_date
+{
+    margin-top: 1px !important;    
+}
+
+.tik_tok .clock_time
+{
+    margin-top: 0px !important;    
+}
+
+.list_item_notifications
+{
+    padding: 3px !important;
+}

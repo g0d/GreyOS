@@ -26,6 +26,7 @@ function boot_script()
     var os_keys = greyos.keyboard();
     var os_timers = greyos.timers();
     var os_benchmark = greyos.benchmark();
+    var os_mode = greyos.mode();
     var os_utils = greyos.utils();
 
     // Set global parameters
@@ -530,6 +531,8 @@ function boot_script()
     {
         if (!os_boot.init())
             return false;
+
+        os_mode.init();
 
         //os_loader.backtrace(true);
         os_loader.use([init_script, init_script_dev]);
