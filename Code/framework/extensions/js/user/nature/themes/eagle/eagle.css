@@ -17,11 +17,11 @@
     left: calc(100vw/2 - 250px);
     width: 492px;
     height: 240px;
-    color: #ffffff;
-    background-color: #3a68bd7a;
+    color: #808080;
+    background-color: #eeeeee;
     text-align: center;
-    border: 2px solid #b1d0f1bd;
-    box-shadow: 0 0 12px #282c2c5e;
+    border: 2px solid #EAEAEA;
+    box-shadow: 0 0 12px #585e5e;
     border-radius: 6px;
     margin-top: 250px;
     z-index: 2147483647;
@@ -44,7 +44,7 @@
     font-size: 12px;
     width: 148px;
     height: 100px;
-    border: 2px solid #81d6f342;
+    border: 2px solid #35bab2;
     margin-right: 4px;
     margin-bottom: 8px;
 }
@@ -56,7 +56,7 @@
 
 .eagle_window_title
 {
-    background-color: #1c4c59c7;
+    background-color: #8cce00;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -68,12 +68,12 @@
 
 .eagle_window_body
 {
-    background-color: #ffffffcf;
+    background-color: #ffffff;
     height: 75px;
 }
 
 .eagle_window_selected
 {
-    border: 2px solid #dbf878a6;
-    background-color: #ffffff85;
+    border: 2px solid #f878d2;
+    background-color: #ffffff;
 }

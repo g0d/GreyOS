@@ -242,6 +242,11 @@ option
     margin-right: 5px;
 }
 
+.tik_tok .clock_date
+{
+    margin-top: 4px !important;
+}
+
 .parrot
 {
     margin-top: -3px !important;

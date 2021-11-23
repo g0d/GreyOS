@@ -428,6 +428,34 @@ option
     background-color: #5a296175 !important;
 }
 
+.eagle
+{
+    color: #ffffff !important;
+    background-color: #3a68bd7a !important;
+    border: 2px solid #96abc2bd !important;
+}
+
+.eagle_window
+{
+    border: 2px solid #81d6f342 !important;
+}
+
+.eagle_window_title
+{
+    background-color: #1c4c59c7 !important;
+}
+
+.eagle_window_body
+{
+    background-color: #ffffffcf !important;
+}
+
+.eagle_window_selected
+{
+    border: 2px solid #dbf878a6 !important;
+    background-color: #ffffff85 !important;
+}
+
 .gui
 {
     background-color: #55339f66 !important;
