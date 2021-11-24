@@ -1,0 +1,10 @@
+[begin] (Desktop menu)
+   [exec] (Terminal) { fbstartupnotify && xterm -ls }
+#   [exec] (File Manager) { fbstartupnotify && pcmanfm }
+   [exec] (Web Browser) { fbstartupnotify && fbliveapp chromium }
+#   [exec] (Text Editor) { fbstartupnotify && leafpad }
+   [exec] (Network Manager) { fbstartupnotify && wicd-manager }
+#   [exec] (Run) { fbappselect }
+   [separator]
+   [exec] (Exit / Logout) { fblogout }
+[end]
