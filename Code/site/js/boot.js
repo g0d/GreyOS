@@ -47,7 +47,7 @@ function boot_script()
         var dev_tools = [bee];
 
         // List of user applications
-        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon];
+        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs];
 
         // Add a VM to the hypervisor
         os_hypervisor.add([os_vm]);
@@ -357,7 +357,7 @@ function boot_script()
         var dev_tools = [bee];
 
         // List of user applications
-        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon];
+        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs];
 
         // Add a VM to the hypervisor
         //os_hypervisor.backtrace(true);

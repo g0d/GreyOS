@@ -64,6 +64,7 @@
     "i_linkedin"        :   "user",
     "i_youtube"         :   "user",
     "i_bassoon"         :   "user",
+    "i_quakejs"         :   "user",
     "ace"               :   "user",
     "banana"            :   "user"
 }
