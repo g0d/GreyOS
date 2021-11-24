@@ -56,7 +56,7 @@ session.screen0.workspacewarping:	false
 session.screen0.windowMenu:	/root/.fluxbox/windowmenu
 session.screen0.tooltipDelay:	500
 session.screen0.colPlacementDirection:	TopToBottom
-session.screen0.workspaceNames:	GreyOS,Workspace 2             Ctrl+F2,Workspace 3             Ctrl+F3,Workspace 4             Ctrl+F4,
+session.screen0.workspaceNames:	GreyOS
 session.doubleClickInterval:	250
 session.styleFile:	/usr/share/fluxbox/styles/Slax
 session.cacheMax:	200

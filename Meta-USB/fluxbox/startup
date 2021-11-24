@@ -26,7 +26,7 @@ done
 
 # set background color and big wait mouse cursor
 xsetroot -solid '#111111'
-xsetroot -xcf /usr/share/icons/breeze_cursors/cursors/watch 37
+#xsetroot -xcf /usr/share/icons/breeze_cursors/cursors/watch 37
 
 # disable screen blanking
 xset s off
