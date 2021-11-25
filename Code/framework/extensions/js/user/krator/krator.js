@@ -333,11 +333,11 @@ function krator()
         krator_bee.settings.actions.can_edit_title(false);
         krator_bee.settings.actions.can_use_menu(false);
         krator_bee.settings.actions.can_close(false);
-        krator_bee.gui.position.static(true);
-        krator_bee.gui.position.left(screen.width / 2 - 260);
-        krator_bee.gui.position.top(100);
         krator_bee.gui.size.width(420);
         krator_bee.gui.size.height(400);
+        krator_bee.gui.position.static(true);
+        krator_bee.gui.position.left(swarm.settings.right() / 2 - 210);
+        krator_bee.gui.position.top(100);
         krator_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         krator_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         krator_bee.on('open', function() { krator_bee.gui.fx.fade.into(); });
@@ -364,6 +364,7 @@ function krator()
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
 
+        swarm = matrix.get('swarm');
         nature = matrix.get('nature');
 
         return true;
@@ -374,6 +375,7 @@ function krator()
         cosmos = null,
         matrix = null,
         dev_box = null,
+        swarm = null,
         nature = null,
         krator_bee = null,
         utils_sys = new vulcan(),

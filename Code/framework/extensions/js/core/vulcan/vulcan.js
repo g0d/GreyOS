@@ -1,7 +1,7 @@
 /*
     Vulcan (General JS Programming Utilities)
 
-    File name: vulcan.js (Version: 2.0)
+    File name: vulcan.js (Version: 2.2)
     Description: This file contains the Vulcan extension.
 
     Coded by George Delaportas (G0D)
@@ -75,6 +75,8 @@ function vulcan()
 
         function misc()
         {
+            var __self = this;
+
             this.is_undefined = function(val)
             {
                 if (val === undefined)
@@ -125,7 +127,7 @@ function vulcan()
 
             this.is_invalid = function(val)
             {
-                if (self.validation.misc.is_undefined(val) || self.validation.misc.is_nothing(val))
+                if (__self.is_undefined(val) || __self.is_nothing(val))
                     return true;
 
                 return false;
@@ -476,6 +478,9 @@ function vulcan()
             if (self.validation.misc.is_undefined(theme))
                 theme = 'default';
 
+            if (self.system.source_exists(theme, 'link', 'href'))
+                return false;
+
             var __dynamic_object = null;
 
             __dynamic_object = document.createElement('link');
@@ -576,10 +581,15 @@ function vulcan()
 
     function system()
     {
+        var __self = this;
+
         this.require = function(js_file_path, js_file_name)
         {
             if (self.validation.misc.is_invalid(js_file_path) || 
                 self.validation.misc.is_invalid(js_file_name) || self.validation.alpha.is_symbol(js_file_name))
+                return false;
+
+            if (__self.source_exists(js_file_name, 'script', 'src'))
                 return false;
 
             var __dynamic_object = null;
@@ -590,6 +600,24 @@ function vulcan()
             self.objects.by_tag('head')[0].appendChild(__dynamic_object);
 
             return true;
+        };
+
+        this.source_exists = function(file_name, tag_type, attribute)
+        {
+            if (self.validation.misc.is_invalid(file_name) || self.validation.alpha.is_symbol(file_name) || 
+                self.validation.misc.is_invalid(tag_type) || self.validation.alpha.is_symbol(tag_type) || 
+                self.validation.misc.is_invalid(attribute) || self.validation.alpha.is_symbol(attribute))
+                return false;
+
+            var __sources = document.head.getElementsByTagName(tag_type);
+
+            for (var i = 0; i < __sources.length; i++)
+            {
+                if (__sources[i].attributes[attribute].value.indexOf(file_name) > -1)
+                    return true;
+            }
+
+            return false;
         };
     }
 

@@ -1,7 +1,7 @@
 /*
     WorkBox
 
-    File name: style.css
+    File name: workbox.css
     Description: This file contains the WorkBox - CSS.
 
     Coded by George Delaportas (G0D) 
@@ -71,7 +71,7 @@
     height: 100%;
     left: 0px;
     top: 0px;
-    z-index: 99;
+    z-index: 2147483645;
 }
 
 .work_window
@@ -86,7 +86,7 @@
     margin-top: 104px;
     padding: 8px;
     box-shadow: #747474 2px 2px 4px;
-    z-index: 99;
+    z-index: 2147483645;
 }
 
 .wb_fade_in

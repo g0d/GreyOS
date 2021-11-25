@@ -260,12 +260,21 @@ function dock()
 
                                 swarm.bees.insert(__bee);
 
-                                __bee.show();
+                                if (__bee.show())
+                                {
+                                    utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
+                                    utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
 
-                                utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
-                                utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
-
-                                close_app(__bee, dock_app['app_id']);
+                                    close_app(__bee, dock_app['app_id']);
+                                }
+                                else
+                                {
+                                    if (__bee.gui.size.width() > swarm.settings.right() || __bee.gui.size.height() > swarm.settings.bottom())
+                                    {
+                                        msg_win.show('GreyOS', 'The app is overflowing your screen. \
+                                                                You need a larger screen or higher resolution to run it!');
+                                    }
+                                }
                             }
                             else
                             {
@@ -273,12 +282,13 @@ function dock()
                                 {
                                     parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
 
-                                    __bee.show();
+                                    if (__bee.show())
+                                    {
+                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
+                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
 
-                                    utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
-                                    utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
-
-                                    close_app(__bee, dock_app['app_id']);
+                                        close_app(__bee, dock_app['app_id']);
+                                    }
                                 }
                             }
                         };
@@ -301,6 +311,8 @@ function dock()
 
         this.draw = function()
         {
+            msg_win.init('desktop');
+
             ajax_load(self.settings.container(), function()
                                                  {
                                                     create_dock_array();
@@ -398,6 +410,7 @@ function dock()
         utils_sys = new vulcan(),
         ajax = new bull(),
         random = new pythia(),
+        msg_win = new msgbox(),
         config = new config_model(),
         utils_int = new utilities();
 
