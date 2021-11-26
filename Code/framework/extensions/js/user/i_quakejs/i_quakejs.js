@@ -44,7 +44,7 @@ function i_quakejs()
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_quakejs_bee.settings.general.id() + '_overlay" class="overlay"></div>\
                                  <iframe id= "' + i_quakejs_bee.settings.general.id() + '_frame" \
-                                         src="http://www.quakejs.com/play?set%20fs_game%20cpma&set%20mode_start%20FFA&set%20g_teamAutoJoin%201&map%20cpm1a&addbot%20arQon%2040%20f&addbot%20rat%2040%20f">\
+                                         src="https://fte.triptohell.info/demo" scrolling="no">\
                                  </iframe>\
                              </div>';
 
@@ -55,17 +55,16 @@ function i_quakejs()
 
         this.attach_events = function()
         {
-            var __i_quake_object = utils_sys.objects.by_id(i_quakejs_bee.settings.general.id()),
-                __overlay_object = utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay')
+            var __overlay_object = utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay'),
                 __iframe_object = utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_frame');
 
-            utils_sys.events.attach('i_quakejs', __i_quake_object, 'click', function() { __iframe_object.focus(); });
-            utils_sys.events.attach('i_quakejs', __overlay_object, 'click', function() { __iframe_object.focus(); });
-            utils_sys.events.attach('i_quakejs', __overlay_object, 'mousemove', function()
-                                                                                {
-                                                                                    __overlay_object.style.display = 'none';
-                                                                                    __iframe_object.focus();
-                                                                                });
+            utils_sys.events.attach(config.id, __overlay_object, 'click', 
+            function()
+            {
+                __overlay_object.style.display = 'none';
+
+                __iframe_object.focus();
+            });
 
             return true;
         };
@@ -79,7 +78,7 @@ function i_quakejs()
         return i_quakejs_bee;
     };
 
-    this.init = function(caller)
+    this.init = function()
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
@@ -98,20 +97,16 @@ function i_quakejs()
 
         infinity.init();
 
-        i_quakejs_bee.init(config.id, 1);
+        i_quakejs_bee.init(config.id, 2);
         i_quakejs_bee.settings.data.window.labels.title('iQuakeJS (Integrated Online Multiplayer Game)');
         i_quakejs_bee.settings.data.window.labels.status_bar('Frag the hell out of them all!');
         i_quakejs_bee.settings.general.single_instance(true);
         i_quakejs_bee.settings.actions.can_edit_title(false);
         i_quakejs_bee.settings.actions.can_use_menu(false);
-        i_quakejs_bee.gui.position.left(200);
+        i_quakejs_bee.gui.position.left((swarm.settings.right() / 2) - 600);
         i_quakejs_bee.gui.position.top(30);
-        i_quakejs_bee.gui.size.width(900);
-        i_quakejs_bee.gui.size.height(700);
-        i_quakejs_bee.gui.size.min.width(700);
-        i_quakejs_bee.gui.size.min.height(500);
-        i_quakejs_bee.gui.size.max.width(1200);
-        i_quakejs_bee.gui.size.max.height(900);
+        i_quakejs_bee.gui.size.width(1057);
+        i_quakejs_bee.gui.size.height(810);
         i_quakejs_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         i_quakejs_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_quakejs_bee.on('open', function() { i_quakejs_bee.gui.fx.fade.into(); });
@@ -128,17 +123,7 @@ function i_quakejs()
         i_quakejs_bee.on('dragged', function()
                                     {
                                         i_quakejs_bee.gui.fx.opacity.reset();
-
-                                        utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'none';
                                     });
-        i_quakejs_bee.on('resize', function() { utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'block'; });
-        i_quakejs_bee.on('resized', function() { utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'none'; });
-        i_quakejs_bee.on('mousemove', function()
-                                      {
-                                          utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'none';
-                                          utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_frame').focus();
-                                      });
-        i_quakejs_bee.on('mouseout', function() { utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_quakejs_bee.on('close', function()
                                   {
                                       i_quakejs_bee.gui.fx.fade.out();
@@ -157,8 +142,9 @@ function i_quakejs()
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
 
-        nature = matrix.get('nature');
+        swarm = matrix.get('swarm');
         infinity = matrix.get('infinity');
+        nature = matrix.get('nature');
 
         return true;
     };
@@ -167,6 +153,7 @@ function i_quakejs()
         cosmos = null,
         matrix = null,
         dev_box = null,
+        swarm = null,
         infinity = null,
         nature = null,
         i_quakejs_bee = null,

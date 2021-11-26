@@ -69,7 +69,7 @@ function i_bassoon()
         return i_bassoon_bee;
     };
 
-    this.init = function(caller)
+    this.init = function()
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;

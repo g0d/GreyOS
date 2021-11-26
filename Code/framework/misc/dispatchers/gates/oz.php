@@ -3,20 +3,24 @@
         GreyOS - OZ (Version: 1.0)
         
         File name: oz.php
-        Description: This file contains the OZ - Dynamic app creation application.
+        Description: This file contains the OZ - Gate (AJAX).
         
         Coded by George Delaportas (G0D)
         Copyright © 2013 - 2021
         Open Software License (OSL 3.0)
     */
-    
-    // Start OZ
+
+    // Check for direct access
+    if (!defined('micro_mvc'))
+        exit();
+
+    // Handle OZ requests
     if ($_POST['oz'])
     {
         
 
-        return true;
+        echo '1';
     }
     else
-        return null;
+        echo '0';
 ?>

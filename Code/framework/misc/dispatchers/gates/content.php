@@ -3,7 +3,7 @@
 		Content (Programmable gate for delivering content)
 		
 		File name: content.php
-		Description: This file contains the content gate.
+		Description: This file contains the content gate (AJAX).
 		
 		Coded by George Delaportas (G0D)
 		Copyright (C) 2017

@@ -14,9 +14,6 @@
     if (!defined('micro_mvc'))
         exit();
 
-    // Disable error reporting
-    error_reporting(0);
-
     if (isset($_POST))
     {
         if ($_POST['action'] === 'load')
