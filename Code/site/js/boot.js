@@ -322,6 +322,11 @@ function boot_script()
                     event.preventDefault();
             });
             os_utils.events.attach('greyos', document, 'contextmenu', function(event){ event.preventDefault(); });
+            os_utils.events.attach('greyos', document, 'mousedown', function(event)
+                                                                    {
+                                                                        if (event.buttons === 4)
+                                                                            event.preventDefault();
+                                                                    });
             //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
 
             // Calculate speed index
@@ -506,6 +511,11 @@ function boot_script()
                     event.preventDefault();
             });
             os_utils.events.attach('greyos', document, 'contextmenu', function(event){ event.preventDefault(); });
+            os_utils.events.attach('greyos', document, 'mousedown', function(event)
+                                                                    {
+                                                                        if (event.buttons === 4)
+                                                                            event.preventDefault();
+                                                                    });
             //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
 
             // Calculate speed index
