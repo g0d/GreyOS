@@ -1,1 +1,32 @@
-[{"app_id":"coyote","position":"0","title":"Coyote :: A Web browser inside the browser ;-) Click me!"},{"app_id":"cloud_edit","position":"1","title":"Cloud Edit :: Integrated code editor for GreyOS. Click me!"},{"app_id":"radio_dude","position":"2","title":"Radio Dude :: Put some tunes in your life. Click me!"},{"app_id":"i_bassoon","position":"3","title":"iBassoon :: 3rd-party integrated DAW for fun. Click me!"},{"app_id":"i_quakejs","position":"4","title":"iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"}]
+[
+    {
+        "app_id": "coyote",
+        "position": "0",
+        "title": "Coyote :: A Web browser inside the browser ;-) Click me!"
+    },
+    {
+        "app_id": "cloud_edit",
+        "position": "1",
+        "title": "Cloud Edit :: Integrated code editor for GreyOS. Click me!"
+    },
+    {
+        "app_id": "i_bassoon",
+        "position": "2",
+        "title": "iBassoon :: 3rd-party integrated DAW for fun. Click me!"
+    },
+    {
+        "app_id": "radio_dude",
+        "position": "3",
+        "title": "Radio Dude :: Put some tunes in your life. Click me!"
+    },
+    {
+        "app_id": "i_quakejs",
+        "position": "4",
+        "title": "iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"
+    },
+    {
+        "app_id": "i_minecraft",
+        "position": "5",
+        "title": "iMinecraft :: 3rd-party integrated Minecraft game. Click me!"
+    }
+]
