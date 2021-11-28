@@ -67,6 +67,7 @@
     "i_bassoon"         :   "user",
     "i_quakejs"         :   "user",
     "i_minecraft"       :   "user",
+    "i_webgl_preview"   :   "user",
     "ace"               :   "user",
     "banana"            :   "user"
 }

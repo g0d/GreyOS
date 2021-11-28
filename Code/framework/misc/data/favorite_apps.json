@@ -28,5 +28,10 @@
         "app_id": "i_minecraft",
         "position": "5",
         "title": "iMinecraft :: 3rd-party integrated Minecraft game. Click me!"
+    },
+    {
+        "app_id": "i_webgl_preview",
+        "position": "6",
+        "title": "iWebGL (Preview) :: 3rd-party integrated showcase. Click me!"
     }
 ]

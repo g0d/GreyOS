@@ -75,6 +75,7 @@
     UTIL::Load_Extension('i_bassoon', 'js');
     UTIL::Load_Extension('i_quakejs', 'js');
     UTIL::Load_Extension('i_minecraft', 'js');
+    UTIL::Load_Extension('i_webgl_preview', 'js');
     //UTIL::Load_Extension('e_games', 'js');
     UTIL::Load_Extension('banana', 'js');
     UTIL::Load_Extension('splash', 'php');
