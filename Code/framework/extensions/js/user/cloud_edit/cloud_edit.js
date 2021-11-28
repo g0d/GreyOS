@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cloud Edit (Version: 1.5)
+    GreyOS - Cloud Edit (Version: 1.6)
     
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
@@ -18,7 +18,7 @@ function cloud_edit()
     {
         function ce_model()
         {
-            this.component = null;
+            this.editor = null;
             this.exec_button = null;
             this.status_label = null;
         }
@@ -53,7 +53,7 @@ function cloud_edit()
             if (event_object.buttons !== 1)
                 return false;
 
-            __code = config.ce.component.getValue();
+            __code = config.ce.editor.getValue();
 
             if (__code === '')
                 return false;
@@ -168,20 +168,20 @@ function cloud_edit()
 
         this.attach_functions = function()
         {
-            config.ce.component = ace.edit(cloud_edit_bee.settings.general.id() + '_data');
+            config.ce.editor = ace.edit(cloud_edit_bee.settings.general.id() + '_data');
 
-            ace.require('ace/ext/settings_menu').init(config.ce.component);
+            ace.require('ace/ext/settings_menu').init(config.ce.editor);
 
-            config.ce.component.setTheme('ace/theme/tomorrow_night');
-            config.ce.component.session.setMode('ace/mode/javascript');
-            config.ce.component.setOptions({ enableBasicAutocompletion: true, 
+            config.ce.editor.setTheme('ace/theme/tomorrow_night');
+            config.ce.editor.session.setMode('ace/mode/javascript');
+            config.ce.editor.setOptions({ enableBasicAutocompletion: true, 
                                              enableSnippets: true, 
                                              enableLiveAutocompletion: true, 
                                              printMargin: false, 
                                              vScrollBarAlwaysVisible: true, 
                                              fontSize: '14' 
                                            });
-            config.ce.component.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'}, 
+            config.ce.editor.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'}, 
                                                   exec: function(this_editor) { this_editor.showSettingsMenu(); } 
                                                 } ]);
 
@@ -203,6 +203,13 @@ function cloud_edit()
             config.ce.status_label.innerHTML = '[READY]';
             config.ce.exec_button.value = 'Run';
             config.ce.exec_button.classList.remove('ce_stop');
+
+            return true;
+        };
+
+        this.destroy_editor = function()
+        {
+            config.ce.editor.destroy();
 
             return true;
         };
@@ -257,7 +264,12 @@ function cloud_edit()
                                           cloud_edit_bee.gui.fx.opacity.apply();
                                       });
         cloud_edit_bee.on('dragged', function() { cloud_edit_bee.gui.fx.opacity.reset(); });
-        cloud_edit_bee.on('close', function() { cloud_edit_bee.gui.fx.fade.out(); });
+        cloud_edit_bee.on('close', function()
+                                   {
+                                       cloud_edit_bee.gui.fx.fade.out();
+
+                                       utils_int.destroy_editor();
+                                   });
 
         return true;
     };

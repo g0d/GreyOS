@@ -399,12 +399,12 @@ function swarm()
             }
             else
             {
-                var __objects = objects_array.length;
+                var __objects_num = objects_array.length;
 
-                if (!utils_sys.validation.misc.is_array(objects_array) || colony.num() < __objects)
+                if (!utils_sys.validation.misc.is_array(objects_array) || colony.num() < __objects_num)
                     return false;
 
-                for (var i = 0; i < __objects; i++)
+                for (var i = 0; i < __objects_num; i++)
                 {
                     for (i = 0; i < colony.num(); i++)
                     {

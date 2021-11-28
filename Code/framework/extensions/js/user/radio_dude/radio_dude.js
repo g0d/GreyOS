@@ -1,5 +1,5 @@
 /*
-    GreyOS - Radio Dude (Version: 2.5)
+    GreyOS - Radio Dude (Version: 2.6)
     
     File name: radio_dude.js
     Description: This file contains the Radio Dude - Radio player application.
@@ -31,6 +31,8 @@ function radio_dude()
             infinity.setup(__data_content_id);
             infinity.begin();
 
+            selected_stream = 'https://stream.zeno.fm/qmqe8k5e74zuv';
+
             me.draw();
 
             config.player = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_ctlr');
@@ -46,8 +48,8 @@ function radio_dude()
         this.draw = function()
         {
             radio_dude_bee.settings.data.window.content('<div class="radio_dude_player">' + 
-                                                        '  <audio id="' + radio_dude_bee.settings.general.id() + '_ctlr" width="300" height="32" autoplay' + 
-                                                        '         controls src="https://stream.zeno.fm/qmqe8k5e74zuv">' + 
+                                                        '  <audio id="' + radio_dude_bee.settings.general.id() + '_ctlr" width="300" height="32" ' + 
+                                                        '         autoplay="false" controls="false" src="' + selected_stream + '">' + 
                                                         '  </audio>' + 
                                                         '</div>' + 
                                                         '<div class="radio_dude_list">' + 
@@ -75,6 +77,8 @@ function radio_dude()
             streams[2] = 'https://i4.streams.ovh/sc/musicfactory/stream';
             streams[3] = 'https://c30.radioboss.fm:18119/stream';
             streams[4] = 'https://ais-sa2.cdnstream1.com/1963_128.mp3';
+
+            selected_stream = streams[stream_id];
 
             config.player.pause();
             config.player.src = streams[stream_id];
@@ -192,6 +196,7 @@ function radio_dude()
         swarm = null,
         nature = null,
         infinity = null,
+        selected_stream = null,
         radio_dude_bee = null,
         utils_sys = new vulcan(),
         config = new config_model(),

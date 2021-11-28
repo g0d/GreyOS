@@ -1,5 +1,5 @@
 /*
-    GreyOS - Colony (Version: 2.2)
+    GreyOS - Colony (Version: 2.4)
     
     File name: colony.js
     Description: This file contains the Colony - Bee keeper container module.
@@ -16,9 +16,29 @@ function colony()
 
     function bees_model()
     {
+        this.max = 50;
         this.num = 0;
         this.list = [];
     }
+
+    this.max = function(num)
+    {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (utils_sys.validation.misc.is_undefined(num))
+            return bees.max;
+
+        if (!utils_sys.validation.numerics.is_integer(num) || num < 1 || num > 100)
+            return false;
+
+        bees.max = num;
+
+        if (backtrace === true)
+            frog('COLONY', 'Objects :: Max', num);
+
+        return true;
+    };
 
     this.num = function()
     {
@@ -75,9 +95,12 @@ function colony()
         if (!utils_sys.validation.misc.is_array(objects_array))
             return false;
 
-        var __objects = objects_array.length;
+        var __objects_num = objects_array.length;
 
-        for (var i = 0; i < __objects; i++)
+        if ((bees.num === bees.max) || (__objects_num > (bees.max - bees.num)))
+            return false;
+
+        for (var i = 0; i < __objects_num; i++)
         {
             if (!self.is_bee(objects_array[i]))
             {

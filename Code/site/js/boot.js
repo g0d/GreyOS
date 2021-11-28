@@ -32,6 +32,7 @@ function boot_script()
     // Set global parameters
     var global_boot_mode = 0;           // Boot modes: Normal (0) / Development (1)
     var global_theme = 'tomorrow';      // Themes: 'bubble_gum', 'tomorrow'
+    var global_max_active_bees = 10;    // Maximum number of allowed active bees per session
 
     // Initialization script
     var init_script = function()
@@ -80,6 +81,14 @@ function boot_script()
         app_box_container.add(user_apps);
 
         //console.log(app_box_container.list());
+
+        // Colony - Bee keeper container
+        var bees_container = os_vm.hub.access('colony');
+
+        // Set maximum allowed active bees per session
+        bees_container.max(global_max_active_bees);
+
+        //console.log(bees_container.list());
 
         /* ======================================================= */
 
@@ -402,10 +411,11 @@ function boot_script()
         //console.log(app_box_container.list());
 
         // Colony - Bee keeper container
-        //var bees_container = os_vm.hub.access('colony');
+        var bees_container = os_vm.hub.access('colony');
 
-        // Track changes in the container
+        // Set maximum allowed active bees per session
         //bees_container.backtrace(true);
+        bees_container.max(global_max_active_bees);
 
         //console.log(bees_container.list());
 
