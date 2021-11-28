@@ -27,12 +27,13 @@ function boot_script()
     var os_timers = greyos.timers();
     var os_benchmark = greyos.benchmark();
     var os_mode = greyos.mode();
+    var os_settings = greyos.settings();
     var os_utils = greyos.utils();
 
-    // Set global parameters
-    var global_boot_mode = 0;           // Boot modes: Normal (0) / Development (1)
-    var global_theme = 'tomorrow';      // Themes: 'bubble_gum', 'tomorrow'
-    var global_max_active_bees = 10;    // Maximum number of allowed active bees per session
+    // Set global settings
+    os_settings.set('boot_mode', 0);        // Boot modes: Normal (0) / Development (1)
+    os_settings.set('theme', 'tomorrow');   // Themes: 'bubble_gum', 'tomorrow'
+    os_settings.set('max_apps', 10);        // Maximum number of allowed active apps per session
 
     // Initialization script
     var init_script = function()
@@ -85,8 +86,8 @@ function boot_script()
         // Colony - Bee keeper container
         var bees_container = os_vm.hub.access('colony');
 
-        // Set maximum allowed active bees per session
-        bees_container.max(global_max_active_bees);
+        // Set maximum allowed active apps (bees) per session
+        bees_container.max(os_settings.get('max_apps'));
 
         //console.log(bees_container.list());
 
@@ -131,14 +132,14 @@ function boot_script()
             new_trinity.init();
 
             // Set the theme in use
-            new_chameleon.set(global_theme);
+            new_chameleon.set(os_settings.get('theme'));
 
             // Preload (cache) Bee theme for better graphics performance on load
             new_nature.theme(['bee']);
             new_nature.apply('new');
 
             // Apply desktop theme
-            os_utils.graphics.apply_theme('/site/themes/' + global_theme, global_theme);
+            os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
             // Initialize only the sound service (no UI)
             new_parrot.init();
@@ -156,7 +157,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the splash screen sound
-                new_parrot.play('sys', '/site/themes/' + global_theme + '/sounds/splash.mp3');
+                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/splash.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -206,7 +207,6 @@ function boot_script()
             matrix_container.get('nature').remove('krator');
 
             // Load the full dektop UI infrastructure
-
             matrix_container.get('ui_controls').init('action_icons');
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
@@ -228,7 +228,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                matrix_container.get('parrot').play('sys', '/site/themes/' + global_theme + '/sounds/login.mp3');
+                matrix_container.get('parrot').play('sys', '/site/themes/' + os_settings.get('theme') + '/sounds/login.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -261,14 +261,14 @@ function boot_script()
             new_trinity.init();
 
             // Set the theme in use
-            new_chameleon.set(global_theme);
+            new_chameleon.set(os_settings.get('theme'));
 
             // Preload (cache) Bee theme for better graphics performance on load
             new_nature.theme(['bee']);
             new_nature.apply('new');
 
             // Apply desktop theme
-            os_utils.graphics.apply_theme('/site/themes/' + global_theme, global_theme);
+            os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');
@@ -293,7 +293,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                new_parrot.play('sys', '/site/themes/' + global_theme + '/sounds/login.mp3');
+                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -413,9 +413,9 @@ function boot_script()
         // Colony - Bee keeper container
         var bees_container = os_vm.hub.access('colony');
 
-        // Set maximum allowed active bees per session
+        // Set maximum allowed active apps (bees) per session
         //bees_container.backtrace(true);
-        bees_container.max(global_max_active_bees);
+        bees_container.max(os_settings.get('max_apps'));
 
         //console.log(bees_container.list());
 
@@ -448,14 +448,14 @@ function boot_script()
             new_trinity.init();
 
             // Set the theme in use
-            new_chameleon.set(global_theme);
+            new_chameleon.set(os_settings.get('theme'));
 
             // Preload (cache) Bee theme for better graphics performance on load
             new_nature.theme(['bee']);
             new_nature.apply('new');
 
             // Apply desktop theme
-            os_utils.graphics.apply_theme('/site/themes/' + global_theme, global_theme);
+            os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');
@@ -480,7 +480,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                new_parrot.play('sys', '/site/themes/' + global_theme + '/sounds/login.mp3');
+                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -556,7 +556,7 @@ function boot_script()
 
         //os_loader.backtrace(true);
         os_loader.use([init_script, init_script_dev]);
-        os_loader.execute([global_boot_mode]);
+        os_loader.execute([os_settings.get('boot_mode')]);
 
         return true;
     }

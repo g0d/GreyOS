@@ -16,7 +16,7 @@ function colony()
 
     function bees_model()
     {
-        this.max = 50;
+        this.max = 10;
         this.num = 0;
         this.list = [];
     }
@@ -29,7 +29,7 @@ function colony()
         if (utils_sys.validation.misc.is_undefined(num))
             return bees.max;
 
-        if (!utils_sys.validation.numerics.is_integer(num) || num < 1 || num > 100)
+        if (!utils_sys.validation.numerics.is_integer(num) || num < 1)
             return false;
 
         bees.max = num;

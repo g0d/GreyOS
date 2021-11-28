@@ -82,6 +82,11 @@ function meta_os()
         return new_linux_mode;
     };
 
+    this.settings = function()
+    {
+        return new_settings;
+    };
+
     var new_keys = new key_manager(),
         //new_mouse = new mouse_manager(),
         new_vulcan = new vulcan(),
@@ -95,5 +100,6 @@ function meta_os()
         new_hypervisor = new multiverse(),
         new_loader = new scenario(),
         new_boot = new boot_screen(),
-        new_linux_mode = new linux_mode();
+        new_linux_mode = new linux_mode(),
+        new_settings = new teletraan();
 }
