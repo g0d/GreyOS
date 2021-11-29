@@ -1,7 +1,7 @@
 /*
     FX (Colection of high quality fx for web apps)
 
-    File id: fx.js (Version: 2.4)
+    File id: fx.js (Version: 2.6)
     Description: This file contains the FX extension.
     Dependencies: Vulcan.
 
@@ -385,12 +385,201 @@ function fx()
                                     else
                                         __element.style[__pos] = __pos_val + __distance + 'px';
                                  }, speed);
+
+                    return true;
                 }
                 else
                     return false;
             }
 
             return do_swipe(direction);
+        };
+
+        this.roll = function(id, mode, direction, distance, offset, speed, step, callback)
+        {
+            var __element = element_validator(id, mode),
+                __distance = 0,
+                __last_step = 0,
+                __interval_id = null,
+                interval = new interval_model();
+
+            if (__element === false)
+                return false;
+
+            if (!utils.validation.alpha.is_string(direction) || 
+                !utils.validation.numerics.is_integer(distance) || 
+                !utils.validation.numerics.is_integer(offset) || 
+                !utils.validation.numerics.is_integer(speed) || 
+                !utils.validation.numerics.is_integer(step))
+                return false;
+
+            if (!utils.validation.misc.is_undefined(callback) && !utils.validation.misc.is_function(callback))
+                return false;
+
+            if (step >= distance)
+                return false;
+
+            function interval_model()
+            {
+                this.run = function(func, speed)
+                {
+                    __interval_id = setInterval(function() { func.call(); }, speed);
+
+                    return true;
+                };
+
+                this.stop = function(interval_handler)
+                {
+                    clearInterval(interval_handler);
+
+                    return true;
+                };
+            }
+
+            function reverse_parameters()
+            {
+                distance = -distance;
+                step = -step;
+
+                return true;
+            }
+
+            function dynamic_logic(distance, direction, mode)
+            {
+                if (direction === 'up' || direction === 'left')
+                {
+                    if (mode === 1)
+                    {
+                        if (__distance <= distance)
+                            return true;
+
+                        return false;
+                    }
+                    else if (mode === 2)
+                    {
+                        if (__distance < distance)
+                            return true;
+
+                        return false;
+                    }
+                    else
+                        return null;
+                }
+                else if (direction === 'down' || direction === 'right')
+                {
+                    if (mode === 1)
+                    {
+                        if (__distance >= distance)
+                            return true;
+
+                        return false;
+                    }
+                    else if (mode === 2)
+                    {
+                        if (__distance > distance)
+                            return true;
+
+                        return false;
+                    }
+                    else
+                        return null;
+                }
+
+                return null;
+            }
+
+            function execute_callback()
+            {
+                interval.stop(__interval_id);
+
+                if (!utils.validation.misc.is_undefined(callback))
+                    callback.call();
+
+                return null;
+            }
+
+            function do_roll(direction)
+            {
+                if (direction === 'up' || direction === 'down' || direction === 'left' || direction === 'right')
+                {
+                    var __dimension = null,
+                        __pos = null,
+                        __dimension_val = 0,
+                        __pos_val = 0;
+
+                    if (direction === 'up' || direction === 'down')
+                    {
+                        __dimension = 'height';
+                        __pos = 'top';
+
+                        __dimension_val = utils.graphics.pixels_value(__element.style.height);
+                        __pos_val = utils.graphics.pixels_value(__element.style.top);
+
+                        if (direction === 'down')
+                        {
+                            __element.style.top = __pos_val + __dimension_val + offset + 'px';
+                            __element.style[__dimension] = '0px';
+                        }
+                    }
+                    else
+                    {
+                        __dimension = 'width';
+                        __pos = 'left';
+
+                        __dimension_val = utils.graphics.pixels_value(__element.style.width);
+                        __pos_val = utils.graphics.pixels_value(__element.style.left);
+
+                        if (direction === 'right')
+                        {
+                            __element.style.left = __pos_val + __dimension_val + offset + 'px';
+                            __element.style[__dimension] = '0px';
+                        }
+                    }
+
+                    if (direction === 'up' || direction === 'left')
+                    {
+                        __distance = distance;
+
+                        reverse_parameters();
+                    }
+
+                    interval.run(function()
+                                 {
+                                    __distance = __distance + step;
+
+                                    if (__distance <= 0)
+                                    {
+                                        __element.style[__pos] = __pos_val + 'px';
+                                        __element.style[__dimension] = __dimension_val + 'px';
+
+                                        execute_callback();
+                                    }
+                                    else
+                                    {
+                                        if (dynamic_logic(distance, direction, 1))
+                                        {
+                                            if (dynamic_logic(distance, direction, 2))
+                                            {
+                                                __last_step = distance - (__distance - step);
+                                                __element.style[__dimension] = Math.abs((__distance - step) + __last_step) + 'px';
+                                            }
+                                            else
+                                                __element.style[__dimension] = Math.abs(__distance) + 'px';
+
+                                            execute_callback();
+                                        }
+                                        else
+                                            __element.style[__dimension] = Math.abs(__distance) + 'px';
+                                    }
+                                 }, speed);
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            return do_roll(direction);
         };
 
         this.slider = function(options)

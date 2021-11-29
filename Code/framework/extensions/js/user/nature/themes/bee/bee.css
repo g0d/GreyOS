@@ -300,7 +300,6 @@
     position: absolute;
     display: none;
     cursor: default;
-    min-width: 260px;
     min-height: 130px;
     font-size: 12px;
     background-color: #FFFFFF;

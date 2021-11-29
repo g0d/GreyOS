@@ -2934,10 +2934,10 @@ function bee()
 
                 this.deploy = function(event_object, callback)
                 {
-                    function swipe_casement()
+                    function animate_casement()
                     {
                         gfx.visibility.toggle(ui_config.casement.id, 1);
-                        gfx.animation.swipe(ui_config.casement.id, 1, 'right', __casement_width, 0, __speed, __step,
+                        gfx.animation.roll(ui_config.casement.id, 1, 'right', __casement_width, 0, __speed, __step,
                         function()
                         {
                             bee_statuses.casement_deployed(true);
@@ -2971,9 +2971,9 @@ function bee()
                     __casement.style.left = __pos_x + 'px';
 
                     if (self.status.gui.fx.fading.into.finished())
-                        swipe_casement();
+                        animate_casement();
                     else
-                        setTimeout(function() { swipe_casement(); }, utils_int.animating_events.duration());
+                        setTimeout(function() { animate_casement(); }, utils_int.animating_events.duration());
 
                     if (self.settings.actions.can_use_menu())
                         utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').innerHTML = 'Hide casement';
@@ -2983,9 +2983,9 @@ function bee()
 
                 this.hide = function(event_object, callback)
                 {
-                    function swipe_casement()
+                    function animate_casement()
                     {
-                        gfx.animation.swipe(ui_config.casement.id, 1, 'left', 
+                        gfx.animation.roll(ui_config.casement.id, 1, 'left', 
                         __casement_width, 0, __speed, __step, 
                         function()
                         {
@@ -3019,7 +3019,7 @@ function bee()
                     if (!bee_statuses.casement_deployed())
                         execute_commands(callback);
                     else
-                        swipe_casement();
+                        animate_casement();
 
                     if (self.settings.actions.can_use_menu())
                         utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').innerHTML = 'Deploy casement';
