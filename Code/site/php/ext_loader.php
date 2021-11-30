@@ -24,6 +24,7 @@
     UTIL::Load_Extension('heartbeat', 'js');
     UTIL::Load_Extension('msgbox', 'js');
     UTIL::Load_Extension('workbox', 'js');
+    UTIL::Load_Extension('task', 'js');
     UTIL::Load_Extension('parallel', 'js');
     UTIL::Load_Extension('key_manager', 'js');
     UTIL::Load_Extension('ajax_factory', 'js');

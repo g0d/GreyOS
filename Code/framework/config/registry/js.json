@@ -15,6 +15,7 @@
     "armadillo"         :   "user",
     "fx"                :   "user",
     "lava"              :   "user",
+    "task"              :   "user",
     "parallel"          :   "user",
     "snail"             :   "user",
     "workbox"           :   "user",
