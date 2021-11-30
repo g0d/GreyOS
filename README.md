@@ -4,7 +4,7 @@
 
 GreyOS is a new kind of OS, a Meta-OS.
 
-GreyOS introduces a new era of unimited possibilities with the concept of Cloud Computer (CC). GreyOS is still under rigorous development 
+GreyOS introduces a new era of unlimited possibilities with the concept of Cloud Computer (CC). GreyOS is still under rigorous development 
 and not a final system to be deployed for business purposes. Ths CC is the next generation of computing but highly experimental for now.
 GreyOS is based on the latest [micro-MVC](https://github.com/g0d/micro-MVC) and supported by various developers across the globe.
 
