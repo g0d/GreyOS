@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cloud Edit (Version: 1.6)
+    GreyOS - Cloud Edit (Version: 1.8)
     
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
@@ -62,8 +62,6 @@ function cloud_edit()
             {
                 app_bee.gui.actions.close(event_object);
 
-                //hive. - TODO!!!
-
                 me.reset();
 
                 return false;
@@ -106,7 +104,17 @@ function cloud_edit()
 
             __this_bee = __this_app.get_bee();
 
-            swarm.bees.insert(__this_bee);
+            if (!swarm.bees.insert(__this_bee))
+            {
+                config.ce.status_label.innerHTML = '[INVALID]';
+                config.ce.exec_button.value = 'Run';
+                config.ce.exec_button.classList.remove('ce_stop');
+
+                frog('CLOUD EDIT', '% Unknown Method %', 
+                     'The application contains unknown method(s)!');
+
+                return false;
+            }
 
             __this_bee.show();
 

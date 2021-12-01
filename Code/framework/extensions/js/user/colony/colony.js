@@ -215,6 +215,11 @@ function colony()
             utils_sys.validation.misc.is_undefined(object.drone))
             return false;
 
+        var bee_length = Object.keys(object).length;
+
+        if (bee_length < 8 || bee_length > 8)
+            return false;
+
         return true;
     };
 
