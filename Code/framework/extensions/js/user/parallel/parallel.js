@@ -3,7 +3,7 @@
 
     File name: parallel.js (Version: 2.0)
     Description: This file contains the Parallel tasks framework extension.
-    Dependencies: Task, Vulcan and Pythia.
+    Dependencies: Vulcan, Pythia, JAP and Task.
 
     Coded by George Delaportas (G0D)
     Copyright (C) 2015 - 2021
@@ -83,6 +83,34 @@ function parallel()
             }
 
             return false;
+        };
+
+        this.run_all = function(tasks_config)
+        {
+            if (utils.validation.misc.is_undefined(tasks_config))
+                return false;
+
+            if (!config_parser.verify(__tasks_config_model, tasks_config))
+                return false;
+
+            var __task = null;
+
+            for (__this_task_config of tasks_config)
+            {
+                if (__this_task_config.callback !== null && 
+                    !utils.validation.misc.is_function(__this_task_config.callback))
+                    return false;
+
+                for (__index = 0; __index < tasks_list.num; __index++)
+                {
+                    __task = tasks_list.tasks[__index];
+
+                    if (__task.id() == __this_task_config.id)
+                        __task.run(__this_task_config.data, __this_task_config.callback);
+                }
+            }
+
+            return true;
         };
 
         this.kill = function()
@@ -176,6 +204,11 @@ function parallel()
             return tasks_manager.run(task_id, data, callback);
         };
 
+        this.run_all = function(tasks_config)
+        {
+            return tasks_manager.run_all(tasks_config);
+        };
+
         this.kill = function()
         {
             tasks_manager.kill();
@@ -196,7 +229,24 @@ function parallel()
     }
 
     var __tasks_status = ['RUNNING', 'FINISHED', 'DELAYED'],
+        __tasks_config_model = 
+        { "arguments"   :   [
+                                {
+                                    "key"       :   { "name" : "id", "optional" : false },
+                                    "value"     :   { "type" : "number" }
+                                },
+                                {
+                                    "key"       :   { "name" : "data", "optional" : false },
+                                    "value"     :   { "type" : "*" }
+                                },
+                                {
+                                    "key"       :   { "name" : "callback", "optional" : true },
+                                    "value"     :   { "type" : "*" }
+                                }
+                            ]
+        };
         tasks_manager = new task_manager_model(),
+        config_parser = new jap(),
         utils = new vulcan();
 
     // Initialize

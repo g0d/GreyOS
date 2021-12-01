@@ -1,8 +1,8 @@
 /*
-    Worker (Test worker for Task)
+    Worker (Template)
 
     File name: worker.js (Version: 0.1)
-    Description: This file contains the test worker for Task.
+    Description: This file contains the worker template for Task.
 
     Coded by George Delaportas (G0D)
     Copyright (C) 2021

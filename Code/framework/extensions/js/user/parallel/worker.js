@@ -1,11 +1,11 @@
 /*
-    Worker (Test worker for Parallel)
+    Worker (Template)
 
     File name: worker.js (Version: 0.1)
-    Description: This file contains the test worker for Parallel.
+    Description: This file contains the worker template for Parallel.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2017
+    Copyright (C) 2021
     Open Software License (OSL 3.0)
 */
 

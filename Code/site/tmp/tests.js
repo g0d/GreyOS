@@ -1,3 +1,14 @@
+var pl = new parallel();
+var tk_1 = pl.tasks.create('/framework/extensions/js/user/parallel/worker.js');
+var tk_2 = pl.tasks.create('/framework/extensions/js/user/parallel/worker.js');
+var tk_3 = pl.tasks.create('/framework/extensions/js/user/parallel/worker.js');
+var tasks_config = 
+[
+    { "id" : tk_1, "data" : "Task 1", "callback" : function(e) { console.log(e.data); } },
+    { "id" : tk_2, "data" : "Task 2", "callback" : function(e) { console.log(e.data); } },
+    { "id" : tk_3, "data" : "Task 3", "callback" : function(e) { console.log(e.data); } },
+];
+console.log(pl.tasks.run_all(tasks_config));
 
 console.log('VM CPU: ', navigator.hardwareConcurrency, ' CORES');
 console.log('VM RAM: ', navigator.deviceMemory, ' GiB');
