@@ -150,9 +150,6 @@ function boot_script()
             // Show login/register windows
             run_krator_app();
 
-            // Load Banana (User suggestions widget)
-            //Banana();
-
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()
             {
@@ -474,7 +471,7 @@ function boot_script()
             new_hive.stack.bees.show();
 
             // Load Banana (User suggestions widget)
-            //Banana();
+            Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()

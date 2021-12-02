@@ -1,5 +1,5 @@
 /*
-    GreyOS - Banana (Version: 1.2)
+    GreyOS - Banana (Version: 1.4)
     
     File name: banana.js
     Description: This file contains the Banana - Suggestions manager widget.
@@ -12,7 +12,8 @@
 // Banana
 function Banana()
 {
-    var dynamic_object = null;
+    var dynamic_object = null,
+        utils = new vulcan();
 
     dynamic_object = document.createElement('link');
 
@@ -26,7 +27,8 @@ function Banana()
     dynamic_object = document.createElement('div');
 
     dynamic_object.id = 'banana';
-    dynamic_object.innerHTML = '<div class="banana_trigger" title="Dudes, send us your suggestions!"><br>O<br>P<br>E<br>N<br><br>M<br>E</div>' + 
+    dynamic_object.innerHTML = '<div class="banana_trigger" title="Dudes, send us your suggestions!">' + 
+                                                                   '<br><br><br>O<br>P<br>E<br>N<br><br>M<br>E</div>' + 
                                '<div class="banana_body">' + 
                                '<div class="banana_title">User Suggestions</div>' + 
                                '<div class="banana_box">' + 
@@ -38,8 +40,8 @@ function Banana()
 
     setTimeout(function()
                {
-                    document.getElementById('desktop').appendChild(dynamic_object);
-                    document.getElementById('banana_send').addEventListener('click', function() { __Banana_Post(); }, false);
+                    utils.objects.by_id('desktop').appendChild(dynamic_object);
+                    utils.objects.by_id('banana_send').addEventListener('click', function() { __Banana_Post(); }, false);
                }, 1500);
 
     return true;
@@ -48,18 +50,19 @@ function Banana()
 // Banana Post
 function __Banana_Post()
 {
-    var data = 'gate=banana&suggestion=' + document.getElementById('banana_suggestion').value;
+    var utils = new vulcan(),
+        data = 'gate=banana&suggestion=' + utils.objects.by_id('banana_suggestion').value;
 
     ajax_factory(data, function(result)
                        {
-                            document.getElementById('banana_suggestion').value = '';
+                            utils.objects.by_id('banana_suggestion').value = '';
 
                             if (result === '1')
-                                document.getElementById('banana_info').innerHTML = 'Thank you dude!';
+                                utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
                             else
-                                document.getElementById('banana_info').innerHTML = 'Houston, we have a problem...';
+                                utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
 
-                            setTimeout(function() { document.getElementById('banana_info').innerHTML = ''; }, 1500);
+                            setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
                        },
                        function()
                        {

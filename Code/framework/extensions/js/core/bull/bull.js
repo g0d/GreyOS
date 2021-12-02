@@ -135,7 +135,7 @@ function bull()
                         __ajax_response = __xml_http.responseText;
                     else
                     {
-                        var __container = document.getElementById(__data_div_id);
+                        var __container = utils.objects.by_id(__data_div_id);
                         
                         if (utils.validation.misc.is_invalid(__container))
                             return false;

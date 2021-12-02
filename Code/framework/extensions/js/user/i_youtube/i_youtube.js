@@ -357,7 +357,7 @@ function i_youtube()
             
             events.attach(4);
             
-//            var node = document.getElementById(config.video_tag + '_data');
+//            var node = utils.objects.by_id(config.video_tag + '_data');
 //
 //            var kids = node.childNodes;
 //

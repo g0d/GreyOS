@@ -724,7 +724,7 @@ function i_fb()
                              };
 
             var geocoder = new google.maps.Geocoder();
-            var map = new google.maps.Map(document.getElementById('map_canvas'), my_options);
+            var map = new google.maps.Map(utils.objects.by_id('map_canvas'), my_options);
             var marker;
 
             google.maps.event.addListener(map, 'click', function(event) 
@@ -885,5 +885,3 @@ function i_fb()
         map = new initialize_map();
 
 }
-
-
