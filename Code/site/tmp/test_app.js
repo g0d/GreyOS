@@ -116,9 +116,9 @@ function test_app()
         //test_app_bee.on('resized', function() {  });
         test_app_bee.on('close', function()
                                  {
-                                    test_app_bee.gui.fx.fade.out();
+                                     test_app_bee.gui.fx.fade.out();
 
-                                    caller.reset();
+                                     caller.reset();
                                  });
 
         return true;

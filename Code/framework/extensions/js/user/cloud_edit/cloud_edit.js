@@ -183,15 +183,15 @@ function cloud_edit()
             config.ce.editor.setTheme('ace/theme/tomorrow_night');
             config.ce.editor.session.setMode('ace/mode/javascript');
             config.ce.editor.setOptions({ enableBasicAutocompletion: true, 
-                                             enableSnippets: true, 
-                                             enableLiveAutocompletion: true, 
-                                             printMargin: false, 
-                                             vScrollBarAlwaysVisible: true, 
-                                             fontSize: '14' 
-                                           });
+                                          enableSnippets: true, 
+                                          enableLiveAutocompletion: true, 
+                                          printMargin: false, 
+                                          vScrollBarAlwaysVisible: true, 
+                                          fontSize: '14' 
+                                        });
             config.ce.editor.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'}, 
-                                                  exec: function(this_editor) { this_editor.showSettingsMenu(); } 
-                                                } ]);
+                                                      exec: function(this_editor) { this_editor.showSettingsMenu(); } 
+                                                    } ]);
 
              return true;
         };

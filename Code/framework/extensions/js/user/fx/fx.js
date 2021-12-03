@@ -517,7 +517,7 @@ function fx()
 
                         if (direction === 'down')
                         {
-                            __element.style.top = __pos_val + __dimension_val + offset + 'px';
+                            __element.style[__pos] = __pos_val + __dimension_val + offset + 'px';
                             __element.style[__dimension] = '0px';
                         }
                     }
@@ -531,7 +531,7 @@ function fx()
 
                         if (direction === 'right')
                         {
-                            __element.style.left = __pos_val + __dimension_val + offset + 'px';
+                            __element.style[__pos] = __pos_val + __dimension_val + offset + 2 + 'px';
                             __element.style[__dimension] = '0px';
                         }
                     }

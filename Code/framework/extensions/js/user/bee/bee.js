@@ -3316,7 +3316,7 @@ function bee()
                     bee_statuses.dragging(true);
 
                     if (bee_statuses.casement_deployed())
-                        __dynamic_casement_width = __casement_width;
+                        __dynamic_casement_width = __casement_width + 2;
 
                     __pos_x = me.position.left() + (swarm.area.mouse.x() - me.mouse.relative.x());
                     __pos_y = me.position.top() + (swarm.area.mouse.y() - me.mouse.relative.y());
@@ -3361,7 +3361,7 @@ function bee()
                         swarm.settings.bottom() - __current_height + 'px';
 
                         utils_sys.objects.by_id(ui_config.casement.id).style.left = 
-                        swarm.settings.right() - __dynamic_casement_width + 'px';
+                        swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
                         utils_sys.objects.by_id(ui_config.casement.id).style.top = 
                         swarm.settings.bottom() - __current_height + 'px';
                     }
@@ -3377,7 +3377,7 @@ function bee()
                                 utils_sys.objects.by_id(__bee_id).style.top = '0px';
 
                                 utils_sys.objects.by_id(ui_config.casement.id).style.left = 
-                                swarm.settings.right() - __dynamic_casement_width + 'px';
+                                swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
                                 utils_sys.objects.by_id(ui_config.casement.id).style.top = '0px';
                             }
                             else
@@ -3387,7 +3387,7 @@ function bee()
                                 utils_sys.objects.by_id(__bee_id).style.top = __pos_y + 'px';
 
                                 utils_sys.objects.by_id(ui_config.casement.id).style.left = 
-                                swarm.settings.right() - __dynamic_casement_width + 'px';
+                                swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
                                 utils_sys.objects.by_id(ui_config.casement.id).style.top = __pos_y + 'px';
                             }
                         }

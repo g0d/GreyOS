@@ -96,21 +96,21 @@ function my_app()
         my_app_bee.on('open', function() { my_app_bee.gui.fx.fade.into(); });
         my_app_bee.on('opened', function() { utils_int.gui_init(); });
         my_app_bee.on('dragging', function()
-                                    {
-                                        my_app_bee.gui.fx.opacity.settings.set(0.7);
-                                        my_app_bee.gui.fx.opacity.apply();
-                                    });
+                                  {
+                                      my_app_bee.gui.fx.opacity.settings.set(0.7);
+                                      my_app_bee.gui.fx.opacity.apply();
+                                  });
         my_app_bee.on('dragged', function() { my_app_bee.gui.fx.opacity.reset(); });
         //my_app_bee.on('resizing', function() {  });
         //my_app_bee.on('resize', function() {  });
         //my_app_bee.on('resized', function() {  });
         my_app_bee.on('close', function()
-                                 {
-                                    my_app_bee.gui.fx.fade.out();
+                               {
+                                  my_app_bee.gui.fx.fade.out();
 
-                                    // API exposed by the caller (Cloud Edit in this case)
-                                    caller.reset();
-                                 });
+                                  // API exposed by the caller (Cloud Edit in this case)
+                                  caller.reset();
+                               });
 
         return true;
     };
@@ -145,7 +145,7 @@ function my_app()
         swarm = null,                   // Swarm of bees (desktop apps)
         infinity = null,                // Progress (loading) indicator
         nature = null,                  // Theme manager
-        my_app_bee = null,              // A variable to stor a model of the window
+        my_app_bee = null,              // A variable to store a model of the window
         utils_sys = new vulcan(),       // System utilities
         config = new config_model(),    // A configuration model
         utils_int = new utilities();    // Internal utilities

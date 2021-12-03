@@ -1,19 +1,16 @@
 /*
-    GreyOS - Octopus (Version: 1.0)
+    Octopus - Task
 
-    File name: octopus.js
-    Description: This file contains the Octopus - Media devices management service module.
+    File name: task.js (Version: 1.0)
+    Description: This file contains the Octopus - Task.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright (C) 2021
     Open Software License (OSL 3.0)
 */
 
-// Octopus
-function octopus()
+function octopus_task()
 {
-    var self = this;
-
     function devices_model()
     {
         function input_model()
@@ -237,9 +234,6 @@ function octopus()
 
     this.init = function(container_id)
     {
-        if (utils_sys.validation.misc.is_nothing(cosmos))
-            return false;
-
         if (is_init === true)
             return false;
 
@@ -260,34 +254,27 @@ function octopus()
         }
     };
 
-    this.cosmos = function(cosmos_object)
-    {
-        if (utils_sys.validation.misc.is_undefined(cosmos_object))
-            return false;
-
-        cosmos = cosmos_object;
-
-        matrix = cosmos.hub.access('matrix');
-
-        parrot = matrix.get('parrot');
-        chameleon = matrix.get('chameleon');
-        nature = matrix.get('nature');
-
-        return true;
-    };
-
     var is_init = false,
         is_service_active = false,
-        cosmos = null,
-        matrix = null,
-        parrot = null,
-        chameleon = null,
-        nature = null,
         utils_sys = new vulcan(),
         random = new pythia(),
         usb_devices = new devices_model(),
         utils_int = new utilities();
 
-    this.devices = new devices();
-    this.settings = new settings();
+        this.devices = new devices();
+        this.settings = new settings();
 }
+
+onmessage = function(e)
+{
+    if (e.data === 'init')
+    {
+        var code = new octopus_task();
+
+        code.init();
+
+        postMessage('1');
+    }
+    else
+        postMessage('0');
+};
