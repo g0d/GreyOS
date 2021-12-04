@@ -34,8 +34,6 @@ function krator()
 
         this.gui_init = function()
         {
-            msg_win.init('desktop');
-
             me.draw();
             me.attach_events();
 
@@ -199,6 +197,10 @@ function krator()
 
         this.check_login_credentials = function(username_object, password_object, login_button_object)
         {
+            msg_win = new msgbox();
+
+            msg_win.init('desktop');
+
             if (!utils_sys.validation.utilities.is_email(username_object.value))
             {
                 msg_win.show('GreyOS', 'The email format is invalid!');
@@ -239,6 +241,10 @@ function krator()
 
         this.check_registration_credentials = function(username_object, password_object, password_comfirm_object, register_button_object)
         {
+            msg_win = new msgbox();
+
+            msg_win.init('desktop');
+
             if (!utils_sys.validation.utilities.is_email(username_object.value))
             {
                 msg_win.show('GreyOS', 'The email format is invalid!');
@@ -377,10 +383,10 @@ function krator()
         dev_box = null,
         swarm = null,
         nature = null,
+        msg_win = null,
         krator_bee = null,
         utils_sys = new vulcan(),
         key_control = new key_manager(),
-        msg_win = new msgbox(),
         config = new config_model(),
         utils_int = new utilities();
 }

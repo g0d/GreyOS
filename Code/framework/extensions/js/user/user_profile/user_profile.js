@@ -22,6 +22,9 @@ function user_profile()
         {
             function abnormal_logout()
             {
+                msg_win = new msgbox();
+
+                msg_win.init('desktop');
                 msg_win.show('GreyOS', 'Your session has been terminated!',
                 function() { setTimeout(function(){ me.logout(); }, 2000); });
             }
@@ -64,6 +67,9 @@ function user_profile()
                                  },
                                  function()
                                  {
+                                     msg_win = new msgbox();
+
+                                     msg_win.init('desktop');
                                      msg_win.show('GreyOS', 'Logout error!', 
                                                   function() { cc_reload.init(); });
                                  },
@@ -77,8 +83,6 @@ function user_profile()
 
         this.draw_user_profile = function()
         {
-            msg_win.init('desktop');
-
             me.draw();
             me.attach_events();
             me.session_watchdog();
@@ -310,9 +314,9 @@ function user_profile()
         swarm = null,
         hive = null,
         nature = null,
+        msg_win = null,
         utils_sys = new vulcan(),
         key_control = new key_manager(),
-        msg_win = new msgbox(),
         cc_reload = new f5(),
         utils_int = new utilities();
 

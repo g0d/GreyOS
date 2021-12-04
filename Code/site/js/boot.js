@@ -171,7 +171,6 @@ function boot_script()
                 var msg_win = new msgbox();
 
                 msg_win.init('desktop');
-
                 msg_win.show('GreyOS', 'A system error occurred. Your system will be rebooted!', 
                 function()
                 {

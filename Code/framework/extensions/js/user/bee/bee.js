@@ -2936,6 +2936,8 @@ function bee()
                 {
                     function animate_casement()
                     {
+                        __is_animating = true;
+
                         gfx.visibility.toggle(ui_config.casement.id, 1);
                         gfx.animation.roll(ui_config.casement.id, 1, 'right', __casement_width, 0, __speed, __step,
                         function()
@@ -2960,13 +2962,21 @@ function bee()
                     if (__is_animating === true || !self.settings.actions.can_deploy_casement())
                         return false;
 
-                    __is_animating = true;
-
                     var __pos_x = me.position.left(),
                         __casement = utils_sys.objects.by_id(ui_config.casement.id),
                         __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
                         __step = Math.ceil(__casement_width / 23),
                         __speed = Math.ceil(__step / 3);
+
+                    if ((__pos_x + (__casement_width * 2)) >= swarm.settings.right())
+                    {
+                        msg_win = new msgbox();
+
+                        msg_win.init('desktop');
+                        msg_win.show('GreyOS', 'The casement can not be deployed here as it overflows your screen!');
+
+                        return false;
+                    }
 
                     __casement.style.left = __pos_x + 'px';
 
@@ -2985,6 +2995,8 @@ function bee()
                 {
                     function animate_casement()
                     {
+                        __is_animating = true;
+
                         gfx.animation.roll(ui_config.casement.id, 1, 'left', 
                         __casement_width, 0, __speed, __step, 
                         function()
@@ -3008,8 +3020,6 @@ function bee()
 
                     if (__is_animating === true)
                         return false;
-
-                    __is_animating = true;
 
                     var __casement = utils_sys.objects.by_id(ui_config.casement.id),
                         __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
@@ -4517,6 +4527,7 @@ function bee()
         swarm = null,
         hive = null,
         colony = null,
+        msg_win = null,
         utils_sys = new vulcan(),
         random = new pythia(),
         gfx = new fx(),

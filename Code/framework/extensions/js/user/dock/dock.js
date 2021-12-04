@@ -271,6 +271,9 @@ function dock()
                                 {
                                     if (__bee.gui.size.width() > swarm.settings.right() || __bee.gui.size.height() > swarm.settings.bottom())
                                     {
+                                        msg_win = new msgbox();
+
+                                        msg_win.init('desktop');
                                         msg_win.show('GreyOS', 'The app is overflowing your screen. \
                                                                 You need a larger screen or higher resolution to run it!');
                                     }
@@ -311,6 +314,8 @@ function dock()
 
         this.draw = function()
         {
+            msg_win = new msgbox();
+
             msg_win.init('desktop');
 
             ajax_load(self.settings.container(), function()
@@ -406,11 +411,11 @@ function dock()
         parrot = null,
         chameleon = null,
         nature = null,
+        msg_win = null,
         last_button_clicked = 0,
         utils_sys = new vulcan(),
         ajax = new bull(),
         random = new pythia(),
-        msg_win = new msgbox(),
         config = new config_model(),
         utils_int = new utilities();
 
