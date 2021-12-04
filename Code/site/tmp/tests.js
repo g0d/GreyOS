@@ -1,14 +1,22 @@
+var tk = new task();
+tk.create('/framework/extensions/js/user/task/worker.js');
+tk.message.receive((x) => { console.log(x.data); });
+tk.message.send('Test');
+
 var pl = new parallel();
-var tk_1 = pl.tasks.create('/framework/extensions/js/user/parallel/worker.js');
-var tk_2 = pl.tasks.create('/framework/extensions/js/user/parallel/worker.js');
-var tk_3 = pl.tasks.create('/framework/extensions/js/user/parallel/worker.js');
+var tk_1 = pl.create('/framework/extensions/js/user/parallel/worker.js');
+var tk_2 = pl.create('/framework/extensions/js/user/parallel/worker.js');
+var tk_3 = pl.create('/framework/extensions/js/user/parallel/worker.js');
 var tasks_config = 
 [
-    { "id" : tk_1, "data" : "Task 1", "callback" : function(e) { console.log(e.data); } },
-    { "id" : tk_2, "data" : "Task 2", "callback" : function(e) { console.log(e.data); } },
-    { "id" : tk_3, "data" : "Task 3", "callback" : function(e) { console.log(e.data); } },
+    { "id" : tk_1, "data" : "Task 1" },
+    { "id" : tk_2, "data" : {"id" : "1", "sd" : [2,5,3,4] }, "callback" : function(e) { console.log(e.data); } },
+    { "id" : tk_3, "data" : '...', "callback" : function(e) { console.log(e.data + 'XXX'); } },
 ];
-console.log(pl.tasks.run_all(tasks_config));
+//console.log(pl.run(tk_1, 'TASK 1'));
+//console.log(pl.run(tk_2, 'test 2', () => { console.log('OK!'); }));
+//console.log(pl.run(tk_3, '3333', (e) => { console.log(e.data); }));
+console.log(pl.run_all(tasks_config));
 
 console.log('VM CPU: ', navigator.hardwareConcurrency, ' CORES');
 console.log('VM RAM: ', navigator.deviceMemory, ' GiB');

@@ -1,7 +1,7 @@
 /*
     Task programming
 
-    File name: task.js (Version: 1.0)
+    File name: task.js (Version: 2.0)
     Description: This file contains the Task framework extension.
     Dependencies: Vulcan and Pythia.
 
@@ -18,15 +18,13 @@ function task()
     function task_model()
     {
         this.id = null;
-        this.delay = 0;
-        this.status = null;
         this.file = null;
         this.worker = null;
     }
 
     function task_manager_model()
     {
-        this.create = function(worker_file, delay)
+        this.create = function(worker_file)
         {
             var __new_worker = new Worker(worker_file);
 
@@ -34,13 +32,7 @@ function task()
             __task.file = worker_file;
             __task.worker = __new_worker;
 
-            if (!utils.validation.misc.is_undefined(delay))
-            {
-                __task.delay = delay;
-                __task.status = __task_status[2];
-            }
-            else
-                __task.status = __task_status[0];
+            __is_task_created = true;
 
             return __task.id;
         };
@@ -48,65 +40,73 @@ function task()
         this.destroy = function()
         {
             __task.worker.terminate();
-            __task.status = __task_status[1];
+
+            __is_task_created = false;
 
             return true;
         };
 
-        this.run = function(data, callback)
+        this.message = function(any)
         {
-            if (__task.delay > 0)
-            {
-                clearTimeout(__timer_handler);
-
-                __timer_handler = setTimeout(function() { __task.worker.postMessage(data); }, __task.delay);
-            }
+            if (utils.validation.misc.is_function(any))
+                 __task.worker.onmessage = function(e) { any.call(this, e); };
             else
-                __task.worker.postMessage(data);
-
-            __task.status = __task_status[0];
-
-            if (callback !== null)
-                __task.worker.onmessage = function(e) {callback.call(this, e); };
+                __task.worker.postMessage(any);
 
             return true;
         };
-
-        var __timer_handler = null;
     }
 
-    this.create = function(worker_file, delay)
+    function message()
     {
-        if (utils.validation.misc.is_invalid(worker_file) || !utils.validation.alpha.is_string(worker_file) || 
-            (!utils.validation.misc.is_undefined(delay) && (!utils.validation.numerics.is_integer(delay) || 
-             delay < 1 || delay > 86400000)))
+        this.receive = function(callback)
+        {
+            if (!utils.validation.misc.is_function(callback))
+                return false;
+
+            if (__is_task_created === false)
+                return false;
+
+            return task_manager.message(callback);
+        };
+
+        this.send = function(data)
+        {
+            if (utils.validation.misc.is_invalid(data))
+                return false;
+
+            if (__is_task_created === false)
+                return false;
+
+            return task_manager.message(data);
+        };
+    }
+
+    this.id = function()
+    {
+        if (__is_task_created === false)
             return false;
 
-        return task_manager.create(worker_file, delay);
+        return __task.id;
+    };
+
+    this.create = function(worker_file)
+    {
+        if (utils.validation.misc.is_invalid(worker_file) || !utils.validation.alpha.is_string(worker_file))
+            return false;
+
+        if (__is_task_created === true)
+            return false;
+
+        return task_manager.create(worker_file);
     };
 
     this.destroy = function()
     {
-        return task_manager.destroy();
-    };
-
-    this.run = function(data, callback = null)
-    {
-        if (utils.validation.misc.is_invalid(data) || 
-            (callback !== null && !utils.validation.misc.is_function(callback)))
+        if (__is_task_created === false)
             return false;
 
-        return task_manager.run(data, callback);
-    };
-
-    this.id = function()
-    {
-        return __task.id;
-    };
-
-    this.status = function()
-    {
-        return __task.status;
+        return task_manager.destroy();
     };
 
     function init()
@@ -117,11 +117,13 @@ function task()
         return this;
     }
 
-    var __task_status = ['RUNNING', 'FINISHED', 'DELAYED'],
+    var __is_task_created = false,
         __task = new task_model(),
         task_manager = new task_manager_model(),
         rnd_gen = new pythia(),
         utils = new vulcan();
+
+    this.message = new message();
 
     // Initialize
     init();

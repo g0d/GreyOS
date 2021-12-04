@@ -1,7 +1,7 @@
 /*
     Worker (Template)
 
-    File name: worker.js (Version: 0.1)
+    File name: worker.js (Version: 0.2)
     Description: This file contains the worker template for Parallel.
 
     Coded by George Delaportas (G0D)
@@ -11,7 +11,6 @@
 
 onmessage = function(e)
 {
-    // YOUR STUFF HERE...
-
+    // Your code here...
     postMessage(e.data);
 };

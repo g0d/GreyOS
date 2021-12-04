@@ -15,7 +15,7 @@ function parallel()
 {
     var self = this;
 
-    function task_manager_model()
+    function tasks_manager_model()
     {
         function tasks_list_model()
         {
@@ -39,18 +39,20 @@ function parallel()
             };
         }
 
-        this.create = function(worker_file, delay)
+        this.create = function(worker_file)
         {
             var __new_task_id = null,
                 __new_task = new task(),
 
-            __new_task_id = __new_task.create(worker_file, delay);
+            __new_task_id = __new_task.create(worker_file);
 
             if (__new_task_id === false)
                 return false;
 
             tasks_list.tasks.push(__new_task);
             tasks_list.num++;
+
+            __is_task_created = true;
 
             return __new_task_id;
         };
@@ -64,7 +66,14 @@ function parallel()
                 __task = tasks_list.tasks[__index];
 
                 if (__task.id() === task_id)
+                {
+                    tasks_list.tasks.splice(__index, 1);
+
+                    if (tasks_list.num === 0)
+                        __is_task_created = false;
+
                     return __task.destroy();
+                }
             }
 
             return false;
@@ -79,7 +88,12 @@ function parallel()
                 __task = tasks_list.tasks[__index];
 
                 if (__task.id() === task_id)
-                    return __task.run(data, callback);
+                {
+                    __task.message.send(data);
+                    __task.message.receive(callback);
+
+                    return true;
+                }
             }
 
             return false;
@@ -97,7 +111,7 @@ function parallel()
 
             for (__this_task_config of tasks_config)
             {
-                if (__this_task_config.callback !== null && 
+                if (!utils.validation.misc.is_undefined(__this_task_config.callback) && 
                     !utils.validation.misc.is_function(__this_task_config.callback))
                     return false;
 
@@ -105,8 +119,14 @@ function parallel()
                 {
                     __task = tasks_list.tasks[__index];
 
-                    if (__task.id() == __this_task_config.id)
-                        __task.run(__this_task_config.data, __this_task_config.callback);
+                    if (__task.id() === __this_task_config.id)
+                    {
+                        if (!utils.validation.misc.is_undefined(__this_task_config.data))
+                            __task.message.send(__this_task_config.data);
+
+                        if (!utils.validation.misc.is_undefined(__this_task_config.callback))
+                            __task.message.receive(__this_task_config.callback);
+                    }
                 }
             }
 
@@ -120,6 +140,8 @@ function parallel()
 
             tasks_list = new tasks_list_model();
 
+            __is_task_created = false;
+
             return null;
         };
 
@@ -129,106 +151,83 @@ function parallel()
             tasks_list = new tasks_list_model();
     }
 
-    function status()
+    this.num = function()
     {
-        function status_factory(status)
-        {
-            var __index = 0, 
-                __list = [],
-                __task = null;
+        if (__is_task_created === false)
+            return false;
 
-            for (__index = 0; __index < tasks_manager.tasks.num(); __index++)
-            {
-                __task = tasks_manager.tasks.list(__index);
+        return tasks_manager.tasks.num();
+    };
 
-                if (__task.status() === status)
-                    __list.push(__task);
-            }
-
-            return __list;
-        }
-
-        this.running = function()
-        {
-            return status_factory(__tasks_status[0]);
-        };
-
-        this.finished = function()
-        {
-            return status_factory(__tasks_status[1]);
-        };
-
-        this.delayed = function()
-        {
-            return status_factory(__tasks_status[2]);
-        };
-    }
-
-    function tasks()
+    this.list = function(index)
     {
-        this.num = function()
-        {
-            return tasks_manager.tasks.num();
-        };
+        if (__is_task_created === false)
+            return false;
 
-        this.list = function(index)
-        {
-            if (utils.validation.misc.is_undefined(index))
-                return tasks_manager.tasks.list();
+        if (utils.validation.misc.is_undefined(index))
+            return tasks_manager.tasks.list();
 
-            if (!utils.validation.numerics.is_integer(index) 
-                || index < 0 || index > (tasks_manager.tasks.num() - 1))
-                return false;
+        if (!utils.validation.numerics.is_integer(index) 
+            || index < 0 || index > (tasks_manager.tasks.num() - 1))
+            return false;
 
-            return tasks_manager.tasks.list(index);
-        };
+        return tasks_manager.tasks.list(index);
+    };
 
-        this.create = function(worker_file, delay)
-        {
-            return tasks_manager.create(worker_file, delay);
-        };
+    this.create = function(worker_file)
+    {
+        return tasks_manager.create(worker_file);
+    };
 
-        this.destroy = function(task_id)
-        {
-            if (!utils.validation.numerics.is_integer(task_id))
-                return false;
+    this.destroy = function(task_id)
+    {
+        if (!utils.validation.numerics.is_integer(task_id))
+            return false;
 
-            return tasks_manager.destroy(task_id);
-        };
+        if (__is_task_created === false)
+            return false;
 
-        this.run = function(task_id, data, callback = null)
-        {
-            if (!utils.validation.numerics.is_integer(task_id))
-                return false;
+        return tasks_manager.destroy(task_id);
+    };
 
-            return tasks_manager.run(task_id, data, callback);
-        };
+    this.run = function(task_id, data = null, callback = null)
+    {
+        if (!utils.validation.numerics.is_integer(task_id))
+            return false;
 
-        this.run_all = function(tasks_config)
-        {
-            return tasks_manager.run_all(tasks_config);
-        };
+        if (__is_task_created === false)
+            return false;
 
-        this.kill = function()
-        {
-            tasks_manager.kill();
+        return tasks_manager.run(task_id, data, callback);
+    };
 
-            return true;
-        };
-    }
+    this.run_all = function(tasks_config)
+    {
+        if (__is_task_created === false)
+            return false;
+
+        return tasks_manager.run_all(tasks_config);
+    };
+
+    this.kill = function()
+    {
+        if (__is_task_created === false)
+            return false;
+
+        tasks_manager.kill();
+
+        return true;
+    };
 
     function init()
     {
         if (utils.validation.misc.is_undefined(Worker))
             return false;
 
-        self.tasks = new tasks();
-        self.status = new status();
-
         return this;
     }
 
-    var __tasks_status = ['RUNNING', 'FINISHED', 'DELAYED'],
+    var __is_task_created = false,
         __tasks_config_model = 
         { "arguments"   :   [
                                 {
@@ -245,7 +244,7 @@ function parallel()
                                 }
                             ]
         };
-        tasks_manager = new task_manager_model(),
+        tasks_manager = new tasks_manager_model(),
         config_parser = new jap(),
         utils = new vulcan();
 
