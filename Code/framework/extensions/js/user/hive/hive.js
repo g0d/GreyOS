@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 2.4)
+    GreyOS - Hive (Version: 2.5)
     
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -408,8 +408,6 @@ function hive()
                     __this_hive_bee.drone.run('enable_drag');
 
                     __this_hive_bee.gui.position.top(__this_hive_bee.gui.position.top() + __this_hive_bee.gui.size.height() - 85);
-
-                    utils_sys.objects.by_id(__this_bee).style.opacity = '1.0';
                 }
 
                 utils_sys.objects.by_id(__this_bee).style.display = 'block';
@@ -810,10 +808,7 @@ function hive()
 
             swarm.settings.z_index(__z_index + 1);
 
-            __bee_object.gui.position.z_index(__z_index + 1);
-
-            if (utils_sys.objects.by_id(bee_id) !== null)
-                utils_sys.objects.by_id(bee_id).style.zIndex = __z_index + 1;
+            __bee_object.gui.actions.set_top();
 
             return true;
         };

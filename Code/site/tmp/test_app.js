@@ -95,6 +95,7 @@ function test_app()
         test_app_bee.settings.data.window.labels.title('GreyOS :: Test App');
         test_app_bee.settings.data.window.labels.status_bar('GreyOS - Test application');
         test_app_bee.settings.data.window.content(utils_int.say());
+        test_app_bee.settings.general.topmost(true);
         test_app_bee.gui.position.left(920);
         test_app_bee.gui.position.top(170);
         test_app_bee.gui.size.width(720);

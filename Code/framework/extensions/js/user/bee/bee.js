@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 3.0)
+    GreyOS - Bee (Version: 3.2)
     
     File name: bee.js
     Description: This file contains the Bee - Floating window module.
@@ -163,16 +163,21 @@ function bee()
             return true;
         };
 
-        this.manage_drag_status = function()
+        this.manage_drag_status = function(event_object)
         {
+            if (event_object.buttons !== 1)
+                return false;
+
             if (!self.settings.actions.can_drag.enabled() || bee_statuses.title_on_edit() || bee_statuses.close())
                 return false;
 
-            swarm.settings.active_bee(self.settings.general.id());
+            swarm.settings.active_bee(my_bee_id);
 
             bee_statuses.drag(true);
+            bee_statuses.active(true);
 
             bee_events_scheduler.execute('gui', 'drag');
+            bee_events_scheduler.execute('system', 'active');
 
             return true;
         };
@@ -195,17 +200,13 @@ function bee()
 
         this.edit_win_title = function()
         {
-            var __bee_id = self.settings.general.id(),
-                __ctrl_bar = utils_sys.objects.by_id(ui_config.window.control_bar.id),
+            var __ctrl_bar = utils_sys.objects.by_id(ui_config.window.control_bar.id),
                 __old_title = utils_sys.objects.by_id(ui_config.window.control_bar.ids.title),
                 __pencil = utils_sys.objects.by_id(ui_config.window.control_bar.ids.pencil),
                 __win_type_class_title = null,
-                __title_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.width) - 100,
+                __title_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width) - 100,
                 __edit_box = document.createElement('input'),
                 __handler = null;
-
-            __handler = function(event) { event.preventDefault(); };
-            utils_sys.events.detach(__bee_id, utils_sys.objects.by_id(ui_config.window.control_bar.id), 'mousedown', __handler);
 
             __ctrl_bar.removeChild(__old_title);
             __ctrl_bar.removeChild(__pencil);
@@ -215,7 +216,7 @@ function bee()
             else
                 __win_type_class_title = 'box_title';
 
-            __edit_box.setAttribute('id', __bee_id + '_title_edit_box');
+            __edit_box.setAttribute('id', my_bee_id + '_title_edit_box');
             __edit_box.setAttribute('class', 'title ' + __win_type_class_title + ' edit_win_title');
             __edit_box.setAttribute('style', 'width: ' + __title_width + 'px');
             __edit_box.setAttribute('value', self.settings.data.window.labels.title());
@@ -223,7 +224,7 @@ function bee()
             __ctrl_bar.appendChild(__edit_box);
 
             __handler = function(event) { if (self.gui.keys.get(event) === 13) me.update_win_title(); };
-            utils_sys.events.attach(__bee_id, utils_sys.objects.by_id(__edit_box.id), 'keydown', __handler);
+            utils_sys.events.attach(my_bee_id, utils_sys.objects.by_id(__edit_box.id), 'keydown', __handler);
 
             bee_statuses.title_on_edit(true);
 
@@ -234,12 +235,11 @@ function bee()
 
         this.update_win_title = function()
         {
-            var __bee_id = self.settings.general.id(),
-                __ctrl_bar = utils_sys.objects.by_id(ui_config.window.control_bar.id),
-                __title_edit_box = utils_sys.objects.by_id(__bee_id + '_title_edit_box'),
+            var __ctrl_bar = utils_sys.objects.by_id(ui_config.window.control_bar.id),
+                __title_edit_box = utils_sys.objects.by_id(my_bee_id + '_title_edit_box'),
                 __new_title = __title_edit_box.value,
                 __win_type_class_title = null,
-                __title_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.width) - 100,
+                __title_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width) - 100,
                 __title_div = document.createElement('div'),
                 __pencil_div = document.createElement('div'),
                 __handler = null;
@@ -263,10 +263,14 @@ function bee()
             __ctrl_bar.appendChild(__title_div);
             __ctrl_bar.appendChild(__pencil_div);
 
-            __handler = function(event) { event.preventDefault(); };
-            utils_sys.events.attach(__bee_id, utils_sys.objects.by_id(ui_config.window.control_bar.id), 'mousedown', __handler);
+            __handler = function(event)
+                        {
+                            self.gui.actions.edit_title(event);
 
-            __handler = function(event) { self.gui.actions.edit_title(event); };
+                            bee_statuses.active(true);
+
+                            bee_events_scheduler.execute('system', 'active');
+                        };
             utils_sys.objects.by_id(ui_config.window.control_bar.ids.pencil).onmousedown = __handler;
 
             self.settings.data.window.labels.title(__new_title);
@@ -280,10 +284,8 @@ function bee()
         {
             var __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
                 __dynamic_object = null,
-                __bee_id = bee_object.settings.general.id(),
                 __bee_settings = bee_object.settings,
                 __bee_gui = bee_object.gui,
-                __z_index = swarm.status.z_index(),
                 __marquee_class = '',
                 __html = null,
                 __handler = null;
@@ -294,7 +296,7 @@ function bee()
             if (self.gui.size.width() > swarm.settings.right() || self.gui.size.height() > swarm.settings.bottom())
                 return false;
 
-            ui_config.window.id = __bee_id;
+            ui_config.window.id = my_bee_id;
             ui_config.window.class = 'gui ' + ui_config.window.id + '_gui';
 
             ui_config.window.control_bar.id = ui_config.window.id + '_ctrl_bar';
@@ -472,33 +474,33 @@ function bee()
             bee_events_scheduler.execute('mouse', 'mousemove');
 
             __handler = function(event) { __bee_gui.actions.menu.close(event); };
-            utils_sys.events.attach(__bee_id, document, 'mousedown', __handler);
+            utils_sys.events.attach(my_bee_id, document, 'mousedown', __handler);
 
             __handler = function(event) { __bee_gui.actions.release(event); };
-            utils_sys.events.attach(__bee_id, document, 'mouseup', __handler);
+            utils_sys.events.attach(my_bee_id, document, 'mouseup', __handler);
 
             __handler = function(event) { __bee_gui.keys.get(event); };
-            utils_sys.events.attach(__bee_id, __swarm_object, 'keydown', __handler);
+            utils_sys.events.attach(my_bee_id, __swarm_object, 'keydown', __handler);
 
             __handler = function() { bee_statuses.key_pressed(false); };
-            utils_sys.events.attach(__bee_id, __swarm_object, 'keyup', __handler);
+            utils_sys.events.attach(my_bee_id, __swarm_object, 'keyup', __handler);
 
             __handler = function(event) { __bee_gui.actions.dresize(event); };
-            utils_sys.events.attach(__bee_id, __swarm_object, 'mousemove', __handler);
+            utils_sys.events.attach(my_bee_id, __swarm_object, 'mousemove', __handler);
 
             __handler = function(event) { __bee_gui.actions.hover.into(event); };
-            utils_sys.objects.by_id(__bee_id).onmouseover = __handler;
+            utils_sys.objects.by_id(my_bee_id).onmouseover = __handler;
 
             __handler = function(event) { __bee_gui.actions.hover.out(event); };
-            utils_sys.objects.by_id(__bee_id).onmouseout = __handler;
+            utils_sys.objects.by_id(my_bee_id).onmouseout = __handler;
 
             __handler = function(event) { me.coords(event, 1); };
-            utils_sys.objects.by_id(__bee_id).onmousemove = __handler;
+            utils_sys.objects.by_id(my_bee_id).onmousemove = __handler;
 
             __handler = function() { __bee_gui.actions.touch(); };
-            utils_sys.objects.by_id(__bee_id).onmousedown = __handler;
+            utils_sys.objects.by_id(my_bee_id).onmousedown = __handler;
 
-            __handler = function(event) { me.coords(event, 2); me.manage_drag_status(); };
+            __handler = function(event) { me.coords(event, 2); me.manage_drag_status(event); };
             utils_sys.objects.by_id(ui_config.window.control_bar.id).onmousedown = __handler;
 
             __handler = function(event)
@@ -506,6 +508,10 @@ function bee()
                             self.settings.actions.can_drag.enabled(false);
 
                             last_mouse_button_clicked = event.buttons;
+
+                            bee_statuses.active(true);
+
+                            bee_events_scheduler.execute('system', 'active');
                         };
             utils_sys.objects.by_id(ui_config.window.control_bar.ids.icon).onmousedown = __handler;
 
@@ -555,9 +561,20 @@ function bee()
                                 me.coords(event, 2);
 
                                 bee_statuses.resize(true);
+                                bee_statuses.active(true);
+
                                 bee_events_scheduler.execute('gui', 'resize');
+                                bee_events_scheduler.execute('system', 'active');
                             };
                 utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).onmousedown = __handler;
+
+                __handler = function()
+                {
+                    bee_statuses.resize(false);
+
+                    bee_events_scheduler.execute('gui', 'resized');
+                };
+                utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).onmouseup = __handler;
             }
 
             __handler = function() { return false; };
@@ -565,7 +582,6 @@ function bee()
             utils_sys.objects.by_id(ui_config.window.status_bar.id).onselectstart = __handler;
 
             __handler = function(event) { event.preventDefault(); };
-            utils_sys.events.attach(__bee_id, utils_sys.objects.by_id(ui_config.window.control_bar.id), 'mousedown', __handler);
             utils_sys.objects.by_id(ui_config.window.status_bar.id).onmousedown = __handler;
 
             __handler = function(event) { __bee_gui.actions.hover.into(event); };
@@ -594,22 +610,7 @@ function bee()
                 utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).style.height = 19 + 'px';
             }
 
-            if (self.settings.general.topmost()) // BUGGY: Needs work...
-            {
-                var __top_z_index = 2147400000 + __z_index;
-
-                swarm.settings.z_index(__z_index + 2);
-                __bee_gui.position.z_index(__top_z_index);
-
-                me.set_z_index(__top_z_index);
-            }
-            else
-            {
-                swarm.settings.z_index(__z_index + 2);
-                __bee_gui.position.z_index(__z_index + 2);
-
-                me.set_z_index(__z_index);
-            }
+            __bee_gui.actions.set_top();
 
             bee_statuses.open(false);
             bee_statuses.opened(true);
@@ -1214,10 +1215,9 @@ function bee()
                                 {
                                     if (context_id === 'mouse' || context_id === 'key')
                                     {
-                                        var __bee_id = self.settings.general.id(),
-                                            __bee_id_dom = utils_sys.objects.by_id(__bee_id);
+                                        var __bee_id_dom = utils_sys.objects.by_id(my_bee_id);
 
-                                        utils_sys.events.attach(__bee_id, __bee_id_dom, event_id, __contexts[i].events[j].cmd);
+                                        utils_sys.events.attach(my_bee_id, __bee_id_dom, event_id, __contexts[i].events[j].cmd);
 
                                         bee_statuses[event_id](true);
 
@@ -2018,6 +2018,7 @@ function bee()
                 this.left = 0;
                 this.top = 0;
                 this.z_index = 0;
+                this.topmost_z_index = 2147400000;
                 this.limits = new limits();
             }
 
@@ -2125,6 +2126,11 @@ function bee()
             this.z_index = function(val)
             {
                 return validate(1, 'z_index', 'z_index', val);
+            };
+
+            this.topmost_z_index = function(val)
+            {
+                return validate(1, 'topmost_z_index', 'z_index', val);
             };
 
             this.static = function(val)
@@ -3048,13 +3054,6 @@ function bee()
                     if (utils_sys.validation.misc.is_undefined(event_object))
                         return false;
 
-                    bee_statuses.active(true);
-
-                    bee_events_scheduler.execute('system', 'active');
-
-                    if (!swarm.status.active_bee())
-                        swarm.settings.active_bee(self.settings.general.id());
-
                     return true;
 
                 };
@@ -3068,11 +3067,7 @@ function bee()
                         return false;
 
                     if (!bee_statuses.dragging())
-                    {
                         bee_statuses.active(false);
-
-                        swarm.settings.active_bee(null);
-                    }
 
                     return true;
                 };
@@ -3106,15 +3101,14 @@ function bee()
 
                 function remove_me(this_object)
                 {
-                    var __bee_id = self.settings.general.id(),
-                        __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
-                        __honeycomb_id = hive.status.bees.honeycomb_id(__bee_id);
+                    var __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
+                        __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
 
-                    utils_sys.events.detach(__bee_id, __swarm_object, 'keydown');
-                    utils_sys.events.detach(__bee_id, __swarm_object, 'keyup');
-                    utils_sys.events.detach(__bee_id, __swarm_object, 'mousemove');
-                    utils_sys.events.detach(__bee_id, document, 'mousedown');
-                    utils_sys.events.detach(__bee_id, document, 'mouseup');
+                    utils_sys.events.detach(my_bee_id, __swarm_object, 'keydown');
+                    utils_sys.events.detach(my_bee_id, __swarm_object, 'keyup');
+                    utils_sys.events.detach(my_bee_id, __swarm_object, 'mousemove');
+                    utils_sys.events.detach(my_bee_id, document, 'mousedown');
+                    utils_sys.events.detach(my_bee_id, document, 'mouseup');
 
                     bee_events_scheduler.execute('gui', 'closed');
 
@@ -3139,8 +3133,7 @@ function bee()
 
                 if (event_object === null || event_object.buttons === 1 && bee_statuses.opened() && !bee_statuses.close())
                 {
-                    var __bee_id = self.settings.general.id(),
-                        __app_id = self.settings.general.app_id();
+                    var __app_id = self.settings.general.app_id();
 
                     if (!self.settings.actions.can_close())
                         return false;
@@ -3148,7 +3141,7 @@ function bee()
                     bee_statuses.close(true);
                     bee_statuses.dragging(false);
 
-                    self.gui.actions.casement.hide(event_object, 
+                    me.actions.casement.hide(event_object, 
                     function()
                     {
                         bee_events_scheduler.execute('gui', 'close');
@@ -3159,7 +3152,7 @@ function bee()
                             remove_me(self);
                     });
 
-                    owl.status.set(__bee_id, __app_id, 'END');
+                    owl.status.set(my_bee_id, __app_id, 'END');
 
                     return true;
                 }
@@ -3266,9 +3259,22 @@ function bee()
                 var __z_index = swarm.status.z_index();
 
                 swarm.settings.z_index(__z_index + 2);
-                me.position.z_index(__z_index + 2);
 
-                utils_int.set_z_index(__z_index);
+                if (self.settings.general.topmost())
+                {
+                    var new_topmost_z_index = me.position.topmost_z_index() + __z_index;
+
+                    me.position.topmost_z_index(new_topmost_z_index);
+                    me.position.z_index(new_topmost_z_index + 2);
+    
+                    utils_int.set_z_index(new_topmost_z_index);
+                }
+                else
+                {
+                    me.position.z_index(__z_index + 2);
+
+                    utils_int.set_z_index(__z_index);
+                }
 
                 return true;
             };
@@ -3281,8 +3287,6 @@ function bee()
                 if (bee_statuses.fading_in() || bee_statuses.fading_out() || bee_statuses.close())
                     return false;
 
-                var __z_index = swarm.status.z_index();
-
                 bee_statuses.touch(true);
                 bee_statuses.touched(false);
 
@@ -3294,10 +3298,7 @@ function bee()
                 if (self.settings.general.topmost())
                     return true;
 
-                swarm.settings.z_index(__z_index + 2);
-                me.position.z_index(__z_index + 2);
-
-                utils_int.set_z_index(__z_index);
+                me.actions.set_top();
 
                 return true;
             };
@@ -3310,14 +3311,16 @@ function bee()
                 if (utils_sys.validation.misc.is_undefined(event_object) || bee_statuses.title_on_edit() || bee_statuses.close())
                     return false;
 
-                var __bee_id = self.settings.general.id(),
-                    __current_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.width),
-                    __current_height = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.height),
+                if (event_object.buttons !== 1)
+                    return false;
+
+                var __current_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width),
+                    __current_height = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.height),
                     __casement_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(ui_config.casement.id).style.width),
                     __dynamic_casement_width = 0,
                     __dynamic_right_pos = 0;
 
-                if (event_object.buttons === 1 && bee_statuses.drag() && self.settings.actions.can_drag.enabled())
+                if (bee_statuses.drag() && self.settings.actions.can_drag.enabled())
                 {
                     var __pos_x = 0,
                         __pos_y = 0;
@@ -3333,8 +3336,8 @@ function bee()
 
                     if (__pos_x <= 0 && __pos_y <= 0)
                     {
-                        utils_sys.objects.by_id(__bee_id).style.left = '0px';
-                        utils_sys.objects.by_id(__bee_id).style.top = '0px';
+                        utils_sys.objects.by_id(my_bee_id).style.left = '0px';
+                        utils_sys.objects.by_id(my_bee_id).style.top = '0px';
 
                         utils_sys.objects.by_id(ui_config.casement.id).style.left = __dynamic_casement_width + 'px';
                         utils_sys.objects.by_id(ui_config.casement.id).style.top = '0px';
@@ -3343,8 +3346,8 @@ function bee()
                     {
                         if (__pos_x <= 0)
                         {
-                            utils_sys.objects.by_id(__bee_id).style.left = '0px';
-                            utils_sys.objects.by_id(__bee_id).style.top = __pos_y + 'px';
+                            utils_sys.objects.by_id(my_bee_id).style.left = '0px';
+                            utils_sys.objects.by_id(my_bee_id).style.top = __pos_y + 'px';
 
                             utils_sys.objects.by_id(ui_config.casement.id).style.left = __dynamic_casement_width + 'px';
                             utils_sys.objects.by_id(ui_config.casement.id).style.top = __pos_y + 'px';
@@ -3352,8 +3355,8 @@ function bee()
 
                         if (__pos_y <= 0)
                         {
-                            utils_sys.objects.by_id(__bee_id).style.left = __pos_x + 'px';
-                            utils_sys.objects.by_id(__bee_id).style.top = '0px';
+                            utils_sys.objects.by_id(my_bee_id).style.left = __pos_x + 'px';
+                            utils_sys.objects.by_id(my_bee_id).style.top = '0px';
 
                             utils_sys.objects.by_id(ui_config.casement.id).style.left = __pos_x + __dynamic_casement_width + 'px';
                             utils_sys.objects.by_id(ui_config.casement.id).style.top = '0px';
@@ -3365,9 +3368,9 @@ function bee()
                         ((__pos_y + __current_height - swarm.area.mouse.y()) >= 
                          (swarm.settings.bottom() - swarm.area.mouse.y())))
                     {
-                        utils_sys.objects.by_id(__bee_id).style.left = 
+                        utils_sys.objects.by_id(my_bee_id).style.left = 
                         swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
-                        utils_sys.objects.by_id(__bee_id).style.top = 
+                        utils_sys.objects.by_id(my_bee_id).style.top = 
                         swarm.settings.bottom() - __current_height + 'px';
 
                         utils_sys.objects.by_id(ui_config.casement.id).style.left = 
@@ -3382,9 +3385,9 @@ function bee()
                         {
                             if (__pos_y <= 0)
                             {
-                                utils_sys.objects.by_id(__bee_id).style.left = 
+                                utils_sys.objects.by_id(my_bee_id).style.left = 
                                 swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
-                                utils_sys.objects.by_id(__bee_id).style.top = '0px';
+                                utils_sys.objects.by_id(my_bee_id).style.top = '0px';
 
                                 utils_sys.objects.by_id(ui_config.casement.id).style.left = 
                                 swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
@@ -3392,9 +3395,9 @@ function bee()
                             }
                             else
                             {
-                                utils_sys.objects.by_id(__bee_id).style.left = 
+                                utils_sys.objects.by_id(my_bee_id).style.left = 
                                 swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
-                                utils_sys.objects.by_id(__bee_id).style.top = __pos_y + 'px';
+                                utils_sys.objects.by_id(my_bee_id).style.top = __pos_y + 'px';
 
                                 utils_sys.objects.by_id(ui_config.casement.id).style.left = 
                                 swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
@@ -3407,8 +3410,8 @@ function bee()
                         {
                             if (__pos_x <= 0)
                             {
-                                utils_sys.objects.by_id(__bee_id).style.left = '0px';
-                                utils_sys.objects.by_id(__bee_id).style.top = 
+                                utils_sys.objects.by_id(my_bee_id).style.left = '0px';
+                                utils_sys.objects.by_id(my_bee_id).style.top = 
                                 swarm.settings.bottom() - __current_height + 'px';
 
                                 utils_sys.objects.by_id(ui_config.casement.id).style.left = __dynamic_casement_width + 'px';
@@ -3416,8 +3419,8 @@ function bee()
                             }
                             else
                             {
-                                utils_sys.objects.by_id(__bee_id).style.left = __pos_x + 'px';
-                                utils_sys.objects.by_id(__bee_id).style.top = 
+                                utils_sys.objects.by_id(my_bee_id).style.left = __pos_x + 'px';
+                                utils_sys.objects.by_id(my_bee_id).style.top = 
                                 swarm.settings.bottom() - __current_height + 'px';
 
                                 utils_sys.objects.by_id(ui_config.casement.id).style.left = __pos_x + __dynamic_casement_width + 'px';
@@ -3437,8 +3440,8 @@ function bee()
                         ((__pos_y + __current_height - swarm.area.mouse.y()) < 
                             (swarm.settings.bottom() - swarm.area.mouse.y()))))
                     {
-                        utils_sys.objects.by_id(__bee_id).style.left = __pos_x + 'px';
-                        utils_sys.objects.by_id(__bee_id).style.top = __pos_y + 'px';
+                        utils_sys.objects.by_id(my_bee_id).style.left = __pos_x + 'px';
+                        utils_sys.objects.by_id(my_bee_id).style.top = __pos_y + 'px';
 
                         utils_sys.objects.by_id(ui_config.casement.id).style.left = __pos_x + __dynamic_casement_width + 'px';
                         utils_sys.objects.by_id(ui_config.casement.id).style.top = __pos_y + 'px';
@@ -3447,8 +3450,7 @@ function bee()
                     bee_events_scheduler.execute('gui', 'mouse_clicked');
                     bee_events_scheduler.execute('gui', 'dragging');
                 }
-                else if (event_object.buttons === 1 && bee_statuses.resize() && self.settings.actions.can_resize.enabled() && 
-                         !bee_statuses.casement_deployed())
+                else if (bee_statuses.resize() && self.settings.actions.can_resize.enabled() && !bee_statuses.casement_deployed())
                 {
                     var __size_x = 0,
                         __size_y = 0,
@@ -3479,8 +3481,8 @@ function bee()
                             if (__new_width - __size_x >= me.size.max.width() && 
                                 __new_height - __size_y >= me.size.max.height())
                             {
-                                utils_sys.objects.by_id(__bee_id).style.width = me.size.max.width() + 'px';
-                                utils_sys.objects.by_id(__bee_id).style.height = me.size.max.height() + 'px';
+                                utils_sys.objects.by_id(my_bee_id).style.width = me.size.max.width() + 'px';
+                                utils_sys.objects.by_id(my_bee_id).style.height = me.size.max.height() + 'px';
 
                                 utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
                                 me.size.max.width() - __resize_title_diff + 'px';
@@ -3501,8 +3503,8 @@ function bee()
                             {
                                 if (__new_width - __size_x >= me.size.max.width())
                                 {
-                                    utils_sys.objects.by_id(__bee_id).style.width = me.size.max.width() + 'px';
-                                    utils_sys.objects.by_id(__bee_id).style.height = __new_height + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.width = me.size.max.width() + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.height = __new_height + 'px';
 
                                     utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
                                     me.size.max.width() - __resize_title_diff + 'px';
@@ -3522,8 +3524,8 @@ function bee()
                             {
                                 if (__new_height - __size_y >= me.size.max.height())
                                 {
-                                    utils_sys.objects.by_id(__bee_id).style.width = __new_width + 'px';
-                                    utils_sys.objects.by_id(__bee_id).style.height =  me.size.max.height() + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.width = __new_width + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.height =  me.size.max.height() + 'px';
 
                                     utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
                                     __new_width - __resize_title_diff + 'px';
@@ -3545,8 +3547,8 @@ function bee()
                         {
                             if (__size_x >= 0 && __size_y >= 0)
                             {
-                                utils_sys.objects.by_id(__bee_id).style.width = me.size.min.width() + 'px';
-                                utils_sys.objects.by_id(__bee_id).style.height = me.size.min.height() + 'px';
+                                utils_sys.objects.by_id(my_bee_id).style.width = me.size.min.width() + 'px';
+                                utils_sys.objects.by_id(my_bee_id).style.height = me.size.min.height() + 'px';
 
                                 utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
                                 me.size.min.width() - __resize_title_diff + 'px';
@@ -3567,8 +3569,8 @@ function bee()
                             {
                                 if (__size_x >= 0)
                                 {
-                                    utils_sys.objects.by_id(__bee_id).style.width = me.size.min.width() + 'px';
-                                    utils_sys.objects.by_id(__bee_id).style.height = __new_height + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.width = me.size.min.width() + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.height = __new_height + 'px';
 
                                     utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
                                     me.size.min.width() - __resize_title_diff + 'px';
@@ -3588,8 +3590,8 @@ function bee()
                             {
                                 if (__size_y >= 0)
                                 {
-                                    utils_sys.objects.by_id(__bee_id).style.width = __new_width + 'px';
-                                    utils_sys.objects.by_id(__bee_id).style.height = me.size.min.height() + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.width = __new_width + 'px';
+                                    utils_sys.objects.by_id(my_bee_id).style.height = me.size.min.height() + 'px';
 
                                     utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
                                     __new_width - __resize_title_diff + 'px';
@@ -3609,8 +3611,8 @@ function bee()
                         if (__new_width > me.size.min.width() && __new_height > me.size.min.height() && 
                             __new_width < me.size.max.width() && __new_height < me.size.max.height())
                         {
-                            utils_sys.objects.by_id(__bee_id).style.width = __new_width + 'px';
-                            utils_sys.objects.by_id(__bee_id).style.height = __new_height + 'px';
+                            utils_sys.objects.by_id(my_bee_id).style.width = __new_width + 'px';
+                            utils_sys.objects.by_id(my_bee_id).style.height = __new_height + 'px';
 
                             utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
                             __new_width - __resize_title_diff + 'px';
@@ -3625,15 +3627,15 @@ function bee()
                             __new_height + 'px';
                         }
 
-                         utils_sys.objects.by_id(ui_config.casement.id).style.width = utils_sys.objects.by_id(__bee_id).style.width;
-                         utils_sys.objects.by_id(ui_config.casement.id).style.height = utils_sys.objects.by_id(__bee_id).style.height;
+                         utils_sys.objects.by_id(ui_config.casement.id).style.width = utils_sys.objects.by_id(my_bee_id).style.width;
+                         utils_sys.objects.by_id(ui_config.casement.id).style.height = utils_sys.objects.by_id(my_bee_id).style.height;
                     }
 
                     if (self.settings.data.window.labels.status_bar().length * 7.0 < 
-                        utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.width) - 40)
-                        utils_sys.objects.by_id(__bee_id + '_msg').childNodes[1].className = '';
+                        utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width) - 40)
+                        utils_sys.objects.by_id(my_bee_id + '_msg').childNodes[1].className = '';
                     else
-                        utils_sys.objects.by_id(__bee_id + '_msg').childNodes[1].className = 'marquee';
+                        utils_sys.objects.by_id(my_bee_id + '_msg').childNodes[1].className = 'marquee';
 
                     bee_events_scheduler.execute('gui', 'mouse_clicked');
                     bee_events_scheduler.execute('gui', 'resizing');
@@ -3654,40 +3656,43 @@ function bee()
                 if (utils_sys.validation.misc.is_undefined(event_object))
                     return false;
 
-                var __bee_id = self.settings.general.id();
+                if (event_object.buttons !== 0)
+                    return false;
 
                 self.settings.actions.can_drag.enabled(true);
 
-                if (event_object.buttons === 0 && !bee_statuses.close() && 
-                    swarm.status.active_bee() === __bee_id)
+                if (!bee_statuses.close() && swarm.status.active_bee() === my_bee_id)
                 {
+                    swarm.settings.active_bee(null);
+
                     if (bee_statuses.dragging())
                         bee_statuses.dragged(true);
 
                     if (bee_statuses.resizing())
                         bee_statuses.resized(true);
 
-                    bee_statuses.drag(false);
                     bee_statuses.dragging(false);
-                    bee_statuses.resize(false);
-                    bee_statuses.resizing(false);
+                    bee_statuses.drag(false);
 
-                    bee_statuses.touched(true);
                     bee_statuses.touch(false);
-
-                    bee_statuses.active(false);
+                    bee_statuses.touched(true);
 
                     bee_statuses.mouse_clicked(false);
+
+                    bee_statuses.active(false);
 
                     bee_events_scheduler.execute('gui', 'touched');
                     bee_events_scheduler.execute('gui', 'dragged');
                     bee_events_scheduler.execute('gui', 'resized');
 
-                    me.position.left(utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.left));
-                    me.position.top(utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__bee_id).style.top));
+                    me.position.left(utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.left));
+                    me.position.top(utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.top));
 
                     return true;
                 }
+
+                bee_statuses.resizing(false);
+                bee_statuses.resize(false);
 
                 if (!self.settings.actions.can_close())
                     bee_statuses.close(false);
@@ -4446,13 +4451,12 @@ function bee()
         if (is_init === false)
             return false;
  
-        var __bee_id = self.settings.general.id(),
-            __app_id = self.settings.general.app_id();
+        var __app_id = self.settings.general.app_id();
 
         if (bee_statuses.running())
             return false;
 
-        if (utils_int.is_lonely_bee(__bee_id))
+        if (utils_int.is_lonely_bee(my_bee_id))
             return false;
 
         if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.contains(__app_id))
@@ -4466,14 +4470,14 @@ function bee()
 
         if (!utils_int.draw(self))
         {
-            owl.status.set(__bee_id, __app_id, 'FAIL');
+            owl.status.set(my_bee_id, __app_id, 'FAIL');
 
             utils_int.log('show', 'ERROR');
 
             return false;
         }
 
-        owl.status.set(__bee_id, __app_id, 'RUN');
+        owl.status.set(my_bee_id, __app_id, 'RUN');
 
         utils_int.log('show', 'OK');
 
@@ -4492,6 +4496,8 @@ function bee()
 
         if (!self.settings.general.id(bee_id) || !self.settings.general.type(type))
             return false;
+
+        my_bee_id = self.settings.general.id();
 
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
@@ -4519,6 +4525,7 @@ function bee()
     };
 
     var is_init = false,
+        my_bee_id = null,
         cosmos = null,
         matrix = null,
         dev_box = null,
