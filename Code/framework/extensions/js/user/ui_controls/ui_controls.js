@@ -172,6 +172,9 @@ function ui_controls()
                 var __bees = colony.list(),
                     __bees_length = __bees.length;
 
+                if (__bees_length === 0)
+                    return false;
+
                 for (var i = 0; i < __bees_length; i++)
                     hive.stack.bees.insert(__bees[i], 1);
 

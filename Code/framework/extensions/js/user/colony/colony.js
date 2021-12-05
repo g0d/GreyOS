@@ -97,7 +97,7 @@ function colony()
 
         var __objects_num = objects_array.length;
 
-        if ((bees.num === bees.max) || (__objects_num > (bees.max - bees.num)))
+        if (__objects_num === 0 || (__objects_num > (bees.max - bees.num)))
             return false;
 
         for (var i = 0; i < __objects_num; i++)
@@ -217,7 +217,7 @@ function colony()
 
         var bee_length = Object.keys(object).length;
 
-        if (bee_length < 8 || bee_length > 8)
+        if (bee_length < 9 || bee_length > 9)
             return false;
 
         return true;

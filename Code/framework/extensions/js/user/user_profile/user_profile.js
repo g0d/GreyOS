@@ -196,7 +196,7 @@ function user_profile()
 
             key_control.scan(event);
 
-            if (key_control.get() !== key_control.constants().ESCAPE)
+            if (key_control.get() !== key_control.keys.ESCAPE)
                 return false;
 
             me.hide_pop_up();

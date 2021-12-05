@@ -1,5 +1,5 @@
 /*
-    GreyOS - App Box (Version: 1.4)
+    GreyOS - App Box (Version: 1.6)
     
     File name: app_box.js
     Description: This file contains the App Box - Integrated/User applications container module.
@@ -98,6 +98,9 @@ function app_box()
 
         var __models_num = models_array.length;
 
+        if (__models_num === 0)
+            return false;
+
         for (var i = 0; i < __models_num; i++)
         {
             if (!utils_sys.validation.misc.is_function(models_array[i]))
@@ -161,6 +164,37 @@ function app_box()
         }
 
         return false;
+    };
+
+    this.replace = function(models_array)
+    {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (!utils_sys.validation.misc.is_array(models_array))
+            return false;
+
+        var __models_num = models_array.length;
+
+        if (__models_num === 0)
+            return false;
+
+        for (var i = 0; i < __models_num; i++)
+        {
+            if (!utils_sys.validation.misc.is_function(models_array[i]))
+            {
+                if (backtrace === true)
+                    frog('APP BOX', 'Models :: Invalid', models_array[i]);
+
+                self.clear();
+
+                return false;
+            }
+
+            self.remove(models_array[i].name);
+        }
+
+        return self.add(models_array);
     };
 
     this.clear = function()

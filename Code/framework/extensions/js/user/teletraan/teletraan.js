@@ -19,6 +19,8 @@ function teletraan()
         this.boot_mode = 0;
         this.theme = null;
         this.max_apps = 1;
+        this.apps_per_view = 8;
+        this.stack_bars = 4;
     }
 
     this.get = function(option)

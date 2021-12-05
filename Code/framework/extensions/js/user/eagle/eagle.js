@@ -16,8 +16,8 @@ function eagle()
 
     function trace_keys_model()
     {
-        this.modifier = key_control.constants().SHIFT;
-        this.trigger = key_control.constants().TAB;
+        this.modifier = key_control.keys.SHIFT;
+        this.trigger = key_control.keys.TAB;
         this.modifier_set = false;
         this.trigger_set = false;
     }

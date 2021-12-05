@@ -98,6 +98,9 @@ function dev_box()
 
         var __models_num = models_array.length;
 
+        if (__models_num === 0)
+            return false;
+
         for (var i = 0; i < __models_num; i++)
         {
             if (!utils_sys.validation.misc.is_function(models_array[i]))

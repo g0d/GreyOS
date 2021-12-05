@@ -96,8 +96,7 @@ function cloud_edit()
                 return false;
             }
 
-            app_box.remove(__code_app.constructor.name);
-            app_box.add([__code_app.constructor]);
+            app_box.replace([__code_app.constructor]);
 
             __this_app = app_box.get(__code_app.constructor.name);
             __this_app.init(ce_api);

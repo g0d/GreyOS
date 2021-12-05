@@ -128,6 +128,10 @@ function i_quakejs()
                                   {
                                       i_quakejs_bee.gui.fx.fade.out();
                                   });
+        i_quakejs_bee.on('keydown', function()
+                                    {
+                                        console.log('QUAKE JS');
+                                    });
 
         return true;
     };

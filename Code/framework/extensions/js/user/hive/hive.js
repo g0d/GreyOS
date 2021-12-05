@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 2.5)
+    GreyOS - Hive (Version: 2.6)
     
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -226,9 +226,11 @@ function hive()
             if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
-            coords.mouse_x = event_object.clientX + document.documentElement.scrollLeft + document.body.scrollLeft - 
+            coords.mouse_x = event_object.clientX + 
+                             document.documentElement.scrollLeft + document.body.scrollLeft - 
                              document.body.clientLeft;
-            coords.mouse_y = event_object.clientY + document.documentElement.scrollTop + document.body.scrollTop - 
+            coords.mouse_y = event_object.clientY + 
+                             document.documentElement.scrollTop + document.body.scrollTop - 
                              document.body.clientTop;
 
             return true;
@@ -265,23 +267,31 @@ function hive()
             return false;
         };
 
-        this.set_bees_per_honeycomb = function(current_stack_width)
+        this.setup_honeycomb_size = function(bees_per_honeycomb)
         {
-            var __model_stack_width = 1162,
-                __bees_num = 0;
+            var __proposed_stack_width = ((bees_per_honeycomb / 2) * 230),
+                __min_screen_width = 1296,
+                __proportion = __proposed_stack_width / __min_screen_width,
+                __fixed_bees_per_honeycomb = bees_per_honeycomb;
 
-            if (current_stack_width > __model_stack_width)
+            if (__proportion > 1 & __proposed_stack_width >= __min_screen_width)
             {
-                __bees_num = parseInt(9 * (current_stack_width / __model_stack_width), 10);
+                var __width_diff = __proposed_stack_width - __min_screen_width,
+                    __margin_fix = 0;
 
-                if (__bees_num % 2 !== 0)
-                    __bees_num--;
+                __fixed_bees_per_honeycomb -= (Math.ceil(__width_diff / 230) + 1);
 
-                if (self.settings.bees_per_honeycomb() > __bees_num && __bees_num >= 8)
-                    self.settings.bees_per_honeycomb(__bees_num);
+                if (__fixed_bees_per_honeycomb % 2 !== 0)
+                    __fixed_bees_per_honeycomb -= 3;
+
+                __margin_fix = ((__fixed_bees_per_honeycomb / 2) * 2) + 1;
+
+                __proposed_stack_width -= (__width_diff - __margin_fix);
             }
 
-            return true;
+            max_stack_width = __proposed_stack_width;
+
+            return __fixed_bees_per_honeycomb;
         };
 
         this.validate_honeycomb_range = function(val)
@@ -328,15 +338,16 @@ function hive()
                         {
                             var __this_bee = swarm.status.active_bee(),
                                 __hive_bee = utils_sys.objects.by_id('hive_bee_' + __this_bee),
+                                __hive_object = utils_sys.objects.by_id(self.settings.id()),
                                 __ghost_bee_width = 230,
                                 __ghost_bee_height = 30,
                                 __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_views.visible()),
                                 __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
                                 __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
                                 __stack_offset_x_space = self.settings.left() + 
-                                                         utils_sys.graphics.pixels_value(utils_sys.objects.by_id(self.settings.id()).style.width) + 26,
+                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 26,
                                 __stack_offset_y_space = self.settings.top() + 
-                                                         utils_sys.graphics.pixels_value(utils_sys.objects.by_id(self.settings.id()).style.height);
+                                                         utils_sys.graphics.pixels_value(__hive_object.style.height);
 
                             if (mode === 1)
                             {
@@ -352,7 +363,7 @@ function hive()
                                 utils_sys.objects.by_id('hive_ghost_bee').style.left = coords.mouse_x + 10 + 'px';
 
                                 //if (__bee_y <= __stack_offset_y_space - 20)
-                                    utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y + __ghost_bee_height - 10 + 'px';
+                                utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y + __ghost_bee_height - 10 + 'px';
                                 //else
                                     //utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y - __ghost_bee_height - 10 + 'px';
                             }
@@ -545,7 +556,7 @@ function hive()
             __dynamic_object.setAttribute('style', 'top: ' + top + 'px; ' + 
                                                    'left: ' + left + 'px; ' + 
                                                    'right: ' + left + 'px; ' + 
-                                                   'width: ' + (document.body.clientWidth - 270) + 'px; ' + 
+                                                   'width: ' + max_stack_width + 'px; ' + 
                                                    'height: 85px;');
 
             __dynamic_object.innerHTML = '<div id="' + __hive_id + '_previous_arrow" class="stack_arrow left_arrow"></div>' + 
@@ -558,9 +569,8 @@ function hive()
 
             __current_stack_width = utils_sys.graphics.pixels_value(__dynamic_object.style.width);
 
-            me.set_bees_per_honeycomb(__current_stack_width);
-
-            utils_sys.objects.by_id(__hive_id + '_stack').style.width = (utils_sys.graphics.pixels_value(__dynamic_object.style.width) - 84) + 'px';
+            utils_sys.objects.by_id(__hive_id + '_stack').style.width = 
+            (utils_sys.graphics.pixels_value(__dynamic_object.style.width) - 84) + 'px';
             utils_sys.objects.by_id(__hive_id + '_stack').style.height = '85px';
 
             __handler = function(event)
@@ -616,7 +626,7 @@ function hive()
             __container_object.removeChild(__hive_object);
 
             self.settings.left(47);
-            self.settings.top(window.innerHeight - 87);
+            self.settings.top(window.innerHeight - 85);
 
             me.prepare_draw(self.settings.left(), self.settings.top(), honeycomb_views.num(), 2);
 
@@ -818,7 +828,7 @@ function hive()
     {
         var __id = null,
             __container = null,
-            __bees_per_honeycomb = 8,
+            __bees_per_honeycomb = 10,
             __left = 0,
             __top = 0;
 
@@ -954,7 +964,8 @@ function hive()
                 if (is_init === false)
                     return false;
 
-                if (utils_sys.validation.misc.is_undefined(event_object) || (event_object.buttons !== 0 && last_mouse_button_clicked !== 1))
+                if (utils_sys.validation.misc.is_undefined(event_object) || 
+                    (event_object.buttons !== 0 && last_mouse_button_clicked !== 1))
                     return false;
 
                 if (honeycomb_views.swiping())
@@ -1248,15 +1259,18 @@ function hive()
             if (utils_sys.validation.alpha.is_symbol(container_id) || utils_sys.objects.by_id(container_id) === null || 
                 !utils_sys.validation.numerics.is_integer(left) || left < 0 || 
                 !utils_sys.validation.numerics.is_integer(top) || top < 0 || 
-                !utils_sys.validation.numerics.is_integer(bees_per_honeycomb) || bees_per_honeycomb < 4 || 
+                !utils_sys.validation.numerics.is_integer(bees_per_honeycomb) || 
+                bees_per_honeycomb < 10 || bees_per_honeycomb % 2 !== 0 || 
                 !utils_sys.validation.numerics.is_integer(honeycombs_num) || honeycombs_num < 1)
                 return false;
+
+            var dynamic_bees_per_honeycomb = utils_int.setup_honeycomb_size(bees_per_honeycomb);
 
             is_init = true;
 
             self.settings.id('hive_' + random.generate());
             self.settings.container(container_id);
-            self.settings.bees_per_honeycomb(bees_per_honeycomb);
+            self.settings.bees_per_honeycomb(dynamic_bees_per_honeycomb);
             self.settings.left(left);
             self.settings.top(top);
 
@@ -1293,6 +1307,7 @@ function hive()
         swarm = null,
         forest = null,
         nature = null,
+        max_stack_width = 0,
         last_mouse_button_clicked = 0,
         utils_sys = new vulcan()
         gfx = new fx(),

@@ -58,6 +58,9 @@ function multiverse()
 
         var __cosmos_num = cosmos_array.length;
 
+        if (__cosmos_num === 0)
+            return false;
+
         for (var i = 0; i < __cosmos_num; i++)
         {
             if (!utils_int.is_cosmos(cosmos_array[i]))

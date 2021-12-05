@@ -1,18 +1,21 @@
 /*
     Key Manager
 
-    File name: key_manager.js (Version: 0.4)
+    File name: key_manager.js (Version: 0.6)
     Description: This file contains the Key Manager extension.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2016
+    Copyright (C) 2016 - 2021
     Open Software License (OSL 3.0)
 */
 
 // Key Manager
 function key_manager()
 {
-    // Key Constants
+    // Global keyboard key
+    var __keyboard_key = null;
+
+    // Key constants
     function key_constants() 
     {
         this.ESCAPE = 27;
@@ -23,12 +26,6 @@ function key_manager()
         this.CONTROL = 17;
         this.ALT = 18;
     }
-
-    // Constants
-    this.constants = function()
-    {
-        return new key_constants();
-    };
 
     // Scan keys
     this.scan = function(key_event)
@@ -50,12 +47,12 @@ function key_manager()
         }
     };
 
-    // Get keys
+    // Get key strokes
     this.get = function()
     {
         return __keyboard_key;
     };
 
-    // Global keyboard key
-    var __keyboard_key = null;
+    // Keys
+    this.keys = new key_constants();
 }

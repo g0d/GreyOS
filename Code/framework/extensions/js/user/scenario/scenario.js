@@ -1,5 +1,5 @@
 /*
-    GreyOS - Scenario (Version: 1.4)
+    GreyOS - Scenario (Version: 1.5)
     
     File name: scenario.js
     Description: This file contains the Scenario - Scenario-based loader & manager module.
@@ -25,6 +25,11 @@ function scenario()
         this.is_indices_array = function(indices_array)
         {
             if (!utils_sys.validation.misc.is_array(indices_array))
+                return false;
+
+            var __indices_num = indices_array.length;
+
+            if (__indices_num === 0 || indices_array.length > scripts.num)
                 return false;
 
             for (var i = 0; i < indices_array.length; i++)
@@ -70,6 +75,9 @@ function scenario()
             return false;
 
         var __scripts_num = scripts_array.length;
+
+        if (__scripts_num === 0)
+            return false;
 
         for (var i = 0; i < __scripts_num; i++)
         {
@@ -133,7 +141,7 @@ function scenario()
             return true;
         }
 
-        if (!utils_int.is_indices_array(indices_array) || indices_array.length > scripts.num)
+        if (!utils_int.is_indices_array(indices_array))
             return false;
 
         for (var i = 0; i < indices_array.length; i++)

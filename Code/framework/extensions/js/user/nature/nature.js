@@ -58,6 +58,9 @@ function nature()
 
         var __themes_num = __themes_array.length;
 
+        if (__themes_num === 0)
+            return false;
+
         for (var i = 0; i < __themes_num; i++)
         {
             if (mode === 'new')

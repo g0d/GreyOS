@@ -110,8 +110,7 @@ function dock()
             var __app_id = null,
                 __position = null,
                 __title = null
-                __dock = utils_sys.objects.by_class('favorites'),
-                __dock_length = __dock.length;
+                __dock = utils_sys.objects.by_class('favorites');
 
             for (var __dock_app of __dock)
             {
@@ -269,7 +268,8 @@ function dock()
                                 }
                                 else
                                 {
-                                    if (__bee.gui.size.width() > swarm.settings.right() || __bee.gui.size.height() > swarm.settings.bottom())
+                                    if (__bee.error.last() === __bee.error.codes.POSITION || 
+                                        __bee.error.last() === __bee.error.codes.SIZE)
                                     {
                                         msg_win = new msgbox();
 

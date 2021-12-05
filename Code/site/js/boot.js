@@ -33,7 +33,9 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);        // Boot modes: Normal (0) / Development (1)
     os_settings.set('theme', 'tomorrow');   // Themes: 'bubble_gum', 'tomorrow'
-    os_settings.set('max_apps', 10);        // Maximum number of allowed active apps per session
+    os_settings.set('max_apps', 16);        // Maximum number of allowed active apps per session
+    os_settings.set('apps_per_view', 18);   // Apps per stack bar view
+    os_settings.set('stack_bars', 4);       // Number of stack bars
 
     // Initialization script
     var init_script = function()
@@ -207,7 +209,7 @@ function boot_script()
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
             matrix_container.get('forest').init('desktop');
-            matrix_container.get('hive').init('desktop', 47, window.innerHeight - 87, 16, 4);
+            matrix_container.get('hive').init('desktop', 47, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             matrix_container.get('eagle').init('desktop');
             matrix_container.get('tik_tok').init('clock');
             matrix_container.get('octopus').init('device_manager');
@@ -272,7 +274,7 @@ function boot_script()
             new_user_profile.init('user_profile');
             new_forest.init('desktop');
             new_swarm.init('desktop', 47, 100, window.innerWidth - 70, window.innerHeight - 120);
-            new_hive.init('desktop', 47, window.innerHeight - 87, 16, 4);
+            new_hive.init('desktop', 47, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
             new_octopus.init('device_manager');
@@ -459,7 +461,7 @@ function boot_script()
             new_user_profile.init('user_profile');
             new_forest.init('desktop');
             new_swarm.init('desktop', 47, 100, window.innerWidth - 70, window.innerHeight - 120);
-            new_hive.init('desktop', 47, window.innerHeight - 87, 16, 4);
+            new_hive.init('desktop', 47, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
             new_octopus.init('device_manager');

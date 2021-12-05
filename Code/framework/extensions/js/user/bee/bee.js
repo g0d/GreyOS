@@ -14,6 +14,23 @@ function bee()
 {
     var self = this;
 
+    function error()
+    {
+        function codes()
+        {
+            this.POSITION = 0xF1;
+            this.SIZE = 0xF2;
+            this.FX = 0xF3;
+        }
+
+        this.last = function()
+        {
+            return error_code;
+        }
+
+        this.codes = new codes();
+    }
+
     function ui_config_model()
     {
         function window()
@@ -223,8 +240,12 @@ function bee()
 
             __ctrl_bar.appendChild(__edit_box);
 
-            __handler = function(event) { if (self.gui.keys.get(event) === 13) me.update_win_title(); };
-            utils_sys.events.attach(my_bee_id, utils_sys.objects.by_id(__edit_box.id), 'keydown', __handler);
+            __handler = function(event)
+                        {
+                            if (self.gui.keys.get(event) === key_control.keys.ENTER)
+                                me.update_win_title();
+                        };
+            utils_sys.events.attach(my_bee_id, __edit_box, 'keydown', __handler);
 
             bee_statuses.title_on_edit(true);
 
@@ -243,6 +264,8 @@ function bee()
                 __title_div = document.createElement('div'),
                 __pencil_div = document.createElement('div'),
                 __handler = null;
+
+            utils_sys.events.detach(my_bee_id, __title_edit_box, 'keydown');
 
             __ctrl_bar.removeChild(__title_edit_box);
 
@@ -293,7 +316,7 @@ function bee()
             if (__swarm_object === null)
                 return false;
 
-            if (self.gui.size.width() > swarm.settings.right() || self.gui.size.height() > swarm.settings.bottom())
+            if (__bee_gui.size.width() >= swarm.settings.right() || __bee_gui.size.height() >= swarm.settings.bottom())
                 return false;
 
             ui_config.window.id = my_bee_id;
@@ -478,12 +501,6 @@ function bee()
 
             __handler = function(event) { __bee_gui.actions.release(event); };
             utils_sys.events.attach(my_bee_id, document, 'mouseup', __handler);
-
-            __handler = function(event) { __bee_gui.keys.get(event); };
-            utils_sys.events.attach(my_bee_id, __swarm_object, 'keydown', __handler);
-
-            __handler = function() { bee_statuses.key_pressed(false); };
-            utils_sys.events.attach(my_bee_id, __swarm_object, 'keyup', __handler);
 
             __handler = function(event) { __bee_gui.actions.dresize(event); };
             utils_sys.events.attach(my_bee_id, __swarm_object, 'mousemove', __handler);
@@ -1217,7 +1234,17 @@ function bee()
                                     {
                                         var __bee_id_dom = utils_sys.objects.by_id(my_bee_id);
 
-                                        utils_sys.events.attach(my_bee_id, __bee_id_dom, event_id, __contexts[i].events[j].cmd);
+                                        if (context_id === 'key')
+                                        {
+                                            var __handler = function()
+                                                            {
+                                                                if (bee_statuses.active())
+                                                                    __contexts[i].events[j].cmd.call();
+                                                            };
+                                            utils_sys.events.attach(my_bee_id, document, event_id, __handler);
+                                        }
+                                        else
+                                            utils_sys.events.attach(my_bee_id, __bee_id_dom, event_id, __contexts[i].events[j].cmd);
 
                                         bee_statuses[event_id](true);
 
@@ -1486,7 +1513,11 @@ function bee()
                 bee_statuses.in_hive(val);
 
                 if (val === true)
+                {
+                    bee_statuses.active(false);
+
                     bee_events_scheduler.execute('system', 'in_hive');
+                }
 
                 return true;
             };
@@ -1947,14 +1978,13 @@ function bee()
                 if (is_init === false)
                     return false;
 
+                key_control.scan(event_object);
+
                 bee_statuses.key_pressed(true);
 
                 bee_events_scheduler.execute('gui', 'key_pressed');
 
-                if (utils_sys.validation.misc.is_undefined(event_object.keyCode))
-                    return event_object.key;
-                else
-                    return event_object.keyCode;
+                return key_control.get();
             };
         }
 
@@ -2066,7 +2096,11 @@ function bee()
                 }
 
                 if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+                {
+                    error_code = self.error.codes.POSITION;
+
                     return false;
+                }
 
                 if (limit === 'right' || limit === 'bottom')
                 {
@@ -2078,20 +2112,32 @@ function bee()
                     else
                     {
                         if (val >= __position_settings.limits[limit])
+                        {
+                            error_code = self.error.codes.POSITION;
+
                             return false;
+                        }        
                     }
                 }
                 else if (limit === 'left' || limit === 'top')
                 {
                     if (val <= __position_settings.limits[limit])
+                    {
+                        error_code = self.error.codes.POSITION;
+
                         return false;
+                    }    
                 }
                 else
                 {
                     if (limit === 'z_index')
                     {
                         if (val > __position_settings.limits[limit])
+                        {
+                            error_code = self.error.codes.POSITION;
+
                             return false;
+                        }        
                     }
                 }
                 
@@ -2188,19 +2234,31 @@ function bee()
                 }
 
                 if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+                {
+                    error_code = self.error.codes.SIZE;
+
                     return false;
+                }
 
                 if (mode === 1)
                 {
                     if (type === 1)
                     {
                         if (val < me.size.min.width() || val > me.size.max.width())
+                        {
+                            error_code = self.error.codes.SIZE;
+
                             return false;
+                        }
                     }
                     else if (type === 2)
                     {
                         if (val < me.size.min.height() || val > me.size.max.height())
+                        {
+                            error_code = self.error.codes.SIZE;
+
                             return false;
+                        }
                     }
                 }
                 else if (mode === 2)
@@ -2208,12 +2266,20 @@ function bee()
                     if (type === 1)
                     {
                         if (val < me.size.min.width() || val > me.size.width())
+                        {
+                            error_code = self.error.codes.SIZE;
+
                             return false;
+                        }
                     }
                     else if (type === 2)
                     {
                         if (val < me.size.min.height() || val > me.size.height())
+                        {
+                            error_code = self.error.codes.SIZE;
+
                             return false;
+                        }
                     }
                 }
                 else if (mode === 3)
@@ -2221,12 +2287,20 @@ function bee()
                     if (type === 1)
                     {
                         if (val < me.size.width())
+                        {
+                            error_code = self.error.codes.SIZE;
+
                             return false;
+                        }
                     }
                     else if (type === 2)
                     {
                         if (val < me.size.height())
+                        {
+                            error_code = self.error.codes.SIZE;
+
                             return false;
+                        }
                     }
                 }
 
@@ -2524,7 +2598,7 @@ function bee()
                         if (!me.fx.enabled.fade[type]())
                             return false;
 
-                        if (!__fade_batch_array.length)
+                        if (__fade_batch_array.length === 0)
                             return false;
 
                         if (utils_sys.validation.misc.is_undefined(option) && utils_sys.validation.misc.is_undefined(index))
@@ -2571,7 +2645,7 @@ function bee()
                         if (!me.fx.enabled.fade[type]())
                             return false;
 
-                        if (!__fade_batch_array.length)
+                        if (__fade_batch_array.length === 0)
                             return false;
 
                         if (!utils_sys.validation.numerics.is_integer(option) || option < 1 || option > 3)
@@ -2712,6 +2786,9 @@ function bee()
                         return false;
 
                     var __batch_num = __fade_batch_array.length;
+
+                    if (__batch_num === 0)
+                        return false;
 
                     for (var i = 0; i < __batch_num; i++)
                     {
@@ -3054,6 +3131,8 @@ function bee()
                     if (utils_sys.validation.misc.is_undefined(event_object))
                         return false;
 
+                    // Future code...
+
                     return true;
 
                 };
@@ -3101,14 +3180,16 @@ function bee()
 
                 function remove_me(this_object)
                 {
-                    var __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
+                    var __bee_id_dom = utils_sys.objects.by_id(my_bee_id),
+                        __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
                         __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
 
-                    utils_sys.events.detach(my_bee_id, __swarm_object, 'keydown');
-                    utils_sys.events.detach(my_bee_id, __swarm_object, 'keyup');
                     utils_sys.events.detach(my_bee_id, __swarm_object, 'mousemove');
                     utils_sys.events.detach(my_bee_id, document, 'mousedown');
                     utils_sys.events.detach(my_bee_id, document, 'mouseup');
+                    utils_sys.events.detach(my_bee_id, document, 'keydown');
+                    utils_sys.events.detach(my_bee_id, document, 'keyup');
+                    utils_sys.events.detach(my_bee_id, document, 'keypress');
 
                     bee_events_scheduler.execute('gui', 'closed');
 
@@ -3678,8 +3759,6 @@ function bee()
                     bee_statuses.touched(true);
 
                     bee_statuses.mouse_clicked(false);
-
-                    bee_statuses.active(false);
 
                     bee_events_scheduler.execute('gui', 'touched');
                     bee_events_scheduler.execute('gui', 'dragged');
@@ -4451,6 +4530,9 @@ function bee()
         if (is_init === false)
             return false;
  
+        if (error_code !== null)
+            return false;
+
         var __app_id = self.settings.general.app_id();
 
         if (bee_statuses.running())
@@ -4466,20 +4548,22 @@ function bee()
 
         bee_statuses.running(true);
 
-        bee_events_scheduler.execute('system', 'running');
-
         if (!utils_int.draw(self))
         {
             owl.status.set(my_bee_id, __app_id, 'FAIL');
 
-            utils_int.log('show', 'ERROR');
+            utils_int.log('Show', 'ERROR');
 
             return false;
         }
 
+        bee_statuses.active(true);
+
+        bee_events_scheduler.execute('system', 'running');
+
         owl.status.set(my_bee_id, __app_id, 'RUN');
 
-        utils_int.log('show', 'OK');
+        utils_int.log('Show', 'OK');
 
         return true;
     };
@@ -4525,6 +4609,7 @@ function bee()
     };
 
     var is_init = false,
+        error_code = null,
         my_bee_id = null,
         cosmos = null,
         matrix = null,
@@ -4537,6 +4622,7 @@ function bee()
         msg_win = null,
         utils_sys = new vulcan(),
         random = new pythia(),
+        key_control = new key_manager(),
         gfx = new fx(),
         ui_config = new ui_config_model(),
         bee_events = new supported_events(),
@@ -4548,4 +4634,5 @@ function bee()
     this.gui = new gui();
     this.drone = new drone();
     this.status = new status();
+    this.error = new error();
 }

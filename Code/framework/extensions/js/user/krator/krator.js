@@ -182,7 +182,7 @@ function krator()
         {
             key_control.scan(event);
 
-            if (key_control.get() === key_control.constants().ENTER)
+            if (key_control.get() === key_control.keys.ENTER)
             {
                 if (form_id === 'login')
                     me.check_login_credentials(args_array[0], args_array[1], args_array[2]);

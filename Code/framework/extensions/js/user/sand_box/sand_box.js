@@ -43,6 +43,9 @@ function sand_box()
 
         var __cosmos_num = cosmos_array.length;
 
+        if (__cosmos_num === 0)
+            return false;
+
         for (var i = 0; i < __cosmos_num; i++)
         {
             if (!utils_sys.validation.misc.is_object(cosmos_array[i]))
