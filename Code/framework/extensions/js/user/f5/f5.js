@@ -1,9 +1,9 @@
 /*
     GreyOS - F5 (Version: 1.0)
-    
+
     File name: f5.js
     Description: This file contains the F5 - Screen refresh handler utility.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

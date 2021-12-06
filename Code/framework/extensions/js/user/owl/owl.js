@@ -1,9 +1,9 @@
 /*
     GreyOS - Owl (Version: 2.0)
-    
+
     File name: owl.js
     Description: This file contains the Owl - Bee tracer & status logger module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

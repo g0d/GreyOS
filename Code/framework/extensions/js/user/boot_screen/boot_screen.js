@@ -1,9 +1,9 @@
 /*
     GreyOS - Boot Screen (Version: 1.2)
-    
+
     File name: boot_screen.js
     Description: This file contains the Boot Screen utility.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

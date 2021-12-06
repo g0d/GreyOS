@@ -1,9 +1,9 @@
 /*
     GreyOS - Cosmos (Version: 2.0)
-    
+
     File name: cosmos.js
     Description: This file contains the Cosmos - JS IMC hub module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

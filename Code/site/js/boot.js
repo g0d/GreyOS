@@ -1,9 +1,9 @@
 /*
     GreyOS - Bootstrap facility (Version: 3.0)
-    
+
     File name: boot.js
     Description: This file contains the bootstrap facility.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

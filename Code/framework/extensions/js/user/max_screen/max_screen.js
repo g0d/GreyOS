@@ -1,9 +1,9 @@
 /*
     GreyOS -  Max Screen (Version: 1.7)
-    
+
     File name: max_screen.js
     Description: This file contains the Max Screen - App size manager module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

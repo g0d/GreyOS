@@ -1,9 +1,9 @@
 /*
     GreyOS - Coyote (Version: 2.5)
-    
+
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
-    
+
     Coded by George Delaportas (G0D) and John Inglessis (negle)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

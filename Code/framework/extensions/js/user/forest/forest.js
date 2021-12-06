@@ -1,9 +1,9 @@
 /*
     GreyOS - Forest (Version: 2.0)
-    
+
     File name: forest.js
     Description: This file contains the Forest - Desktops container & manager module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

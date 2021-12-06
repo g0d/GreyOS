@@ -1,9 +1,9 @@
 /*
     GreyOS - Dev Box (Version: 1.4)
-    
+
     File name: dev_box.js
     Description: This file contains the Dev Box - Development tools container module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

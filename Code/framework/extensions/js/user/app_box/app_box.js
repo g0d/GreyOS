@@ -1,9 +1,9 @@
 /*
     GreyOS - App Box (Version: 1.6)
-    
+
     File name: app_box.js
     Description: This file contains the App Box - Integrated/User applications container module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

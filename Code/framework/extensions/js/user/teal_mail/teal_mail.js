@@ -1,9 +1,9 @@
 /*
     GreyOS - Teal Mail (Version: 1.4)
-    
+
     File name: teal_mail.js
     Description: This file contains the Teal Mail application.
-    
+
     Coded by Mirko Lučić (mands) and George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

@@ -1,9 +1,9 @@
 /*
     GreyOS - Bee (Version: 3.2)
-    
+
     File name: bee.js
     Description: This file contains the Bee - Floating window module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)
@@ -640,7 +640,7 @@ function bee()
         this.remove_bee = function()
         {
             var __swarm_div = utils_sys.objects.by_id(swarm.settings.id()),
-                __bee = utils_sys.objects.by_id(self.settings.general.id()),
+                __bee = utils_sys.objects.by_id(my_bee_id),
                 __casement = utils_sys.objects.by_id(ui_config.casement.id);
 
             __swarm_div.removeChild(__bee);
@@ -674,7 +674,7 @@ function bee()
 
         this.set_z_index = function(z_index)
         {
-            utils_sys.objects.by_id(self.settings.general.id()).style.zIndex = z_index + 2;
+            utils_sys.objects.by_id(my_bee_id).style.zIndex = z_index + 2;
             utils_sys.objects.by_id(ui_config.casement.id).style.zIndex = z_index + 1;
 
             return true;
@@ -2512,7 +2512,7 @@ function bee()
                     if (!me.fx.enabled.opacity())
                         return false;
 
-                    gfx.opacity.apply(self.settings.general.id(), settings.opacity);
+                    gfx.opacity.apply(my_bee_id, settings.opacity);
                     gfx.opacity.apply(ui_config.casement.id, settings.opacity);
 
                     return true;
@@ -2528,7 +2528,7 @@ function bee()
 
                     me.fx.enabled.opacity(false);
 
-                    gfx.opacity.reset(self.settings.general.id());
+                    gfx.opacity.reset(my_bee_id);
                     gfx.opacity.reset(ui_config.casement.id);
 
                     return true;
@@ -2571,7 +2571,7 @@ function bee()
 
                         bee_events_scheduler.execute('gui', __fading_type);
 
-                        gfx.fade[type](self.settings.general.id(), me.fx.fade.settings[type].get.last(1), 
+                        gfx.fade[type](my_bee_id, me.fx.fade.settings[type].get.last(1), 
                                        me.fx.fade.settings[type].get.last(2), me.fx.fade.settings[type].get.last(3), 
                                        function()
                                        {
@@ -3180,8 +3180,7 @@ function bee()
 
                 function remove_me(this_object)
                 {
-                    var __bee_id_dom = utils_sys.objects.by_id(my_bee_id),
-                        __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
+                    var __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
                         __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
 
                     utils_sys.events.detach(my_bee_id, __swarm_object, 'mousemove');
@@ -3221,6 +3220,9 @@ function bee()
 
                     bee_statuses.close(true);
                     bee_statuses.dragging(false);
+
+                    if (bee_statuses.in_hive())
+                        utils_sys.objects.by_id(ui_config.casement.id).style.visibility = 'hidden';
 
                     me.actions.casement.hide(event_object, 
                     function()
@@ -4097,7 +4099,7 @@ function bee()
                     if (is_init === false)
                         return false;
 
-                    return utils_sys.graphics.pixels_value(utils_sys.objects.by_id(self.settings.general.id()).style.width);
+                    return utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width);
                 };
 
                 this.height = function()
@@ -4105,7 +4107,7 @@ function bee()
                     if (is_init === false)
                         return false;
 
-                    return utils_sys.graphics.pixels_value(utils_sys.objects.by_id(self.settings.general.id()).style.height);
+                    return utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.height);
                 };
             }
 

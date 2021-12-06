@@ -1,9 +1,9 @@
 /*
     GreyOS - Scrollbar (Version: 1.0)
-    
+
     File name: scrollbar.js
     Description: This file contains the Scrollbar module.
-    
+
     Coded by Arron Bailiss (abailiss), George Delaportas (G0D) and John Inglessis (negle).
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

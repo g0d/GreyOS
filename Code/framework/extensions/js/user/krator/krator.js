@@ -1,9 +1,9 @@
 /*
     GreyOS - Krator :: Login & registration form (Version: 1.0)
-    
+
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2021
     Open Software License (OSL 3.0)

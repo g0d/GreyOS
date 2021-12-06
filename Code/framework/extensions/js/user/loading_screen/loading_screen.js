@@ -1,9 +1,9 @@
 /*
     GreyOS - Loading Screen (Version: 1.0)
-    
+
     File name: loading_screen.js
     Description: This file contains the Loading Screen utility.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

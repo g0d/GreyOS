@@ -1,9 +1,9 @@
 /*
     GreyOS - Colony (Version: 2.4)
-    
+
     File name: colony.js
     Description: This file contains the Colony - Bee keeper container module.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)

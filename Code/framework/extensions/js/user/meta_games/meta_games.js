@@ -1,9 +1,9 @@
 /*
     GreyOS - Meta-Games (Version: 2.5)
-    
+
     File name: meta_games.js
     Description: This file contains the Meta-Games application.
-    
+
     Coded by George Delaportas (G0D)
     Copyright © 2014 - 2021
     Open Software License (OSL 3.0)
