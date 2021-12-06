@@ -12,94 +12,85 @@
 // Meta-OS
 function meta_os()
 {
-    this.keyboard = function()
+    function boot()
     {
-        return new_keys;
-    };
+        this.start = function()
+        {
+            return new boot_screen();
+        };
 
-    this.mouse = function()
-    {
-        return null; //new_mouse
-    };
+        this.loader = function()
+        {
+            return new scenario();
+        };
 
-    this.utils = function()
-    {
-        return new_vulcan;
-    };
+        this.environment = function()
+        {
+            return new linux_mode();
+        };
+    }
 
-    this.fx = function()
+    function system()
     {
-        return new_fx;
-    };
+        function io()
+        {
+            this.keyboard = function()
+            {
+                return new key_manager();
+            };
+        
+            this.mouse = function()
+            {
+                return null;
+            };
 
-    this.timers = function()
-    {
-        return new_stopwatch;
-    };
+            this.screen = function()
+            {
+                return null;
+            };
+        }
 
-    this.random = function()
-    {
-        return new_pythia;
-    };
+        function hypervisor()
+        {
+            this.console = function()
+            {
+                return new multiverse();
+            };
 
-    this.benchmark = function()
-    {
-        return new_snail;
-    };
+            this.vm = function()
+            {
+                return new cosmos();
+            };
+        }
 
-    this.ajax = function()
-    {
-        return new_bull;
-    };
+        this.timers = function()
+        {
+            return new stopwatch();
+        };
 
-    this.parallel = function()
-    {
-        return new_parallel;
-    };
+        this.io = new io();
+        this.hypervisor = new hypervisor();
+    }
 
-    this.vm = function()
+    function utilities()
     {
-        return new_vm;
-    };
+        this.general = function()
+        {
+            return new vulcan();
+        };
 
-    this.hypervisor = function()
-    {
-        return new_hypervisor;
-    };
-
-    this.loader = function()
-    {
-        return new_loader;
-    };
-
-    this.boot = function()
-    {
-        return new_boot;
-    };
-
-    this.mode = function()
-    {
-        return new_linux_mode;
-    };
+        this.benchmark = function()
+        {
+            return new snail();
+        };
+    }
 
     this.settings = function()
     {
-        return new_settings;
+        return new teletraan();
     };
 
-    var new_keys = new key_manager(),
-        //new_mouse = new mouse_manager(),
-        new_vulcan = new vulcan(),
-        new_fx = new fx(),
-        new_stopwatch = new stopwatch(),
-        new_pythia = new pythia(),
-        new_snail = new snail(),
-        new_bull = new bull(),
-        new_parallel = new parallel(),
-        new_vm = new cosmos(),
-        new_hypervisor = new multiverse(),
-        new_loader = new scenario(),
-        new_boot = new boot_screen(),
-        new_linux_mode = new linux_mode(),
-        new_settings = new teletraan();
+    this.boot = new boot();
+    this.system = new system();
+    this.utilities = new utilities();
 }

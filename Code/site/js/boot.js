@@ -19,16 +19,16 @@ function boot_script()
     var greyos = new meta_os();
 
     // Initialize required OS infrastructure for this script
-    var os_boot = greyos.boot();
-    var os_loader = greyos.loader();
-    var os_hypervisor = greyos.hypervisor();
-    var os_vm = greyos.vm();
-    var os_keys = greyos.keyboard();
-    var os_timers = greyos.timers();
-    var os_benchmark = greyos.benchmark();
-    var os_mode = greyos.mode();
+    var os_boot = greyos.boot.start();
+    var os_loader = greyos.boot.loader();
+    var os_environment = greyos.boot.environment();
+    var os_hypervisor = greyos.system.hypervisor.console();
+    var os_vm = greyos.system.hypervisor.vm();
+    var os_keys = greyos.system.io.keyboard();
+    var os_timers = greyos.system.timers();
+    var os_utils = greyos.utilities.general();
+    var os_benchmark = greyos.utilities.benchmark();
     var os_settings = greyos.settings();
-    var os_utils = greyos.utils();
 
     // Set global settings
     os_settings.set('boot_mode', 0);        // Boot modes: Normal (0) / Development (1)
@@ -550,7 +550,7 @@ function boot_script()
         if (!os_boot.init())
             return false;
 
-        os_mode.init();
+        os_environment.init();
 
         //os_loader.backtrace(true);
         os_loader.use([init_script, init_script_dev]);
