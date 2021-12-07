@@ -303,6 +303,22 @@ function hive()
             return true;
         };
 
+        this.free_space_hc_view_swipe = function(event_object, next_view)
+        {
+            var __real_hc_view = next_view + 1;
+
+            // TO DO:
+            //   1. Check if all views are full and inform user with a message box
+            //   2. If not all full scan all views in reverse and swipe to the first with available space
+
+            if (__real_hc_view > honeycomb_views.num())
+                __real_hc_view = 1;
+
+            self.stack.set_view(event_object, __real_hc_view);
+
+            return false;
+        };
+
         this.show_hive_bee = function(honeycomb_view, bees_colony, index)
         {
             var __new_bee = bees_colony.list(index);
@@ -328,12 +344,14 @@ function hive()
                 {
                     if (honeycomb_views.list(i).id === honeycomb_views.visible())
                     {
+                        stack_trace.bee_drag = true;
+
                         if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb() && 
                             stack_trace.internal_bee_drag === false)
                         {
-                            stack_trace.bee_drag = false;
+                            me.free_space_hc_view_swipe(event_object, i + 1);
 
-                            me.manage_stack_view(event_object, '+');
+                            return true;
                         }
                         else
                         {
@@ -349,8 +367,6 @@ function hive()
                                                          utils_sys.graphics.pixels_value(__hive_object.style.width) + 190,
                                 __stack_offset_y_space = self.settings.top() + 
                                                          utils_sys.graphics.pixels_value(__hive_object.style.height);
-
-                            stack_trace.bee_drag = true;
 
                             if (mode === 1)
                             {
@@ -750,26 +766,21 @@ function hive()
 
         this.manage_stack_view = function(event_object, symbol, callback = null)
         {
-            if (!utils_sys.validation.alpha.is_symbol(symbol))
-                return false;
-
-            if (!utils_sys.validation.misc.is_undefined(event_object.buttons) && event_object.buttons !== 1)
-                return false;
-
-            var __hive_id = self.settings.id(),
-                __sliding_box = __hive_id + '_sliding_box';
-
-            if (symbol === '-')
+            function factory_swipe(direction)
             {
-                if (honeycomb_views.swiping() || honeycomb_views.visible() === 1)
-                    return false;
+                var __hive_id = self.settings.id(),
+                    __sliding_box = __hive_id + '_sliding_box',
+                    __sign = 1;
+
+                if (direction === 'right')
+                    __sign = -1;
 
                 honeycomb_views.swiping(true);
 
-                gfx.animation.swipe(__sliding_box, 1, 'right', honeycomb_views.dynamic_width(), 20, 5, 25, 
+                gfx.animation.swipe(__sliding_box, 1, direction, honeycomb_views.dynamic_width(), 20, 5, 25, 
                                     function()
                                     {
-                                        honeycomb_views.visible(honeycomb_views.visible() - 1);
+                                        honeycomb_views.visible(honeycomb_views.visible() + __sign);
 
                                         honeycomb_views.swiping(false);
 
@@ -777,23 +788,29 @@ function hive()
                                             callback.apply();
                                     });
             }
-            else if (symbol === '+')
+
+            if (!utils_sys.validation.alpha.is_symbol(symbol))
+                return false;
+
+            if (!utils_sys.validation.misc.is_undefined(event_object.buttons) && event_object.buttons !== 1)
+                return false;
+
+            if (honeycomb_views.swiping())
+                return false;
+
+            if (symbol === '-')
             {
-                if (honeycomb_views.swiping() || honeycomb_views.visible() === honeycomb_views.num())
+                if (honeycomb_views.visible() === 1)
                     return false;
 
-                honeycomb_views.swiping(true);
+                factory_swipe('right')
+            }
+            else if (symbol === '+')
+            {
+                if (honeycomb_views.visible() === honeycomb_views.num())
+                    return false;
 
-                gfx.animation.swipe(__sliding_box, 1, 'left', honeycomb_views.dynamic_width(), 20, 5, 25, 
-                                    function()
-                                    {
-                                        honeycomb_views.visible(honeycomb_views.visible() + 1);
-
-                                        honeycomb_views.swiping(false);
-
-                                        if (callback !== null)
-                                            callback.apply();
-                                    });
+                factory_swipe('left')
             }
             else
                 return false;
@@ -1112,26 +1129,43 @@ function hive()
             };
         }
 
-        this.set_view = function(event_object, honeycomb_num)
+        this.set_view = function(event_object, next_honeycomb_num)
         {
+            function recursive_swipe(hc_view_delta)
+            {
+                var __sign = '+';
+
+                if (hc_view_delta === 0)
+                    return;
+
+                if (hc_view_delta < 0 )
+                {
+                    hc_view_delta = -hc_view_delta;
+                    __sign = '-';
+                }
+
+                utils_int.manage_stack_view(event_object, __sign, 
+                function()
+                {
+                    hc_view_delta--;
+
+                    if (__sign === '-')
+                        hc_view_delta = -hc_view_delta;
+
+                    recursive_swipe(hc_view_delta);
+                });
+            }
+
             if (is_init === false)
                 return false;
 
-            if (!utils_sys.validation.numerics.is_integer(honeycomb_num) || 
-                honeycomb_num < 1 || honeycomb_num > honeycomb_views.num())
+            if (!utils_sys.validation.numerics.is_integer(next_honeycomb_num) || 
+                next_honeycomb_num < 1 || next_honeycomb_num > honeycomb_views.num())
                 return false;
 
-            var __honeycomb_view_delta = honeycomb_num - honeycomb_views.visible();
+            var __honeycomb_view_delta = next_honeycomb_num - honeycomb_views.visible();
 
-            if (__honeycomb_view_delta > 0)
-                return false;
-
-            utils_int.manage_stack_view(event_object, '-', 
-            function()
-            {
-                for (var i = 0; i < Math.abs(__honeycomb_view_delta); i++)
-                    utils_int.manage_stack_view(event_object, '-');
-            });
+            recursive_swipe(__honeycomb_view_delta);
 
             return true;
         };
