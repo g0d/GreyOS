@@ -1247,17 +1247,15 @@ function bee()
                                             utils_sys.events.attach(my_bee_id, __bee_id_dom, event_id, __contexts[i].events[j].cmd);
 
                                         bee_statuses[event_id](true);
-
-                                        return true;
                                     }
 
-                                    return __contexts[i].events[j].cmd.call();
+                                    __contexts[i].events[j].cmd.call();
                                 }
                             }
                         }
                     }
 
-                    return false;
+                    return true;
                 };
             }
 

@@ -126,17 +126,119 @@ function dock()
 
         function attach_events()
         {
+            var __dock_div = utils_sys.objects.by_id(self.settings.container()),
+                __handler = null;
+
+            __handler = function()
+                        {
+                            last_button_clicked = 0;
+                        };
+            utils_sys.events.attach('dock', __dock_div, 'mouseenter', __handler);
+
             for (var __dock_app of config.dock_array)
                 open_app(__dock_app);
 
+            enable_drag();
+
             return true;
+        }
+
+        function update_dock_array(position_one, position_two)
+        {
+            var tmp = config.dock_array[position_one];
+
+            config.dock_array[position_one] = config.dock_array[position_two];
+            config.dock_array[position_two] = tmp;
+            config.dock_array[position_one]['position'] = position_one;
+            config.dock_array[position_two]['position'] = position_two;
+
+            return true;
+        }
+
+        function open_app(dock_app)
+        {
+            var __handler = function(event)
+                            {
+                                if (event.buttons === 0 && last_button_clicked !== 1)
+                                    return false;
+
+                                if (is_dragging)
+                                    return false;
+
+                                var __bee = colony.get(dock_app['app_id']),
+                                    __sys_theme = chameleon.get();
+
+                                if (__bee === null || __bee === false)
+                                {
+                                    var __app = app_box.get(dock_app['app_id']);
+
+                                    __app.init();
+
+                                    __bee = __app.get_bee();
+
+                                    parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
+
+                                    swarm.bees.insert(__bee);
+
+                                    if (__bee.show())
+                                    {
+                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
+                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
+
+                                        close_app(__bee, dock_app['app_id']);
+                                    }
+                                    else
+                                    {
+                                        if (__bee.error.last() === __bee.error.codes.POSITION || 
+                                            __bee.error.last() === __bee.error.codes.SIZE)
+                                        {
+                                            msg_win = new msgbox();
+
+                                            msg_win.init('desktop');
+                                            msg_win.show('GreyOS', 'The app is overflowing your screen. \
+                                                                    You need a larger screen or higher resolution to run it!');
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (!__bee.status.system.running())
+                                    {
+                                        parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
+
+                                        if (__bee.show())
+                                        {
+                                            utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
+                                            utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
+
+                                            close_app(__bee, dock_app['app_id']);
+                                        }
+                                    }
+                                }
+                            };
+            utils_sys.objects.by_id('app_' + dock_app['app_id']).onmouseup = __handler;
+        }
+
+        function close_app(bee, app_id)
+        {
+            bee.on('closed', function()
+                             {
+                                if (owl.status.get.by_app_id(app_id, 'RUN'))
+                                    return false;
+
+                                utils_sys.objects.by_id('app_' + app_id).classList.remove('app_' + app_id + '_on');
+                                utils_sys.objects.by_id('app_' + app_id).classList.add('app_' + app_id + '_off');
+
+                                return true;
+                             });
         }
 
         function enable_drag()
         {
             var __dock_div = utils_sys.objects.by_id(self.settings.container()),
                 __dock_apps = utils_sys.objects.selectors.all('#top_panel #bottom_area #dynamic_container #favorite_apps .favorites'),
-                __dock_apps_length = __dock_apps.length;
+                __dock_apps_length = __dock_apps.length,
+                __handler = null;
 
             for (var i = 0; i < __dock_apps_length; i++)
             {
@@ -220,98 +322,6 @@ function dock()
             }
         }
 
-        function update_dock_array(position_one, position_two)
-        {
-            var tmp = config.dock_array[position_one];
-
-            config.dock_array[position_one] = config.dock_array[position_two];
-            config.dock_array[position_two] = tmp;
-            config.dock_array[position_one]['position'] = position_one;
-            config.dock_array[position_two]['position'] = position_two;
-
-            return true;
-        }
-
-        function open_app(dock_app)
-        {
-            var __handler = null;
-
-            __handler = function(event)
-                        {
-                            if (event.buttons === 0 && last_button_clicked !== 1)
-                                return false;
-
-                            if (is_dragging)
-                                return false;
-
-                            var __bee = colony.get(dock_app['app_id']),
-                                __sys_theme = chameleon.get();
-
-                            if (__bee === null || __bee === false)
-                            {
-                                var __app = app_box.get(dock_app['app_id']);
-
-                                __app.init();
-
-                                __bee = __app.get_bee();
-
-                                parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
-
-                                swarm.bees.insert(__bee);
-
-                                if (__bee.show())
-                                {
-                                    utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
-                                    utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
-
-                                    close_app(__bee, dock_app['app_id']);
-                                }
-                                else
-                                {
-                                    if (__bee.error.last() === __bee.error.codes.POSITION || 
-                                        __bee.error.last() === __bee.error.codes.SIZE)
-                                    {
-                                        msg_win = new msgbox();
-
-                                        msg_win.init('desktop');
-                                        msg_win.show('GreyOS', 'The app is overflowing your screen. \
-                                                                You need a larger screen or higher resolution to run it!');
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!__bee.status.system.running())
-                                {
-                                    parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
-
-                                    if (__bee.show())
-                                    {
-                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
-                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
-
-                                        close_app(__bee, dock_app['app_id']);
-                                    }
-                                }
-                            }
-                        };
-            utils_sys.objects.by_id('app_' + dock_app['app_id']).onmouseup = __handler;
-        }
-
-        function close_app(bee, app_id)
-        {
-            bee.on('closed', function()
-                             {
-                                if (owl.status.get.by_app_id(app_id, 'RUN'))
-                                    return false;
-
-                                utils_sys.objects.by_id('app_' + app_id).classList.remove('app_' + app_id + '_on');
-                                utils_sys.objects.by_id('app_' + app_id).classList.add('app_' + app_id + '_off');
-
-                                return true;
-                             });
-        }
-
         this.draw = function()
         {
             msg_win = new msgbox();
@@ -322,7 +332,6 @@ function dock()
                                                  {
                                                     create_dock_array();
                                                     attach_events();
-                                                    enable_drag();
                                                  });
 
             return true;

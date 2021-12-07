@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 2.6)
+    GreyOS - Hive (Version: 2.8)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -24,7 +24,8 @@ function hive()
     {
         this.bee_drag = false;
         this.internal_bee_drag = false;
-        this.bee_close = false;
+        this.bee_closing = false;
+        this.bee_closed = false;
     }
 
     function honeycomb_view_model()
@@ -242,7 +243,7 @@ function hive()
             {
                 stack_trace.bee_drag = false;
                 stack_trace.internal_bee_drag = false;
-                stack_trace.bee_close = false;
+                stack_trace.bee_closed = false;
 
                 return true;
             }
@@ -332,7 +333,7 @@ function hive()
                         {
                             stack_trace.bee_drag = false;
 
-                            console.log('Sorry, maximum number of apps in this stack bar!');
+                            me.manage_stack_view(event_object, '+');
                         }
                         else
                         {
@@ -345,9 +346,11 @@ function hive()
                                 __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
                                 __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
                                 __stack_offset_x_space = self.settings.left() + 
-                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 26,
+                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 190,
                                 __stack_offset_y_space = self.settings.top() + 
                                                          utils_sys.graphics.pixels_value(__hive_object.style.height);
+
+                            stack_trace.bee_drag = true;
 
                             if (mode === 1)
                             {
@@ -372,18 +375,14 @@ function hive()
                                 if (!utils_sys.objects.by_id('hive_ghost_bee').style.top)
                                     utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
                             }
-
-                            stack_trace.bee_drag = true;
                         }
 
                         return true;
                     }
                 }
-
-                return false;
             }
 
-            return true;
+            return false;
         };
 
         this.hide_ghost_bee = function(event_object)
@@ -691,7 +690,7 @@ function hive()
                                 if (event.buttons !== 1)
                                     return false;
 
-                                if (stack_trace.bee_drag === true || stack_trace.bee_close === true)
+                                if (stack_trace.bee_drag === true || stack_trace.bee_closing === true)
                                     return false;
 
                                 last_mouse_button_clicked = 1;
@@ -709,16 +708,21 @@ function hive()
                                 if (event.buttons !== 1)
                                     return false;
 
-                                if (stack_trace.bee_drag === true || __bee_object.status.gui.closed())
+                                if (stack_trace.bee_drag === true || stack_trace.bee_closing === true)
                                     return false;
 
-                                __bee_object.gui.actions.close(event);
+                                last_mouse_button_clicked = 1;
+
+                                stack_trace.bee_closing = true;
 
                                 me.remove_bee(honeycomb_id, bee_id);
 
-                                stack_trace.bee_close = true;
-
-                                last_mouse_button_clicked = 1;
+                                __bee_object.on('closed', function()
+                                                          {
+                                                              stack_trace.bee_closed = true;
+                                                              stack_trace.bee_closing = false;
+                                                          });
+                                __bee_object.gui.actions.close(event);
                             };
                 __dynamic_object.childNodes[2].onmousedown = __handler;
             }
@@ -736,8 +740,9 @@ function hive()
                     utils_sys.objects.by_id(bee_id + '_casement').style.display = 'none';
                 }
 
-                __handler = function(event) { me.reset_stack_trace(event); self.stack.bees.put(event); };
+                __handler = function(event) { me.release_bee(event); };
                 __ghost_object.onmouseup = __handler;
+
             }
 
             return true;
@@ -1238,7 +1243,7 @@ function hive()
             if (is_init === false)
                 return false;
 
-            return stack_trace.bee_close;
+            return stack_trace.bee_closed;
         };
 
         this.honeycombs = new honeycombs();
