@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 2.8)
+    GreyOS - Hive (Version: 2.9)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -303,20 +303,29 @@ function hive()
             return true;
         };
 
-        this.free_space_hc_view_swipe = function(event_object, next_view)
+        this.free_space_hc_view_swipe = function(event_object)
         {
-            var __real_hc_view = next_view + 1;
+            if (self.status.bees.num() === self.status.bees.max())
+            {
+                msg_win = new msgbox();
 
-            // TO DO:
-            //   1. Check if all views are full and inform user with a message box
-            //   2. If not all full scan all views in reverse and swipe to the first with available space
+                msg_win.init('desktop');
+                msg_win.show('GreyOS', 'All stack views are full!');
 
-            if (__real_hc_view > honeycomb_views.num())
-                __real_hc_view = 1;
+                return false;
+            }
+            else
+            {
+                for (var i = 1; i <= honeycomb_views.num() ; i++)
+                {
+                    if (honeycomb_views.list(i - 1).bees.num() < self.settings.bees_per_honeycomb())
+                    {
+                        self.stack.set_view(event_object, i);
 
-            self.stack.set_view(event_object, __real_hc_view);
-
-            return false;
+                        return true;
+                    }
+                }
+            }
         };
 
         this.show_hive_bee = function(honeycomb_view, bees_colony, index)
@@ -344,17 +353,17 @@ function hive()
                 {
                     if (honeycomb_views.list(i).id === honeycomb_views.visible())
                     {
-                        stack_trace.bee_drag = true;
-
                         if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb() && 
                             stack_trace.internal_bee_drag === false)
                         {
-                            me.free_space_hc_view_swipe(event_object, i + 1);
+                            me.free_space_hc_view_swipe(event_object);
 
                             return true;
                         }
                         else
                         {
+                            stack_trace.bee_drag = true;
+
                             var __this_bee = swarm.status.active_bee(),
                                 __hive_bee = utils_sys.objects.by_id('hive_bee_' + __this_bee),
                                 __hive_object = utils_sys.objects.by_id(self.settings.id()),
@@ -1216,6 +1225,14 @@ function hive()
 
         function bees()
         {
+            this.max = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return (honeycomb_views.num() * self.settings.bees_per_honeycomb());
+            };
+
             this.num = function()
             {
                 if (is_init === false)
@@ -1346,6 +1363,7 @@ function hive()
         swarm = null,
         forest = null,
         nature = null,
+        msg_win = null,
         max_stack_width = 0,
         last_mouse_button_clicked = 0,
         utils_sys = new vulcan()
