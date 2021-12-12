@@ -12,42 +12,34 @@
 // Max Screen
 function max_screen()
 {
-
     var self = this;
 
     function utilities()
     {
-
         var me = this;
 
         this.go_full_screen = function()
         {
-
             var __element = vulcan.objects.by_id(self.settings.container());
 
             vulcan.objects.by_id('max_screen_splash').style.display = 'none';
 
             if (__element.requestFullscreen)
                 __element.requestFullscreen();
-
             else if (__element.mozRequestFullScreen)
                 __element.mozRequestFullScreen();
-
             else if (__element.webkitRequestFullscreen)
                 __element.webkitRequestFullscreen();
-            
             else
                 return false;
 
            self.settings.callback_function().call();
 
            return true;
-
         };
 
         this.setup = function(theme)
         {
-
             var __handler = null,
                 __dynamic_object = null;
 
@@ -65,20 +57,16 @@ function max_screen()
             vulcan.objects.by_id('max_screen_splash').onmousedown = __handler;
 
             return true;
-
         };
-
     }
 
     function settings()
     {
-
         var __container = null,
             __callback_function = null;
 
         this.container = function(val)
         {
-
             if (is_init === false)
                 return false;
 
@@ -91,12 +79,10 @@ function max_screen()
             __container = val;
 
             return true;
-
         };
 
         this.callback_function = function(val)
         {
-
             if (is_init === false)
                 return false;
 
@@ -106,17 +92,13 @@ function max_screen()
             __callback_function = val;
 
             return true;
-
         };
-
     }
 
     function status()
     {
-
         this.full_screen = function()
         {
-
             if (is_init === false)
                 return false;
 
@@ -124,9 +106,7 @@ function max_screen()
                 return true;
 
             return false;
-
         };
-
     }
 
     this.init = function(container_id, func, theme)
@@ -154,7 +134,6 @@ function max_screen()
 
     this.cosmos = function(cosmos_object)
     {
-
         if (cosmos_exists === true)
             return false;
 
@@ -168,7 +147,6 @@ function max_screen()
         cosmos_exists = true;
 
         return true;
-
     };
 
     var cosmos_exists = false,
@@ -179,5 +157,4 @@ function max_screen()
 
     this.settings = new settings();
     this.status = new status();
-
 }

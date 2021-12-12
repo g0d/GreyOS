@@ -1,5 +1,5 @@
 /*
-    GreyOS - Swarm (Version: 2.5)
+    GreyOS - Swarm (Version: 2.6)
 
     File name: swarm.js
     Description: This file contains the Swarm - Bees action area container module.
@@ -73,23 +73,27 @@ function swarm()
             return true;
         };
 
-        this.draw = function(swarm, left, top, right, bottom)
+        this.draw = function(left, top, right, bottom)
         {
-            var __dynamic_object = null,
-                __swarm_id = swarm.settings.id();
+            var __swarm_object = null,
+                __dynamic_object = null,
+                __handler = null;
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.setAttribute('id', __swarm_id);
+            __dynamic_object.setAttribute('id', swarm_id);
             __dynamic_object.setAttribute('class', 'swarm');
             __dynamic_object.setAttribute('style', 'left: ' + left + 'px; ' + 
                                                    'top: ' + top + 'px; ' + 
                                                    'width: ' + right + 'px; ' + 
                                                    'height: ' + bottom + 'px;');
 
-            utils_sys.objects.by_id(swarm.settings.container()).appendChild(__dynamic_object);
+            utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
 
-            utils_sys.objects.by_id(__swarm_id).onmousemove = function(event) { me.coords(event); me.toggle_hive(); };
+            __swarm_object = utils_sys.objects.by_id(swarm_id);
+
+            __handler = function(event) { me.coords(event); me.toggle_hive(); };
+            morpheus.run(swarm_id, 'mouse', 'mousemove', __handler, __swarm_object);
 
             return true;
         };
@@ -486,10 +490,12 @@ function swarm()
             self.settings.right(right);
             self.settings.bottom(bottom);
 
+            swarm_id = self.settings.id();
+
             nature.theme(['swarm']);
             nature.apply('new');
 
-            utils_int.draw(self, left, top, right, bottom);
+            utils_int.draw(left, top, right, bottom);
         }
 
         return true;
@@ -505,15 +511,18 @@ function swarm()
         matrix = cosmos.hub.access('matrix');
         colony = cosmos.hub.access('colony');
 
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
         return true;
     };
 
     var is_init = false,
+        swarm_id = null,
         cosmos = null,
         matrix = null,
         colony = null,
+        morpheus = null,
         nature = null,
         utils_sys = new vulcan(),
         random = new pythia(),
