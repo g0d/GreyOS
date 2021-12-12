@@ -138,7 +138,7 @@ function cloud_edit()
 
         this.gui_init = function()
         {
-            var __data_content_id = cloud_edit_bee.settings.general.id();
+            var __data_content_id = cloud_edit_bee.settings.general.id()  + '_data';
 
             infinity.setup(__data_content_id);
             infinity.begin();
@@ -168,7 +168,7 @@ function cloud_edit()
             dynamic_elements.append(config.ce.status_label);
             dynamic_elements.append(config.ce.exec_button);
 
-            utils_sys.objects.by_id(cloud_edit_bee.settings.general.id() + '_msg').childNodes[1].append(dynamic_elements);
+            utils_sys.objects.by_id(cloud_edit_bee.settings.general.id() + '_status_bar_msg').append(dynamic_elements);
 
             return true;
         };

@@ -129,11 +129,8 @@ function dock()
             var __dock_div = utils_sys.objects.by_id(self.settings.container()),
                 __handler = null;
 
-            __handler = function()
-                        {
-                            last_button_clicked = 0;
-                        };
-            utils_sys.events.attach('dock', __dock_div, 'mouseenter', __handler);
+            __handler = function() { last_button_clicked = 0; };
+            morpheus.run(dock_id, 'mouse', 'mouseenter', __handler, __dock_div);
 
             for (var __dock_app of config.dock_array)
                 open_app(__dock_app);
@@ -216,7 +213,7 @@ function dock()
                                     }
                                 }
                             };
-            utils_sys.objects.by_id('app_' + dock_app['app_id']).onmouseup = __handler;
+            morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['app_id']));
         }
 
         function close_app(bee, app_id)
@@ -242,11 +239,8 @@ function dock()
 
             for (var i = 0; i < __dock_apps_length; i++)
             {
-                __handler = function(event)
-                            {
-                                last_button_clicked = event.buttons;
-                            };
-                utils_sys.events.attach('dock', __dock_apps[i], 'mousedown', __handler);
+                __handler = function(event) { last_button_clicked = event.buttons; };
+                morpheus.run(dock_id, 'mouse', 'mousedown', __handler, __dock_apps[i]);
 
                 __handler = function(event)
                             {
@@ -259,7 +253,7 @@ function dock()
                                 for (var j = 0; j < __dock_apps_length; j++)
                                     __dock_apps[j].classList.add('dock_replace');
                             };
-                utils_sys.events.attach('dock', __dock_apps[i], 'dragstart', __handler);
+                morpheus.run(dock_id, 'mouse', 'dragstart', __handler, __dock_apps[i]);
 
                 __handler = function(event)
                             {
@@ -267,7 +261,7 @@ function dock()
 
                                 event.dataTransfer.dropEffect = 'move';
                             };
-                utils_sys.events.attach('dock', __dock_apps[i], 'dragover', __handler);
+                morpheus.run(dock_id, 'mouse', 'dragover', __handler, __dock_apps[i]);
 
                 __handler = function(event)
                             {
@@ -275,13 +269,10 @@ function dock()
 
                                 event.target.classList.add('dock_replace_outer');
                             };
-                utils_sys.events.attach('dock', __dock_apps[i], 'dragenter', __handler);
+                morpheus.run(dock_id, 'mouse', 'dragenter', __handler, __dock_apps[i]);
 
-                __handler = function()
-                            {
-                                this.classList.remove('dock_replace_outer');
-                            };
-                utils_sys.events.attach('dock', __dock_apps[i], 'dragleave', __handler);
+                __handler = function() { this.classList.remove('dock_replace_outer'); };
+                morpheus.run(dock_id, 'mouse', 'dragleave', __handler, __dock_apps[i]);
 
                 __handler = function()
                             {
@@ -293,7 +284,7 @@ function dock()
                                     __dock_apps[j].classList.remove('dock_replace');
                                 }
                             };
-                utils_sys.events.attach('dock', __dock_apps[i], 'dragend', __handler);
+                morpheus.run(dock_id, 'mouse', 'dragend', __handler, __dock_apps[i]);
 
                 __handler = function(event)
                             {
@@ -318,7 +309,7 @@ function dock()
                                     me.save_dock();
                                 }
                             };
-                utils_sys.events.attach('dock', __dock_apps[i], 'drop', __handler);
+                morpheus.run(dock_id, 'mouse', 'drop', __handler, __dock_apps[i]);
             }
         }
 
@@ -379,6 +370,8 @@ function dock()
         self.settings.id('dock_' + random.generate());
         self.settings.container(container_id);
 
+        dock_id = self.settings.id();
+
         nature.theme('dock');
         nature.apply('new');
 
@@ -400,6 +393,7 @@ function dock()
 
         swarm = matrix.get('swarm');
         hive = matrix.get('swarm');
+        morpheus = matrix.get('morpheus');
         owl = matrix.get('owl');
         parrot = matrix.get('parrot');
         chameleon = matrix.get('chameleon');
@@ -410,12 +404,14 @@ function dock()
 
     var is_init = false,
         is_dragging = false,
+        dock_id = null,
         cosmos = null,
         matrix = null,
         swarm = null,
         hive = null,
         app_box = null,
         colony = null,
+        morpheus = null,
         owl = null,
         parrot = null,
         chameleon = null,

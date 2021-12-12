@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 3.2)
+    GreyOS - Bee (Version: 3.6)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window module.
@@ -13,6 +13,256 @@
 function bee()
 {
     var self = this;
+
+    function ui_objects_model()
+    {
+        function window()
+        {
+            function control_bar()
+            {
+                this.ui = null;
+                this.icon = null;
+                this.title = null;
+                this.pencil = null;
+                this.separator = null;
+                this.close = null;
+            }
+
+            function menu()
+            {
+                this.ui = null;
+                this.put_to_stack = null;
+                this.mini_mode = null;
+                this.max_mode = null;
+                this.manage_casement = null;
+                this.send_to_desktop = null;
+                this.close = null;
+            }
+
+            function content()
+            {
+                this.ui = null;
+                this.data = null;
+            }
+
+            function status_bar()
+            {
+                this.ui = null;
+                this.message = null;
+                this.resize = null;
+            }
+
+            this.control_bar = new control_bar();
+            this.menu = new menu();
+            this.content = new content();
+            this.status_bar = new status_bar();
+        }
+
+        function casement()
+        {
+            this.ui = null;
+            this.title = null;
+            this.data = null;
+            this.status = null;
+        }
+
+        this.ui = null;
+        this.swarm = null;
+        this.window = new window();
+        this.casement = new casement();
+    }
+
+    function ui_config_model()
+    {
+        function window()
+        {
+            function control_bar()
+            {
+                function ids()
+                {
+                    this.icon = null;
+                    this.title = null;
+                    this.pencil = null;
+                    this.separator = null;
+                    this.close = null;
+                }
+
+                function classes()
+                {
+                    this.container = null;
+                    this.icon = null;
+                    this.title = null;
+                    this.pencil = null;
+                    this.separator = null;
+                    this.close = null;
+                }
+
+                this.id = null;
+                this.ids = new ids();
+                this.classes = new classes();
+            }
+
+            function menu()
+            {
+                function ids()
+                {
+                    this.put_to_stack = null;
+                    this.mini_mode = null;
+                    this.max_mode = null;
+                    this.manage_casement = null;
+                    this.send_to_desktop = null;
+                    this.close = null;
+                }
+
+                this.id = null;
+                this.class = null;
+                this.ids = new ids();
+            }
+
+            function content()
+            {
+                function ids()
+                {
+                    this.data = null;
+                }
+
+                function classes()
+                {
+                    this.container = null;
+                    this.data = null;
+                }
+
+                this.id = null;
+                this.ids = new ids();
+                this.classes = new classes();
+            }
+
+            function status_bar()
+            {
+                function ids()
+                {
+                    this.message = null;
+                    this.resize = null;
+                }
+
+                function classes()
+                {
+                    this.container = null;
+                    this.message = null;
+                    this.resize = null;
+                }
+
+                this.id = null;
+                this.ids = new ids();
+                this.classes = new classes();
+            }
+
+            this.id = null;
+            this.class = null;
+            this.control_bar = new control_bar();
+            this.menu = new menu();
+            this.content = new content();
+            this.status_bar = new status_bar();
+        }
+
+        function casement()
+        {
+            function ids()
+            {
+                this.title = null;
+                this.data = null;
+                this.status = null;
+            }
+
+            function classes()
+            {
+                this.title = null;
+                this.container = null;
+                this.data = null;
+                this.status = null;
+            }
+
+            this.id = null;
+            this.ids = new ids();
+            this.classes = new classes();
+        }
+
+        this.window = new window();
+        this.casement = new casement();
+    }
+
+    function events_status_settings_model()
+    {
+        function system()
+        {
+            this.running = false;
+            this.active = false;
+            this.in_hive = false;
+            this.id_changed = false;
+            this.type_changed = false;
+            this.desktop_changed = false;
+        }
+
+        function gui()
+        {
+            this.open = false;
+            this.opened = false;
+            this.close = false;
+            this.closed = false;
+            this.minimize = false;
+            this.minimized = false;
+            this.restore = false;
+            this.restored = false;
+            this.maximize = false;
+            this.maximized = false;
+            this.drag = false;
+            this.dragging = false;
+            this.dragged = false;
+            this.resize = false;
+            this.resizing = false;
+            this.resized = false;
+            this.touch = false;
+            this.touched = false;
+            this.menu_activated = false;
+            this.casement_deployed = false;
+            this.resize_enabled = false;
+            this.key_pressed = false;
+            this.mouse_clicked = false;
+            this.title_on_edit = false;
+            this.title_changed = false;
+            this.status_bar_label_changed = false;
+            this.content_changed = false;
+            this.fading_in = false;
+            this.fading_in_finished = false;
+            this.fading_out = false;
+            this.fading_out_finished = false;
+            this.opacity_changed = false;
+        }
+
+        function key()
+        {
+            this.keydown = false;
+            this.keyup = false;
+            this.keypress = false;
+        }
+
+        function mouse()
+        {
+            this.click = false;
+            this.dblclick = false;
+            this.mousedown = false;
+            this.mouseup = false;
+            this.mouseover = false;
+            this.mouseout = false;
+            this.mousemove = false;
+        }
+
+        this.on_event = false;
+        this.system = new system();
+        this.gui = new gui();
+        this.key = new key();
+        this.mouse = new mouse();
+    }
 
     function error()
     {
@@ -31,125 +281,395 @@ function bee()
         this.codes = new codes();
     }
 
-    function ui_config_model()
-    {
-        function window()
-        {
-            this.id = null;
-            this.class = null;
-
-            function control_bar()
-            {
-                this.id = null;
-
-                function ids()
-                {
-                    this.icon = null;
-                    this.title = null;
-                    this.pencil = null;
-                    this.separator = null;
-                    this.close = null;
-                }
-
-                function classes()
-                {
-                    this.container = null;
-                    this.icon = null;
-                    this.title = null;
-                    this.pencil = null;
-                    this.separator = null;
-                    this.close = null;
-                }
-
-                this.ids = new ids();
-                this.classes = new classes();
-            }
-
-            function menu()
-            {
-                this.id = null;
-                this.class = null;
-            }
-
-            function content()
-            {
-                this.id = null;
-
-                function ids()
-                {
-                    this.data = null;
-                }
-
-                function classes()
-                {
-                    this.container = null;
-                    this.data = null;
-                }
-
-                this.ids = new ids();
-                this.classes = new classes();
-            }
-
-            function status_bar()
-            {
-                this.id = null;
-
-                function ids()
-                {
-                    this.message = null;
-                    this.resize = null;
-                }
-
-                function classes()
-                {
-                    this.container = null;
-                    this.message = null;
-                    this.resize = null;
-                }
-
-                this.ids = new ids();
-                this.classes = new classes();
-            }
-
-            this.control_bar = new control_bar();
-            this.menu = new menu();
-            this.content = new content();
-            this.status_bar = new status_bar();
-        }
-
-        function casement()
-        {
-            this.id = null;
-
-            function ids()
-            {
-                this.title = null;
-                this.data = null;
-                this.status = null;
-            }
-
-            function classes()
-            {
-                this.title = null;
-                this.container = null;
-                this.data = null;
-                this.status = null;
-            }
-
-            this.ids = new ids();
-            this.classes = new classes();
-        }
-
-        this.window = new window();
-        this.casement = new casement();
-    }
-
     function utilities()
     {
         var me = this;
         var last_mouse_button_clicked = 0;
 
-        this.coords = function(event_object, type)
+        function populate_ui_config()
+        {
+            ui_config.window.id = my_bee_id;
+            ui_config.window.class = 'gui ' + ui_config.window.id + '_gui';
+
+            ui_config.window.control_bar.id = ui_config.window.id + '_ctrl_bar';
+            ui_config.window.control_bar.ids.icon = ui_config.window.id + '_icon';
+            ui_config.window.control_bar.ids.title = ui_config.window.id + '_title';
+            ui_config.window.control_bar.ids.pencil = ui_config.window.id + '_pencil';
+            ui_config.window.control_bar.ids.separator = ui_config.window.id + '_separator';
+            ui_config.window.control_bar.ids.close = ui_config.window.id + '_close';
+            ui_config.window.control_bar.classes.icon = 'icon ' + ui_config.window.control_bar.ids.icon;
+            ui_config.window.control_bar.classes.pencil = 'pencil ' + ui_config.window.control_bar.ids.pencil;
+
+            ui_config.window.menu.id = ui_config.window.id + '_menu';
+            ui_config.window.menu.ids.put_to_stack = ui_config.window.menu.id + '_put_to_stack';
+            ui_config.window.menu.ids.mini_mode = ui_config.window.menu.id + '_mini_mode';
+            ui_config.window.menu.ids.max_mode = ui_config.window.menu.id + '_max_mode';
+            ui_config.window.menu.ids.manage_casement = ui_config.window.menu.id + '_manage_casement';
+            ui_config.window.menu.ids.send_to_desktop = ui_config.window.menu.id + '_send_to_desktop';
+            ui_config.window.menu.ids.close = ui_config.window.menu.id + '_close';
+            ui_config.window.menu.class = 'menu ' + ui_config.window.menu.id;
+
+            ui_config.window.content.id = ui_config.window.id + '_content';
+            ui_config.window.content.ids.data = ui_config.window.id + '_data';
+            ui_config.window.content.classes.container = 'content ' + ui_config.window.content.id;
+            ui_config.window.content.classes.data = 'data ' + ui_config.window.content.ids.data;
+
+            ui_config.window.status_bar.id = ui_config.window.id + '_status_bar';
+            ui_config.window.status_bar.ids.message = ui_config.window.status_bar.id + '_msg';
+            ui_config.window.status_bar.classes.container = 'status_bar ' + ui_config.window.status_bar.id;
+            ui_config.window.status_bar.classes.message = 'status_msg ' + ui_config.window.status_bar.ids.message;
+
+            ui_config.casement.id = ui_config.window.id + '_casement';
+            ui_config.casement.ids.title = ui_config.casement.id + '_title';
+            ui_config.casement.ids.data = ui_config.casement.id + '_data';
+            ui_config.casement.ids.status = ui_config.casement.id + '_status';
+            ui_config.casement.classes.container = 'casement ' + ui_config.casement.id;
+            ui_config.casement.classes.title = 'casement_title ' + ui_config.casement.ids.title;
+            ui_config.casement.classes.data = 'casement_data ' + ui_config.casement.ids.data;
+            ui_config.casement.classes.status = 'casement_status ' + ui_config.casement.ids.status;
+        }
+
+        function populate_ui_objects()
+        {
+            ui_objects.window.ui = utils_sys.objects.by_id(ui_config.window.id);
+            ui_objects.window.control_bar.ui = utils_sys.objects.by_id(ui_config.window.control_bar.id);
+            ui_objects.window.control_bar.icon = utils_sys.objects.by_id(ui_config.window.control_bar.ids.icon);
+            ui_objects.window.control_bar.title = utils_sys.objects.by_id(ui_config.window.control_bar.ids.title);
+            ui_objects.window.control_bar.pencil = utils_sys.objects.by_id(ui_config.window.control_bar.ids.pencil);
+            ui_objects.window.control_bar.separator = utils_sys.objects.by_id(ui_config.window.control_bar.ids.separator);
+            ui_objects.window.control_bar.close = utils_sys.objects.by_id(ui_config.window.control_bar.ids.close);
+
+            ui_objects.window.menu.ui = utils_sys.objects.by_id(ui_config.window.menu.id);
+            ui_objects.window.menu.put_to_stack = utils_sys.objects.by_id(ui_config.window.menu.ids.put_to_stack);
+            ui_objects.window.menu.mini_mode = utils_sys.objects.by_id(ui_config.window.menu.ids.mini_mode);
+            ui_objects.window.menu.max_mode = utils_sys.objects.by_id(ui_config.window.menu.ids.max_mode);
+            ui_objects.window.menu.manage_casement = utils_sys.objects.by_id(ui_config.window.menu.ids.manage_casement);
+            ui_objects.window.menu.send_to_desktop = utils_sys.objects.by_id(ui_config.window.menu.ids.send_to_desktop);
+            ui_objects.window.menu.close = utils_sys.objects.by_id(ui_config.window.menu.ids.close);
+
+            ui_objects.window.content.ui = utils_sys.objects.by_id(ui_config.window.content.id);
+            ui_objects.window.content.data = utils_sys.objects.by_id(ui_config.window.content.ids.data);
+
+            ui_objects.window.status_bar.ui = utils_sys.objects.by_id(ui_config.window.status_bar.id);
+            ui_objects.window.status_bar.message = utils_sys.objects.by_id(ui_config.window.status_bar.ids.message);
+            ui_objects.window.status_bar.resize = utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize);
+
+            ui_objects.casement.ui = utils_sys.objects.by_id(ui_config.casement.id);
+            ui_objects.casement.title = utils_sys.objects.by_id(ui_config.casement.ids.title);
+            ui_objects.casement.data = utils_sys.objects.by_id(ui_config.casement.ids.data);
+            ui_objects.casement.status = utils_sys.objects.by_id(ui_config.casement.ids.status);
+        }
+
+        function draw()
+        {
+            var __dynamic_object = null,
+                __bee_settings = self.settings,
+                __bee_gui = self.gui,
+                __marquee_class = '',
+                __html = null;
+
+            if (__bee_gui.size.width() >= swarm.settings.right() || __bee_gui.size.height() >= swarm.settings.bottom())
+                return false;
+
+            populate_ui_config();
+
+            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
+            {
+                ui_config.window.status_bar.ids.resize = ui_config.window.id + '_resize';
+                ui_config.window.status_bar.classes.resize = 'resize ' + ui_config.window.status_bar.ids.resize;
+            }
+
+            if (self.settings.general.type() === 1)
+            {
+                ui_config.window.control_bar.classes.container = 'ctrl_bar box_ctrl_bar ' + ui_config.window.control_bar.id;
+                ui_config.window.control_bar.classes.title = 'title box_title ' + ui_config.window.control_bar.ids.title;
+                ui_config.window.control_bar.classes.separator = 'separator box_separator '+ ui_config.window.control_bar.ids.separator;
+                ui_config.window.control_bar.classes.close = 'close box_close ' + ui_config.window.control_bar.ids.close;
+            }
+            else
+            {
+                ui_config.window.control_bar.classes.container = 'ctrl_bar widget_ctrl_bar ' + ui_config.window.control_bar.id;
+                ui_config.window.control_bar.classes.title = 'title widget_title ' + ui_config.window.control_bar.ids.title;
+                ui_config.window.control_bar.classes.separator = 'separator widget_separator '+ ui_config.window.control_bar.ids.separator;
+                ui_config.window.control_bar.classes.close = 'close widget_close ' + ui_config.window.control_bar.ids.close;
+            }
+
+            if (__bee_settings.data.window.labels.status_bar().length * 6.4 > __bee_gui.size.width())
+                __marquee_class = 'marquee';
+
+            __html = '<div id="' + ui_config.window.control_bar.id + '" class="' + ui_config.window.control_bar.classes.container + '">' + 
+                     '    <div id="' + ui_config.window.control_bar.ids.icon + '" class="' + ui_config.window.control_bar.classes.icon + '"></div>' + 
+                     '    <div id="' + ui_config.window.control_bar.ids.title + '" class="' + ui_config.window.control_bar.classes.title + '">' + 
+                            __bee_settings.data.window.labels.title() + 
+                     '    </div>';
+
+            if (self.settings.actions.can_edit_title())
+                __html += '    <div id="' + ui_config.window.control_bar.ids.pencil + '" class="' + ui_config.window.control_bar.classes.pencil + '"></div>';
+
+            if (self.settings.actions.can_close())
+                __html += '    <div id="' + ui_config.window.control_bar.ids.close + '" class="' + ui_config.window.control_bar.classes.close + '"></div>';
+
+            if (self.settings.actions.can_edit_title() && self.settings.actions.can_close())
+                __html += '    <div id="' + ui_config.window.control_bar.ids.separator + '" class="' + ui_config.window.control_bar.classes.separator + '"></div>';
+
+            __html += '</div>';
+
+            if (self.settings.actions.can_use_menu())
+            {
+                __html += '<div id="' + ui_config.window.menu.id + '" class="' + ui_config.window.menu.class + '">' + 
+                          '    <div id="' + ui_config.window.menu.ids.put_to_stack + '" ' + 
+                          '         class="menu_option put_to_stack">Put to stack</div>' + 
+                          '    <div id="' + ui_config.window.menu.ids.mini_mode + '" ' + 
+                          '         class="menu_option mini_mode">Mini mode</div>' + 
+                          '    <div id="' + ui_config.window.menu.ids.max_mode + '" ' + 
+                          '         class="menu_option max_mode">Max mode</div>' + 
+                          '    <div id="' + ui_config.window.menu.ids.manage_casement + '" ' + 
+                          '         class="menu_option manage_casement">Deploy casement</div>' + 
+                          '    <div id="' + ui_config.window.menu.ids.send_to_desktop + '" ' + 
+                          '         class="menu_option send_to_desktop">Send to desktop...</div>' + 
+                          '    <div id="' + ui_config.window.menu.ids.close + '" ' + 
+                          '         class="menu_option menu_close">Close</div>' + 
+                          '</div>';
+            }
+
+            __html += '<div id="' + ui_config.window.content.id + '" class="' + ui_config.window.content.classes.container + '">' + 
+                      '    <div id="' + ui_config.window.content.ids.data + '" class="' + ui_config.window.content.classes.data + '">' + 
+                                        __bee_settings.data.window.content() + '</div>' + 
+                      '</div>' + 
+                      '<div id="' + ui_config.window.status_bar.id + '" class="' + ui_config.window.status_bar.classes.container + '">' + 
+                      '    <div id="' + ui_config.window.status_bar.ids.message + '" class="' + 
+                                        ui_config.window.status_bar.classes.message + '">' + 
+                      '      <div class="dynamic_msg ' + __marquee_class + '">' + __bee_settings.data.window.labels.status_bar() + '</div>' + 
+                      '    </div>';
+
+            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
+                __html += '    <div id="' + ui_config.window.status_bar.ids.resize + '" class="' + 
+                                            ui_config.window.status_bar.classes.resize + '"></div>';
+
+            __html += '</div>';
+
+            __dynamic_object = document.createElement('div');
+
+            __dynamic_object.setAttribute('id', ui_config.window.id);
+            __dynamic_object.setAttribute('class', ui_config.window.class);
+
+            __dynamic_object.style.opacity = '1.0';
+            __dynamic_object.style.display = 'block';
+
+            if (self.gui.fx.enabled.fade.into())
+                __dynamic_object.style.display = 'none';
+
+            if (bee_statuses.in_hive())
+            {
+                __dynamic_object.style.display = 'none';
+
+                morpheus.execute(my_bee_id, 'system', 'in_hive');
+            }
+
+            __dynamic_object.style.left = __bee_gui.position.left() + 'px';
+            __dynamic_object.style.top = __bee_gui.position.top() + 'px';
+            __dynamic_object.style.width = __bee_gui.size.width() + 'px';
+            __dynamic_object.style.height = __bee_gui.size.height() + 'px';
+
+            __dynamic_object.innerHTML = __html;
+
+            ui_objects.swarm.appendChild(__dynamic_object);
+
+            __dynamic_object = document.createElement('div');
+
+            __dynamic_object.setAttribute('id', ui_config.casement.id);
+            __dynamic_object.setAttribute('class', ui_config.casement.classes.container);
+
+            __dynamic_object.style.left = __bee_gui.position.left() + __bee_gui.size.width() + 'px';
+            __dynamic_object.style.top = __bee_gui.position.top() + 'px';
+            __dynamic_object.style.width = __bee_gui.size.width() + 'px';
+            __dynamic_object.style.height = __bee_gui.size.height() + 'px';
+
+            __dynamic_object.innerHTML = '<div id="' + ui_config.casement.ids.title + '" class="casement_title ' + 
+                                         ui_config.casement.classes.title + '">' + 
+                                         __bee_settings.data.casement.labels.title() + 
+                                         '</div>' + 
+                                         '<div id="' + ui_config.casement.ids.data + '" class="casement_data ' + 
+                                         ui_config.casement.classes.data + '">' + 
+                                         __bee_settings.data.casement.content() + 
+                                         '</div>' + 
+                                         '<div id="' + ui_config.casement.ids.status + '" class="casement_status ' + 
+                                         ui_config.casement.classes.status + '">' + 
+                                         __bee_settings.data.casement.labels.status() + 
+                                         '</div>';
+
+            ui_objects.swarm.appendChild(__dynamic_object);
+
+            populate_ui_objects();
+
+            ui_objects.window.control_bar.title.style.width = __bee_gui.size.width() - 100 + 'px';
+            ui_objects.window.content.data.style.height = __bee_gui.size.height() - 88 + 'px';
+
+            if (self.settings.general.type() === 2 && !self.settings.actions.can_resize.widget())
+                ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 22 + 'px';
+            else
+                ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 50 + 'px';
+
+            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
+            {
+                ui_objects.window.status_bar.resize.style.width = 19 + 'px';
+                ui_objects.window.status_bar.resize.style.height = 19 + 'px';
+            }
+
+            __bee_gui.actions.set_top();
+
+            attach_events();
+
+            bee_statuses.open(true);
+
+            morpheus.execute(my_bee_id, 'gui', 'open');
+
+            bee_statuses.open(false);
+            bee_statuses.opened(true);
+
+            morpheus.execute(my_bee_id, 'gui', 'opened');
+
+            morpheus.execute(my_bee_id, 'key', 'keydown');
+            morpheus.execute(my_bee_id, 'key', 'keyup');
+            morpheus.execute(my_bee_id, 'key', 'keypress');
+
+            morpheus.execute(my_bee_id, 'mouse', 'click');
+            morpheus.execute(my_bee_id, 'mouse', 'dblclick');
+            morpheus.execute(my_bee_id, 'mouse', 'mousedown');
+            morpheus.execute(my_bee_id, 'mouse', 'mouseup');
+            morpheus.execute(my_bee_id, 'mouse', 'mouseover');
+            morpheus.execute(my_bee_id, 'mouse', 'mouseout');
+            morpheus.execute(my_bee_id, 'mouse', 'mousemove');
+
+            return true;
+        }
+
+        function attach_events()
+        {
+            var __bee_gui = self.gui,
+                __handler = null;
+
+            __handler = function(event) { __bee_gui.actions.menu.close(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, document);
+
+            __handler = function(event) { __bee_gui.actions.release(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
+
+            __handler = function(event) { __bee_gui.actions.dresize(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.swarm);
+
+            __handler = function(event) { __bee_gui.actions.hover.into(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mouseover', __handler, ui_objects.window.ui);
+
+            __handler = function(event) { __bee_gui.actions.hover.out(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mouseout', __handler, ui_objects.window.ui);
+
+            __handler = function(event) { coords(event, 1); };
+            morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.window.ui);
+
+            __handler = function() { __bee_gui.actions.touch(); };
+            morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.ui);
+
+            __handler = function(event) { coords(event, 2); manage_drag_status(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.ui);
+
+            __handler = function(event)
+                        {
+                            self.settings.actions.can_drag.enabled(false);
+
+                            last_mouse_button_clicked = event.buttons;
+
+                            bee_statuses.active(true);
+
+                            morpheus.execute(my_bee_id, 'system', 'active');
+                        };
+            morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.icon);
+
+            __handler = function(event) { __bee_gui.actions.menu.open(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, ui_objects.window.control_bar.icon);
+
+            if (self.settings.actions.can_edit_title())
+            {
+                __handler = function(event) { __bee_gui.actions.edit_title(event); };
+                morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.pencil);
+            }
+
+            if (self.settings.actions.can_close())
+            {
+                __handler = function(event) { __bee_gui.actions.close(event); };
+                morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.close);
+            }
+
+            if (self.settings.actions.can_use_menu())
+            {
+                if (self.settings.actions.can_deploy_casement())
+                {
+                    __handler = function(event) { manage_casement(event); };
+                    morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.manage_casement);
+                }
+
+                if (self.settings.actions.can_close())
+                {
+                    __handler = function(event) { __bee_gui.actions.close(event); };
+                    morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.close);
+                }
+            }
+
+            if (!self.settings.actions.can_select_text())
+            {
+                __handler = function() { return false; };
+                morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.content.data);
+
+                __handler = function(event) { event.preventDefault(); };
+                morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.content.data);
+            }
+
+            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
+            {
+                __handler = function(event)
+                            {
+                                coords(event, 2);
+
+                                bee_statuses.resize(true);
+                                bee_statuses.active(true);
+
+                                morpheus.execute(my_bee_id, 'gui', 'resize');
+                                morpheus.execute(my_bee_id, 'system', 'active');
+                            };
+                morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.status_bar.resize);
+
+                __handler = function()
+                {
+                    bee_statuses.resize(false);
+
+                    morpheus.execute(my_bee_id, 'gui', 'resized');
+                };
+                morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, ui_objects.window.status_bar.resize);
+            }
+
+            __handler = function() { return false; };
+            morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.control_bar.ui);
+            morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.status_bar.ui);
+
+            __handler = function(event) { event.preventDefault(); };
+            morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.status_bar.ui);
+
+            __handler = function(event) { __bee_gui.actions.hover.into(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mouseover', __handler, ui_objects.casement.ui);
+
+            __handler = function(event) { __bee_gui.actions.hover.out(event); };
+            morpheus.store(my_bee_id, 'mouse', 'mouseout', __handler, ui_objects.casement.ui);
+
+            __handler = function(event) { coords(event, 1); };
+            morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.casement.ui);
+
+            __handler = function() { __bee_gui.actions.touch(); };
+            morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.casement.ui);
+
+            return true;
+        }
+
+        function coords(event_object, type)
         {
             if (utils_sys.validation.misc.is_undefined(event_object) || !utils_sys.validation.numerics.is_integer(type) || 
                 type < 1 || type > 2)
@@ -178,94 +698,20 @@ function bee()
             }
 
             return true;
-        };
+        }
 
-        this.manage_drag_status = function(event_object)
+        function update_win_title()
         {
-            if (event_object.buttons !== 1)
-                return false;
-
-            if (!self.settings.actions.can_drag.enabled() || bee_statuses.title_on_edit() || bee_statuses.close())
-                return false;
-
-            swarm.settings.active_bee(my_bee_id);
-
-            bee_statuses.drag(true);
-            bee_statuses.active(true);
-
-            bee_events_scheduler.execute('gui', 'drag');
-            bee_events_scheduler.execute('system', 'active');
-
-            return true;
-        };
-
-        this.manage_casement = function(event_object)
-        {
-            if (bee_statuses.close())
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
-                return false;
-
-            if (bee_statuses.casement_deployed())
-                self.gui.actions.casement.hide(event_object);
-            else
-                self.gui.actions.casement.deploy(event_object);
-
-            return true;
-        };
-
-        this.edit_win_title = function()
-        {
-            var __ctrl_bar = utils_sys.objects.by_id(ui_config.window.control_bar.id),
-                __old_title = utils_sys.objects.by_id(ui_config.window.control_bar.ids.title),
-                __pencil = utils_sys.objects.by_id(ui_config.window.control_bar.ids.pencil),
-                __win_type_class_title = null,
-                __title_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width) - 100,
-                __edit_box = document.createElement('input'),
-                __handler = null;
-
-            __ctrl_bar.removeChild(__old_title);
-            __ctrl_bar.removeChild(__pencil);
-
-            if (self.settings.general.type() === 2)
-                __win_type_class_title = 'widget_title';
-            else
-                __win_type_class_title = 'box_title';
-
-            __edit_box.setAttribute('id', my_bee_id + '_title_edit_box');
-            __edit_box.setAttribute('class', 'title ' + __win_type_class_title + ' edit_win_title');
-            __edit_box.setAttribute('style', 'width: ' + __title_width + 'px');
-            __edit_box.setAttribute('value', self.settings.data.window.labels.title());
-
-            __ctrl_bar.appendChild(__edit_box);
-
-            __handler = function(event)
-                        {
-                            if (self.gui.keys.get(event) === key_control.keys.ENTER)
-                                me.update_win_title();
-                        };
-            utils_sys.events.attach(my_bee_id, __edit_box, 'keydown', __handler);
-
-            bee_statuses.title_on_edit(true);
-
-            bee_events_scheduler.execute('gui', 'title_on_edit');
-
-            return true;
-        };
-
-        this.update_win_title = function()
-        {
-            var __ctrl_bar = utils_sys.objects.by_id(ui_config.window.control_bar.id),
+            var __ctrl_bar = ui_objects.window.control_bar.ui,
                 __title_edit_box = utils_sys.objects.by_id(my_bee_id + '_title_edit_box'),
                 __new_title = __title_edit_box.value,
                 __win_type_class_title = null,
-                __title_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width) - 100,
+                __title_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width) - 100,
                 __title_div = document.createElement('div'),
                 __pencil_div = document.createElement('div'),
                 __handler = null;
 
-            utils_sys.events.detach(my_bee_id, __title_edit_box, 'keydown');
+            morpheus.delete(my_bee_id, 'keydown', __title_edit_box);
 
             __ctrl_bar.removeChild(__title_edit_box);
 
@@ -286,365 +732,120 @@ function bee()
             __ctrl_bar.appendChild(__title_div);
             __ctrl_bar.appendChild(__pencil_div);
 
+            ui_objects.window.control_bar.title = __title_div;
+            ui_objects.window.control_bar.pencil = __pencil_div;
+
             __handler = function(event)
                         {
                             self.gui.actions.edit_title(event);
 
                             bee_statuses.active(true);
 
-                            bee_events_scheduler.execute('system', 'active');
+                            morpheus.execute(my_bee_id, 'system', 'active');
                         };
-            utils_sys.objects.by_id(ui_config.window.control_bar.ids.pencil).onmousedown = __handler;
+            morpheus.run(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.pencil);
 
             self.settings.data.window.labels.title(__new_title);
 
             bee_statuses.title_on_edit(false);
 
             return true;
+        }
+
+        function manage_drag_status(event_object)
+        {
+            if (event_object.buttons !== 1)
+                return false;
+
+            if (!self.settings.actions.can_drag.enabled() || bee_statuses.title_on_edit() || bee_statuses.close())
+                return false;
+
+            swarm.settings.active_bee(my_bee_id);
+
+            bee_statuses.drag(true);
+            bee_statuses.active(true);
+
+            morpheus.execute(my_bee_id, 'gui', 'drag');
+            morpheus.execute(my_bee_id, 'system', 'active');
+
+            return true;
+        }
+
+        function manage_casement(event_object)
+        {
+            if (bee_statuses.close())
+                return false;
+
+            if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+                return false;
+
+            if (bee_statuses.casement_deployed())
+                self.gui.actions.casement.hide(event_object);
+            else
+                self.gui.actions.casement.deploy(event_object);
+
+            return true;
+        }
+
+        this.gui_init = function()
+        {
+            ui_objects.swarm = utils_sys.objects.by_id(swarm.settings.id());
+
+            if (ui_objects.swarm === false)
+                return false;
+
+            if (!draw())
+                return false;
+
+            return true;
         };
 
-        this.draw = function(bee_object)
+        this.edit_win_title = function()
         {
-            var __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
-                __dynamic_object = null,
-                __bee_settings = bee_object.settings,
-                __bee_gui = bee_object.gui,
-                __marquee_class = '',
-                __html = null,
+            var __ctrl_bar = ui_objects.window.control_bar.ui,
+                __old_title = ui_objects.window.control_bar.title,
+                __pencil = ui_objects.window.control_bar.pencil,
+                __win_type_class_title = null,
+                __title_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width) - 100,
+                __title_edit_box = document.createElement('input'),
                 __handler = null;
 
-            if (__swarm_object === null)
-                return false;
+            __ctrl_bar.removeChild(__old_title);
+            __ctrl_bar.removeChild(__pencil);
 
-            if (__bee_gui.size.width() >= swarm.settings.right() || __bee_gui.size.height() >= swarm.settings.bottom())
-                return false;
-
-            ui_config.window.id = my_bee_id;
-            ui_config.window.class = 'gui ' + ui_config.window.id + '_gui';
-
-            ui_config.window.control_bar.id = ui_config.window.id + '_ctrl_bar';
-            ui_config.window.control_bar.ids.icon = ui_config.window.id + '_icon';
-            ui_config.window.control_bar.ids.title = ui_config.window.id + '_title';
-            ui_config.window.control_bar.ids.pencil = ui_config.window.id + '_pencil';
-            ui_config.window.control_bar.ids.separator = ui_config.window.id + '_separator';
-            ui_config.window.control_bar.ids.close = ui_config.window.id + '_close';
-            ui_config.window.control_bar.classes.icon = 'icon ' + ui_config.window.control_bar.ids.icon;
-            ui_config.window.control_bar.classes.pencil = 'pencil ' + ui_config.window.control_bar.ids.pencil;
-
-            ui_config.window.menu.id = ui_config.window.id + '_menu';
-            ui_config.window.menu.class = 'menu ' + ui_config.window.menu.id;
-
-            ui_config.window.content.id = ui_config.window.id + '_content';
-            ui_config.window.content.ids.data = ui_config.window.id + '_data';
-            ui_config.window.content.classes.container = 'content ' + ui_config.window.content.id;
-            ui_config.window.content.classes.data = 'data ' + ui_config.window.content.ids.data;
-
-            ui_config.window.status_bar.id = ui_config.window.id + '_status_bar';
-            ui_config.window.status_bar.ids.message = ui_config.window.id + '_msg';
-            ui_config.window.status_bar.classes.container = 'status_bar ' + ui_config.window.status_bar.id;
-            ui_config.window.status_bar.classes.message = 'status_msg ' + ui_config.window.status_bar.ids.message;
-
-            ui_config.casement.id = ui_config.window.id + '_casement';
-            ui_config.casement.ids.title = ui_config.casement.id + '_title';
-            ui_config.casement.ids.data = ui_config.casement.id + '_data';
-            ui_config.casement.ids.status = ui_config.casement.id + '_status';
-            ui_config.casement.classes.container = 'casement ' + ui_config.casement.id;
-            ui_config.casement.classes.title = 'casement_title ' + ui_config.casement.ids.title;
-            ui_config.casement.classes.data = 'casement_data ' + ui_config.casement.ids.data;
-            ui_config.casement.classes.status = 'casement_status ' + ui_config.casement.ids.status;
-
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
-            {
-                ui_config.window.status_bar.ids.resize = ui_config.window.id + '_resize';
-                ui_config.window.status_bar.classes.resize = 'resize ' + ui_config.window.status_bar.ids.resize;
-            }
-
-            if (self.settings.general.type() === 1)
-            {
-                ui_config.window.control_bar.classes.container = 'ctrl_bar box_ctrl_bar ' + ui_config.window.control_bar.id;
-                ui_config.window.control_bar.classes.title = 'title box_title ' + ui_config.window.control_bar.ids.title;
-                ui_config.window.control_bar.classes.separator = 'separator box_separator '+ ui_config.window.control_bar.ids.separator;
-                ui_config.window.control_bar.classes.close = 'close box_close ' + ui_config.window.control_bar.ids.close;
-            }
+            if (self.settings.general.type() === 2)
+                __win_type_class_title = 'widget_title';
             else
-            {
-                ui_config.window.control_bar.classes.container = 'ctrl_bar widget_ctrl_bar ' + ui_config.window.control_bar.id;
-                ui_config.window.control_bar.classes.title = 'title widget_title ' + ui_config.window.control_bar.ids.title;
-                ui_config.window.control_bar.classes.separator = 'separator widget_separator '+ ui_config.window.control_bar.ids.separator;
-                ui_config.window.control_bar.classes.close = 'close widget_close ' + ui_config.window.control_bar.ids.close;
-            }
+                __win_type_class_title = 'box_title';
 
-            if (__bee_settings.data.window.labels.status_bar().length * 7 > __bee_gui.size.width())
-                __marquee_class = 'marquee';
+            __title_edit_box.setAttribute('id', my_bee_id + '_title_edit_box');
+            __title_edit_box.setAttribute('class', 'title ' + __win_type_class_title + ' edit_win_title');
+            __title_edit_box.setAttribute('style', 'width: ' + __title_width + 'px');
+            __title_edit_box.setAttribute('value', self.settings.data.window.labels.title());
 
-            __html = '<div id="' + ui_config.window.control_bar.id + '" class="' + ui_config.window.control_bar.classes.container + '">' + 
-                     '    <div id="' + ui_config.window.control_bar.ids.icon + '" class="' + ui_config.window.control_bar.classes.icon + '"></div>' + 
-                     '    <div id="' + ui_config.window.control_bar.ids.title + '" class="' + ui_config.window.control_bar.classes.title + '">' + 
-                            __bee_settings.data.window.labels.title() + 
-                     '    </div>';
-
-            if (self.settings.actions.can_edit_title())
-                __html += '    <div id="' + ui_config.window.control_bar.ids.pencil + '" class="' + ui_config.window.control_bar.classes.pencil + '"></div>';
-
-            if (self.settings.actions.can_close())
-                __html += '    <div id="' + ui_config.window.control_bar.ids.close + '" class="' + ui_config.window.control_bar.classes.close + '"></div>';
-
-            if (self.settings.actions.can_edit_title() && self.settings.actions.can_close())
-                __html += '    <div id="' + ui_config.window.control_bar.ids.separator + '" class="' + ui_config.window.control_bar.classes.separator + '"></div>';
-
-            __html += '</div>';
-
-            if (self.settings.actions.can_use_menu())
-            {
-                __html += '<div id="' + ui_config.window.menu.id + '" class="' + ui_config.window.menu.class + '">' + 
-                          '    <div id="' + ui_config.window.menu.id + '_put_to_stack" class="menu_option put_to_stack ' + 
-                                            ui_config.window.menu.id + '_put_to_stack">Put to stack</div>' + 
-                          '    <div id="' + ui_config.window.menu.id + '_mini_mode" class="menu_option mini_mode ' + 
-                                            ui_config.window.menu.id + '_mini_mode">Mini mode</div>' + 
-                          '    <div id="' + ui_config.window.menu.id + '_max_mode" class="menu_option max_mode ' + 
-                                            ui_config.window.menu.id + '_max_mode">Max mode</div>' + 
-                          '    <div id="' + ui_config.window.menu.id + '_manage_casement" class="menu_option manage_casement ' + 
-                                            ui_config.window.menu.id + '_manage_casement">Deploy casement</div>' + 
-                          '    <div id="' + ui_config.window.menu.id + '_send_to_desktop" class="menu_option send_to_desktop ' + 
-                                            ui_config.window.menu.id + '_minimize">Send to desktop...</div>' + 
-                          '    <div id="' + ui_config.window.menu.id + '_close" class="menu_option menu_close ' + 
-                                            ui_config.window.menu.id + '_close">Close</div>' + 
-                          '</div>';
-            }
-
-            __html += '<div id="' + ui_config.window.content.id + '" class="' + ui_config.window.content.classes.container + '">' + 
-                      '    <div id="' + ui_config.window.content.ids.data + '" class="' + ui_config.window.content.classes.data + '">' + 
-                                        __bee_settings.data.window.content() + '</div>' + 
-                      '</div>' + 
-                      '<div id="' + ui_config.window.status_bar.id + '" class="' + ui_config.window.status_bar.classes.container + '">' + 
-                      '    <div id="' + ui_config.window.status_bar.ids.message + '" class="' + 
-                                        ui_config.window.status_bar.classes.message + '">' + 
-                      '      <div class="' + __marquee_class + '">' + __bee_settings.data.window.labels.status_bar() + '</div>' + 
-                      '    </div>';
-
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
-                __html += '    <div id="' + ui_config.window.status_bar.ids.resize + '" class="' + 
-                                            ui_config.window.status_bar.classes.resize + '"></div>';
-
-            __html += '</div>';
-
-            __dynamic_object = document.createElement('div');
-
-            __dynamic_object.setAttribute('id', ui_config.window.id);
-            __dynamic_object.setAttribute('class', ui_config.window.class);
-
-            __dynamic_object.style.opacity = '1.0';
-            __dynamic_object.style.display = 'block';
-
-            if (self.gui.fx.enabled.fade.into())
-                __dynamic_object.style.display = 'none';
-
-            if (bee_statuses.in_hive())
-            {
-                __dynamic_object.style.display = 'none';
-
-                bee_events_scheduler.execute('system', 'in_hive');
-            }
-
-            __dynamic_object.style.left = __bee_gui.position.left() + 'px';
-            __dynamic_object.style.top = __bee_gui.position.top() + 'px';
-            __dynamic_object.style.width = __bee_gui.size.width() + 'px';
-            __dynamic_object.style.height = __bee_gui.size.height() + 'px';
-
-            __dynamic_object.innerHTML = __html;
-
-            utils_sys.objects.by_id(swarm.settings.id()).appendChild(__dynamic_object);
-
-            __dynamic_object = document.createElement('div');
-
-            __dynamic_object.setAttribute('id', ui_config.casement.id);
-            __dynamic_object.setAttribute('class', ui_config.casement.classes.container);
-
-            __dynamic_object.style.left = __bee_gui.position.left() + __bee_gui.size.width() + 'px';
-            __dynamic_object.style.top = __bee_gui.position.top() + 'px';
-            __dynamic_object.style.width = __bee_gui.size.width() + 'px';
-            __dynamic_object.style.height = __bee_gui.size.height() + 'px';
-
-            __dynamic_object.innerHTML = '<div id="' + ui_config.casement.ids.title + '" class="casement_title ' + 
-                                         ui_config.casement.classes.title + '">' + 
-                                         __bee_settings.data.casement.labels.title() + 
-                                         '</div>' + 
-                                         '<div id="' + ui_config.casement.ids.data + '" class="casement_data ' + 
-                                         ui_config.casement.classes.data + '">' + 
-                                         __bee_settings.data.casement.content() + 
-                                         '</div>' + 
-                                         '<div id="' + ui_config.casement.ids.status + '" class="casement_status ' + 
-                                         ui_config.casement.classes.status + '">' + 
-                                         __bee_settings.data.casement.labels.status() + 
-                                         '</div>';
-
-            utils_sys.objects.by_id(swarm.settings.id()).appendChild(__dynamic_object);
-
-            bee_statuses.open(true);
-
-            bee_events_scheduler.execute('gui', 'open');
-
-            bee_events_scheduler.execute('key', 'keydown');
-            bee_events_scheduler.execute('key', 'keyup');
-            bee_events_scheduler.execute('key', 'keypress');
-
-            bee_events_scheduler.execute('mouse', 'click');
-            bee_events_scheduler.execute('mouse', 'dblclick');
-            bee_events_scheduler.execute('mouse', 'mousedown');
-            bee_events_scheduler.execute('mouse', 'mouseup');
-            bee_events_scheduler.execute('mouse', 'mouseover');
-            bee_events_scheduler.execute('mouse', 'mouseout');
-            bee_events_scheduler.execute('mouse', 'mousemove');
-
-            __handler = function(event) { __bee_gui.actions.menu.close(event); };
-            utils_sys.events.attach(my_bee_id, document, 'mousedown', __handler);
-
-            __handler = function(event) { __bee_gui.actions.release(event); };
-            utils_sys.events.attach(my_bee_id, document, 'mouseup', __handler);
-
-            __handler = function(event) { __bee_gui.actions.dresize(event); };
-            utils_sys.events.attach(my_bee_id, __swarm_object, 'mousemove', __handler);
-
-            __handler = function(event) { __bee_gui.actions.hover.into(event); };
-            utils_sys.objects.by_id(my_bee_id).onmouseover = __handler;
-
-            __handler = function(event) { __bee_gui.actions.hover.out(event); };
-            utils_sys.objects.by_id(my_bee_id).onmouseout = __handler;
-
-            __handler = function(event) { me.coords(event, 1); };
-            utils_sys.objects.by_id(my_bee_id).onmousemove = __handler;
-
-            __handler = function() { __bee_gui.actions.touch(); };
-            utils_sys.objects.by_id(my_bee_id).onmousedown = __handler;
-
-            __handler = function(event) { me.coords(event, 2); me.manage_drag_status(event); };
-            utils_sys.objects.by_id(ui_config.window.control_bar.id).onmousedown = __handler;
+            __ctrl_bar.appendChild(__title_edit_box);
 
             __handler = function(event)
                         {
-                            self.settings.actions.can_drag.enabled(false);
+                            if (!bee_statuses.active())
+                                return false;
 
-                            last_mouse_button_clicked = event.buttons;
-
-                            bee_statuses.active(true);
-
-                            bee_events_scheduler.execute('system', 'active');
+                            if (self.gui.keys.get(event) === key_control.keys.ENTER)
+                                update_win_title();
                         };
-            utils_sys.objects.by_id(ui_config.window.control_bar.ids.icon).onmousedown = __handler;
+            morpheus.run(my_bee_id, 'key', 'keydown', __handler, __title_edit_box);
 
-            __handler = function(event) { __bee_gui.actions.menu.open(event); };
-            utils_sys.objects.by_id(ui_config.window.control_bar.ids.icon).onmouseup = __handler;
+            bee_statuses.title_on_edit(true);
 
-            if (self.settings.actions.can_edit_title())
-            {
-                __handler = function(event) { __bee_gui.actions.edit_title(event); };
-                utils_sys.objects.by_id(ui_config.window.control_bar.ids.pencil).onmousedown = __handler;
-            }
-
-            if (self.settings.actions.can_close())
-            {
-                __handler = function(event) { __bee_gui.actions.close(event); };
-                utils_sys.objects.by_id(ui_config.window.control_bar.ids.close).onmousedown = __handler;
-            }
-
-            if (self.settings.actions.can_use_menu())
-            {
-                if (self.settings.actions.can_deploy_casement())
-                {
-                    __handler = function(event) { me.manage_casement(event); };
-                    utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').onmousedown = __handler;
-                }
-
-                if (self.settings.actions.can_close())
-                {
-                    __handler = function(event) { __bee_gui.actions.close(event); };
-                    utils_sys.objects.by_id(ui_config.window.menu.id + '_close').onmousedown = __handler;
-                }
-            }
-
-            if (!self.settings.actions.can_select_text())
-            {
-                __handler = function() { return false; };
-                utils_sys.objects.by_id(ui_config.window.content.ids.data).onselectstart = __handler;
-
-                __handler = function(event) { event.preventDefault(); };
-                utils_sys.objects.by_id(ui_config.window.content.ids.data).onmousedown = __handler;
-            }
-
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
-            {
-                __handler = function(event)
-                            {
-                                me.coords(event, 2);
-
-                                bee_statuses.resize(true);
-                                bee_statuses.active(true);
-
-                                bee_events_scheduler.execute('gui', 'resize');
-                                bee_events_scheduler.execute('system', 'active');
-                            };
-                utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).onmousedown = __handler;
-
-                __handler = function()
-                {
-                    bee_statuses.resize(false);
-
-                    bee_events_scheduler.execute('gui', 'resized');
-                };
-                utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).onmouseup = __handler;
-            }
-
-            __handler = function() { return false; };
-            utils_sys.objects.by_id(ui_config.window.control_bar.id).onselectstart = __handler;
-            utils_sys.objects.by_id(ui_config.window.status_bar.id).onselectstart = __handler;
-
-            __handler = function(event) { event.preventDefault(); };
-            utils_sys.objects.by_id(ui_config.window.status_bar.id).onmousedown = __handler;
-
-            __handler = function(event) { __bee_gui.actions.hover.into(event); };
-            utils_sys.objects.by_id(ui_config.casement.id).onmouseover = __handler;
-
-            __handler = function(event) { __bee_gui.actions.hover.out(event); };
-            utils_sys.objects.by_id(ui_config.casement.id).onmouseout = __handler;
-
-            __handler = function(event) { me.coords(event, 1); };
-            utils_sys.objects.by_id(ui_config.casement.id).onmousemove = __handler;
-
-            __handler = function() { __bee_gui.actions.touch(); };
-            utils_sys.objects.by_id(ui_config.casement.id).onmousedown = __handler;
-
-            utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = __bee_gui.size.width() - 100 + 'px';
-            utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = __bee_gui.size.height() - 88 + 'px';
-
-            if (self.settings.general.type() === 2 && !self.settings.actions.can_resize.widget())
-                utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = __bee_gui.size.width() - 22 + 'px';
-            else
-                utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = __bee_gui.size.width() - 50 + 'px';
-
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
-            {
-                utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).style.width = 19 + 'px';
-                utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).style.height = 19 + 'px';
-            }
-
-            __bee_gui.actions.set_top();
-
-            bee_statuses.open(false);
-            bee_statuses.opened(true);
-
-            bee_events_scheduler.execute('gui', 'opened');
+            morpheus.execute(my_bee_id, 'gui', 'title_on_edit');
 
             return true;
         };
 
         this.remove_bee = function()
         {
-            var __swarm_div = utils_sys.objects.by_id(swarm.settings.id()),
-                __bee = utils_sys.objects.by_id(my_bee_id),
-                __casement = utils_sys.objects.by_id(ui_config.casement.id);
-
-            __swarm_div.removeChild(__bee);
-            __swarm_div.removeChild(__casement);
+            ui_objects.swarm.removeChild(ui_objects.window.ui);
+            ui_objects.swarm.removeChild(ui_objects.casement.ui);
 
             return true;
         };
@@ -674,8 +875,8 @@ function bee()
 
         this.set_z_index = function(z_index)
         {
-            utils_sys.objects.by_id(my_bee_id).style.zIndex = z_index + 2;
-            utils_sys.objects.by_id(ui_config.casement.id).style.zIndex = z_index + 1;
+            ui_objects.window.ui.style.zIndex = z_index + 2;
+            ui_objects.casement.ui.style.zIndex = z_index + 1;
 
             return true;
         };
@@ -773,82 +974,9 @@ function bee()
         this.animating_events = new animating_events();
     }
 
-    function events_status_settings_object()
-    {
-        function system()
-        {
-            this.running = false;
-            this.active = false;
-            this.in_hive = false;
-            this.id_changed = false;
-            this.type_changed = false;
-            this.desktop_changed = false;
-        }
-
-        function gui()
-        {
-            this.open = false;
-            this.opened = false;
-            this.close = false;
-            this.closed = false;
-            this.minimize = false;
-            this.minimized = false;
-            this.restore = false;
-            this.restored = false;
-            this.maximize = false;
-            this.maximized = false;
-            this.drag = false;
-            this.dragging = false;
-            this.dragged = false;
-            this.resize = false;
-            this.resizing = false;
-            this.resized = false;
-            this.touch = false;
-            this.touched = false;
-            this.menu_activated = false;
-            this.casement_deployed = false;
-            this.resize_enabled = false;
-            this.key_pressed = false;
-            this.mouse_clicked = false;
-            this.title_on_edit = false;
-            this.title_changed = false;
-            this.status_bar_label_changed = false;
-            this.content_changed = false;
-            this.fading_in = false;
-            this.fading_in_finished = false;
-            this.fading_out = false;
-            this.fading_out_finished = false;
-            this.opacity_changed = false;
-        }
-
-        function key()
-        {
-            this.keydown = false;
-            this.keyup = false;
-            this.keypress = false;
-        }
-
-        function mouse()
-        {
-            this.click = false;
-            this.dblclick = false;
-            this.mousedown = false;
-            this.mouseup = false;
-            this.mouseover = false;
-            this.mouseout = false;
-            this.mousemove = false;
-        }
-
-        this.on_event = false;
-        this.system = new system();
-        this.gui = new gui();
-        this.key = new key();
-        this.mouse = new mouse();
-    }
-
     function supported_events()
     {
-        var __events_settings = new events_status_settings_object();
+        var __events_settings = new events_status_settings_model();
 
         this.contains = function(event_var, context)
         {
@@ -1155,215 +1283,7 @@ function bee()
             return validate('mousemove', 'mouse', val);
         };
 
-        var __status_settings = new events_status_settings_object();
-    }
-
-    function events_scheduler()
-    {
-        function events_queue_object()
-        {
-            function event_object()
-            {
-                this.id = null;
-                this.cmd = null;
-            }
-
-            function context_object()
-            {
-                this.id = null;
-                this.events = [];
-            }
-
-            function contexts_list_object()
-            {
-                var __contexts = [],
-                    __loops = 0;
-
-                this.exists = function(context_id)
-                {
-                    __loops = __contexts.length;
-
-                    for (var i = 0; i < __loops; i++)
-                    {
-                        if (__contexts[i].id === context_id)
-                            return true;
-                    }
-
-                    return false;
-                };
-
-                this.insert = function(context_object)
-                {
-                    __contexts.push(context_object);
-
-                    return true;
-                };
-
-                this.append = function(context_id, event_object)
-                {
-                    __loops = __contexts.length;
-
-                    for (var i = 0; i < __loops; i++)
-                    {
-                        if (__contexts[i].id === context_id)
-                        {
-                            __contexts[i].events.push(event_object);
-
-                            return true;
-                        }
-                    }
-
-                    return false;
-                };
-
-                this.call = function(context_id, event_id)
-                {
-                    __loops = __contexts.length;
-
-                    for (var i = 0; i < __loops; i++)
-                    {
-                        if (__contexts[i].id === context_id)
-                        {
-                            var __inner_loops = __contexts[i].events.length;
-
-                            for (var j = 0; j < __inner_loops; j++)
-                            {
-                                if (__contexts[i].events[j].id === event_id)
-                                {
-                                    if (context_id === 'mouse' || context_id === 'key')
-                                    {
-                                        var __bee_id_dom = utils_sys.objects.by_id(my_bee_id);
-
-                                        if (context_id === 'key')
-                                        {
-                                            var __handler = function()
-                                                            {
-                                                                if (bee_statuses.active())
-                                                                    __contexts[i].events[j].cmd.call();
-                                                            };
-                                            utils_sys.events.attach(my_bee_id, document, event_id, __handler);
-                                        }
-                                        else
-                                            utils_sys.events.attach(my_bee_id, __bee_id_dom, event_id, __contexts[i].events[j].cmd);
-
-                                        bee_statuses[event_id](true);
-                                    }
-
-                                    __contexts[i].events[j].cmd.call();
-                                }
-                            }
-                        }
-                    }
-
-                    return true;
-                };
-            }
-
-            var __contexts_list = new contexts_list_object();
-
-            this.include = function(this_context, this_event, cmd)
-            {
-                var __new_event = new event_object();
-
-                __new_event.id = this_event;
-                __new_event.cmd = cmd;
-
-                if (__contexts_list.exists(this_context))
-                    __contexts_list.append(this_context, __new_event);
-                else
-                {
-                    var __new_context = new context_object();
-
-                    __new_context.id = this_context;
-                    __new_context.events.push(__new_event);
-
-                    __contexts_list.insert(__new_context);
-                }
-
-                return true;
-            };
-
-            this.run = function(this_context, this_event)
-            {
-                return __contexts_list.call(this_context, this_event);
-            };
-        }
-
-        var __events_queue = new events_queue_object();
-
-        this.store = function(this_context, this_event, cmd)
-        {
-            return __events_queue.include(this_context, this_event, cmd);
-        };
-
-        this.execute = function(this_context, this_event)
-        {
-            var __result;
-
-            __result = __events_queue.run(this_context, this_event);
-
-            return __result;
-        };
-    }
-
-    function drone()
-    {
-        var __drones = [];
-
-        function drone_object()
-        {
-            this.name = null;
-            this.code = null;
-        }
-
-        this.use = function(new_func_name, new_func_code)
-        {
-            if (is_init === false)
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(new_func_name) || utils_sys.validation.misc.is_undefined(new_func_code))
-                return false;
-
-            var new_drone = new drone_object();
-
-            new_drone.name = new_func_name;
-            new_drone.code = new_func_code;
-
-            __drones.push(new_drone);
-
-            return true;
-        };
-
-        this.run = function(existing_func_name, dynamic_func_args)
-        {
-            if (is_init === false)
-                return false;
-
-            if (!utils_sys.validation.alpha.is_string(existing_func_name) || 
-                (!utils_sys.validation.misc.is_undefined(dynamic_func_args) && !utils_sys.validation.misc.is_array(dynamic_func_args)))
-                return false;
-
-            var __drones_num = __drones.length;
-
-            for (var i = 0; i < __drones_num; i++)
-            {
-                if (__drones[i].name === existing_func_name)
-                {
-                    var __dynamic_func = null;
-
-                    if (utils_sys.validation.alpha.is_string(__drones[i].code))
-                        __dynamic_func = function() { eval(__drones[i].code); };
-                    else
-                        __dynamic_func = function() { __drones[i].code.call(); };
-
-                    __dynamic_func.apply(this, dynamic_func_args);
-
-                    return true;
-                }
-            }
-
-            return false;
-        };
+        var __status_settings = new events_status_settings_model();
     }
 
     function settings()
@@ -1405,7 +1325,7 @@ function bee()
 
                 bee_statuses.id_changed(true);
 
-                bee_events_scheduler.execute('system', 'id_changed');
+                morpheus.execute(my_bee_id, 'system', 'id_changed');
 
                 bee_statuses.id_changed(false);
 
@@ -1430,7 +1350,7 @@ function bee()
 
                 bee_statuses.type_changed(true);
 
-                bee_events_scheduler.execute('system', 'type_changed');
+                morpheus.execute(my_bee_id, 'system', 'type_changed');
 
                 bee_statuses.type_changed(false);
 
@@ -1452,7 +1372,7 @@ function bee()
 
                 bee_statuses.desktop_changed(true);
 
-                bee_events_scheduler.execute('system', 'desktop_changed');
+                morpheus.execute(my_bee_id, 'system', 'desktop_changed');
 
                 bee_statuses.desktop_changed(false);
 
@@ -1514,7 +1434,7 @@ function bee()
                 {
                     bee_statuses.active(false);
 
-                    bee_events_scheduler.execute('system', 'in_hive');
+                    morpheus.execute(my_bee_id, 'system', 'in_hive');
                 }
 
                 return true;
@@ -1717,14 +1637,14 @@ function bee()
 
                     __content = val;
 
-                    if (!utils_sys.objects.by_id(ui_config.window.content.ids.data))
+                    if (!ui_objects.window.content.data)
                         return false;
 
-                    utils_sys.objects.by_id(ui_config.window.content.ids.data).innerHTML = val;
+                    ui_objects.window.content.data.innerHTML = val;
 
                     bee_statuses.content_changed(true);
 
-                    bee_events_scheduler.execute('gui', 'content_changed');
+                    morpheus.execute(my_bee_id, 'gui', 'content_changed');
 
                     bee_statuses.content_changed(false);
 
@@ -1746,14 +1666,14 @@ function bee()
 
                         __title = val;
 
-                        if (!utils_sys.objects.by_id(ui_config.window.control_bar.ids.title))
+                        if (!ui_objects.window.control_bar.title)
                             return false;
 
-                        utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).innerHTML = val;
+                        ui_objects.window.control_bar.title.innerHTML = val;
 
                         bee_statuses.title_changed(true);
 
-                        bee_events_scheduler.execute('gui', 'title_changed');
+                        morpheus.execute(my_bee_id, 'gui', 'title_changed');
 
                         bee_statuses.title_changed(false);
 
@@ -1770,14 +1690,14 @@ function bee()
 
                         __status_bar = val;
 
-                        if (!utils_sys.objects.by_id(ui_config.window.status_bar.ids.message))
+                        if (!ui_objects.window.status_bar.message)
                             return false;
 
-                        utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).childNodes[1].innerHTML = val;
+                        ui_objects.window.status_bar.message.childNodes[1].innerHTML = val;
 
                         bee_statuses.status_bar_label_changed(true);
 
-                        bee_events_scheduler.execute('gui', 'status_bar_label_changed');
+                        morpheus.execute(my_bee_id, 'gui', 'status_bar_label_changed');
 
                         bee_statuses.status_bar_label_changed(false);
 
@@ -1802,10 +1722,10 @@ function bee()
 
                     __data = val;
 
-                    if (!utils_sys.objects.by_id(ui_config.casement.ids.data))
+                    if (!ui_objects.casement.data)
                         return false;
 
-                    utils_sys.objects.by_id(ui_config.casement.ids.data).innerHTML = val;
+                    ui_objects.casement.data.innerHTML = val;
 
                     return true;
                 };
@@ -1825,10 +1745,10 @@ function bee()
 
                         __title = val;
 
-                        if (!utils_sys.objects.by_id(ui_config.casement.ids.title))
+                        if (!ui_objects.casement.title)
                             return false;
 
-                        utils_sys.objects.by_id(ui_config.casement.ids.title).innerHTML = val;
+                        ui_objects.casement.title.innerHTML = val;
 
                         return true;
                     };
@@ -1843,10 +1763,10 @@ function bee()
 
                         __status = val;
 
-                        if (!utils_sys.objects.by_id(ui_config.casement.ids.status))
+                        if (!ui_objects.casement.status)
                             return false;
 
-                        utils_sys.objects.by_id(ui_config.casement.ids.status).innerHTML = val;
+                        ui_objects.casement.status.innerHTML = val;
 
                         return true;
                     };
@@ -1965,6 +1885,478 @@ function bee()
         this.data = new data();
     }
 
+    function status()
+    {
+        this.on_event = function()
+        {
+            if (is_init === false)
+                return false;
+
+            return bee_statuses.on_event();
+        };
+
+        function system_status()
+        {
+            this.running = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.running();
+            };
+
+            this.active = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.active();
+            };
+
+            this.in_hive = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.in_hive();
+            };
+
+            this.id_changed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.id_changed();
+            };
+
+            this.type_changed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.type_changed();
+            };
+
+            this.desktop_changed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.desktop_changed();
+            };
+        }
+
+        function gui_status()
+        {
+            function size_status()
+            {
+                this.width = function()
+                {
+                    if (is_init === false)
+                        return false;
+
+                    return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
+                };
+
+                this.height = function()
+                {
+                    if (is_init === false)
+                        return false;
+
+                    return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height);
+                };
+            }
+
+            function fx_status()
+            {
+                function fading()
+                {
+                    function into()
+                    {
+                        this.in_progress = function()
+                        {
+                            if (is_init === false)
+                                return false;
+
+                            return bee_statuses.fading_in();
+                        };
+
+                        this.finished = function()
+                        {
+                            if (is_init === false)
+                                return false;
+
+                            return bee_statuses.fading_in_finished();
+                        };
+                    }
+
+                    function out()
+                    {
+                        this.in_progress = function()
+                        {
+                            if (is_init === false)
+                                return false;
+
+                            return bee_statuses.fading_out();
+                        };
+
+                        this.finished = function()
+                        {
+                            if (is_init === false)
+                                return false;
+
+                            return bee_statuses.fading_out_finished();
+                        };
+                    }
+
+                    this.into = new into();
+                    this.out = new out();
+                }
+
+                function opacity()
+                {
+                    this.changed = function()
+                    {
+                        if (is_init === false)
+                            return false;
+
+                        return bee_statuses.opacity_changed();
+                    };
+                }
+
+                this.fading = new fading();
+                this.opacity = new opacity();
+            }
+
+            this.open = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.open();
+            };
+
+            this.opened = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.opened();
+            };
+
+            this.close = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.close();
+            };
+
+            this.closed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.closed();
+            };
+
+            this.minimize = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.minimize();
+            };
+
+            this.minimized = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.minimized();
+            };
+
+            this.restore = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.restore();
+            };
+
+            this.restored = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.restored();
+            };
+
+            this.maximize = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.maximize();
+            };
+
+            this.maximized = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.maximized();
+            };
+
+            this.drag = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.drag();
+            };
+
+            this.dragging = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.dragging();
+            };
+
+            this.dragged = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.dragged();
+            };
+
+            this.resize = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.resize();
+            };
+
+            this.resizing = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.resizing();
+            };
+
+            this.resized = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.resized();
+            };
+
+            this.touch = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.touch();
+            };
+
+            this.touched = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.touched();
+            };
+
+            this.menu_activated = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.menu_activated();
+            };
+
+            this.casement_deployed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.casement_deployed();
+            };
+
+            this.resize_enabled = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.resize_enabled();
+            };
+
+            this.key_pressed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.key_pressed();
+            };
+
+            this.mouse_clicked = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mouse_clicked();
+            };
+
+            this.title_changed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.title_changed();
+            };
+
+            this.status_bar_label_changed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.status_bar_label_changed();
+            };
+
+            this.content_changed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.content_changed();
+            };
+
+            this.keydown = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.keydown();
+            };
+
+            this.keyup = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.keyup();
+            };
+
+            this.keypress = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.keypress();
+            };
+
+            this.mouseclick = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mouseclick();
+            };
+
+            this.mousedblclick = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mousedblclick();
+            };
+
+            this.mousedown = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mousedown();
+            };
+
+            this.mouseup = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mouseup();
+            };
+
+            this.mouseover = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mouseover();
+            };
+
+            this.mouseout = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mouseout();
+            };
+
+            this.mousemove = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.mousemove();
+            };
+
+            this.size = new size_status();
+            this.fx = new fx_status();
+        }
+
+        function data_status()
+        {
+            function labels_status()
+            {
+                this.title_changed = function()
+                {
+                    if (is_init === false)
+                        return false;
+
+                    return bee_statuses.title_changed();
+                };
+
+                this.status_bar_label_changed = function()
+                {
+                    if (is_init === false)
+                        return false;
+
+                    return bee_statuses.status_bar_label_changed();
+                };
+            }
+
+            this.content_changed = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.content_changed();
+            };
+
+            this.labels = new labels_status();
+        }
+
+        this.system = new system_status();
+        this.gui = new gui_status();
+        this.data = new data_status();
+    }
+
     function gui()
     {
         var me = this;
@@ -1980,7 +2372,7 @@ function bee()
 
                 bee_statuses.key_pressed(true);
 
-                bee_events_scheduler.execute('gui', 'key_pressed');
+                morpheus.execute(my_bee_id, 'gui', 'key_pressed');
 
                 return key_control.get();
             };
@@ -2494,7 +2886,7 @@ function bee()
 
                         bee_statuses.opacity_changed(true);
 
-                        bee_events_scheduler.execute('gui', 'opacity_changed');
+                        morpheus.execute(my_bee_id, 'gui', 'opacity_changed');
 
                         bee_statuses.opacity_changed(false);
 
@@ -2567,7 +2959,7 @@ function bee()
                         bee_statuses[__fading_type + '_finished'](false);
                         bee_statuses[__fading_type](true);
 
-                        bee_events_scheduler.execute('gui', __fading_type);
+                        morpheus.execute(my_bee_id, 'gui', __fading_type);
 
                         gfx.fade[type](my_bee_id, me.fx.fade.settings[type].get.last(1), 
                                        me.fx.fade.settings[type].get.last(2), me.fx.fade.settings[type].get.last(3), 
@@ -2576,7 +2968,7 @@ function bee()
                                             bee_statuses[__fading_type](false);
                                             bee_statuses[__fading_type + '_finished'](true);
 
-                                            bee_events_scheduler.execute('gui', __fading_type + '_finished');
+                                            morpheus.execute(my_bee_id, 'gui', __fading_type + '_finished');
                                        });
                         return true;
                     }
@@ -2969,7 +3361,7 @@ function bee()
 
                         self.settings.actions.can_drag.enabled(true);
 
-                        bee_events_scheduler.execute('gui', 'menu_activated');
+                        morpheus.execute(my_bee_id, 'gui', 'menu_activated');
 
                         return true;
                     }
@@ -3044,7 +3436,7 @@ function bee()
                         return false;
 
                     var __pos_x = me.position.left(),
-                        __casement = utils_sys.objects.by_id(ui_config.casement.id),
+                        __casement = ui_objects.casement.ui,
                         __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
                         __step = Math.ceil(__casement_width / 23),
                         __speed = Math.ceil(__step / 3);
@@ -3067,7 +3459,7 @@ function bee()
                         setTimeout(function() { animate_casement(); }, utils_int.animating_events.duration());
 
                     if (self.settings.actions.can_use_menu())
-                        utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').innerHTML = 'Hide casement';
+                        ui_objects.window.menu.manage_casement.innerHTML = 'Hide casement';
 
                     return true;
                 };
@@ -3102,7 +3494,7 @@ function bee()
                     if (__is_animating === true)
                         return false;
 
-                    var __casement = utils_sys.objects.by_id(ui_config.casement.id),
+                    var __casement = ui_objects.casement.ui,
                         __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
                         __step = Math.ceil(__casement_width / 23),
                         __speed = Math.ceil(__step / 3);
@@ -3113,7 +3505,7 @@ function bee()
                         animate_casement();
 
                     if (self.settings.actions.can_use_menu())
-                        utils_sys.objects.by_id(ui_config.window.menu.id + '_manage_casement').innerHTML = 'Deploy casement';
+                        ui_objects.window.menu.manage_casement.innerHTML = 'Deploy casement';
 
                     return true;
                 };
@@ -3178,17 +3570,10 @@ function bee()
 
                 function remove_me(this_object)
                 {
-                    var __swarm_object = utils_sys.objects.by_id(swarm.settings.id()),
-                        __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
+                    var __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
 
-                    utils_sys.events.detach(my_bee_id, __swarm_object, 'mousemove');
-                    utils_sys.events.detach(my_bee_id, document, 'mousedown');
-                    utils_sys.events.detach(my_bee_id, document, 'mouseup');
-                    utils_sys.events.detach(my_bee_id, document, 'keydown');
-                    utils_sys.events.detach(my_bee_id, document, 'keyup');
-                    utils_sys.events.detach(my_bee_id, document, 'keypress');
-
-                    bee_events_scheduler.execute('gui', 'closed');
+                    morpheus.execute(my_bee_id, 'gui', 'closed');
+                    morpheus.clear(my_bee_id);
 
                     bee_statuses.running(false);
                     bee_statuses.closed(true);
@@ -3220,12 +3605,12 @@ function bee()
                     bee_statuses.dragging(false);
 
                     if (bee_statuses.in_hive())
-                        utils_sys.objects.by_id(ui_config.casement.id).style.visibility = 'hidden';
+                        ui_objects.casement.ui.style.visibility = 'hidden';
 
                     me.actions.casement.hide(event_object, 
                     function()
                     {
-                        bee_events_scheduler.execute('gui', 'close');
+                        morpheus.execute(my_bee_id, 'gui', 'close');
 
                         if (utils_int.animating_events.in_progress())
                             setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());
@@ -3260,11 +3645,11 @@ function bee()
                     bee_statuses.dragging(false);
                     bee_statuses.resizing(false);
 
-                    bee_events_scheduler.execute('gui', 'minimize');
+                    morpheus.execute(my_bee_id, 'gui', 'minimize');
 
                     // TODO: Call Hive
 
-                    bee_events_scheduler.execute('gui', 'minimized');
+                    morpheus.execute(my_bee_id, 'gui', 'minimized');
 
                     return true;
                 }
@@ -3289,11 +3674,11 @@ function bee()
                     bee_statuses.dragging(false);
                     bee_statuses.resizing(false);
 
-                    bee_events_scheduler.execute('gui', 'restore');
+                    morpheus.execute(my_bee_id, 'gui', 'restore');
 
                     // TODO: Call Hive
 
-                    bee_events_scheduler.execute('gui', 'restored');
+                    morpheus.execute(my_bee_id, 'gui', 'restored');
 
                     return true;
                 }
@@ -3320,11 +3705,11 @@ function bee()
                     bee_statuses.dragging(false);
                     bee_statuses.resizing(false);
 
-                    bee_events_scheduler.execute('gui', 'maximize');
+                    morpheus.execute(my_bee_id, 'gui', 'maximize');
 
                     // TODO: Call Hive
 
-                    bee_events_scheduler.execute('gui', 'maximized');
+                    morpheus.execute(my_bee_id, 'gui', 'maximized');
 
                     return true;
                 }
@@ -3371,10 +3756,13 @@ function bee()
                 bee_statuses.touch(true);
                 bee_statuses.touched(false);
 
+                bee_statuses.mouse_clicked(true);
+
                 bee_statuses.active(true);
 
-                bee_events_scheduler.execute('system', 'active');
-                bee_events_scheduler.execute('gui', 'touch');
+                morpheus.execute(my_bee_id, 'system', 'active');
+                morpheus.execute(my_bee_id, 'gui', 'touch');
+                morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
 
                 if (self.settings.general.topmost())
                     return true;
@@ -3395,9 +3783,9 @@ function bee()
                 if (event_object.buttons !== 1)
                     return false;
 
-                var __current_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width),
-                    __current_height = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.height),
-                    __casement_width = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(ui_config.casement.id).style.width),
+                var __current_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
+                    __current_height = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height),
+                    __casement_width = utils_sys.graphics.pixels_value(ui_objects.casement.ui.style.width),
                     __dynamic_casement_width = 0,
                     __dynamic_right_pos = 0;
 
@@ -3417,30 +3805,30 @@ function bee()
 
                     if (__pos_x <= 0 && __pos_y <= 0)
                     {
-                        utils_sys.objects.by_id(my_bee_id).style.left = '0px';
-                        utils_sys.objects.by_id(my_bee_id).style.top = '0px';
+                        ui_objects.window.ui.style.left = '0px';
+                        ui_objects.window.ui.style.top = '0px';
 
-                        utils_sys.objects.by_id(ui_config.casement.id).style.left = __dynamic_casement_width + 'px';
-                        utils_sys.objects.by_id(ui_config.casement.id).style.top = '0px';
+                        ui_objects.casement.ui.style.left = __dynamic_casement_width + 'px';
+                        ui_objects.casement.ui.style.top = '0px';
                     }
                     else
                     {
                         if (__pos_x <= 0)
                         {
-                            utils_sys.objects.by_id(my_bee_id).style.left = '0px';
-                            utils_sys.objects.by_id(my_bee_id).style.top = __pos_y + 'px';
+                            ui_objects.window.ui.style.left = '0px';
+                            ui_objects.window.ui.style.top = __pos_y + 'px';
 
-                            utils_sys.objects.by_id(ui_config.casement.id).style.left = __dynamic_casement_width + 'px';
-                            utils_sys.objects.by_id(ui_config.casement.id).style.top = __pos_y + 'px';
+                            ui_objects.casement.ui.style.left = __dynamic_casement_width + 'px';
+                            ui_objects.casement.ui.style.top = __pos_y + 'px';
                         }
 
                         if (__pos_y <= 0)
                         {
-                            utils_sys.objects.by_id(my_bee_id).style.left = __pos_x + 'px';
-                            utils_sys.objects.by_id(my_bee_id).style.top = '0px';
+                            ui_objects.window.ui.style.left = __pos_x + 'px';
+                            ui_objects.window.ui.style.top = '0px';
 
-                            utils_sys.objects.by_id(ui_config.casement.id).style.left = __pos_x + __dynamic_casement_width + 'px';
-                            utils_sys.objects.by_id(ui_config.casement.id).style.top = '0px';
+                            ui_objects.casement.ui.style.left = __pos_x + __dynamic_casement_width + 'px';
+                            ui_objects.casement.ui.style.top = '0px';
                         }
                     }
 
@@ -3449,14 +3837,14 @@ function bee()
                         ((__pos_y + __current_height - swarm.area.mouse.y()) >= 
                          (swarm.settings.bottom() - swarm.area.mouse.y())))
                     {
-                        utils_sys.objects.by_id(my_bee_id).style.left = 
+                        ui_objects.window.ui.style.left = 
                         swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
-                        utils_sys.objects.by_id(my_bee_id).style.top = 
+                        ui_objects.window.ui.style.top = 
                         swarm.settings.bottom() - __current_height + 'px';
 
-                        utils_sys.objects.by_id(ui_config.casement.id).style.left = 
+                        ui_objects.casement.ui.style.left = 
                         swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
-                        utils_sys.objects.by_id(ui_config.casement.id).style.top = 
+                        ui_objects.casement.ui.style.top = 
                         swarm.settings.bottom() - __current_height + 'px';
                     }
                     else
@@ -3466,23 +3854,23 @@ function bee()
                         {
                             if (__pos_y <= 0)
                             {
-                                utils_sys.objects.by_id(my_bee_id).style.left = 
+                                ui_objects.window.ui.style.left = 
                                 swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
-                                utils_sys.objects.by_id(my_bee_id).style.top = '0px';
+                                ui_objects.window.ui.style.top = '0px';
 
-                                utils_sys.objects.by_id(ui_config.casement.id).style.left = 
+                                ui_objects.casement.ui.style.left = 
                                 swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
-                                utils_sys.objects.by_id(ui_config.casement.id).style.top = '0px';
+                                ui_objects.casement.ui.style.top = '0px';
                             }
                             else
                             {
-                                utils_sys.objects.by_id(my_bee_id).style.left = 
+                                ui_objects.window.ui.style.left = 
                                 swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
-                                utils_sys.objects.by_id(my_bee_id).style.top = __pos_y + 'px';
+                                ui_objects.window.ui.style.top = __pos_y + 'px';
 
-                                utils_sys.objects.by_id(ui_config.casement.id).style.left = 
+                                ui_objects.casement.ui.style.left = 
                                 swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
-                                utils_sys.objects.by_id(ui_config.casement.id).style.top = __pos_y + 'px';
+                                ui_objects.casement.ui.style.top = __pos_y + 'px';
                             }
                         }
 
@@ -3491,21 +3879,21 @@ function bee()
                         {
                             if (__pos_x <= 0)
                             {
-                                utils_sys.objects.by_id(my_bee_id).style.left = '0px';
-                                utils_sys.objects.by_id(my_bee_id).style.top = 
+                                ui_objects.window.ui.style.left = '0px';
+                                ui_objects.window.ui.style.top = 
                                 swarm.settings.bottom() - __current_height + 'px';
 
-                                utils_sys.objects.by_id(ui_config.casement.id).style.left = __dynamic_casement_width + 'px';
-                                utils_sys.objects.by_id(ui_config.casement.id).style.top = swarm.settings.bottom() - __current_height + 'px';
+                                ui_objects.casement.ui.style.left = __dynamic_casement_width + 'px';
+                                ui_objects.casement.ui.style.top = swarm.settings.bottom() - __current_height + 'px';
                             }
                             else
                             {
-                                utils_sys.objects.by_id(my_bee_id).style.left = __pos_x + 'px';
-                                utils_sys.objects.by_id(my_bee_id).style.top = 
+                                ui_objects.window.ui.style.left = __pos_x + 'px';
+                                ui_objects.window.ui.style.top = 
                                 swarm.settings.bottom() - __current_height + 'px';
 
-                                utils_sys.objects.by_id(ui_config.casement.id).style.left = __pos_x + __dynamic_casement_width + 'px';
-                                utils_sys.objects.by_id(ui_config.casement.id).style.top = swarm.settings.bottom() - __current_height + 'px';
+                                ui_objects.casement.ui.style.left = __pos_x + __dynamic_casement_width + 'px';
+                                ui_objects.casement.ui.style.top = swarm.settings.bottom() - __current_height + 'px';
                             }
                         }
                     }
@@ -3521,22 +3909,22 @@ function bee()
                         ((__pos_y + __current_height - swarm.area.mouse.y()) < 
                             (swarm.settings.bottom() - swarm.area.mouse.y()))))
                     {
-                        utils_sys.objects.by_id(my_bee_id).style.left = __pos_x + 'px';
-                        utils_sys.objects.by_id(my_bee_id).style.top = __pos_y + 'px';
+                        ui_objects.window.ui.style.left = __pos_x + 'px';
+                        ui_objects.window.ui.style.top = __pos_y + 'px';
 
-                        utils_sys.objects.by_id(ui_config.casement.id).style.left = __pos_x + __dynamic_casement_width + 'px';
-                        utils_sys.objects.by_id(ui_config.casement.id).style.top = __pos_y + 'px';
+                        ui_objects.casement.ui.style.left = __pos_x + __dynamic_casement_width + 'px';
+                        ui_objects.casement.ui.style.top = __pos_y + 'px';
                     }
 
-                    bee_events_scheduler.execute('gui', 'mouse_clicked');
-                    bee_events_scheduler.execute('gui', 'dragging');
+                    morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
+                    morpheus.execute(my_bee_id, 'gui', 'dragging');
                 }
                 else if (bee_statuses.resize() && self.settings.actions.can_resize.enabled() && !bee_statuses.casement_deployed())
                 {
                     var __size_x = 0,
                         __size_y = 0,
-                        __resize_x_offset = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).style.width),
-                        __resize_y_offset = utils_sys.graphics.pixels_value(utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize).style.height),
+                        __resize_x_offset = utils_sys.graphics.pixels_value(ui_objects.window.status_bar.resize.style.width),
+                        __resize_y_offset = utils_sys.graphics.pixels_value(ui_objects.window.status_bar.resize.style.height),
                         __resize_title_diff = 100,
                         __resize_data_diff = 88,
                         __resize_status_msg_diff = 50;
@@ -3562,19 +3950,19 @@ function bee()
                             if (__new_width - __size_x >= me.size.max.width() && 
                                 __new_height - __size_y >= me.size.max.height())
                             {
-                                utils_sys.objects.by_id(my_bee_id).style.width = me.size.max.width() + 'px';
-                                utils_sys.objects.by_id(my_bee_id).style.height = me.size.max.height() + 'px';
+                                ui_objects.window.ui.style.width = me.size.max.width() + 'px';
+                                ui_objects.window.ui.style.height = me.size.max.height() + 'px';
 
-                                utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
+                                ui_objects.window.control_bar.title.style.width = 
                                 me.size.max.width() - __resize_title_diff + 'px';
 
-                                utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = 
+                                ui_objects.window.content.data.style.height = 
                                 me.size.max.height() - __resize_data_diff + 'px';
 
-                                utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = 
+                                ui_objects.window.status_bar.message.style.width = 
                                 me.size.max.width() - __resize_status_msg_diff + 'px';
 
-                                utils_sys.objects.by_id(ui_config.casement.ids.data).style.height = 
+                                ui_objects.casement.data.style.height = 
                                 me.gui.size.height() + 'px';
                             }
                         }
@@ -3584,19 +3972,19 @@ function bee()
                             {
                                 if (__new_width - __size_x >= me.size.max.width())
                                 {
-                                    utils_sys.objects.by_id(my_bee_id).style.width = me.size.max.width() + 'px';
-                                    utils_sys.objects.by_id(my_bee_id).style.height = __new_height + 'px';
+                                    ui_objects.window.ui.style.width = me.size.max.width() + 'px';
+                                    ui_objects.window.ui.style.height = __new_height + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
+                                    ui_objects.window.control_bar.title.style.width = 
                                     me.size.max.width() - __resize_title_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = 
+                                    ui_objects.window.content.data.style.height = 
                                     __new_height - __resize_data_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = 
+                                    ui_objects.window.status_bar.message.style.width = 
                                     me.size.max.width() - __resize_status_msg_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.casement.ids.data).style.height = 
+                                    ui_objects.casement.data.style.height = 
                                     __new_height + 'px';
                                 }
                             }
@@ -3605,19 +3993,19 @@ function bee()
                             {
                                 if (__new_height - __size_y >= me.size.max.height())
                                 {
-                                    utils_sys.objects.by_id(my_bee_id).style.width = __new_width + 'px';
-                                    utils_sys.objects.by_id(my_bee_id).style.height =  me.size.max.height() + 'px';
+                                    ui_objects.window.ui.style.width = __new_width + 'px';
+                                    ui_objects.window.ui.style.height =  me.size.max.height() + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
+                                    ui_objects.window.control_bar.title.style.width = 
                                     __new_width - __resize_title_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = 
+                                    ui_objects.window.content.data.style.height = 
                                     me.size.max.height() - __resize_data_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = 
+                                    ui_objects.window.status_bar.message.style.width = 
                                     __new_width - __resize_status_msg_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.casement.ids.data).style.height = 
+                                    ui_objects.casement.data.style.height = 
                                     me.gui.size.height() + 'px';
                                 }
                             }
@@ -3628,19 +4016,19 @@ function bee()
                         {
                             if (__size_x >= 0 && __size_y >= 0)
                             {
-                                utils_sys.objects.by_id(my_bee_id).style.width = me.size.min.width() + 'px';
-                                utils_sys.objects.by_id(my_bee_id).style.height = me.size.min.height() + 'px';
+                                ui_objects.window.ui.style.width = me.size.min.width() + 'px';
+                                ui_objects.window.ui.style.height = me.size.min.height() + 'px';
 
-                                utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
+                                ui_objects.window.control_bar.title.style.width = 
                                 me.size.min.width() - __resize_title_diff + 'px';
 
-                                utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = 
+                                ui_objects.window.content.data.style.height = 
                                 me.size.min.height() - __resize_data_diff + 'px';
 
-                                utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = 
+                                ui_objects.window.status_bar.message.style.width = 
                                 me.size.min.width() - __resize_status_msg_diff + 'px';
 
-                                utils_sys.objects.by_id(ui_config.casement.ids.data).style.height = 
+                                ui_objects.casement.data.style.height = 
                                 me.gui.size.height() + 'px';
                             }
                         }
@@ -3650,19 +4038,19 @@ function bee()
                             {
                                 if (__size_x >= 0)
                                 {
-                                    utils_sys.objects.by_id(my_bee_id).style.width = me.size.min.width() + 'px';
-                                    utils_sys.objects.by_id(my_bee_id).style.height = __new_height + 'px';
+                                    ui_objects.window.ui.style.width = me.size.min.width() + 'px';
+                                    ui_objects.window.ui.style.height = __new_height + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
+                                    ui_objects.window.control_bar.title.style.width = 
                                     me.size.min.width() - __resize_title_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = 
+                                    ui_objects.window.content.data.style.height = 
                                     __new_height - __resize_data_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = 
+                                    ui_objects.window.status_bar.message.style.width = 
                                     me.size.min.width() - __resize_status_msg_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.casement.ids.data).style.height = 
+                                    ui_objects.casement.data.style.height = 
                                     __new_height + 'px';
                                 }
                             }
@@ -3671,19 +4059,19 @@ function bee()
                             {
                                 if (__size_y >= 0)
                                 {
-                                    utils_sys.objects.by_id(my_bee_id).style.width = __new_width + 'px';
-                                    utils_sys.objects.by_id(my_bee_id).style.height = me.size.min.height() + 'px';
+                                    ui_objects.window.ui.style.width = __new_width + 'px';
+                                    ui_objects.window.ui.style.height = me.size.min.height() + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
+                                    ui_objects.window.control_bar.title.style.width = 
                                     __new_width - __resize_title_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = 
+                                    ui_objects.window.content.data.style.height = 
                                     me.size.min.height() - __resize_data_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = 
+                                    ui_objects.window.status_bar.message.style.width = 
                                     __new_width - __resize_status_msg_diff + 'px';
 
-                                    utils_sys.objects.by_id(ui_config.casement.ids.data).style.height = 
+                                    ui_objects.casement.data.style.height = 
                                     me.gui.size.height() + 'px';
                                 }
                             }
@@ -3692,34 +4080,34 @@ function bee()
                         if (__new_width > me.size.min.width() && __new_height > me.size.min.height() && 
                             __new_width < me.size.max.width() && __new_height < me.size.max.height())
                         {
-                            utils_sys.objects.by_id(my_bee_id).style.width = __new_width + 'px';
-                            utils_sys.objects.by_id(my_bee_id).style.height = __new_height + 'px';
+                            ui_objects.window.ui.style.width = __new_width + 'px';
+                            ui_objects.window.ui.style.height = __new_height + 'px';
 
-                            utils_sys.objects.by_id(ui_config.window.control_bar.ids.title).style.width = 
+                            ui_objects.window.control_bar.title.style.width = 
                             __new_width - __resize_title_diff + 'px';
 
-                            utils_sys.objects.by_id(ui_config.window.content.ids.data).style.height = 
+                            ui_objects.window.content.data.style.height = 
                             __new_height - __resize_data_diff + 'px';
 
-                            utils_sys.objects.by_id(ui_config.window.status_bar.ids.message).style.width = 
+                            ui_objects.window.status_bar.message.style.width = 
                             __new_width - __resize_status_msg_diff + 'px';
 
-                            utils_sys.objects.by_id(ui_config.casement.ids.data).style.height = 
+                            ui_objects.casement.data.style.height = 
                             __new_height + 'px';
                         }
 
-                         utils_sys.objects.by_id(ui_config.casement.id).style.width = utils_sys.objects.by_id(my_bee_id).style.width;
-                         utils_sys.objects.by_id(ui_config.casement.id).style.height = utils_sys.objects.by_id(my_bee_id).style.height;
+                         ui_objects.casement.ui.style.width = ui_objects.window.ui.style.width;
+                         ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
                     }
 
-                    if (self.settings.data.window.labels.status_bar().length * 7.0 < 
-                        utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width) - 40)
-                        utils_sys.objects.by_id(my_bee_id + '_msg').childNodes[1].className = '';
+                    if (self.settings.data.window.labels.status_bar().length * 6.4 < 
+                        utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+                        ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
                     else
-                        utils_sys.objects.by_id(my_bee_id + '_msg').childNodes[1].className = 'marquee';
+                        ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
 
-                    bee_events_scheduler.execute('gui', 'mouse_clicked');
-                    bee_events_scheduler.execute('gui', 'resizing');
+                    morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
+                    morpheus.execute(my_bee_id, 'gui', 'resizing');
 
                     hive.stack.toggle('off');
                 }
@@ -3760,12 +4148,12 @@ function bee()
 
                     bee_statuses.mouse_clicked(false);
 
-                    bee_events_scheduler.execute('gui', 'touched');
-                    bee_events_scheduler.execute('gui', 'dragged');
-                    bee_events_scheduler.execute('gui', 'resized');
+                    morpheus.execute(my_bee_id, 'gui', 'touched');
+                    morpheus.execute(my_bee_id, 'gui', 'dragged');
+                    morpheus.execute(my_bee_id, 'gui', 'resized');
 
-                    me.position.left(utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.left));
-                    me.position.top(utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.top));
+                    me.position.left(utils_sys.graphics.pixels_value(ui_objects.window.ui.style.left));
+                    me.position.top(utils_sys.graphics.pixels_value(ui_objects.window.ui.style.top));
 
                     return true;
                 }
@@ -4027,476 +4415,64 @@ function bee()
         this.config = new config();
     }
 
-    function status()
+    function drone()
     {
-        this.on_event = function()
+        var __drones = [];
+
+        function drone_object()
+        {
+            this.name = null;
+            this.code = null;
+        }
+
+        this.use = function(new_func_name, new_func_code)
         {
             if (is_init === false)
                 return false;
 
-            return bee_statuses.on_event();
+            if (utils_sys.validation.misc.is_undefined(new_func_name) || utils_sys.validation.misc.is_undefined(new_func_code))
+                return false;
+
+            var new_drone = new drone_object();
+
+            new_drone.name = new_func_name;
+            new_drone.code = new_func_code;
+
+            __drones.push(new_drone);
+
+            return true;
         };
 
-        function system_status()
+        this.run = function(existing_func_name, dynamic_func_args)
         {
-            this.running = function()
+            if (is_init === false)
+                return false;
+
+            if (!utils_sys.validation.alpha.is_string(existing_func_name) || 
+                (!utils_sys.validation.misc.is_undefined(dynamic_func_args) && !utils_sys.validation.misc.is_array(dynamic_func_args)))
+                return false;
+
+            var __drones_num = __drones.length;
+
+            for (var i = 0; i < __drones_num; i++)
             {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.running();
-            };
-
-            this.active = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.active();
-            };
-
-            this.in_hive = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.in_hive();
-            };
-
-            this.id_changed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.id_changed();
-            };
-
-            this.type_changed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.type_changed();
-            };
-
-            this.desktop_changed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.desktop_changed();
-            };
-        }
-
-        function gui_status()
-        {
-            function size_status()
-            {
-                this.width = function()
+                if (__drones[i].name === existing_func_name)
                 {
-                    if (is_init === false)
-                        return false;
+                    var __dynamic_func = null;
 
-                    return utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.width);
-                };
+                    if (utils_sys.validation.alpha.is_string(__drones[i].code))
+                        __dynamic_func = function() { eval(__drones[i].code); };
+                    else
+                        __dynamic_func = function() { __drones[i].code.call(); };
 
-                this.height = function()
-                {
-                    if (is_init === false)
-                        return false;
+                    __dynamic_func.apply(this, dynamic_func_args);
 
-                    return utils_sys.graphics.pixels_value(utils_sys.objects.by_id(my_bee_id).style.height);
-                };
-            }
-
-            function fx_status()
-            {
-                function fading()
-                {
-                    function into()
-                    {
-                        this.in_progress = function()
-                        {
-                            if (is_init === false)
-                                return false;
-
-                            return bee_statuses.fading_in();
-                        };
-
-                        this.finished = function()
-                        {
-                            if (is_init === false)
-                                return false;
-
-                            return bee_statuses.fading_in_finished();
-                        };
-                    }
-
-                    function out()
-                    {
-                        this.in_progress = function()
-                        {
-                            if (is_init === false)
-                                return false;
-
-                            return bee_statuses.fading_out();
-                        };
-
-                        this.finished = function()
-                        {
-                            if (is_init === false)
-                                return false;
-
-                            return bee_statuses.fading_out_finished();
-                        };
-                    }
-
-                    this.into = new into();
-                    this.out = new out();
+                    return true;
                 }
-
-                function opacity()
-                {
-                    this.changed = function()
-                    {
-                        if (is_init === false)
-                            return false;
-
-                        return bee_statuses.opacity_changed();
-                    };
-                }
-
-                this.fading = new fading();
-                this.opacity = new opacity();
             }
 
-            this.open = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.open();
-            };
-
-            this.opened = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.opened();
-            };
-
-            this.close = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.close();
-            };
-
-            this.closed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.closed();
-            };
-
-            this.minimize = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.minimize();
-            };
-
-            this.minimized = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.minimized();
-            };
-
-            this.restore = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.restore();
-            };
-
-            this.restored = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.restored();
-            };
-
-            this.maximize = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.maximize();
-            };
-
-            this.maximized = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.maximized();
-            };
-
-            this.drag = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.drag();
-            };
-
-            this.dragging = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.dragging();
-            };
-
-            this.dragged = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.dragged();
-            };
-
-            this.resize = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.resize();
-            };
-
-            this.resizing = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.resizing();
-            };
-
-            this.resized = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.resized();
-            };
-
-            this.touch = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.touch();
-            };
-
-            this.touched = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.touched();
-            };
-
-            this.menu_activated = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.menu_activated();
-            };
-
-            this.casement_deployed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.casement_deployed();
-            };
-
-            this.resize_enabled = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.resize_enabled();
-            };
-
-            this.key_pressed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.key_pressed();
-            };
-
-            this.mouse_clicked = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mouse_clicked();
-            };
-
-            this.title_changed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.title_changed();
-            };
-
-            this.status_bar_label_changed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.status_bar_label_changed();
-            };
-
-            this.content_changed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.content_changed();
-            };
-
-            this.keydown = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.keydown();
-            };
-
-            this.keyup = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.keyup();
-            };
-
-            this.keypress = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.keypress();
-            };
-
-            this.mouseclick = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mouseclick();
-            };
-
-            this.mousedblclick = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mousedblclick();
-            };
-
-            this.mousedown = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mousedown();
-            };
-
-            this.mouseup = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mouseup();
-            };
-
-            this.mouseover = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mouseover();
-            };
-
-            this.mouseout = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mouseout();
-            };
-
-            this.mousemove = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mousemove();
-            };
-
-            this.size = new size_status();
-            this.fx = new fx_status();
-        }
-
-        function data_status()
-        {
-            function labels_status()
-            {
-                this.title_changed = function()
-                {
-                    if (is_init === false)
-                        return false;
-
-                    return bee_statuses.title_changed();
-                };
-
-                this.status_bar_label_changed = function()
-                {
-                    if (is_init === false)
-                        return false;
-
-                    return bee_statuses.status_bar_label_changed();
-                };
-            }
-
-            this.content_changed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.content_changed();
-            };
-
-            this.labels = new labels_status();
-        }
-
-        this.system = new system_status();
-        this.gui = new gui_status();
-        this.data = new data_status();
+            return false;
+        };
     }
 
     this.on = function(this_event, cmd)
@@ -4507,16 +4483,32 @@ function bee()
         if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(cmd))
             return false;
 
-        var __contexts = new events_status_settings_object();
+        var __context_list = new events_status_settings_model();
 
-        for (var context in __contexts)
+        for (var context in __context_list)
         {
             if (context === 'on_event')
                 continue;
 
             if (bee_events.contains(this_event, context))
             {
-                bee_events_scheduler.store(context, this_event, cmd);
+                var __event_receiver_object = document,
+                    __cmd = cmd;
+
+                if (context === 'mouse')
+                    __event_receiver_object = ui_objects.window.ui;
+                else if (context === 'key')
+                {
+                    var __exended_cmd = function()
+                                        {
+                                            if (bee_statuses.active())
+                                                cmd.call();
+                                        };
+
+                    __cmd = __exended_cmd;
+                }
+
+                morpheus.store(my_bee_id, context, this_event, __cmd, __event_receiver_object);
 
                 return true;
             }
@@ -4548,7 +4540,7 @@ function bee()
 
         bee_statuses.running(true);
 
-        if (!utils_int.draw(self))
+        if (!utils_int.gui_init())
         {
             owl.status.set(my_bee_id, __app_id, 'FAIL');
 
@@ -4559,7 +4551,7 @@ function bee()
 
         bee_statuses.active(true);
 
-        bee_events_scheduler.execute('system', 'running');
+        morpheus.execute(my_bee_id, 'system', 'running');
 
         owl.status.set(my_bee_id, __app_id, 'RUN');
 
@@ -4583,15 +4575,6 @@ function bee()
 
         my_bee_id = self.settings.general.id();
 
-        matrix = cosmos.hub.access('matrix');
-        dev_box = cosmos.hub.access('dev_box');
-        colony = cosmos.hub.access('colony');
-
-        owl = matrix.get('owl');
-        swarm = matrix.get('swarm');
-        hive = matrix.get('hive');
-        nature = matrix.get('nature');
-
         nature.theme(['bee']);
         nature.apply('new');
 
@@ -4605,6 +4588,15 @@ function bee()
 
         cosmos = cosmos_object;
 
+        matrix = cosmos.hub.access('matrix');
+        colony = cosmos.hub.access('colony');
+
+        morpheus = matrix.get('morpheus');
+        owl = matrix.get('owl');
+        swarm = matrix.get('swarm');
+        hive = matrix.get('hive');
+        nature = matrix.get('nature');
+
         return true;
     };
 
@@ -4613,8 +4605,8 @@ function bee()
         my_bee_id = null,
         cosmos = null,
         matrix = null,
-        dev_box = null,
         nature = null,
+        morpheus = null,
         owl = null,
         swarm = null,
         hive = null,
@@ -4624,15 +4616,15 @@ function bee()
         random = new pythia(),
         key_control = new key_manager(),
         gfx = new fx(),
+        ui_objects = new ui_objects_model(),
         ui_config = new ui_config_model(),
         bee_events = new supported_events(),
         bee_statuses = new supported_statuses(),
-        bee_events_scheduler = new events_scheduler(),
         utils_int = new utilities();
 
-    this.settings = new settings();
     this.gui = new gui();
     this.drone = new drone();
     this.status = new status();
+    this.settings = new settings();
     this.error = new error();
 }

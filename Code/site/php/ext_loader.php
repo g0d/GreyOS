@@ -45,6 +45,7 @@
     UTIL::Load_Extension('app_box', 'js');
     UTIL::Load_Extension('colony', 'js');
     //UTIL::Load_Extension('sand_box', 'js');
+    UTIL::Load_Extension('morpheus', 'js');
     UTIL::Load_Extension('owl', 'js');
     UTIL::Load_Extension('forest', 'js');
     UTIL::Load_Extension('swarm', 'js');

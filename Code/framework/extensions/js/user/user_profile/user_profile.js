@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 1.0)
+    GreyOS - User Profile (Version: 1.2)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -97,14 +97,14 @@ function user_profile()
             if (__user_profile_div === null)
                 return false;
 
-            __user_profile_div.innerHTML = '<div id="' + self.settings.id() + '" title="Manage profile">\
+            __user_profile_div.innerHTML = '<div id="' + user_profile_id + '" title="Manage profile">\
                                                 <div id="notifications_num">00</div>\
                                                 <div id="profile_access">\
                                                     <div id="small_avatar"></div>\
                                                     <div id="my">My profile</div>\
                                                 </div>\
                                             </div>\
-                                            <div id="' + self.settings.id() + '_pop_up" class="user_profile_pop_up">\
+                                            <div id="' + user_profile_id + '_pop_up" class="user_profile_pop_up">\
                                                 <div id="profile_left_side">\
                                                     <div id="profile_info">\
                                                         <div id="big_avatar"></div>\
@@ -157,18 +157,29 @@ function user_profile()
 
         this.attach_events = function()
         {
-            utils_sys.events.attach('user_profile', utils_sys.objects.by_id(self.settings.id()), 'click', function() { me.toggle_pop_up(); });
-            utils_sys.events.attach('user_profile', utils_sys.objects.by_id('user_reboot'), 'click', function() { me.reboot_os(); });
-            utils_sys.events.attach('user_profile', utils_sys.objects.by_id('logout'), 'click', function() { me.logout(); });
-            utils_sys.events.attach('user_profile', utils_sys.objects.by_id('desktop'), 'click', function() { me.hide_pop_up(); });
-            utils_sys.events.attach('user_profile', document, 'keydown', function(event) { me.hide_pop_up_handler(event); });
+            var __handler = null;
+
+            __handler = function() { me.toggle_pop_up(); };
+            morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id));
+
+            __handler = function() {  me.reboot_os(); };
+            morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('user_reboot'));
+
+            __handler = function() {  me.logout(); };
+            morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('logout'));
+
+            __handler = function() {  me.hide_pop_up(); };
+            morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+
+            __handler = function(event) {  me.hide_pop_up_handler(event); };
+            morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
 
             return true;
         };
 
         this.toggle_pop_up = function()
         {
-            var __user_profile_pop_up = utils_sys.objects.by_id(self.settings.id() + '_pop_up'),
+            var __user_profile_pop_up = utils_sys.objects.by_id(user_profile_id + '_pop_up'),
                 __my_profile_label = utils_sys.objects.by_id('my');
 
             if (is_pop_up_visible === true)
@@ -206,7 +217,7 @@ function user_profile()
 
         this.hide_pop_up = function()
         {
-            var __user_profile_pop_up = utils_sys.objects.by_id(self.settings.id() + '_pop_up'),
+            var __user_profile_pop_up = utils_sys.objects.by_id(user_profile_id + '_pop_up'),
                 __my_profile_label = utils_sys.objects.by_id('my');
 
             __user_profile_pop_up.style.display = 'none';
@@ -281,6 +292,8 @@ function user_profile()
         self.settings.id('user_profile_' + random.generate());
         self.settings.container(container_id);
 
+        user_profile_id = self.settings.id();
+
         nature.theme('user_profile');
         nature.apply('new');
 
@@ -301,6 +314,7 @@ function user_profile()
 
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
         return true;
@@ -308,11 +322,13 @@ function user_profile()
 
     var is_init = false,
         is_pop_up_visible = false,
+        user_profile_id = null,
         cosmos = null,
         matrix = null,
         colony = null,
         swarm = null,
         hive = null,
+        morpheus = null,
         nature = null,
         msg_win = null,
         utils_sys = new vulcan(),

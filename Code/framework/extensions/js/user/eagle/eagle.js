@@ -1,5 +1,5 @@
 /*
-    GreyOS - Eagle (Version: 1.6)
+    GreyOS - Eagle (Version: 1.8)
 
     File name: eagle.js
     Description: This file contains the Eagle - "Alt-Tab"-like keys facility.
@@ -178,7 +178,7 @@ function eagle()
             var __eagle_interface = document.createElement('div'),
                 __container_object = utils_sys.objects.by_id(self.settings.container());
 
-            __eagle_interface.id = self.settings.id();
+            __eagle_interface.id = eagle_id;
             __eagle_interface.className = 'eagle';
             __eagle_interface.innerHTML = '<div id="eagle_apps"><br><br>No running apps...</div></div>';
 
@@ -189,7 +189,7 @@ function eagle()
 
         this.show_eagle = function()
         {
-            var __eagle = utils_sys.objects.by_id(self.settings.id());
+            var __eagle = utils_sys.objects.by_id(eagle_id);
 
             __eagle.style.display = 'block';
 
@@ -200,7 +200,7 @@ function eagle()
 
         this.hide_eagle = function()
         {
-            var __eagle = utils_sys.objects.by_id(self.settings.id());
+            var __eagle = utils_sys.objects.by_id(eagle_id);
 
             __eagle.style.display = 'none';
 
@@ -320,8 +320,13 @@ function eagle()
 
         this.init_trace_keys = function()
         {
-            utils_sys.events.attach('eagle', document, 'keydown', function(event) { me.key_down_tracer(event); });
-            utils_sys.events.attach('eagle', document, 'keyup', function(event) { me.key_up_tracer(event); });
+            var __handler = null;
+
+            __handler = function(event) { me.key_down_tracer(event); };
+            morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
+
+            __handler = function(event) { me.key_up_tracer(event); };
+            morpheus.run(eagle_id, 'key', 'keyup', __handler, document);
 
             return true;
         };
@@ -361,6 +366,8 @@ function eagle()
         self.settings.id('eagle_' + random.generate());
         self.settings.container(container_id);
 
+        eagle_id = self.settings.id();
+
         nature.theme('eagle');
         nature.apply('new');
 
@@ -380,8 +387,9 @@ function eagle()
         matrix = cosmos.hub.access('matrix');
         colony = cosmos.hub.access('colony');
 
-        owl = matrix.get('owl');
         swarm = matrix.get('swarm');
+        owl = matrix.get('owl');
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
         return true;
@@ -389,13 +397,15 @@ function eagle()
 
     var is_init = false,
         is_visible = false,
-        picked_window = 0,
+        eagle_id = null,
         picked_app = null,
+        picked_window = 0,
         scroll_multiplier = 1,
         cosmos = null,
         matrix = null,
         swarm = null,
         colony = null,
+        morpheus = null,
         owl = null,
         nature = null,
         utils_sys = new vulcan(),

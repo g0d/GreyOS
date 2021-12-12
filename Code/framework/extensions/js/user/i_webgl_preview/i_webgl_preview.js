@@ -26,7 +26,7 @@ function i_webgl_preview()
 
         this.gui_init = function()
         {
-            var __data_content_id = i_webgl_preview_bee.settings.general.id();
+            var __data_content_id = i_webgl_preview_bee.settings.general.id() + '_data';
 
             infinity.setup(__data_content_id);
             infinity.begin();

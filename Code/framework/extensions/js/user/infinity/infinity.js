@@ -90,26 +90,12 @@ function infinity()
                 __infinity_id = self.settings.id(),
                 __infinity_object = null,
                 __container = utils_sys.objects.by_id(self.settings.container()),
-                __top_pos = 0,
-                __top_margin = 40;
+                __top_pos = 0;
 
-            if (utils_sys.validation.misc.is_undefined(__container) || __container === null)
+            if (utils_sys.validation.misc.is_undefined(__container) || __container === false)
                 return false;
 
-            if (utils_sys.validation.misc.is_undefined(__container.attributes[2]))
-                __top_pos = (utils_sys.graphics.pixels_value(__container.parentNode.attributes[2].nodeValue.substr(7)) / 2) - __top_margin;
-            else
-            {
-                if (__container.attributes.length < 3)
-                {
-                    if (utils_sys.validation.misc.is_undefined(__container.attributes[1]))
-                        __top_pos = (utils_sys.graphics.pixels_value(__container.attributes[1].nodeValue.substr(7)) / 2) - __top_margin;
-                    else
-                        __top_pos = (utils_sys.graphics.pixels_value(__container.parentNode.attributes[2].nodeValue.substr(7)) / 2) - __top_margin;
-                }
-                else
-                    __top_pos = (utils_sys.graphics.pixels_value(__container.attributes[2].nodeValue.substr(7)) / 2) - __top_margin;
-            }
+             __top_pos = (utils_sys.graphics.pixels_value(__container.style.height) / 2) - 25;
 
             __dynamic_object = document.createElement('div');
 

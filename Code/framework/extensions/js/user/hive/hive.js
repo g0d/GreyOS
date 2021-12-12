@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 2.9)
+    GreyOS - Hive (Version: 3.2)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -366,7 +366,7 @@ function hive()
 
                             var __this_bee = swarm.status.active_bee(),
                                 __hive_bee = utils_sys.objects.by_id('hive_bee_' + __this_bee),
-                                __hive_object = utils_sys.objects.by_id(self.settings.id()),
+                                __hive_object = utils_sys.objects.by_id(hive_id),
                                 __ghost_bee_width = 230,
                                 __ghost_bee_height = 30,
                                 __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_views.visible()),
@@ -514,21 +514,22 @@ function hive()
         this.draw_honeycomb = function(honeycomb_id)
         {
             var __new_honeycomb = null,
-                __hive_id = self.settings.id(),
                 __honeycomb_id = 'honeycomb_' + honeycomb_id,
-                __dynamic_width = 0;
+                __dynamic_width = 0,
+                __handler = null;
 
             __new_honeycomb = document.createElement('div');
 
-            __dynamic_width = (utils_sys.graphics.pixels_value(utils_sys.objects.by_id(__hive_id + '_stack').style.width) - 20);
+            __dynamic_width = (utils_sys.graphics.pixels_value(utils_sys.objects.by_id(hive_id + '_stack').style.width) - 20);
 
             __new_honeycomb.setAttribute('id', __honeycomb_id);
             __new_honeycomb.setAttribute('class', 'honeycomb');
             __new_honeycomb.setAttribute('style', 'width: ' + __dynamic_width + 'px;');
 
-            utils_sys.objects.by_id(__hive_id + '_sliding_box').appendChild(__new_honeycomb);
+            utils_sys.objects.by_id(hive_id + '_sliding_box').appendChild(__new_honeycomb);
 
-            utils_sys.objects.by_id(__honeycomb_id).onmouseup = function(event) { self.stack.bees.put(event); };
+            __handler = function(event) { self.stack.bees.put(event); };
+            morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(__honeycomb_id));
 
             honeycomb_views.dynamic_width(__dynamic_width);
 
@@ -537,7 +538,7 @@ function hive()
 
         this.remove_honeycomb = function(honeycomb_id)
         {
-            var __hive = utils_sys.objects.by_id(self.settings.id()),
+            var __hive = utils_sys.objects.by_id(hive_id),
                 __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_id);
 
             __hive.removeChild(__honeycomb);
@@ -547,7 +548,7 @@ function hive()
 
         this.remove_all_honeycombs = function()
         {
-            var __hive = utils_sys.objects.by_id(self.settings.id());
+            var __hive = utils_sys.objects.by_id(hive_id);
 
             while (__hive.hasChildNodes())
                 __hive.removeChild(__hive.lastChild);                
@@ -558,12 +559,10 @@ function hive()
         this.draw_hive = function(left, top)
         {
             var __dynamic_object = null,
-                __hive_id = self.settings.id(),
                 __swarm_id = swarm.settings.id(),
                 __forest_id = forest.settings.id(),
                 __swarm_object = utils_sys.objects.by_id(__swarm_id),
                 __forest_object = utils_sys.objects.by_id(__forest_id),
-                __current_stack_width = 0,
                 __handler = null;
 
             __dynamic_object = document.createElement('div');
@@ -575,7 +574,7 @@ function hive()
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.setAttribute('id', __hive_id);
+            __dynamic_object.setAttribute('id', hive_id);
             __dynamic_object.setAttribute('class', 'hive');
             __dynamic_object.setAttribute('style', 'top: ' + top + 'px; ' + 
                                                    'left: ' + left + 'px; ' + 
@@ -583,19 +582,19 @@ function hive()
                                                    'width: ' + max_stack_width + 'px; ' + 
                                                    'height: 85px;');
 
-            __dynamic_object.innerHTML = '<div id="' + __hive_id + '_previous_arrow" class="stack_arrow left_arrow"></div>' + 
-                                         '<div id="' + __hive_id + '_stack" class="stack_bar">' + 
-                                         '  <div id="' + __hive_id + '_sliding_box" class="sliding_box"></div>' + 
+            __dynamic_object.innerHTML = '<div id="' + hive_id + '_previous_arrow" class="stack_arrow left_arrow"></div>' + 
+                                         '<div id="' + hive_id + '_stack" class="stack_bar">' + 
+                                         '  <div id="' + hive_id + '_sliding_box" class="sliding_box"></div>' + 
                                          '</div>' + 
-                                         '<div id="' + __hive_id + '_next_arrow" class="stack_arrow right_arrow"></div>';
+                                         '<div id="' + hive_id + '_next_arrow" class="stack_arrow right_arrow"></div>';
 
             utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
 
             __current_stack_width = utils_sys.graphics.pixels_value(__dynamic_object.style.width);
 
-            utils_sys.objects.by_id(__hive_id + '_stack').style.width = 
+            utils_sys.objects.by_id(hive_id + '_stack').style.width = 
             (utils_sys.graphics.pixels_value(__dynamic_object.style.width) - 84) + 'px';
-            utils_sys.objects.by_id(__hive_id + '_stack').style.height = '85px';
+            utils_sys.objects.by_id(hive_id + '_stack').style.height = '85px';
 
             __handler = function(event)
                         {
@@ -604,36 +603,38 @@ function hive()
 
                             last_mouse_button_clicked = event.buttons;
                         };
-            utils_sys.objects.by_id(__hive_id + '_stack').onmousemove = __handler;
+            morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
 
             __handler = function(event) { me.reset_stack_trace(event); };
-            utils_sys.objects.by_id(__hive_id + '_stack').onmouseup = __handler;
+            morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
 
             __handler = function(event) { me.hide_ghost_bee(event); };
-            utils_sys.events.attach(__hive_id, __swarm_object, 'mousemove', __handler);
+            morpheus.run(hive_id, 'mouse', 'mousemove', __handler, __swarm_object);
 
             __handler = function(event) { me.reset_stack_trace(event); };
-            utils_sys.events.attach(__hive_id, __swarm_object, 'mouseup', __handler);
+            morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __swarm_object);
 
             __handler = function(event) { me.release_bee(event); };
-            utils_sys.events.attach(__hive_id, __forest_object, 'mouseup', __handler);
+            morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __forest_object);
 
-            utils_sys.objects.by_id(__hive_id + '_previous_arrow').onmousedown = function(event) { me.manage_stack_view(event, '-'); };
-            utils_sys.objects.by_id(__hive_id + '_next_arrow').onmousedown = function(event) { me.manage_stack_view(event, '+'); };
+            __handler = function(event) { me.manage_stack_view(event, '-'); };
+            morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_previous_arrow'));
+
+            __handler = function(event) { me.manage_stack_view(event, '+'); };
+            morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_next_arrow'));
 
             //__handler = function(event) { me.redraw_hive(event); };
-            //utils_sys.events.attach(__hive_id, window, 'resize', __handler);
+            //morpheus.run(hive_id, 'mouse', 'resize', __handler, window);
 
             return true;
         };
 
         this.redraw_hive = function(event)
         {
-            var __hive_id = self.settings.id(),
-                __swarm_id = swarm.settings.id(),
+            var __swarm_id = swarm.settings.id(),
                 __forest_id = forest.settings.id(),
                 __container_object = utils_sys.objects.by_id(self.settings.container()),
-                __hive_object = utils_sys.objects.by_id(__hive_id),
+                __hive_object = utils_sys.objects.by_id(hive_id),
                 __swarm_object = utils_sys.objects.by_id(__swarm_id),
                 __forest_object = utils_sys.objects.by_id(__forest_id),
                 __ghost_bee_object = utils_sys.objects.by_id('hive_ghost_bee');
@@ -641,10 +642,12 @@ function hive()
             self.stack.toggle('off');
             self.stack.set_view(event, 1);
 
-            utils_sys.events.detach(__hive_id, __swarm_object, 'mousemove');
-            utils_sys.events.detach(__hive_id, __swarm_object, 'mouseup');
-            utils_sys.events.detach(__hive_id, __forest_object, 'mouseup');
-            utils_sys.events.detach(__hive_id, window, 'resize');
+            morpheus.clear(hive_id);
+
+            // utils_sys.events.detach(hive_id, __swarm_object, 'mousemove');
+            // utils_sys.events.detach(hive_id, __swarm_object, 'mouseup');
+            // utils_sys.events.detach(hive_id, __forest_object, 'mouseup');
+            // utils_sys.events.detach(hive_id, window, 'resize');
 
             __container_object.removeChild(__ghost_bee_object);
             __container_object.removeChild(__hive_object);
@@ -708,7 +711,7 @@ function hive()
                 }
 
                 __handler = function() { return false; };
-                __dynamic_object.onselectstart = __handler;
+                morpheus.run(hive_id, 'mouse', 'selectstart', __handler, __dynamic_object);
 
                 __handler = function(event)
                             {
@@ -726,7 +729,7 @@ function hive()
 
                                 me.show_ghost_bee(event, 1);
                             };
-                __dynamic_object.onmousedown = __handler;
+                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object);
 
                 __handler = function(event)
                             {
@@ -740,16 +743,16 @@ function hive()
 
                                 stack_trace.bee_closing = true;
 
-                                me.remove_bee(honeycomb_id, bee_id);
-
                                 __bee_object.on('closed', function()
                                                           {
                                                               stack_trace.bee_closed = true;
                                                               stack_trace.bee_closing = false;
+
+                                                              me.remove_bee(honeycomb_id, bee_id);
                                                           });
                                 __bee_object.gui.actions.close(event);
                             };
-                __dynamic_object.childNodes[2].onmousedown = __handler;
+                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[2]);
             }
             else
             {
@@ -766,8 +769,7 @@ function hive()
                 }
 
                 __handler = function(event) { me.release_bee(event); };
-                __ghost_object.onmouseup = __handler;
-
+                morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __ghost_object);
             }
 
             return true;
@@ -777,8 +779,7 @@ function hive()
         {
             function factory_swipe(direction)
             {
-                var __hive_id = self.settings.id(),
-                    __sliding_box = __hive_id + '_sliding_box',
+                var __sliding_box = hive_id + '_sliding_box',
                     __sign = 1;
 
                 if (direction === 'right')
@@ -829,12 +830,10 @@ function hive()
 
         this.fixate_sliding_area = function()
         {
-            var __hive_id = self.settings.id();
-
-            utils_sys.objects.by_id(__hive_id + '_sliding_box').style.width = 
+            utils_sys.objects.by_id(hive_id + '_sliding_box').style.width = 
             (honeycomb_views.num() * honeycomb_views.dynamic_width() + 80) + 'px';
 
-            utils_sys.objects.by_id(__hive_id + '_stack').style.width = honeycomb_views.dynamic_width() + 'px';
+            utils_sys.objects.by_id(hive_id + '_stack').style.width = honeycomb_views.dynamic_width() + 'px';
 
             return true;
         };
@@ -1187,7 +1186,7 @@ function hive()
             if (status !== 'on' && status !== 'off')
                 return false;
 
-            var __hive_object = utils_sys.objects.by_id(self.settings.id());
+            var __hive_object = utils_sys.objects.by_id(hive_id);
 
             if (status === 'on')
                 __hive_object.style.visibility = 'visible';
@@ -1330,6 +1329,8 @@ function hive()
             self.settings.left(left);
             self.settings.top(top);
 
+            hive_id = self.settings.id();
+
             nature.theme(['hive']);
             nature.apply('new');
 
@@ -1351,17 +1352,20 @@ function hive()
 
         swarm = matrix.get('swarm');
         forest = matrix.get('forest');
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
         return true;
     };
 
     var is_init = false,
+        hive_id = null,
         cosmos = null,
         matrix = null,
         colony = null,
         swarm = null,
         forest = null,
+        morpheus = null,
         nature = null,
         msg_win = null,
         max_stack_width = 0,

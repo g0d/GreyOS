@@ -44,8 +44,8 @@ function boot_script()
         var containers_list = [matrix, dev_box, app_box, colony];
 
         // List of system services
-        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, 
-                            tik_tok, trinity, octopus, parrot, owl, infinity, nature, chameleon];
+        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, 
+                            trinity, morpheus, octopus, parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];
@@ -362,8 +362,8 @@ function boot_script()
         var containers_list = [matrix, dev_box, app_box, colony];
 
         // List of system services
-        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, 
-                            tik_tok, trinity, octopus, parrot, owl, infinity, nature, chameleon];
+        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, 
+                            trinity, morpheus, octopus, parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];

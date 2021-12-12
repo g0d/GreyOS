@@ -295,6 +295,11 @@
     overflow: hidden;
 }
 
+.dynamic_msg
+{
+    float: left;
+}
+
 .casement
 {
     position: absolute;

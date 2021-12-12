@@ -86,8 +86,13 @@ function ui_controls()
 
         this.attach_events = function()
         {
-            utils_sys.events.attach('ui_controls', utils_sys.objects.by_id('snap_to_grid'), 'click', function() { self.placement.grid(); });
-            utils_sys.events.attach('ui_controls', utils_sys.objects.by_id('stack_all'), 'click', function() { self.placement.stack(); });
+            var __handler = null;
+
+            __handler = function() { self.placement.grid(); };
+            morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('snap_to_grid'));
+
+            __handler = function() { self.placement.stack(); };
+            morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('stack_all'));
 
             return true;
         };
@@ -217,6 +222,8 @@ function ui_controls()
         self.settings.id('ui_controls_' + random.generate());
         self.settings.container(container_id);
 
+        ui_controls_id = self.settings.id();
+
         nature.theme('ui_controls');
         nature.apply('new');
 
@@ -237,17 +244,20 @@ function ui_controls()
 
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
         return true;
     };
 
     var is_init = false,
+        ui_controls_id = null,
         cosmos = null,
         matrix = null,
         colony = null,
         swarm = null,
         hive = null,
+        morpheus = null,
         nature = null,
         utils_sys = new vulcan(),
         random = new pythia(),

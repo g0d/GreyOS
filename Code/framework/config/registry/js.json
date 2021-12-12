@@ -35,6 +35,7 @@
     "dev_box"           :   "user",
     "app_box"           :   "user",
     "colony"            :   "user",
+    "morpheus"          :   "user",
     "owl"               :   "user",
     "forest"            :   "user",
     "swarm"             :   "user",

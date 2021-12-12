@@ -1,5 +1,5 @@
 /*
-    GreyOS - Forest (Version: 2.0)
+    GreyOS - Forest (Version: 2.2)
 
     File name: forest.js
     Description: This file contains the Forest - Desktops container & manager module.
@@ -189,16 +189,17 @@ function forest()
         {
             this.attach = function(action)
             {
-                var __forest_id = self.settings.id(),
-                    __forest_tb_object = utils_sys.objects.by_id(__forest_id + '_trigger_bar');
+                var __forest_tb_object = utils_sys.objects.by_id(forest_id + '_trigger_bar'),
+                    __handler = null;
 
                 if (utils_sys.validation.misc.is_undefined(action))
                     return false;
 
-                // Attach swipe animation to forest's trigger bar
+                // Attach swipe animation to trigger bar
                 if (action === 'swipe')
                 {
-                    utils_sys.events.attach(__forest_id, __forest_tb_object, 'click', function() { me.toggle_forest(); });
+                    __handler = function() { me.toggle_forest(); };
+                    morpheus.run(forest_id, 'mouse', 'click', __handler, __forest_tb_object);
                 }
 
                 return true;
@@ -262,8 +263,6 @@ function forest()
 
         this.toggle_forest = function()
         {
-            var __forest_id = self.settings.id();
-
             if (self.settings.is_open())
             {
                 if (is_swiping === true)
@@ -271,7 +270,7 @@ function forest()
 
                 is_swiping = true;
 
-                gfx.animation.swipe(__forest_id, 1, 'left', 298, 0, 15, 15, 
+                gfx.animation.swipe(forest_id, 1, 'left', 298, 0, 15, 15, 
                 function() { self.settings.is_open(false); is_swiping = false; });
             }
             else
@@ -281,7 +280,7 @@ function forest()
 
                 is_swiping = true;
 
-                gfx.animation.swipe(__forest_id, 1, 'right', 298, 0, 15, 15, 
+                gfx.animation.swipe(forest_id, 1, 'right', 298, 0, 15, 15, 
                 function() { self.settings.is_open(true); is_swiping = false; });
             }
         };
@@ -299,8 +298,7 @@ function forest()
         this.draw_forest = function()
         {
             var __dynamic_object = null,
-                __forest_id = self.settings.id(),
-                __forest_object = utils_sys.objects.by_id(__forest_id),
+                __forest_object = utils_sys.objects.by_id(forest_id),
                 __swarm_id = matrix.get('swarm').settings.id(),
                 __handler = null;
 
@@ -313,11 +311,11 @@ function forest()
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.setAttribute('id', __forest_id);
+            __dynamic_object.setAttribute('id', forest_id);
             __dynamic_object.setAttribute('class', 'forest');
             __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 87) + 'px;');
 
-            __dynamic_object.innerHTML = '<div id="' + __forest_id + '_trigger_bar" class="trigger_bar"></div>' + 
+            __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' + 
                                          '<div id="forest_top_list" class="top_list">' + 
                                          '  <a href="#" class="create_cat">' + 
                                                       'Create new desktop</a>' + 
@@ -397,61 +395,64 @@ function forest()
 
             utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
 
-            utils_sys.objects.by_id(__forest_id).onmousemove = function(event) { me.coords(event); me.toggle_hive(); };
+            __handler = function(event) { me.coords(event); me.toggle_hive(); };
+            morpheus.run(forest_id, 'mouse', 'mousemove', __handler, __forest_object);
 
-            //utils_sys.objects.by_id(__forest_id + '_stack').style.width = 
+            //utils_sys.objects.by_id(forest_id + '_stack').style.width = 
             //(utils_sys.graphics.pixels_value(__dynamic_object.style.width) - 84) + 'px';
-            //utils_sys.objects.by_id(__forest_id + '_stack').style.height = '85px';
+            //utils_sys.objects.by_id(forest_id + '_stack').style.height = '85px';
 
             //__handler = function(event) { me.coords(event); me.show_ghost_bee(event, 0); };
-            //utils_sys.objects.by_id(__forest_id + '_stack').onmousemove = __handler;
+            //morpheus.run(forest_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(forest_id + '_stack'));
 
             //__handler = function() { me.reset_desktops_trace(); };
-            //utils_sys.objects.by_id(__forest_id + '_stack').onmouseup = __handler;
+            //morpheus.run(forest_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(forest_id + '_stack'));
 
             //__handler = function(event) { me.hide_ghost_bee(event); };
-            //utils_sys.events.attach(__forest_id, __forest_object, 'mousemove', __handler);
+            //morpheus.run(forest_id, 'mouse', 'mousemove', __handler, __forest_object);
 
             //__handler = function() { me.reset_desktops_trace(); };
-            //utils_sys.events.attach(__forest_id, __forest_object, 'mouseup', __handler);
+            //morpheus.run(forest_id, 'mouse', 'mouseup', __handler, __forest_object);
 
             //__handler = function() { me.redraw_forest(); };
-            //utils_sys.events.attach(__forest_id, window, 'resize', __handler);
+            //morpheus.run(forest_id, 'mouse', 'resize', __handler, window);
 
             me.events.attach('swipe');
 
             return true;
         };
 
-        this.redraw_forest = function()
-        {
-            var __forest_id = self.settings.id(),
-                __container_object = utils_sys.objects.by_id(self.settings.container()),
-                __forest_object = utils_sys.objects.by_id(__forest_id),
-                __ghost_bee_object = utils_sys.objects.by_id('forest_ghost_bee');
+        // this.redraw_forest = function()
+        // {
+        //     var __container_object = utils_sys.objects.by_id(self.settings.container()),
+        //         __forest_object = utils_sys.objects.by_id(forest_id),
+        //         __ghost_bee_object = utils_sys.objects.by_id('forest_ghost_bee');
 
-            if (self.settings.is_open())
-            {
-                gfx.animation.swipe(__forest_id, 1, 'left', 298, 0, 15, 15);
-                self.settings.is_open(false);
-            }
+        //     if (self.settings.is_open())
+        //     {
+        //         gfx.animation.swipe(forest_id, 1, 'left', 298, 0, 15, 15);
+        //         self.settings.is_open(false);
+        //     }
 
-            utils_sys.events.detach(__forest_id, window, 'resize');
+        //     morpheus.delete(forest_id, 'resize', window);
 
-            __container_object.removeChild(__ghost_bee_object);
-            __container_object.removeChild(__forest_object);
+        //     __container_object.removeChild(__ghost_bee_object);
+        //     __container_object.removeChild(__forest_object);
 
-            me.draw_forest();
+        //     me.draw_forest();
 
-            return true;
-        };
+        //     return true;
+        // };
 
         this.init_trace_keys = function()
         {
-            var __forest_id = self.settings.id();
+            var __handler = null;
 
-            utils_sys.events.attach(__forest_id, document, 'keydown', function(event) { key_down_tracer(event); });
-            utils_sys.events.attach(__forest_id, document, 'keyup', function(event) { key_up_tracer(event); });
+            __handler = function(event) { key_down_tracer(event); };
+            morpheus.run(forest_id, 'key', 'keydown', __handler, document);
+
+            __handler = function(event) { key_up_tracer(event); };
+            morpheus.run(forest_id, 'key', 'keyup', __handler, document);
 
             return true;
         };
@@ -707,6 +708,8 @@ function forest()
             self.settings.id('forest_' + random.generate());
             self.settings.container(container_id);
 
+            forest_id = self.settings.id();
+
             nature.theme(['forest']);
             nature.apply('new');
 
@@ -728,6 +731,7 @@ function forest()
         dev_box = cosmos.hub.access('dev_box');
 
         colony = matrix.get('colony');
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
         return true;
@@ -735,10 +739,12 @@ function forest()
 
     var is_init = false,
         is_swiping = false,
+        forest_id = null,
         cosmos = null,
         matrix = null,
         dev_box = null,
         colony = null,
+        morpheus = null,
         nature = null,
         utils_sys = new vulcan(),
         gfx = new fx(),

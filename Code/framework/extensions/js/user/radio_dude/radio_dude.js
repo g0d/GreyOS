@@ -26,7 +26,7 @@ function radio_dude()
 
         this.gui_init = function()
         {
-            var __data_content_id = radio_dude_bee.settings.general.id();
+            var __data_content_id = radio_dude_bee.settings.general.id() + '_data';
 
             infinity.setup(__data_content_id);
             infinity.begin();
