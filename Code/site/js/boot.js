@@ -45,7 +45,7 @@ function boot_script()
 
         // List of system services
         var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, 
-                            trinity, morpheus, octopus, parrot, owl, infinity, nature, chameleon];
+                            trinity, morpheus, panda, octopus, parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];
@@ -363,7 +363,7 @@ function boot_script()
 
         // List of system services
         var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, 
-                            trinity, morpheus, octopus, parrot, owl, infinity, nature, chameleon];
+                            trinity, morpheus, panda, octopus, parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];

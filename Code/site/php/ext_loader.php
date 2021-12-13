@@ -45,7 +45,6 @@
     UTIL::Load_Extension('app_box', 'js');
     UTIL::Load_Extension('colony', 'js');
     //UTIL::Load_Extension('sand_box', 'js');
-    UTIL::Load_Extension('morpheus', 'js');
     UTIL::Load_Extension('owl', 'js');
     UTIL::Load_Extension('forest', 'js');
     UTIL::Load_Extension('swarm', 'js');
@@ -59,8 +58,10 @@
     UTIL::Load_Extension('eagle', 'js');
     UTIL::Load_Extension('tik_tok', 'js');
     UTIL::Load_Extension('trinity', 'js');
-    UTIL::Load_Extension('parrot', 'js');
+    UTIL::Load_Extension('morpheus', 'js');
+    UTIL::Load_Extension('panda', 'js');
     UTIL::Load_Extension('octopus', 'js');
+    UTIL::Load_Extension('parrot', 'js');
     UTIL::Load_Extension('infinity', 'js');
     UTIL::Load_Extension('max_screen', 'js');
     UTIL::Load_Extension('bee', 'js');
