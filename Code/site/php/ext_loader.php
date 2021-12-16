@@ -63,6 +63,7 @@
     UTIL::Load_Extension('morpheus', 'js');
     UTIL::Load_Extension('panda', 'js');
     UTIL::Load_Extension('octopus', 'js');
+    UTIL::Load_Extension('super_tray', 'js');
     UTIL::Load_Extension('parrot', 'js');
     UTIL::Load_Extension('infinity', 'js');
     UTIL::Load_Extension('max_screen', 'js');

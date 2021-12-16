@@ -45,7 +45,7 @@ function boot_script()
 
         // List of system services
         var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, meta_script, 
-                            meta_parser, trinity, morpheus, panda, octopus, parrot, owl, infinity, nature, chameleon];
+                            meta_parser, trinity, morpheus, panda, octopus, super_tray ,parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];
@@ -213,6 +213,7 @@ function boot_script()
             matrix_container.get('eagle').init('desktop');
             matrix_container.get('tik_tok').init('clock');
             matrix_container.get('octopus').init('device_manager');
+            matrix_container.get('super_tray').init('tray');
             matrix_container.get('parrot').load('audio');
 
             // Show preloaded or saved bees (apps)
@@ -243,6 +244,7 @@ function boot_script()
             // Load all services and full UI infrastructure
             var new_trinity = matrix_container.get('trinity');
             var new_octopus = matrix_container.get('octopus');
+            var new_super_tray = matrix_container.get('super_tray');
             var new_parrot = matrix_container.get('parrot');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
@@ -278,6 +280,7 @@ function boot_script()
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
             new_octopus.init('device_manager');
+            new_super_tray.init('tray');
             new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)
@@ -363,7 +366,7 @@ function boot_script()
 
         // List of system services
         var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, meta_script, 
-                            meta_parser, trinity, morpheus, panda, octopus, parrot, owl, infinity, nature, chameleon];
+                            meta_parser, trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
 
         // List of development tools
         var dev_tools = [bee];
@@ -438,6 +441,7 @@ function boot_script()
             var new_eagle = matrix_container.get('eagle');
             var new_tik_tok = matrix_container.get('tik_tok');
             var new_octopus = matrix_container.get('octopus');
+            var new_super_tray = matrix_container.get('super_tray');
             var new_parrot = matrix_container.get('parrot');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
@@ -465,6 +469,7 @@ function boot_script()
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
             new_octopus.init('device_manager');
+            new_super_tray.init('tray');
             new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)

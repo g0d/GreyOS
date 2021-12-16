@@ -1,0 +1,36 @@
+/*
+    N@TuRe - Super Tray theme
+
+    File name: super_tray.css
+    Description: This file contains the Super Tray theme CSS.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2021
+    Open Software License (OSL 3.0)
+*/
+
+.super_tray
+{
+    display: none;
+    float: right;
+    clear: none;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    margin-top: -2px;
+    margin-right: 28px;
+}
+
+.super_tray div
+{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.super_tray .access
+{
+    background: url('pix/access.png') no-repeat;
+    width: 32px;
+    height: 32px;
+}

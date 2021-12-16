@@ -2,7 +2,7 @@
     GreyOS - Meta-Script (Version: 1.0)
 
     File name: meta_script.js
-    Description: This file contains the Meta-Script - Meta scripting language interface module.
+    Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021
@@ -37,6 +37,11 @@ function meta_script()
         }
 
         function stack()
+        {
+            
+        }
+
+        function tray()
         {
             
         }
