@@ -48,6 +48,8 @@
     "eagle"             :   "user",
     "tik_tok"           :   "user",
     "sketch_pad"        :   "user",
+    "meta_script"       :   "user",
+    "meta_parser"       :   "user",
     "trinity"           :   "user",
     "morpheus"          :   "user",
     "panda"             :   "user",

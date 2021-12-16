@@ -57,6 +57,8 @@
     UTIL::Load_Extension('nature', 'js');
     UTIL::Load_Extension('eagle', 'js');
     UTIL::Load_Extension('tik_tok', 'js');
+    UTIL::Load_Extension('meta_script', 'js');
+    UTIL::Load_Extension('meta_parser', 'js');
     UTIL::Load_Extension('trinity', 'js');
     UTIL::Load_Extension('morpheus', 'js');
     UTIL::Load_Extension('panda', 'js');
