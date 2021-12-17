@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 3.2)
+    GreyOS - Hive (Version: 3.4)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -270,7 +270,7 @@ function hive()
 
         this.setup_honeycomb_size = function(bees_per_honeycomb)
         {
-            var __proposed_stack_width = ((bees_per_honeycomb / 2) * 230),
+            var __proposed_stack_width = Math.floor((bees_per_honeycomb / 2) * 230),
                 __min_screen_width = 1296,
                 __proportion = __proposed_stack_width / __min_screen_width,
                 __fixed_bees_per_honeycomb = bees_per_honeycomb;
@@ -434,8 +434,8 @@ function hive()
                     __this_hive_bee.settings.general.in_hive(false);
                     __this_hive_bee.gui.position.top(self.settings.top() - __this_hive_bee.gui.size.height() - 33);
                     __this_hive_bee.gui.position.left(coords.mouse_x - 
-                                                      parseInt((__this_hive_bee.gui.size.width() / 2), 10) + 
-                                                      parseInt((__this_hive_bee.gui.mouse.relative.x() / 2), 10));
+                                                      Math.floor(__this_hive_bee.gui.size.width() / 2) + 
+                                                      Math.floor(__this_hive_bee.gui.mouse.relative.x() / 2));
 
                     __this_hive_bee.show();
 
@@ -694,8 +694,10 @@ function hive()
             __dynamic_object.innerHTML = '<div id="hive_bee_' + bee_id + '_icon" class="' + __ctrl_bar_icon_class + '"></div>' + 
                                          '<div id="hive_bee_' + bee_id + '_title" class="' + __ctrl_bar_title_class + '">' + 
                                          __bee_object.settings.data.window.labels.title() + 
-                                         '</div>' + 
-                                         '<div id="hive_bee_' + bee_id + '_close" class="' + __ctrl_bar_close_class + '"></div>';
+                                         '</div>';
+
+            if (__bee_object.settings.actions.can_close())
+                __dynamic_object.innerHTML += '<div id="hive_bee_' + bee_id + '_close" class="' + __ctrl_bar_close_class + '"></div>';
 
             if (mode === 0)
             {
@@ -955,13 +957,18 @@ function hive()
                 if (!colony.is_bee(object) || !utils_int.validate_honeycomb_range(honeycomb_view))
                     return false;
 
-                if (!honeycomb_views.list(honeycomb_view - 1).bees.add(object.settings.general.id()))
+                var __bee_id = object.settings.general.id();
+
+                if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+                    return false;
+
+                if (!honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id))
                     return false;
 
                 if (!colony.add([object]))
                     return false;
 
-                utils_int.draw_hive_bee(honeycomb_view, object.settings.general.id(), 0);
+                utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
 
                 object.settings.general.in_hive(true);
 
@@ -977,6 +984,9 @@ function hive()
                     return false;
 
                 var __bee_id = object.settings.general.id();
+
+                if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+                    return false;
 
                 if (!utils_int.remove_bee(honeycomb_view, __bee_id))
                     return false;

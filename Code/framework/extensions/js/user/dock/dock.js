@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 1.6)
+    GreyOS - Dock (Version: 1.8)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -162,54 +162,39 @@ function dock()
                                 if (is_dragging)
                                     return false;
 
-                                var __bee = colony.get(dock_app['app_id']),
+                                var __app_id = dock_app['app_id'],
                                     __sys_theme = chameleon.get();
 
-                                if (__bee === null || __bee === false)
+                                parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
+
+                                if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.contains(__app_id))
+                                    return false;
+
+                                var __app = app_box.get(__app_id);
+
+                                __app.init();
+
+                                __bee = __app.get_bee();
+
+                                swarm.bees.insert(__bee);
+
+                                if (__bee.show())
                                 {
-                                    var __app = app_box.get(dock_app['app_id']);
+                                    utils_sys.objects.by_id('app_' + __app_id).classList.remove('app_' + __app_id + '_off');
+                                    utils_sys.objects.by_id('app_' + __app_id).classList.add('app_' + __app_id + '_on');
 
-                                    __app.init();
-
-                                    __bee = __app.get_bee();
-
-                                    parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
-
-                                    swarm.bees.insert(__bee);
-
-                                    if (__bee.show())
-                                    {
-                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
-                                        utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
-
-                                        close_app(__bee, dock_app['app_id']);
-                                    }
-                                    else
-                                    {
-                                        if (__bee.error.last() === __bee.error.codes.POSITION || 
-                                            __bee.error.last() === __bee.error.codes.SIZE)
-                                        {
-                                            msg_win = new msgbox();
-
-                                            msg_win.init('desktop');
-                                            msg_win.show('GreyOS', 'The app is overflowing your screen. \
-                                                                    You need a larger screen or higher resolution to run it!');
-                                        }
-                                    }
+                                    close_app(__bee, __app_id);
                                 }
                                 else
                                 {
-                                    if (!__bee.status.system.running())
+                                    if (__bee.error.last() === __bee.error.codes.POSITION || 
+                                        __bee.error.last() === __bee.error.codes.SIZE)
                                     {
-                                        parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
+                                        msg_win = new msgbox();
 
-                                        if (__bee.show())
-                                        {
-                                            utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.remove('app_' + dock_app['app_id'] + '_off');
-                                            utils_sys.objects.by_id('app_' + dock_app['app_id']).classList.add('app_' + dock_app['app_id'] + '_on');
-
-                                            close_app(__bee, dock_app['app_id']);
-                                        }
+                                        msg_win.init('desktop');
+                                        msg_win.show('GreyOS', 'The app is overflowing your screen. \
+                                                                You need a larger screen or higher resolution to run it!');
                                     }
                                 }
                             };

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Swarm (Version: 2.6)
+    GreyOS - Swarm (Version: 2.8)
 
     File name: swarm.js
     Description: This file contains the Swarm - Bees action area container module.
@@ -334,6 +334,11 @@ function swarm()
             if (!colony.is_bee(object) || object.status.system.in_hive())
                 return false;
 
+            var __bee_id = object.settings.general.id();
+
+            if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+                return false;
+
             if (!colony.add([object]))
                 return false;
 
@@ -355,6 +360,9 @@ function swarm()
                 return false;
 
             var __bee_id = object.settings.general.id();
+
+            if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+                return false;
 
             for (var i = 0; i < bees_info.num; i++)
             {

@@ -14,7 +14,7 @@ body
 {
     font-family: 'Ubuntu', sans-serif;
     font-size: 18px;
-    background-image: url("pix/wallpaper2.jpg");
+    background-image: url("pix/wallpaper3.jpg");
     background-color: #72bbc5;
     background-attachment: fixed;
     min-width: 1336px;
@@ -532,12 +532,12 @@ option
 
 .casement_title
 {
-    background: #1e345c75 !important;
+    background: #7dd0c873 !important;
 }
 
 .casement_data
 {
-    background-color: #2a3c2b66 !important;
+    background-color: #337e9f66 !important;
 }
 
 .casement_status

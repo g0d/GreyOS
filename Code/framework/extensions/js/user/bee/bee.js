@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 3.6)
+    GreyOS - Bee (Version: 3.8)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window module.
@@ -671,7 +671,8 @@ function bee()
 
         function coords(event_object, type)
         {
-            if (utils_sys.validation.misc.is_undefined(event_object) || !utils_sys.validation.numerics.is_integer(type) || 
+            if (utils_sys.validation.misc.is_undefined(event_object) || 
+                !utils_sys.validation.numerics.is_integer(type) || 
                 type < 1 || type > 2)
                 return false;
 
@@ -2467,7 +2468,7 @@ function bee()
 
             function randomize_pos(position)
             {
-                var __new_pos = parseInt(position + (position * Math.random()), 10);
+                var __new_pos = Math.floor(position + (position * Math.random()));
 
                 return __new_pos;
             }
@@ -3594,13 +3595,14 @@ function bee()
                     return true;
                 }
 
-                if (event_object === null || event_object.buttons === 1 && bee_statuses.opened() && !bee_statuses.close())
+                if ((event_object === null || event_object.buttons === 1) && bee_statuses.opened() && !bee_statuses.close())
                 {
                     var __app_id = self.settings.general.app_id();
 
                     if (!self.settings.actions.can_close())
                         return false;
 
+                    bee_statuses.opened(false);
                     bee_statuses.close(true);
                     bee_statuses.dragging(false);
 
@@ -4517,7 +4519,7 @@ function bee()
         return false;
     };
 
-    this.show = function()
+    this.show = function(parent_app_id = null)
     {
         if (is_init === false)
             return false;
@@ -4533,8 +4535,11 @@ function bee()
         if (utils_int.is_lonely_bee(my_bee_id))
             return false;
 
-        if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.contains(__app_id))
-            return false;
+        if (parent_app_id === null)
+        {
+            if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.contains(__app_id))
+                return false;
+        }
 
         utils_int.status_init();
 
@@ -4542,7 +4547,8 @@ function bee()
 
         if (!utils_int.gui_init())
         {
-            owl.status.set(my_bee_id, __app_id, 'FAIL');
+            if (parent_app_id === null)
+                owl.status.set(my_bee_id, __app_id, 'FAIL');
 
             utils_int.log('Show', 'ERROR');
 
