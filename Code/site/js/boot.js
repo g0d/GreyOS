@@ -213,7 +213,7 @@ function boot_script()
             matrix_container.get('eagle').init('desktop');
             matrix_container.get('tik_tok').init('clock');
             matrix_container.get('octopus').init('device_manager');
-            matrix_container.get('super_tray').init('tray');
+            matrix_container.get('super_tray').init('services_tray');
             matrix_container.get('parrot').load('audio');
 
             // Show preloaded or saved bees (apps)
@@ -280,7 +280,7 @@ function boot_script()
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
             new_octopus.init('device_manager');
-            new_super_tray.init('tray');
+            new_super_tray.init('services_tray');
             new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)
@@ -469,7 +469,7 @@ function boot_script()
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
             new_octopus.init('device_manager');
-            new_super_tray.init('tray');
+            new_super_tray.init('services_tray');
             new_parrot.init('audio');
 
             // Show preloaded or saved bees (apps)

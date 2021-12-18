@@ -140,7 +140,7 @@ option
 
 .user_profile_pop_up:before
 {
-    border-color: #181c2bc4 transparent !important;
+    border-color: #577b844a transparent !important;
 }
 
 #user_full_name
@@ -599,4 +599,16 @@ option
 .radio_dude_selected_stream:hover
 {
     color: #ffffff !important;
+}
+
+#xmass
+{
+    position: absolute;
+    display: block;
+    left: calc(90%);
+    top: calc(80%);
+    width: 512px;
+    height: 512px;
+    background-image: url('pix/xmass/xmass_tree.gif');
+    zoom: 40%;
 }

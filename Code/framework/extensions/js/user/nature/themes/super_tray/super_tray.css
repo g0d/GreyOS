@@ -11,13 +11,12 @@
 
 .super_tray
 {
-    display: none;
     float: right;
     clear: none;
     cursor: pointer;
     width: 32px;
     height: 32px;
-    margin-top: -2px;
+    margin-top: 8px;
     margin-right: 28px;
 }
 
@@ -30,7 +29,7 @@
 
 .super_tray .access
 {
-    background: url('pix/access.png') no-repeat;
+    background: url('pix/down_arrow.png') no-repeat;
     width: 32px;
     height: 32px;
 }

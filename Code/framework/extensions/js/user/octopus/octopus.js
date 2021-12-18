@@ -200,7 +200,7 @@ function octopus()
     function settings()
     {
         var __id = null,
-            __container = 'device_manager';
+            __container = null;
 
         this.id = function(val)
         {

@@ -23,20 +23,14 @@ function super_tray()
             nature.theme('super_tray');
             nature.apply('new');
 
-            me.start_service();
             me.draw();
         };
 
-        this.start_service = function()
+        this.draw = function()
         {
-            if (is_service_active === true)
-                return false;
-
-            var __dynamic_object = null,
-                __super_tray_id = self.settings.id(),
-                __container = utils_sys.objects.by_id(self.settings.container());
-
-            __container.innerHTML = '';
+            var __super_tray_id = self.settings.id(),
+                __container = utils_sys.objects.by_id(self.settings.container()),
+                __dynamic_object = null;
 
             __dynamic_object = document.createElement('div');
 
@@ -44,25 +38,9 @@ function super_tray()
             __dynamic_object.setAttribute('class', 'super_tray');
             __dynamic_object.setAttribute('title', 'Access running services');
 
-            __dynamic_object.innerHTML = '<div id="' + __super_tray_id + '_xxx"></div>';
+            __dynamic_object.innerHTML = '<div id="' + __super_tray_id + '_arrow" class="access"></div>';
 
             __container.appendChild(__dynamic_object);
-
-            is_service_active = true;
-
-            return true;
-        };
-
-        this.draw = function()
-        {
-            if (is_service_active === false)
-                return false;
-
-            var __super_tray_id = self.settings.id(),
-                __super_tray_div = utils_sys.objects.by_id(self.settings.id());
-
-            __super_tray_div.innerHTML += '<div id="' + __super_tray_id + '_access" class="xxx"></div>';
-            __super_tray_div.style.display = 'block';
 
             return true;
         };
@@ -90,7 +68,7 @@ function super_tray()
     function settings()
     {
         var __id = null,
-            __container = 'tray';
+            __container = null;
 
         this.id = function(val)
         {
@@ -125,26 +103,22 @@ function super_tray()
         };
     }
 
-    this.set = function()
+    this.add = function(service_id)
     {
         if (is_init === false)
             return false;
+
+        
 
         return ;
     };
 
-    this.reset = function()
+    this.remove = function(service_id)
     {
         if (is_init === false)
             return false;
 
-        return ;
-    };
-
-    this.zzz = function()
-    {
-        if (is_init === false)
-            return false;
+        
 
         return ;
     };
@@ -154,27 +128,17 @@ function super_tray()
         if (is_init === false)
             return false;
 
+        
+
         return ;
-    };
-
-    this.load = function(container_id)
-    {
-        if (is_init === false)
-            return false;
-
-        if (utils_sys.validation.alpha.is_symbol(container_id))
-            return false;
-
-        self.settings.container(container_id);
-
-        utils_int.load_ui();
-
-        return true;
     };
 
     this.init = function(container_id)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (utils_sys.validation.alpha.is_symbol(container_id))
             return false;
 
         if (is_init === true)
@@ -183,11 +147,9 @@ function super_tray()
         is_init = true;
 
         self.settings.id('super_tray_' + random.generate());
+        self.settings.container(container_id);
 
-        if (utils_sys.validation.misc.is_undefined(container_id))
-            return utils_int.start_service();
-        else
-            return self.load(container_id);
+        return utils_int.load_ui(container_id);
     };
 
     this.cosmos = function(cosmos_object)
@@ -205,7 +167,6 @@ function super_tray()
     };
 
     var is_init = false,
-        is_service_active = false,
         cosmos = null,
         matrix = null,
         nature = null,
