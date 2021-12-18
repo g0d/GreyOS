@@ -2,7 +2,7 @@
     GreyOS - Super Tray (Version: 1.0)
 
     File name: super_tray.js
-    Description: This file contains the Super Tray - Icons tray area service module.
+    Description: This file contains the Super Tray - Service icons tray area service module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021
@@ -24,23 +24,86 @@ function super_tray()
             nature.apply('new');
 
             me.draw();
+            me.attach_events();
         };
 
         this.draw = function()
         {
-            var __super_tray_id = self.settings.id(),
-                __container = utils_sys.objects.by_id(self.settings.container()),
+            var __container = utils_sys.objects.by_id(self.settings.container()),
                 __dynamic_object = null;
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.setAttribute('id', __super_tray_id);
+            __dynamic_object.setAttribute('id', super_tray_id);
             __dynamic_object.setAttribute('class', 'super_tray');
             __dynamic_object.setAttribute('title', 'Access running services');
 
-            __dynamic_object.innerHTML = '<div id="' + __super_tray_id + '_arrow" class="access"></div>';
+            __dynamic_object.innerHTML = '<div id="' + super_tray_id + '_arrow" class="access"></div>\
+                                          <div id="' + super_tray_id + '_service_icons_tray" class="service_icons_area"></div>';
 
             __container.appendChild(__dynamic_object);
+
+            return true;
+        };
+
+        this.attach_events = function()
+        {
+            var __handler = null;
+
+            __handler = function() { me.toggle_service_icons_area(); };
+            morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
+
+            __handler = function() {  me.hide_service_icons_area(); };
+            morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+
+            __handler = function(event) {  me.hide_service_icons_area_handler(event); };
+            morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
+
+            return true;
+        };
+
+        this.toggle_service_icons_area = function()
+        {
+            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+
+            if (is_service_icons_tray_visible === true)
+            {
+                is_service_icons_tray_visible = false;
+
+                __service_icons_tray.style.display = 'none';
+            }
+            else
+            {
+                is_service_icons_tray_visible = true;
+
+                __service_icons_tray.style.display = 'block';
+            }
+
+            return true;
+        };
+
+        this.hide_service_icons_area_handler = function(event)
+        {
+            if (utils_sys.validation.misc.is_undefined(event))
+                return false;
+
+            key_control.scan(event);
+
+            if (key_control.get() !== key_control.keys.ESCAPE)
+                return false;
+
+            me.hide_service_icons_area();
+
+            return true;
+        };
+
+        this.hide_service_icons_area = function()
+        {
+            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+
+            __service_icons_tray.style.display = 'none';
+
+            is_service_icons_tray_visible = false;
 
             return true;
         };
@@ -149,6 +212,8 @@ function super_tray()
         self.settings.id('super_tray_' + random.generate());
         self.settings.container(container_id);
 
+        super_tray_id = self.settings.id();
+
         return utils_int.load_ui(container_id);
     };
 
@@ -161,17 +226,22 @@ function super_tray()
 
         matrix = cosmos.hub.access('matrix');
 
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
         return true;
     };
 
     var is_init = false,
+        is_service_icons_tray_visible = false,
+        super_tray_id = null,
         cosmos = null,
         matrix = null,
+        morpheus = null,
         nature = null,
         utils_sys = new vulcan(),
         random = new pythia(),
+        key_control = new key_manager(),
         utils_int = new utilities();
 
     this.status = new status();

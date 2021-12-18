@@ -33,3 +33,17 @@
     width: 32px;
     height: 32px;
 }
+
+.service_icons_area
+{
+    display: none;
+    position: absolute;
+    background-color: #27272770;
+    border: 2px solid #363a3c6e;
+    box-shadow: 0 0 12px #282c2c5e !important;
+    width: 200px;
+    height: 200px;
+    right: 258px;
+    margin-top: 5px;
+    z-index: 2147483644;
+}

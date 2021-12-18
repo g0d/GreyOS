@@ -332,6 +332,7 @@ function user_profile()
         nature = null,
         msg_win = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         key_control = new key_manager(),
         cc_reload = new f5(),
         utils_int = new utilities();

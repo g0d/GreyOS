@@ -40,9 +40,8 @@ function octopus()
 
         function show_notification(status)
         {
-            var __octopus_id = self.settings.id(),
-                __notification_object = utils_sys.objects.by_id(__octopus_id + '_notification'),
-                __notification_msg_object = utils_sys.objects.by_id(__octopus_id + '_message'),
+            var __notification_object = utils_sys.objects.by_id(octopus_id + '_notification'),
+                __notification_msg_object = utils_sys.objects.by_id(octopus_id + '_message'),
                 __sys_theme = chameleon.get();
 
             __notification_msg_object.innerHTML = 'New device ' + status + '!';
@@ -135,19 +134,18 @@ function octopus()
                 return false;
 
             var __dynamic_object = null,
-                __octopus_id = self.settings.id(),
                 __container = utils_sys.objects.by_id(self.settings.container());
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.setAttribute('id', __octopus_id);
+            __dynamic_object.setAttribute('id', octopus_id);
             __dynamic_object.setAttribute('class', 'octopus');
             __dynamic_object.setAttribute('title', 'Manage devices');
 
-            __dynamic_object.innerHTML += '<div id="' + __octopus_id + '_manager" class="device"></div>\
-                                           <div id="' + __octopus_id + '_notification" class="notification">\
-                                               <div id="' + __octopus_id + '_icon" class="icon"></div>\
-                                               <div id="' + __octopus_id + '_message" class="message"></div>\
+            __dynamic_object.innerHTML += '<div id="' + octopus_id + '_manager" class="device"></div>\
+                                           <div id="' + octopus_id + '_notification" class="notification">\
+                                               <div id="' + octopus_id + '_icon" class="icon"></div>\
+                                               <div id="' + octopus_id + '_message" class="message"></div>\
                                            </div>';
 
             __container.appendChild(__dynamic_object);
@@ -247,6 +245,8 @@ function octopus()
 
         self.settings.id('octopus_' + random.generate());
 
+        octopus_id = self.settings.id();
+
         if (utils_sys.validation.misc.is_undefined(container_id))
             return utils_int.start_service();
         else
@@ -278,6 +278,7 @@ function octopus()
 
     var is_init = false,
         is_service_active = false,
+        octopus_id = null,
         cosmos = null,
         matrix = null,
         parrot = null,

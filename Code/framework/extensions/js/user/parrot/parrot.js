@@ -22,7 +22,7 @@ function parrot()
             __stream_context_in_use = null,
             __play_file = null,
             __audio_stream = null,
-            __audio_player = utils_sys.objects.by_id(self.settings.id());
+            __audio_player = utils_sys.objects.by_id(parrot_id);
 
         function set_sounds()
         {
@@ -242,20 +242,19 @@ function parrot()
                 return false;
 
             var __dynamic_object = null,
-                __parrot_id = self.settings.id(),
                 __container = utils_sys.objects.by_id(self.settings.container());
 
             __container.innerHTML = '';
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.setAttribute('id', __parrot_id);
+            __dynamic_object.setAttribute('id', parrot_id);
             __dynamic_object.setAttribute('class', 'parrot');
             __dynamic_object.setAttribute('title', 'Manage system & apps sound');
 
-            __dynamic_object.innerHTML = '<audio id="' + __parrot_id + '_audio_service_sys" autoplay></audio>\
-                                          <audio id="' + __parrot_id + '_audio_service_actions" autoplay></audio>\
-                                          <audio id="' + __parrot_id + '_audio_service_misc" autoplay></audio>';
+            __dynamic_object.innerHTML = '<audio id="' + parrot_id + '_audio_service_sys" autoplay></audio>\
+                                          <audio id="' + parrot_id + '_audio_service_actions" autoplay></audio>\
+                                          <audio id="' + parrot_id + '_audio_service_misc" autoplay></audio>';
 
             __container.appendChild(__dynamic_object);
 
@@ -275,11 +274,10 @@ function parrot()
 
             audio.clear();
 
-            var __parrot_id = self.settings.id(),
-                __parrot_div = utils_sys.objects.by_id(self.settings.id());
+            var __parrot_div = utils_sys.objects.by_id(parrot_id);
 
-            __parrot_div.innerHTML += '<div id="' + __parrot_id + '_speaker" class="speaker"></div>' + 
-                                      '<div id="' + __parrot_id + '_volume" class="volume">100%</div>';
+            __parrot_div.innerHTML += '<div id="' + parrot_id + '_speaker" class="speaker"></div>' + 
+                                      '<div id="' + parrot_id + '_volume" class="volume">100%</div>';
             __parrot_div.style.display = 'block';
 
             return true;
@@ -434,6 +432,8 @@ function parrot()
 
         self.settings.id('parrot_' + random.generate());
 
+        parrot_id = self.settings.id();
+
         if (utils_sys.validation.misc.is_undefined(container_id))
             return utils_int.start_service();
         else
@@ -456,6 +456,7 @@ function parrot()
 
     var is_init = false,
         is_service_active = false,
+        parrot_id = null,
         cosmos = null,
         matrix = null,
         nature = null,
