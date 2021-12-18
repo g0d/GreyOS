@@ -167,7 +167,7 @@ function dock()
 
                                 parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
 
-                                if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.contains(__app_id))
+                                if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
                                     return false;
 
                                 var __app = app_box.get(__app_id);

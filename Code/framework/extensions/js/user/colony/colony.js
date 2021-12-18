@@ -1,5 +1,5 @@
 /*
-    GreyOS - Colony (Version: 2.4)
+    GreyOS - Colony (Version: 2.6)
 
     File name: colony.js
     Description: This file contains the Colony - Bee keeper container module.
@@ -112,10 +112,12 @@ function colony()
                 return false;
             }
 
-            if (self.contains(objects_array[i].settings.general.app_id()))
+            var __app_id = objects_array[i].settings.general.app_id();
+
+            if (self.is_single_instance(__app_id))
             {
                 if (backtrace === true)
-                    frog('COLONY', 'Objects :: Duplication', objects_array[i].settings.general.app_id());
+                    frog('COLONY', 'Objects :: Duplication', __app_id);
 
                 return false;
             }
@@ -181,26 +183,6 @@ function colony()
         return true;
     };
 
-    this.contains = function(app_id)
-    {
-        if (utils_sys.validation.misc.is_nothing(cosmos))
-            return false;
-
-        if (bees.num === 0)
-            return null;
-
-        if (utils_sys.validation.alpha.is_symbol(app_id))
-            return false;
-
-        for (var i = 0; i < bees.num; i++)
-        {
-            if (bees.list[i].settings.general.app_id() === app_id && bees.list[i].settings.general.single_instance())
-                return true;
-        }
-
-        return false;
-    };
-
     this.is_bee = function(object)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
@@ -221,6 +203,26 @@ function colony()
             return false;
 
         return true;
+    };
+
+    this.is_single_instance = function(app_id)
+    {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (bees.num === 0)
+            return null;
+
+        if (utils_sys.validation.alpha.is_symbol(app_id))
+            return false;
+
+        for (var i = 0; i < bees.num; i++)
+        {
+            if (bees.list[i].settings.general.app_id() === app_id && bees.list[i].settings.general.single_instance())
+                return true;
+        }
+
+        return false;
     };
 
     this.backtrace = function(val)

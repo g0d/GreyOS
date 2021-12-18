@@ -4537,7 +4537,7 @@ function bee()
 
         if (parent_app_id === null)
         {
-            if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.contains(__app_id))
+            if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
                 return false;
         }
 
