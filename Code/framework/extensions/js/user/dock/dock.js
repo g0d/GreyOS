@@ -377,7 +377,7 @@ function dock()
         colony = cosmos.hub.access('colony');
 
         swarm = matrix.get('swarm');
-        hive = matrix.get('swarm');
+        hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
         owl = matrix.get('owl');
         parrot = matrix.get('parrot');

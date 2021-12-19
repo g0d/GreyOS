@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cosmos (Version: 2.0)
+    GreyOS - Cosmos (Version: 2.2)
 
     File name: cosmos.js
     Description: This file contains the Cosmos - JS IMC hub module.
@@ -20,6 +20,17 @@ function cosmos()
         this.backtrace = false;
         this.models_num = 0;
         this.models = [];
+    }
+
+    function cosmos_ref_model()
+    {
+        this.id = function()
+        {
+            return self.id();
+        };
+
+        this.hub = self.hub;
+        this.status = self.status;
     }
 
     function utilities()
@@ -125,7 +136,7 @@ function cosmos()
             }
 
             for (var i = 0; i < system.models_num; i++)
-                system.models[i].cosmos(self);
+                system.models[i].cosmos(new cosmos_ref_model());
 
             if (system.backtrace === true)
                 frog('COSMOS', 'All models', system.models, 'Model count: ' + system.models_num);

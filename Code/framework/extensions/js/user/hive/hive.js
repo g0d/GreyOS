@@ -1380,7 +1380,7 @@ function hive()
         msg_win = null,
         max_stack_width = 0,
         last_mouse_button_clicked = 0,
-        utils_sys = new vulcan()
+        utils_sys = new vulcan(),
         gfx = new fx(),
         random = new pythia(),
         coords = new mouse_coords_model(),
