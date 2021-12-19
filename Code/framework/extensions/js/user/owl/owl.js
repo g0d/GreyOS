@@ -161,10 +161,12 @@ function owl()
                 }
             }
 
+            var __current_epoch = new Date().getTime();
+
             collection.list.bee.id.push(bee_id);
             collection.list.bee.app_id.push(app_id);
             collection.list.status.push(status);
-            collection.list.epoch.push(new Date().getTime());
+            collection.list.epoch.push(__current_epoch);
             collection.num++;
 
             return true;

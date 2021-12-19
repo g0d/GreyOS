@@ -78,7 +78,7 @@ function user_profile()
                                     // No need to use this
                                  });
 
-            me.hide_pop_up();
+            me.hide_profile_area();
         };
 
         this.draw_user_profile = function()
@@ -104,7 +104,7 @@ function user_profile()
                                                     <div id="my">My profile</div>\
                                                 </div>\
                                             </div>\
-                                            <div id="' + user_profile_id + '_pop_up" class="user_profile_pop_up">\
+                                            <div id="' + user_profile_id + '_area" class="user_profile_area">\
                                                 <div id="profile_left_side">\
                                                     <div id="profile_info">\
                                                         <div id="big_avatar"></div>\
@@ -159,7 +159,7 @@ function user_profile()
         {
             var __handler = null;
 
-            __handler = function() { me.toggle_pop_up(); };
+            __handler = function() { me.toggle_profile_area(); };
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id));
 
             __handler = function() {  me.reboot_os(); };
@@ -168,39 +168,39 @@ function user_profile()
             __handler = function() {  me.logout(); };
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('logout'));
 
-            __handler = function() {  me.hide_pop_up(); };
+            __handler = function() {  me.hide_profile_area(); };
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
 
-            __handler = function(event) {  me.hide_pop_up_handler(event); };
+            __handler = function(event) {  me.hide_profile_area_handler(event); };
             morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
 
             return true;
         };
 
-        this.toggle_pop_up = function()
+        this.toggle_profile_area = function()
         {
-            var __user_profile_pop_up = utils_sys.objects.by_id(user_profile_id + '_pop_up'),
+            var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
                 __my_profile_label = utils_sys.objects.by_id('my');
 
-            if (is_pop_up_visible === true)
+            if (is_profile_area_visible === true)
             {
-                is_pop_up_visible = false;
+                is_profile_area_visible = false;
 
-                __user_profile_pop_up.style.display = 'none';
+                __user_profile_area.style.display = 'none';
                 __my_profile_label.style.color = '#55b8ff';
             }
             else
             {
-                is_pop_up_visible = true;
+                is_profile_area_visible = true;
 
-                __user_profile_pop_up.style.display = 'block';
+                __user_profile_area.style.display = 'block';
                 __my_profile_label.style.color = '#55ffe7';
             }
 
             return true;
         };
 
-        this.hide_pop_up_handler = function(event)
+        this.hide_profile_area_handler = function(event)
         {
             if (utils_sys.validation.misc.is_undefined(event))
                 return false;
@@ -210,20 +210,20 @@ function user_profile()
             if (key_control.get() !== key_control.keys.ESCAPE)
                 return false;
 
-            me.hide_pop_up();
+            me.hide_profile_area();
 
             return true;
         };
 
-        this.hide_pop_up = function()
+        this.hide_profile_area = function()
         {
-            var __user_profile_pop_up = utils_sys.objects.by_id(user_profile_id + '_pop_up'),
+            var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
                 __my_profile_label = utils_sys.objects.by_id('my');
 
-            __user_profile_pop_up.style.display = 'none';
+            __user_profile_area.style.display = 'none';
             __my_profile_label.style.color = '#55b8ff';
 
-            is_pop_up_visible = false;
+            is_profile_area_visible = false;
 
             return true;
         };
@@ -321,7 +321,7 @@ function user_profile()
     };
 
     var is_init = false,
-        is_pop_up_visible = false,
+        is_profile_area_visible = false,
         user_profile_id = null,
         cosmos = null,
         matrix = null,

@@ -131,14 +131,14 @@ option
     color: #80caff !important;
 }
 
-.user_profile_pop_up
+.user_profile_area
 {
     background-color: #181c2bc4 !important;
     border: 2px solid #577b844a !important;
     border-radius: 6px;
 }
 
-.user_profile_pop_up:before
+.user_profile_area:before
 {
     border-color: #577b844a transparent !important;
 }

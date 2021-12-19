@@ -9,7 +9,7 @@
     Open Software License (OSL 3.0)
 */
 
-.user_profile_pop_up
+.user_profile_area
 {
     display: none;
     position: absolute;
@@ -23,7 +23,7 @@
     z-index: 2147483645;
 }
 
-.user_profile_pop_up:before
+.user_profile_area:before
 {
     border-color: #f9f9f9 transparent;
     border-style: solid;

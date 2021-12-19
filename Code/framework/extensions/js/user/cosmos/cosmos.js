@@ -135,8 +135,10 @@ function cosmos()
                     frog('COSMOS', 'Models :: Attachment', __object_model.constructor.name);
             }
 
+            var __cosmos_ref = new cosmos_ref_model();
+
             for (var i = 0; i < system.models_num; i++)
-                system.models[i].cosmos(new cosmos_ref_model());
+                system.models[i].cosmos(__cosmos_ref);
 
             if (system.backtrace === true)
                 frog('COSMOS', 'All models', system.models, 'Model count: ' + system.models_num);
