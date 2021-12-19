@@ -19,44 +19,6 @@ function dock()
         this.dock_array = [];
     }
 
-    function settings()
-    {
-        var __id = null,
-            __container = null;
-
-        this.id = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(val))
-                return __id;
-
-            if (utils_sys.validation.alpha.is_symbol(val))
-                return false;
-
-            __id = val;
-
-            return true;
-        };
-
-        this.container = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(val))
-                return __container;
-
-            if (utils_sys.validation.alpha.is_symbol(val))
-                return false;
-
-            __container = val;
-
-            return true;
-        };
-    }
-
     function utilities()
     {
         var me = this;
@@ -318,6 +280,44 @@ function dock()
             var __dock_array = encodeURIComponent(JSON.stringify(config.dock_array));
 
            return ajax_save(__dock_array);
+        };
+    }
+
+    function settings()
+    {
+        var __id = null,
+            __container = null;
+
+        this.id = function(val)
+        {
+            if (is_init === false)
+                return false;
+
+            if (utils_sys.validation.misc.is_undefined(val))
+                return __id;
+
+            if (utils_sys.validation.alpha.is_symbol(val))
+                return false;
+
+            __id = val;
+
+            return true;
+        };
+
+        this.container = function(val)
+        {
+            if (is_init === false)
+                return false;
+
+            if (utils_sys.validation.misc.is_undefined(val))
+                return __container;
+
+            if (utils_sys.validation.alpha.is_symbol(val))
+                return false;
+
+            __container = val;
+
+            return true;
         };
     }
 

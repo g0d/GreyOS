@@ -14,6 +14,18 @@ function super_tray()
 {
     var self = this;
 
+    function tray_service_model()
+    {
+        this.id = null;
+        this.icon = 'default';
+    }
+
+    function tray_services_collection()
+    {
+        this.num = 0;
+        this.list = [];
+    }
+
     function utilities()
     {
         var me = this;
@@ -107,24 +119,20 @@ function super_tray()
 
             return true;
         };
-    }
 
-    function status()
-    {
-        this.xxxx = function(app_id)
+        this.add_service_icon = function(index)
         {
-            if (is_init === false)
-                return false;
-
-            return ;
+            
         };
 
-        this.options = function(app_id)
+        this.remove_service_icon = function(index)
         {
-            if (is_init === false)
-                return false;
+            
+        };
 
-            return ;
+        this.clear_service_icons = function()
+        {
+            
         };
     }
 
@@ -166,14 +174,49 @@ function super_tray()
         };
     }
 
-    this.add = function(service_id)
+    function status()
+    {
+        this.num = function()
+        {
+            if (is_init === false)
+                return false;
+
+            return tray_services.num;
+        };
+
+        this.list = function()
+        {
+            if (is_init === false)
+                return false;
+
+            return tray_services.list;
+        };
+    }
+
+    this.add = function(service_id, icon = null)
     {
         if (is_init === false)
             return false;
 
-        
+        if (utils_sys.validation.alpha.is_symbol(service_id))
+            return false;
 
-        return ;
+        if (icon !== null && utils_sys.validation.alpha.is_symbol(icon))
+            return false;
+
+        var __new_tray_service = new tray_service_model();
+
+        __new_tray_service.id = service_id;
+
+        if (icon !== null)
+            __new_tray_service.icon = icon;
+
+        tray_services.list.push(__new_tray_service);
+        tray_services.num++;
+
+        utils_int.add_service_icon(tray_services.num);
+
+        return true;
     };
 
     this.remove = function(service_id)
@@ -181,9 +224,23 @@ function super_tray()
         if (is_init === false)
             return false;
 
-        
+        if (utils_sys.validation.alpha.is_symbol(service_id))
+            return false;
 
-        return ;
+        for (var i = 0; i < tray_services.num; i++)
+        {
+            if (tray_services.list[i].id === service_id)
+            {
+                tray_services.list.splice(i, 1);
+                tray_services.num--;
+
+                utils_int.remove_service_icon(i);
+
+                return true;
+            }
+        }
+
+        return false;
     };
 
     this.clear = function()
@@ -191,9 +248,12 @@ function super_tray()
         if (is_init === false)
             return false;
 
-        
+        tray_services.num = 0;
+        tray_services.list = [];
 
-        return ;
+        utils_int.clear_service_icons();
+
+        return true;
     };
 
     this.init = function(container_id)
@@ -242,6 +302,7 @@ function super_tray()
         utils_sys = new vulcan(),
         random = new pythia(),
         key_control = new key_manager(),
+        tray_services = new tray_services_collection(),
         utils_int = new utilities();
 
     this.status = new status();

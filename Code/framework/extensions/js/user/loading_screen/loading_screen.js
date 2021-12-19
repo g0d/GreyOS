@@ -14,21 +14,6 @@ function loading_screen()
 {
     var self = this;
 
-    function status()
-    {
-        var __loading = false;
-
-        this.loading = function(val)
-        {
-            if (utils_sys.validation.misc.is_undefined(val))
-                return __loading;
-
-            __loading = val;
-
-            return true;
-        };
-    }
-
     function utilities()
     {
         this.draw = function()
@@ -53,6 +38,21 @@ function loading_screen()
             var __loading_screen = utils_sys.objects.by_id('loading_screen');
 
             document.body.removeChild(__loading_screen);
+
+            return true;
+        };
+    }
+
+    function status()
+    {
+        var __loading = false;
+
+        this.loading = function(val)
+        {
+            if (utils_sys.validation.misc.is_undefined(val))
+                return __loading;
+
+            __loading = val;
 
             return true;
         };

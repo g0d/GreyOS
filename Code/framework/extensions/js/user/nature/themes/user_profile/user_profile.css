@@ -243,14 +243,21 @@
 {
     background-image: url('pix/icons/profile/messages.png');
     width: 20px;
-    height: 16px;
+    height: 20px;
 }
 
 #alerts_icon
 {
     background-image: url('pix/icons/profile/alerts.png');
-    width: 17px;
-    height: 19px;
+    width: 20px;
+    height: 20px;
+}
+
+#calendar_icon
+{
+    background-image: url('pix/icons/profile/calendar.png');
+    width: 20px;
+    height: 20px;
 }
 
 .notification_list_item

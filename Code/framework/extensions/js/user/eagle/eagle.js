@@ -22,93 +22,6 @@ function eagle()
         this.trigger_set = false;
     }
 
-    function settings()
-    {
-        var __id = null,
-            __container = null;
-
-        this.id = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(val))
-                return __id;
-
-            if (utils_sys.validation.alpha.is_symbol(val))
-                return false;
-
-            __id = val;
-
-            return true;
-        };
-
-        this.container = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (utils_sys.validation.misc.is_undefined(val))
-                return __container;
-
-            if (utils_sys.validation.alpha.is_symbol(val))
-                return false;
-
-            __container = val;
-
-            return true;
-        };
-    }
-
-    function status()
-    {
-        function modifier()
-        {
-            this.key = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return trace_keys.modifier;
-            };
-
-            this.status = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return trace_keys.modifier_set;
-            };
-        }
-
-        function trigger()
-        {
-            this.key = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return trace_keys.trigger;
-            };
-
-            this.status = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return trace_keys.trigger_set;
-            };
-        }
-
-        this.picked_app = function()
-        {
-            return picked_app;
-        };
-
-        this.modifier = new modifier();
-        this.trigger = new trigger();
-    }
-
     function utilities()
     {
         var me = this;
@@ -330,6 +243,93 @@ function eagle()
 
             return true;
         };
+    }
+
+    function settings()
+    {
+        var __id = null,
+            __container = null;
+
+        this.id = function(val)
+        {
+            if (is_init === false)
+                return false;
+
+            if (utils_sys.validation.misc.is_undefined(val))
+                return __id;
+
+            if (utils_sys.validation.alpha.is_symbol(val))
+                return false;
+
+            __id = val;
+
+            return true;
+        };
+
+        this.container = function(val)
+        {
+            if (is_init === false)
+                return false;
+
+            if (utils_sys.validation.misc.is_undefined(val))
+                return __container;
+
+            if (utils_sys.validation.alpha.is_symbol(val))
+                return false;
+
+            __container = val;
+
+            return true;
+        };
+    }
+
+    function status()
+    {
+        function modifier()
+        {
+            this.key = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return trace_keys.modifier;
+            };
+
+            this.status = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return trace_keys.modifier_set;
+            };
+        }
+
+        function trigger()
+        {
+            this.key = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return trace_keys.trigger;
+            };
+
+            this.status = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return trace_keys.trigger_set;
+            };
+        }
+
+        this.picked_app = function()
+        {
+            return picked_app;
+        };
+
+        this.modifier = new modifier();
+        this.trigger = new trigger();
     }
 
     this.init = function(container_id, modifier, trigger)
