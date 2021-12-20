@@ -18,6 +18,7 @@ function super_tray()
     {
         this.id = null;
         this.icon = 'default';
+        this.action = null;
     }
 
     function tray_services_collection()
@@ -122,18 +123,41 @@ function super_tray()
 
         this.add_service_icon = function(index)
         {
-            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
+                __new_service = tray_services.list[index],
+                __new_service_id = super_tray_id + '_service_' + __new_service.id,
+                __dynamic_object = null;
 
-            
+            __dynamic_object = document.createElement('div');
+
+            __dynamic_object.setAttribute('id', __new_service_id);
+            __dynamic_object.setAttribute('class', 'super_tray_service');
+            __dynamic_object.setAttribute('title', __new_service_id);
+
+            __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/user/nature/themes/super_tray/pix/' + 
+                                                     __new_service.icon + '.png")';
+
+            __service_icons_tray.appendChild(__dynamic_object);
+
+            if (__new_service.action !== null)
+            {
+                var __handler = function() { __new_service.action.call(); };
+
+                morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(__new_service_id));
+            }
 
             return true;
         };
 
         this.remove_service_icon = function(index)
         {
-            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
+                __new_service = tray_services.list[index],
+                __dynamic_object = utils_sys.objects.by_id(super_tray_id + '_service_' + __new_service.id);
 
-            
+            morpheus.remove(super_tray_id, 'click', __dynamic_object);
+
+            __service_icons_tray.removeChild(__dynamic_object);
 
             return true;
         };
@@ -141,6 +165,8 @@ function super_tray()
         this.clear_service_icons = function()
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+
+            morpheus.clear(super_tray_id);
 
             __service_icons_tray.innerHTML = '';
 
@@ -205,7 +231,7 @@ function super_tray()
         };
     }
 
-    this.add = function(service_id, icon = null)
+    this.add = function(service_id, icon = null, action = null)
     {
         if (is_init === false)
             return false;
@@ -216,12 +242,18 @@ function super_tray()
         if (icon !== null && utils_sys.validation.alpha.is_symbol(icon))
             return false;
 
+        if (action !== null && !utils_sys.validation.misc.is_function(action))
+            return false;
+
         var __new_tray_service = new tray_service_model();
 
         __new_tray_service.id = service_id;
 
         if (icon !== null)
             __new_tray_service.icon = icon;
+
+        if (action !== null)
+            __new_tray_service.action = action;
 
         tray_services.list.push(__new_tray_service);
         tray_services.num++;

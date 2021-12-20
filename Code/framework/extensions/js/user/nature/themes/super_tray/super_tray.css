@@ -47,3 +47,11 @@
     margin-top: 5px;
     z-index: 2147483644;
 }
+
+.super_tray_service
+{
+    float: left;
+    clear: none;
+    width: 30px;
+    width: 30px;
+}
