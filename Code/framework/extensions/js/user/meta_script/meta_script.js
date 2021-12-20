@@ -24,7 +24,7 @@ function meta_script()
         
     }
 
-    function dash()
+    function interface()
     {
         function desktops()
         {
@@ -59,6 +59,11 @@ function meta_script()
             
         }
 
+        function notifications()
+        {
+            
+        }
+
         function profile()
         {
             function messages()
@@ -66,7 +71,25 @@ function meta_script()
                 
             }
 
-            function notifications()
+            function alerts()
+            {
+                
+            }
+
+            function calendar()
+            {
+                
+            }
+        }
+
+        function os()
+        {
+            function reboot()
+            {
+                
+            }
+
+            function logout()
             {
                 
             }

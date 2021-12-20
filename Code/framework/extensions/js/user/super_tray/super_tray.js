@@ -122,17 +122,29 @@ function super_tray()
 
         this.add_service_icon = function(index)
         {
+            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+
             
+
+            return true;
         };
 
         this.remove_service_icon = function(index)
         {
+            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+
             
+
+            return true;
         };
 
         this.clear_service_icons = function()
         {
-            
+            var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+
+            __service_icons_tray.innerHTML = '';
+
+            return true;
         };
     }
 
