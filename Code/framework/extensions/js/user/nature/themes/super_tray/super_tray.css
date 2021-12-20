@@ -13,7 +13,6 @@
 {
     float: right;
     clear: none;
-    cursor: pointer;
     width: 32px;
     height: 32px;
     margin-top: 8px;
@@ -29,6 +28,7 @@
 
 .super_tray .access
 {
+    cursor: pointer;
     background: url('pix/down_arrow.png') no-repeat;
     width: 32px;
     height: 32px;

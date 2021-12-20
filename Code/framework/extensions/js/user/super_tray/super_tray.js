@@ -49,9 +49,8 @@ function super_tray()
 
             __dynamic_object.setAttribute('id', super_tray_id);
             __dynamic_object.setAttribute('class', 'super_tray');
-            __dynamic_object.setAttribute('title', 'Access running services');
 
-            __dynamic_object.innerHTML = '<div id="' + super_tray_id + '_arrow" class="access"></div>\
+            __dynamic_object.innerHTML = '<div id="' + super_tray_id + '_arrow" class="access" title="Access running services"></div>\
                                           <div id="' + super_tray_id + '_service_icons_tray" class="service_icons_area"></div>';
 
             __container.appendChild(__dynamic_object);
