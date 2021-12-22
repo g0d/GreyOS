@@ -154,7 +154,7 @@ function super_tray()
             {
                 var __handler = function() { __new_service.action.call(); };
 
-                morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(__new_service_id));
+                morpheus.run(super_tray_id + '_service', 'mouse', 'click', __handler, utils_sys.objects.by_id(__new_service_id));
             }
 
             return true;
@@ -163,10 +163,10 @@ function super_tray()
         this.remove_service_icon = function(index)
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
-                __new_service = tray_services.list[index - 1],
-                __dynamic_object = utils_sys.objects.by_id(super_tray_id + '_service_' + __new_service.id);
+                __existing_service = tray_services.list[index],
+                __dynamic_object = utils_sys.objects.by_id(super_tray_id + '_service_' + __existing_service.id);
 
-            morpheus.remove(super_tray_id, 'click', __dynamic_object);
+            morpheus.delete(super_tray_id + '_service', 'click', __dynamic_object);
 
             __service_icons_tray.removeChild(__dynamic_object);
 
@@ -177,7 +177,7 @@ function super_tray()
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
 
-            morpheus.clear(super_tray_id);
+            morpheus.clear(super_tray_id + '_service');
 
             __service_icons_tray.innerHTML = '';
 
@@ -289,10 +289,10 @@ function super_tray()
         {
             if (tray_services.list[i].id === service_id)
             {
+                utils_int.remove_service_icon(i);
+
                 tray_services.list.splice(i, 1);
                 tray_services.num--;
-
-                utils_int.remove_service_icon(i);
 
                 return true;
             }

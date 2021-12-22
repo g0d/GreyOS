@@ -50,6 +50,7 @@
 
 .super_tray_service
 {
+    cursor: pointer;
     float: left;
     clear: none;
     width: 30px;
