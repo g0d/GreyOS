@@ -14,87 +14,90 @@ function meta_script()
 {
     var self = this;
 
-    function app()
-    {
-        
-    }
-
-    function service()
-    {
-        
-    }
-
     function interface()
     {
-        function desktops()
+        this.desktops = function()
         {
             
-        }
+        };
 
-        function dock()
+        this.dock = function()
         {
             
-        }
+        };
 
-        function stack()
+        this.stack = function()
         {
             
-        }
+        };
 
-        function tray()
+        this.tray = function()
         {
             
-        }
+        };
     }
 
     function system()
     {
-        function apps()
-        {
-            
-        }
-
-        function services()
-        {
-            
-        }
-
-        function notifications()
-        {
-            
-        }
-
         function profile()
         {
-            function messages()
+            this.messages = function()
             {
                 
-            }
+            };
 
-            function alerts()
+            this.alerts = function()
             {
                 
-            }
+            };
 
-            function calendar()
+            this.calendar = function()
             {
                 
-            }
+            };
         }
 
         function os()
         {
-            function reboot()
+            this.reboot = function()
             {
                 
-            }
+            };
 
-            function logout()
+            this.logout = function()
             {
                 
-            }
+            };
         }
+
+        this.apps = function()
+        {
+            
+        };
+
+        this.services = function()
+        {
+            
+        };
+
+        this.notifications = function()
+        {
+            
+        };
+
+        this.profile = new profile();
+        this.os = new os();
     }
+
+    this.app = function(app_config)
+    {
+        
+    };
+
+    this.service = function(service_config)
+    {
+        
+    };
 
     this.cosmos = function(cosmos_object)
     {
@@ -113,4 +116,7 @@ function meta_script()
         matrix = null,
         app_box = null,
         utils_sys = new vulcan();
+
+    this.interface = new interface();
+    this.system = new system();
 }
