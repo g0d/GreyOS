@@ -41,9 +41,9 @@
     background-color: #27272770;
     border: 2px solid #363a3c6e;
     box-shadow: 0 0 12px #282c2c5e !important;
-    width: 200px;
-    height: 200px;
-    right: 258px;
+    width: 180px;
+    height: 120px;
+    right: 280px;
     margin-top: 5px;
     z-index: 2147483644;
 }
@@ -53,5 +53,5 @@
     float: left;
     clear: none;
     width: 30px;
-    width: 30px;
+    height: 30px;
 }

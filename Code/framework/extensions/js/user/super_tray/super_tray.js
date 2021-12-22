@@ -31,6 +31,17 @@ function super_tray()
     {
         var me = this;
 
+        this.service_exists = function(service_id)
+        {
+            for (var i = 0; i < tray_services.num; i++)
+            {
+                if (tray_services.list[i].id === service_id)
+                    return true;
+            }
+
+            return false;
+        };
+
         this.load_ui = function()
         {
             nature.theme('super_tray');
@@ -123,7 +134,7 @@ function super_tray()
         this.add_service_icon = function(index)
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
-                __new_service = tray_services.list[index],
+                __new_service = tray_services.list[index - 1],
                 __new_service_id = super_tray_id + '_service_' + __new_service.id,
                 __dynamic_object = null;
 
@@ -131,7 +142,8 @@ function super_tray()
 
             __dynamic_object.setAttribute('id', __new_service_id);
             __dynamic_object.setAttribute('class', 'super_tray_service');
-            __dynamic_object.setAttribute('title', __new_service_id);
+            __dynamic_object.setAttribute('data-id', __new_service.id);
+            __dynamic_object.setAttribute('title', __new_service.id);
 
             __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/user/nature/themes/super_tray/pix/' + 
                                                      __new_service.icon + '.png")';
@@ -151,7 +163,7 @@ function super_tray()
         this.remove_service_icon = function(index)
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
-                __new_service = tray_services.list[index],
+                __new_service = tray_services.list[index - 1],
                 __dynamic_object = utils_sys.objects.by_id(super_tray_id + '_service_' + __new_service.id);
 
             morpheus.remove(super_tray_id, 'click', __dynamic_object);
@@ -242,6 +254,9 @@ function super_tray()
             return false;
 
         if (action !== null && !utils_sys.validation.misc.is_function(action))
+            return false;
+
+        if (utils_int.service_exists(service_id))
             return false;
 
         var __new_tray_service = new tray_service_model();
