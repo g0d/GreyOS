@@ -14,6 +14,13 @@ function meta_script()
 {
     var self = this;
 
+    function config_models()
+    {
+        this.app = {};
+        this.service = {};
+        this.notification = {};
+    }
+
     function interface()
     {
         this.desktops = function()
@@ -148,7 +155,9 @@ function meta_script()
         octopus = null,
         super_tray = null,
         owl = null,
-        utils_sys = new vulcan();
+        utils_sys = new vulcan(),
+        config_parser = new jap(),
+        config_models = new config_models();
 
     this.interface = new interface();
     this.system = new system();
