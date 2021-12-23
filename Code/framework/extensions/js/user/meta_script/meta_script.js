@@ -25,22 +25,22 @@ function meta_script()
     {
         this.desktops = function()
         {
-            
+            return forest;
         };
 
         this.dock = function()
         {
-            
+            return dock;
         };
 
         this.stack = function()
         {
-            
+            return hive;
         };
 
         this.tray = function()
         {
-            
+            return super_tray;
         };
     }
 
@@ -50,17 +50,17 @@ function meta_script()
         {
             this.messages = function()
             {
-                
+                return true;
             };
 
             this.alerts = function()
             {
-                
+                return true;
             };
 
             this.calendar = function()
             {
-                
+                return true;
             };
         }
 
@@ -68,38 +68,42 @@ function meta_script()
         {
             this.date_time = function()
             {
-                
+                return tik_tok;
             };
 
             this.tasks = function()
             {
-                
+                return owl;
             };
 
             this.reboot = function()
             {
-                
+                cc_reload.init();
+
+                return true;
             };
 
             this.logout = function()
             {
-                
+                user_profile.logout();
+
+                return true;
             };
         }
 
         this.apps = function()
         {
-            
+            return app_box;
         };
 
         this.services = function()
         {
-            
+            return matrix;
         };
 
         this.notifications = function(notification_config)
         {
-            
+            return true;
         };
 
         this.profile = new profile();
@@ -108,12 +112,19 @@ function meta_script()
 
     this.app = function(app_config)
     {
-        
+        var new_app_bee = dev_box.get('bee');
+
+        // Do stuff...
+        new_app_bee.show();
+
+        return true; 
     };
 
     this.service = function(service_config)
     {
-        
+        // Do stuf...
+
+        return true;
     };
 
     this.cosmos = function(cosmos_object)
@@ -125,6 +136,7 @@ function meta_script()
 
         matrix = cosmos.hub.access('matrix');
         app_box = cosmos.hub.access('app_box');
+        dev_box = cosmos.hub.access('dev_box');
         colony = cosmos.hub.access('colony');
 
         swarm = matrix.get('swarm');
@@ -137,6 +149,7 @@ function meta_script()
         octopus = matrix.get('octopus');
         super_tray = matrix.get('super_tray');
         owl = matrix.get('owl');
+        infinity = matrix.get('infinity');
 
         return true;
     };
@@ -144,6 +157,7 @@ function meta_script()
     var cosmos = null,
         matrix = null,
         app_box = null,
+        dev_box = null,
         colony = null,
         swarm = null,
         hive = null,
@@ -155,8 +169,10 @@ function meta_script()
         octopus = null,
         super_tray = null,
         owl = null,
+        infinity = null,
         utils_sys = new vulcan(),
         config_parser = new jap(),
+        cc_reload = new f5(),
         config_models = new config_models();
 
     this.interface = new interface();

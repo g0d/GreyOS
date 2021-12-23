@@ -274,6 +274,13 @@ function user_profile()
         };
     }
 
+    this.logout = function()
+    {
+        utils_int.logout();
+
+        return true;
+    };
+
     this.init = function(container_id)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))

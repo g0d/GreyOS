@@ -1,0 +1,110 @@
+{
+    "gui": {
+        "keys": {},
+        "mouse": {
+            "actual": {},
+            "relative": {}
+        },
+        "position": {
+            "limits": {}
+        },
+        "size": {
+            "min": {},
+            "max": {}
+        },
+        "fx": {
+            "enabled": {
+                "fade": {}
+            },
+            "opacity": {
+                "settings": {}
+            },
+            "fade": {
+                "settings": {
+                    "into": {
+                        "get": {}
+                    },
+                    "out": {
+                        "get": {}
+                    }
+                }
+            }
+        },
+        "css": {
+            "style": {},
+            "class_name": {}
+        },
+        "actions": {
+            "menu": {},
+            "casement": {},
+            "hover": {}
+        },
+        "config": {
+            "window": {
+                "control_bar": {
+                    "icon": {},
+                    "title": {},
+                    "pencil": {},
+                    "separator": {},
+                    "close": {}
+                },
+                "content": {
+                    "data": {}
+                },
+                "status_bar": {
+                    "message": {},
+                    "resize": {}
+                }
+            },
+            "casement": {
+                "title": {},
+                "content": {},
+                "status": {}
+            }
+        }
+    },
+    "drone": {},
+    "status": {
+        "system": {},
+        "gui": {
+            "size": {},
+            "fx": {
+                "fading": {
+                    "into": {},
+                    "out": {}
+                },
+                "opacity": {}
+            }
+        },
+        "data": {
+            "labels": {}
+        }
+    },
+    "settings": {
+        "general": {},
+        "actions": {
+            "can_drag": {
+                "on": {}
+            },
+            "can_resize": {
+                "on": {}
+            }
+        },
+        "data": {
+            "window": {
+                "labels": {}
+            },
+            "casement": {
+                "labels": {}
+            },
+            "hints": {}
+        }
+    },
+    "error": {
+        "codes": {
+            "POSITION": 241,
+            "SIZE": 242,
+            "FX": 243
+        }
+    }
+}
