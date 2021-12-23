@@ -59,6 +59,16 @@ function meta_script()
 
         function os()
         {
+            this.date_time = function()
+            {
+                
+            };
+
+            this.tasks = function()
+            {
+                
+            };
+
             this.reboot = function()
             {
                 
@@ -80,7 +90,7 @@ function meta_script()
             
         };
 
-        this.notifications = function()
+        this.notifications = function(notification_config)
         {
             
         };
@@ -108,6 +118,18 @@ function meta_script()
 
         matrix = cosmos.hub.access('matrix');
         app_box = cosmos.hub.access('app_box');
+        colony = cosmos.hub.access('colony');
+
+        swarm = matrix.get('swarm');
+        hive = matrix.get('hive');
+        forest = matrix.get('forest');
+        dock = matrix.get('dock');
+        user_profile = matrix.get('user_profile');
+        tik_tok = matrix.get('tik_tok');
+        parrot = matrix.get('parrot');
+        octopus = matrix.get('octopus');
+        super_tray = matrix.get('super_tray');
+        owl = matrix.get('owl');
 
         return true;
     };
@@ -115,6 +137,17 @@ function meta_script()
     var cosmos = null,
         matrix = null,
         app_box = null,
+        colony = null,
+        swarm = null,
+        hive = null,
+        forest = null,
+        dock = null,
+        user_profile = null,
+        tik_tok = null,
+        parrot = null,
+        octopus = null,
+        super_tray = null,
+        owl = null,
         utils_sys = new vulcan();
 
     this.interface = new interface();
