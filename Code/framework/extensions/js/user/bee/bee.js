@@ -602,7 +602,7 @@ function bee()
 
             if (self.settings.actions.can_use_menu())
             {
-                if (self.settings.actions.can_deploy_casement())
+                if (self.settings.actions.can_use_casement())
                 {
                     __handler = function(event) { manage_casement(event); };
                     morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.manage_casement);
@@ -1483,7 +1483,7 @@ function bee()
                 this.can_edit_title = true;
                 this.can_select_text = true;
                 this.can_use_menu = true;
-                this.can_deploy_casement = true;
+                this.can_use_casement = true;
                 this.can_drag = true;
                 this.can_resize = true;
                 this.can_resize_widget = false;
@@ -1560,9 +1560,9 @@ function bee()
                 return validate(1, 'can_use_menu', null, val);
             };
 
-            this.can_deploy_casement = function(val)
+            this.can_use_casement = function(val)
             {
-                return validate(1, 'can_deploy_casement', null, val);
+                return validate(1, 'can_use_casement', null, val);
             };
 
             function can_drag()
@@ -3433,7 +3433,7 @@ function bee()
                         !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
                         return false;
 
-                    if (__is_animating === true || !self.settings.actions.can_deploy_casement())
+                    if (__is_animating === true || !self.settings.actions.can_use_casement())
                         return false;
 
                     var __pos_x = me.position.left(),

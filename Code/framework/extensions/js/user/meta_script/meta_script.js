@@ -112,9 +112,296 @@ function meta_script()
 
     function app()
     {
-        this.run = function(parent_app_id = null, headless = false)
+        function menu()
         {
-            return new_app.run(parent_app_id, headless);
+            this.open = function(event)
+            {
+                return new_app.gui.actions.menu.open(event);
+            };
+
+            this.close = function(event)
+            {
+                return new_app.gui.actions.menu.close(event);
+            };
+        }
+
+        function casement()
+        {
+            this.deploy = function(event, callback)
+            {
+                return new_app.gui.actions.casement.deploy(event, callback);
+            };
+
+            this.hide = function(event, callback)
+            {
+                return new_app.gui.actions.casement.hide(event, callback);
+            };
+
+            this.set_title = function(val)
+            {
+                return new_app.settings.data.casement.labels.title(val);
+            };
+
+            this.set_status = function(val)
+            {
+                return new_app.settings.data.casement.labels.status(val);
+            };
+
+            this.set_content = function(val)
+            {
+                return new_app.settings.data.casement.content(val);
+            };
+        }
+
+        function position()
+        {
+            this.left = function(val)
+            {
+                return new_app.gui.position.left(val);
+            };
+
+            this.top = function(val)
+            {
+                return new_app.gui.position.top(val);
+            };
+        }
+
+        function size()
+        {
+            function min()
+            {
+                this.width = function(val)
+                {
+                    return new_app.gui.size.min.width(val);
+                };
+
+                this.height = function(val)
+                {
+                    return new_app.gui.size.min.height(val);
+                };
+            }
+
+            function max()
+            {
+                this.width = function(val)
+                {
+                    return new_app.gui.size.max.width(val);
+                };
+
+                this.height = function(val)
+                {
+                    return new_app.gui.size.max.height(val);
+                };
+            }
+
+            this.width = function(val)
+            {
+                return new_app.gui.size.width(val);
+            };
+
+            this.height = function(val)
+            {
+                return new_app.gui.size.height(val);
+            };
+
+            this.min = new min();
+            this.max = new max();
+        }
+
+        function can()
+        {
+            this.open = function(val)
+            {
+                return new_app.settings.actions.can_open(val);
+            };
+
+            this.close = function(val)
+            {
+                return new_app.settings.actions.can_close(val);
+            };
+
+            this.edit_title = function(val)
+            {
+                return new_app.settings.actions.can_edit_title(val);
+            };
+
+            this.use_menu = function(val)
+            {
+                return new_app.settings.actions.can_use_menu(val);
+            };
+
+            this.use_casement = function(val)
+            {
+                return new_app.settings.actions.can_use_casement(val);
+            };
+
+            this.drag = function(val)
+            {
+                return new_app.settings.actions.can_drag.enabled(val);
+            };
+
+            this.resize = function(val)
+            {
+                return new_app.settings.actions.can_resize.enabled(val);
+            };
+        }
+
+        function status()
+        {
+            function mouse()
+            {
+                this.click = function()
+                {
+                    return new_app.status.gui.mouse_clicked();
+                };
+
+                this.down = function()
+                {
+                    return new_app.status.gui.mousedown();
+                };
+
+                this.up = function()
+                {
+                    return new_app.status.gui.mouseup();
+                };
+
+                this.move = function()
+                {
+                    return new_app.status.gui.mousemove();
+                };
+
+                this.out = function()
+                {
+                    return new_app.status.gui.mouseout();
+                };
+            }
+
+            this.running = function()
+            {
+                return new_app.status.system.running();
+            };
+
+            this.opened = function()
+            {
+                return new_app.status.gui.opened();
+            };
+
+            this.closed = function()
+            {
+                return new_app.status.gui.closed();
+            };
+
+            this.dragged = function()
+            {
+                return new_app.status.gui.dragged();
+            };
+
+            this.resized = function()
+            {
+                return new_app.status.gui.resized();
+            };
+
+            this.menu_activated = function()
+            {
+                return new_app.status.gui.menu_activated();
+            };
+
+            this.casement_deployed = function()
+            {
+                return new_app.status.gui.casement_deployed();
+            };
+
+            this.key_pressed = function()
+            {
+                return new_app.status.gui.key_pressed();
+            };
+
+            this.focused = function()
+            {
+                return new_app.status.system.active();
+            };
+
+            this.in_stack_bar = function()
+            {
+                return new_app.status.system.in_hive();
+            };
+
+            this.desktop_changed = function()
+            {
+                return new_app.status.system.desktop_changed();
+            };
+
+            this.content_updated = function()
+            {
+                return new_app.status.data.content_changed();
+            };
+
+            this.title_updated = function()
+            {
+                return new_app.status.data.labels.title_changed();
+            };
+
+            this.status_updated = function()
+            {
+                return new_app.status.data.labels.status_bar_label_changed();
+            };
+
+            this.mouse = new mouse();
+        }
+
+        this.get_system_id = function()
+        {
+            return new_app.settings.general.id();
+        };
+
+        this.get_desktop_id = function()
+        {
+            return new_app.settings.general.desktop_id();
+        };
+
+        this.set_topmost = function(val)
+        {
+            return new_app.settings.general.topmpost(val);
+        };
+
+        this.set_single_instance = function(val)
+        {
+            return new_app.settings.general.single_instance(val);
+        };
+
+        this.get_last_error = function()
+        {
+            return new_app.error.last();
+        };
+
+        this.get_error_codes = function()
+        {
+            return new_app.error.codes;
+        };
+
+        this.set_top = function()
+        {
+            return new_app.gui.actions.set_top();
+        };
+
+        this.get_keys = function(event)
+        {
+            return new_app.gui.actions.keys.get(event);
+        };
+
+        this.set_title = function(val)
+        {
+            return new_app.settings.data.window.labels.title(val);
+        };
+
+        this.set_status = function(val)
+        {
+            return new_app.settings.data.window.labels.status_bar(val);
+        };
+
+        this.set_content = function(val)
+        {
+            return new_app.settings.data.window.content(val);
         };
 
         this.show = function(parent_app_id = null, headless = false)
@@ -126,6 +413,28 @@ function meta_script()
         {
             return new_app.gui.actions.close(null);
         };
+
+        this.on = function(event_name, callback)
+        {
+            return new_bee.on(event_name, callback);
+        };
+
+        this.run = function(parent_app_id = null, headless = false)
+        {
+            return new_app.run(parent_app_id, headless);
+        };
+
+        this.init = function(app_id, type = 2)
+        {
+            return new_app.init(app_id, type);
+        };
+
+        this.menu = new menu();
+        this.casement = new casement();
+        this.position = new position();
+        this.size = new size();
+        this.can = new can();
+        this.status = new status();
     }
 
     this.service = function(service_config)

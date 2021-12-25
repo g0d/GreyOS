@@ -40,7 +40,7 @@ function cloud_edit()
     {
         var me = this;
 
-        function run_code(event_object)
+        function run_code(event_object, mode)
         {
             var __code = null,
                 __code_app = null,
@@ -65,6 +65,19 @@ function cloud_edit()
                 me.reset();
 
                 return false;
+            }
+
+            if (mode === 2)
+            {
+                if (__code.indexOf('navigator') >= 0 || __code.indexOf('window') >= 0 || 
+                    __code.indexOf('document') >= 0 || __code.indexOf('location') >= 0)
+                    return false;
+
+                
+            }
+            else
+            {
+
             }
 
             try
@@ -198,7 +211,7 @@ function cloud_edit()
         this.attach_events = function()
         {
             utils_sys.events.attach(config.ce.exec_button.id, config.ce.exec_button, 'mousedown', 
-                                    function(event) { run_code(event); });
+                                    function(event) { run_code(event, 2); });
 
             return true;
         };
