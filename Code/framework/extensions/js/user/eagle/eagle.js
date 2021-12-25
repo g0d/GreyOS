@@ -73,16 +73,6 @@ function eagle()
                 scroll_multiplier = 1;
             }
 
-            // if (trace_keys.modifier === __key_code)
-            //     trace_keys.modifier_set = false;
-
-            // if (trace_keys.trigger === __key_code && trace_keys.modifier_set === true)
-            // {
-            //     trace_keys.trigger_set = false;
-
-            //     me.hide_eagle();
-            // }
-
             return true;
         };
 

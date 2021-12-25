@@ -68,6 +68,7 @@
     UTIL::Load_Extension('infinity', 'js');
     UTIL::Load_Extension('max_screen', 'js');
     UTIL::Load_Extension('bee', 'js');
+    UTIL::Load_Extension('bat', 'js');
     UTIL::Load_Extension('oz', 'js');
     //UTIL::Load_Extension('sketch_pad', 'js');
     UTIL::Load_Extension('coyote', 'js');

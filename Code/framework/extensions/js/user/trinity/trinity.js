@@ -16,36 +16,26 @@ function trinity()
 
     function utilities()
     {
-
+        
     }
 
     this.num = function()
     {
-        if (is_init === false)
-            return false;
-
-        return;
+        return new_bat.exec('num');
     };
 
     this.list = function()
     {
-        if (is_init === false)
-            return false;
-
-        return;
+        return new_bat.exec('list', [1]);
     };
 
     this.init = function()
     {
-        if (utils_sys.validation.misc.is_nothing(cosmos))
-            return false;
+        new_bat.init();
+        new_bat.set_function('num', function() { console.log('NUM!'); });
+        new_bat.set_function('list', function() { console.log(arguments[0]); });
 
-        if (is_init === true)
-            return false;
-
-        is_init = true;
-
-        return;
+        return true;
     };
 
     this.cosmos = function(cosmos_object)
@@ -55,12 +45,17 @@ function trinity()
 
         cosmos = cosmos_object;
 
+        dev_box = cosmos.hub.access('dev_box');
+
+        new_bat = dev_box.get('bat');
+
         return true;
     };
 
-    var is_init = false,
-        is_service_active = false,
+    var is_service_active = false,
         cosmos = null,
+        dev_box = null,
+        new_bat = null,
         utils_sys = new vulcan(),
         utils_int = new utilities();
 }

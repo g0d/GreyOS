@@ -41,14 +41,14 @@ function boot_script()
     var init_script = function()
     {
         // List of containers
-        var containers_list = [matrix, dev_box, app_box, colony];
-
-        // List of system services
-        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, meta_script, 
-                            meta_parser, trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
+        var containers_list = [dev_box, app_box, matrix, colony];
 
         // List of development tools
-        var dev_tools = [bee];
+        var dev_tools = [bee, bat];
+
+        // List of system services
+        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, meta_script, meta_parser,
+                            trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
 
         // List of user applications
         var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, i_webgl_preview];
@@ -61,14 +61,6 @@ function boot_script()
 
         /* ================= Populate containers ================= */
 
-        // Matrix - System services container
-        var matrix_container = os_vm.hub.access('matrix');
-
-        // Put services in the container
-        matrix_container.put(sys_services);
-
-        //console.log(matrix_container.list());
-
         // Dev Box - Development tools container
         var dev_box_container = os_vm.hub.access('dev_box');
 
@@ -76,6 +68,14 @@ function boot_script()
         dev_box_container.add(dev_tools);
 
         //console.log(dev_box_container.list());
+
+        // Matrix - System services container
+        var matrix_container = os_vm.hub.access('matrix');
+
+        // Put services in the container
+        matrix_container.put(sys_services);
+
+        //console.log(matrix_container.list());
 
         // App Box - Integrated/User applications container
         var app_box_container = os_vm.hub.access('app_box');
@@ -362,14 +362,14 @@ function boot_script()
     var init_script_dev = function()
     {
         // List of containers
-        var containers_list = [matrix, dev_box, app_box, colony];
-
-        // List of system services
-        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, meta_script, 
-                            meta_parser, trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
+        var containers_list = [dev_box, app_box, matrix, colony];
 
         // List of development tools
-        var dev_tools = [bee];
+        var dev_tools = [bee, bat];
+
+        // List of system services
+        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok, meta_script, meta_parser,
+                            trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
 
         // List of user applications
         var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, i_webgl_preview];
@@ -384,15 +384,6 @@ function boot_script()
 
         /* ================= Populate containers ================= */
 
-        // Matrix - System services container
-        var matrix_container = os_vm.hub.access('matrix');
-
-        // Put services in the container
-        //matrix_container.backtrace(true);
-        matrix_container.put(sys_services);
-
-        //console.log(matrix_container.list());
-
         // Dev Box - Development tools container
         var dev_box_container = os_vm.hub.access('dev_box');
 
@@ -401,6 +392,15 @@ function boot_script()
         dev_box_container.add(dev_tools);
 
         //console.log(dev_box_container.list());
+
+        // Matrix - System services container
+        var matrix_container = os_vm.hub.access('matrix');
+
+        // Put services in the container
+        //matrix_container.backtrace(true);
+        matrix_container.put(sys_services);
+
+        //console.log(matrix_container.list());
 
         // App Box - Integrated/User applications container
         var app_box_container = os_vm.hub.access('app_box');
