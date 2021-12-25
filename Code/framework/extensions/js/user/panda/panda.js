@@ -66,18 +66,19 @@ function panda()
         matrix = cosmos.hub.access('matrix');
         app_box = cosmos.hub.access('app_box');
 
+        action_config_model = { "arguments"     :   [
+                                                        {
+                                                            "key"       :   { "name" : "config", "optional" : false },
+                                                            "value"     :   { "type" : "*" }
+                                                        }
+                                                    ]
+                              };
+
         return true;
     };
 
     var cosmos = null,
-        action_config_model = 
-        { "arguments"   :   [
-                                {
-                                    "key"       :   { "name" : "config", "optional" : false },
-                                    "value"     :   { "type" : "*" }
-                                }
-                            ]
-        },
+        action_config_model = null,
         matrix = null,
         app_box = null,
         utils_sys = new vulcan(),

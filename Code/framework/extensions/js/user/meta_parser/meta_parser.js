@@ -18,8 +18,19 @@ function meta_parser()
     {
         this.parse = function(program_config)
         {
+            var meta_script = program_config.script;
+
+            if (program_config.type === 'app')
+            {
+                console.log(meta_script);
+            }
+            else
+            {
+                console.log(meta_script);
+            }
+
             // 1. Use eval
-            // 2. Restrict: document, window & navigator
+            // 2. Restrict/deny: document, window & navigator
             // 3. Run
 
             return true;
@@ -49,6 +60,24 @@ function meta_parser()
 
         matrix = cosmos.hub.access('matrix');
         app_box = cosmos.hub.access('app_box');
+
+        program_config_model = { "arguments"    :   [
+                                                        {
+                                                            "key"       :   { "name" : "type", "optional" : false },
+                                                            "value"     :   { "type" : "string" },
+                                                            "choices"   :   ["app", "service"]
+                                                        },
+                                                        {
+                                                            "key"       :   { "name" : "mode", "optional" : false },
+                                                            "value"     :   { "type" : "string" },
+                                                            "choices"   :   ["release", "debug"]
+                                                        },
+                                                        {
+                                                            "key"       :   { "name" : "script", "optional" : false },
+                                                            "value"     :   { "type" : "*" }
+                                                        },
+                                                    ]
+                               };
 
         return true;
     };

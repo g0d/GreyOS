@@ -224,26 +224,27 @@ function parallel()
         if (utils.validation.misc.is_undefined(Worker))
             return false;
 
+        __tasks_config_model = { "arguments"   :    [
+                                                        {
+                                                            "key"       :   { "name" : "id", "optional" : false },
+                                                            "value"     :   { "type" : "number" }
+                                                        },
+                                                        {
+                                                            "key"       :   { "name" : "data", "optional" : false },
+                                                            "value"     :   { "type" : "*" }
+                                                        },
+                                                        {
+                                                            "key"       :   { "name" : "callback", "optional" : true },
+                                                            "value"     :   { "type" : "*" }
+                                                        }
+                                                    ]
+                               };
+
         return this;
     }
 
     var __is_task_created = false,
-        __tasks_config_model = 
-        { "arguments"   :   [
-                                {
-                                    "key"       :   { "name" : "id", "optional" : false },
-                                    "value"     :   { "type" : "number" }
-                                },
-                                {
-                                    "key"       :   { "name" : "data", "optional" : false },
-                                    "value"     :   { "type" : "*" }
-                                },
-                                {
-                                    "key"       :   { "name" : "callback", "optional" : true },
-                                    "value"     :   { "type" : "*" }
-                                }
-                            ]
-        };
+        __tasks_config_model = null,
         tasks_manager = new tasks_manager_model(),
         config_parser = new jap(),
         utils = new vulcan();

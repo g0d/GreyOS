@@ -122,6 +122,8 @@ function meta_script()
 
     this.service = function(service_config)
     {
+        var new_svc_bat = dev_box.get('bat');
+
         // Do stuf...
 
         return true;
