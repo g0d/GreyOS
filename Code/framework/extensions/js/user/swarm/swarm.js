@@ -54,7 +54,7 @@ function swarm()
         this.show_bee = function(bees_colony, index)
         {
             if (!bees_colony.list(index).status.system.in_hive())
-                new bees_colony.list(index).show();
+                new bees_colony.list(index).run();
 
             return true;
         };

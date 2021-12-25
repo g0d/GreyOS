@@ -440,7 +440,7 @@ function hive()
                     __this_hive_bee.show();
 
                     __this_hive_bee.drone.use('enable_drag', 'utils_int.coords(event, 2); utils_int.manage_drag_status();');
-                    __this_hive_bee.drone.run('enable_drag');
+                    __this_hive_bee.drone.execute('enable_drag');
 
                     __this_hive_bee.gui.position.top(__this_hive_bee.gui.position.top() + __this_hive_bee.gui.size.height() - 85);
                 }

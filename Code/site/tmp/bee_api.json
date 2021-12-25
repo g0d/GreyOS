@@ -1,62 +1,80 @@
 {
-    "gui": {
+    "gui":
+    {
         "keys": {},
-        "mouse": {
+        "mouse":
+        {
             "actual": {},
             "relative": {}
         },
-        "position": {
+        "position":
+        {
             "limits": {}
         },
-        "size": {
+        "size":
+        {
             "min": {},
             "max": {}
         },
-        "fx": {
-            "enabled": {
+        "fx":
+        {
+            "enabled":
+            {
                 "fade": {}
             },
-            "opacity": {
+            "opacity":
+            {
                 "settings": {}
             },
-            "fade": {
-                "settings": {
-                    "into": {
+            "fade":
+            {
+                "settings":
+                {
+                    "into":
+                    {
                         "get": {}
                     },
-                    "out": {
+                    "out":
+                    {
                         "get": {}
                     }
                 }
             }
         },
-        "css": {
+        "css":
+        {
             "style": {},
             "class_name": {}
         },
-        "actions": {
+        "actions":
+        {
             "menu": {},
             "casement": {},
             "hover": {}
         },
-        "config": {
-            "window": {
-                "control_bar": {
+        "config":
+        {
+            "window":{
+                "control_bar":
+                {
                     "icon": {},
                     "title": {},
                     "pencil": {},
                     "separator": {},
                     "close": {}
                 },
-                "content": {
+                "content":
+                {
                     "data": {}
                 },
-                "status_bar": {
+                "status_bar":
+                {
                     "message": {},
                     "resize": {}
                 }
             },
-            "casement": {
+            "casement":
+            {
                 "title": {},
                 "content": {},
                 "status": {}
@@ -64,44 +82,58 @@
         }
     },
     "drone": {},
-    "status": {
+    "status":
+    {
         "system": {},
-        "gui": {
+        "gui":
+        {
             "size": {},
-            "fx": {
-                "fading": {
+            "fx":
+            {
+                "fading":
+                {
                     "into": {},
                     "out": {}
                 },
                 "opacity": {}
             }
         },
-        "data": {
+        "data":
+        {
             "labels": {}
         }
     },
-    "settings": {
+    "settings":
+    {
         "general": {},
-        "actions": {
-            "can_drag": {
+        "actions":
+        {
+            "can_drag":
+            {
                 "on": {}
             },
-            "can_resize": {
+            "can_resize":
+            {
                 "on": {}
             }
         },
-        "data": {
-            "window": {
+        "data":
+        {
+            "window":
+            {
                 "labels": {}
             },
-            "casement": {
+            "casement":
+            {
                 "labels": {}
             },
             "hints": {}
         }
     },
-    "error": {
-        "codes": {
+    "error":
+    {
+        "codes":
+        {
             "POSITION": 241,
             "SIZE": 242,
             "FX": 243

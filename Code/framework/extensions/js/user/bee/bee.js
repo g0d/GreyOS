@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 3.8)
+    GreyOS - Bee (Version: 4.0)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window module.
@@ -3561,6 +3561,60 @@ function bee()
                 return false;
             };
 
+            this.show = function(parent_app_id = null, headless = false)
+            {
+                if (is_init === false)
+                    return false;
+
+                if (error_code !== null)
+                    return false;
+
+                if (!utils_sys.validation.misc.is_bool(headless))
+                    return false;
+
+                var __app_id = self.settings.general.app_id();
+
+                if (bee_statuses.running())
+                    return false;
+
+                if (utils_int.is_lonely_bee(my_bee_id))
+                    return false;
+
+                if (parent_app_id === null)
+                {
+                    if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+                        return false;
+                }
+
+                utils_int.status_init();
+
+                bee_statuses.running(true);
+
+                if (headless === false)
+                {
+                    if (!utils_int.gui_init())
+                    {
+                        if (parent_app_id === null)
+                            owl.status.set(my_bee_id, __app_id, 'FAIL');
+
+                        utils_int.log('Show', 'ERROR');
+
+                        return false;
+                    }
+                }
+
+                bee_statuses.active(true);
+
+                morpheus.execute(my_bee_id, 'system', 'running');
+
+                owl.status.set(my_bee_id, __app_id, 'RUN');
+
+                if (headless === false)
+                    utils_int.log('Show', 'OK');
+
+                return true;
+            };
+
             this.close = function(event_object)
             {
                 if (is_init === false)
@@ -4445,7 +4499,7 @@ function bee()
             return true;
         };
 
-        this.run = function(existing_func_name, dynamic_func_args)
+        this.execute = function(existing_func_name, dynamic_func_args)
         {
             if (is_init === false)
                 return false;
@@ -4519,7 +4573,7 @@ function bee()
         return false;
     };
 
-    this.show = function(parent_app_id = null)
+    this.run = function(parent_app_id = null, headless = false)
     {
         if (is_init === false)
             return false;
@@ -4527,41 +4581,10 @@ function bee()
         if (error_code !== null)
             return false;
 
-        var __app_id = self.settings.general.app_id();
-
-        if (bee_statuses.running())
+        if (!self.gui.actions.show(parent_app_id, headless))
             return false;
 
-        if (utils_int.is_lonely_bee(my_bee_id))
-            return false;
-
-        if (parent_app_id === null)
-        {
-            if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
-                return false;
-        }
-
-        utils_int.status_init();
-
-        bee_statuses.running(true);
-
-        if (!utils_int.gui_init())
-        {
-            if (parent_app_id === null)
-                owl.status.set(my_bee_id, __app_id, 'FAIL');
-
-            utils_int.log('Show', 'ERROR');
-
-            return false;
-        }
-
-        bee_statuses.active(true);
-
-        morpheus.execute(my_bee_id, 'system', 'running');
-
-        owl.status.set(my_bee_id, __app_id, 'RUN');
-
-        utils_int.log('Show', 'OK');
+        utils_int.log('Run', 'OK');
 
         return true;
     };

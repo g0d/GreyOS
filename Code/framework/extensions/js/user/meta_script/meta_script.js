@@ -110,20 +110,26 @@ function meta_script()
         this.os = new os();
     }
 
-    this.app = function(app_config)
+    function app()
     {
-        var new_app_bee = dev_box.get('bee');
+        this.run = function(parent_app_id = null, headless = false)
+        {
+            return new_app.run(parent_app_id, headless);
+        };
 
-        // Do stuff...
-        new_app_bee.show();
+        this.show = function(parent_app_id = null, headless = false)
+        {
+            return new_app.gui.actions.show(parent_app_id, headless);
+        };
 
-        return true; 
-    };
+        this.close = function()
+        {
+            return new_app.gui.actions.close(null);
+        };
+    }
 
     this.service = function(service_config)
     {
-        var new_svc_bat = dev_box.get('bat');
-
         // Do stuf...
 
         return true;
@@ -153,6 +159,9 @@ function meta_script()
         owl = matrix.get('owl');
         infinity = matrix.get('infinity');
 
+        new_app = dev_box.get('bee');
+        new_service = dev_box.get('bat');
+
         return true;
     };
 
@@ -172,6 +181,8 @@ function meta_script()
         super_tray = null,
         owl = null,
         infinity = null,
+        new_app = null,
+        new_service = null,
         utils_sys = new vulcan(),
         config_parser = new jap(),
         cc_reload = new f5(),
@@ -179,4 +190,5 @@ function meta_script()
 
     this.interface = new interface();
     this.system = new system();
+    this.app = new app();
 }

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 3.0)
+    GreyOS - Bootstrap facility (Version: 3.2)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -188,7 +188,7 @@ function boot_script()
 
             matrix_container.get('swarm').bees.insert(krator_bee);
 
-            krator_bee.show();
+            krator_bee.run();
 
             return true;
         }

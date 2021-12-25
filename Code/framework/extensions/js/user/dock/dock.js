@@ -140,7 +140,7 @@ function dock()
 
                                 swarm.bees.insert(__bee);
 
-                                if (__bee.show())
+                                if (__bee.run())
                                 {
                                     utils_sys.objects.by_id('app_' + __app_id).classList.remove('app_' + __app_id + '_off');
                                     utils_sys.objects.by_id('app_' + __app_id).classList.add('app_' + __app_id + '_on');

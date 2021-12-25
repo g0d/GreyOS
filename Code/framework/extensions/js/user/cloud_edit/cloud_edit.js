@@ -115,7 +115,7 @@ function cloud_edit()
                 return false;
             }
 
-            __this_bee.show();
+            __this_bee.run();
 
             app_bee = __this_bee;
 
