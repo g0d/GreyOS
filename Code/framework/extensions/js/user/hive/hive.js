@@ -731,7 +731,8 @@ function hive()
 
                                 me.show_ghost_bee(event, 1);
                             };
-                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object);
+                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[0]);
+                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[1]);
 
                 __handler = function(event)
                             {

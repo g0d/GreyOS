@@ -85,13 +85,14 @@
     text-align: left;
     width: 176px;
     min-width: 160px;
-    height: 18px;
+    height: 28px;
     margin-left: 2px;
-    margin-top: 4px;
+    margin-top: -2px;
     padding: 2px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    padding-top: 8px;
 }
 
 .box_title
@@ -109,7 +110,9 @@
     color: #5C5C5C;
     cursor: text;
     font-weight: normal;
-    height: 16px;
+    height: 11px;
+    margin-top: 4px;
+    border-radius: 2px;
 }
 
 .pencil

@@ -394,7 +394,7 @@ function bee()
                 ui_config.window.control_bar.classes.close = 'close widget_close ' + ui_config.window.control_bar.ids.close;
             }
 
-            if (__bee_settings.data.window.labels.status_bar().length * 6.4 > __bee_gui.size.width())
+            if (__bee_settings.data.window.labels.status_bar().length * 9.0 > __bee_gui.size.width())
                 __marquee_class = 'marquee';
 
             __html = '<div id="' + ui_config.window.control_bar.id + '" class="' + ui_config.window.control_bar.classes.container + '">' + 
@@ -3663,6 +3663,8 @@ function bee()
                     if (bee_statuses.in_hive())
                         ui_objects.casement.ui.style.visibility = 'hidden';
 
+                    owl.status.set(my_bee_id, __app_id, 'END');
+
                     me.actions.casement.hide(event_object, 
                     function()
                     {
@@ -3673,8 +3675,6 @@ function bee()
                         else
                             remove_me(self);
                     });
-
-                    owl.status.set(my_bee_id, __app_id, 'END');
 
                     return true;
                 }
@@ -4156,7 +4156,7 @@ function bee()
                          ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
                     }
 
-                    if (self.settings.data.window.labels.status_bar().length * 6.4 < 
+                    if (self.settings.data.window.labels.status_bar().length * 9.0 < 
                         utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
                         ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
                     else

@@ -21,7 +21,8 @@ function meta_parser()
             var meta_script = program_config.script;
 
             if (meta_script.indexOf('navigator') >= 0 || meta_script.indexOf('window') >= 0 || 
-                meta_script.indexOf('document') >= 0 || meta_script.indexOf('location') >= 0)
+                meta_script.indexOf('document') >= 0 || meta_script.indexOf('location') >= 0 || 
+                meta_script.indexOf('eval') >= 0)
                 return false;
 
             if (program_config.type === 'app')
