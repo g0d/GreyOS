@@ -17,5 +17,5 @@ ms_app.position.top(170);                                           // Changes d
 ms_app.size.width(720);
 ms_app.size.height(480);
 ms_app.on('opened', function() { gui(); });                         // On-opened: Start doing your stuff...
-ms_app.on('close', function() { });                                 // On-close: Do cleanups for before termination
+ms_app.on('close', function() { });                                 // On-close: Do cleanups before termination
 ms_app.run(mc);                                                     // Run your app (passing Meta-Caller as argument)

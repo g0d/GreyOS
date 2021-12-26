@@ -1696,6 +1696,9 @@ function bee()
 
                         ui_objects.window.status_bar.message.childNodes[1].innerHTML = val;
 
+                        if (val.length * 9.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+                            ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+
                         bee_statuses.status_bar_label_changed(true);
 
                         morpheus.execute(my_bee_id, 'gui', 'status_bar_label_changed');
