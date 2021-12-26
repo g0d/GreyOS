@@ -1,9 +1,9 @@
-// GreyOS - My Meta-Script App (Default Cloud Edit Meta-Script app template)
+// GreyOS - My test app (Meta-Script app template for Cloud Edit)
 
 var ms_app = meta_script.app(),     // Meta-Script API is automatically exposed in this context
     mc = meta_caller;               // Meta-Caller API is automatically provided by Cloud Edit
 
-// Helping delegate function
+// Helping delegate function example
 function gui()
 {
     ms_app.set_status('APP ID: ' + ms_app.get_system_id());
@@ -17,12 +17,5 @@ ms_app.position.top(170);                                           // Changes d
 ms_app.size.width(720);
 ms_app.size.height(480);
 ms_app.on('opened', function() { gui(); });                         // On-opened: Start doing your stuff...
-ms_app.on('close', function()                                       // On-close: Do cleanups for before termination
-                   {
-                       // Instruct Cloud Edit to reset its state
-                       mc.reset();
-                   });
-ms_app.run();                                                       // Run your app
-
-// Inform Cloud Edit of the application ID specified in run-time by the system
-mc.telemetry(ms_app.get_system_id());
+ms_app.on('close', function() { });                                 // On-close: Do cleanups for before termination
+ms_app.run(mc);                                                     // Run your app (passing Meta-Caller as argument)

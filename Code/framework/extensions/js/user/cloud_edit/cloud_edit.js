@@ -80,7 +80,7 @@ function cloud_edit()
                 config.ce.exec_button.classList.remove('ce_stop');
 
                 frog('CLOUD EDIT', '% Invalid %', 
-                     'The application is invalid!\nPlease see the template...');
+                     'The application is invalid!\nPlease check the template...');
 
                 return false;
             }
@@ -100,19 +100,27 @@ function cloud_edit()
 
                 if (!__this_app.main(meta_script, ce_api))
                 {
+                    app_box.remove(random_app_id);
+
                     config.ce.status_label.innerHTML = '[INVALID]';
                     config.ce.exec_button.value = 'Run';
                     config.ce.exec_button.classList.remove('ce_stop');
-    
-                    frog('CLOUD EDIT', '% Parse Error %', 
-                         'The application contains lexical mistakes!');
-    
+
+                    frog('CLOUD EDIT', '% Parse Mismatch %', 
+                         'The application contains wrong arguments!');
+
                     return false;
                 }
             }
             catch(e)
             {
-                app_box.remove(random_app_id);
+                if (program_app_id !== null)
+                {
+                    program_ref = colony.get(program_app_id);
+
+                    if (utils_sys.validation.misc.is_object(program_ref))
+                        program_ref.gui.actions.close(null);
+                }
 
                 config.ce.status_label.innerHTML = '[ERROR]';
                 config.ce.exec_button.value = 'Run';
@@ -123,11 +131,26 @@ function cloud_edit()
                 return false;
             }
 
+            program_ref = colony.get(program_app_id);
+
+            if (!utils_sys.validation.misc.is_object(program_ref))
+            {
+                program_ref = null;
+
+                app_box.remove(random_app_id);
+
+                config.ce.status_label.innerHTML = '[ERROR]';
+                config.ce.exec_button.value = 'Run';
+                config.ce.exec_button.classList.remove('ce_stop');
+
+                frog('CLOUD EDIT', '[!] Error [!]', 'Program is incomplete!');
+
+                return false;
+            }
+
             config.ce.status_label.innerHTML = '[RUNNING]';
             config.ce.exec_button.value = 'Stop';
             config.ce.exec_button.classList.add('ce_stop');
-
-            program_ref = colony.get(program_app_id);
 
             app_is_running = true;
 
@@ -295,7 +318,6 @@ function cloud_edit()
         dev_box = cosmos.hub.access('dev_box');
         colony = cosmos.hub.access('colony');
 
-        owl = matrix.get('owl');
         meta_script = matrix.get('meta_script');
         nature = matrix.get('nature');
         infinity = matrix.get('infinity');
@@ -310,7 +332,6 @@ function cloud_edit()
         app_box = null,
         dev_box = null,
         colony = null,
-        owl = null,
         meta_script = null,
         nature = null,
         infinity = null,

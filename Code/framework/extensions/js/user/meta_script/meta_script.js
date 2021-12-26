@@ -114,6 +114,8 @@ function meta_script()
     {
         function app_api_model()
         {
+            var me = this;
+
             function menu()
             {
                 this.open = function(event)
@@ -602,19 +604,29 @@ function meta_script()
                 return new_app;
             };
 
-            this.run = function(parent_app_id = null, headless = false)
+            this.run = function(meta_caller, parent_app_id = null, headless = false)
             {
                 if (new_app === null)
                     return false;
 
+                if (!utils_sys.validation.misc.is_object(meta_caller))
+                    return false;
+
                 if (!swarm.bees.insert(new_app))
                     return false;
+
+                meta_caller.telemetry(me.get_system_id());
+
+                me.on('close', function() { meta_caller.reset(); });
 
                 return new_app.run(parent_app_id, headless);
             };
 
             this.init = function(app_id, resizable = true)
             {
+                if (!utils_sys.validation.misc.is_bool(resizable))
+                    return false;
+
                 var type = 1;
 
                 new_app = dev_box.get('bee');
