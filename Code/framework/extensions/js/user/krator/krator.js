@@ -298,7 +298,7 @@ function krator()
             if (!is_login_ok)
                 return false;
 
-            script.apply();
+            script.call();
 
             return true;
         };

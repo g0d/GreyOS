@@ -4524,7 +4524,7 @@ function bee()
                     else
                         __dynamic_func = function() { __drones[i].code.call(); };
 
-                    __dynamic_func.apply(this, dynamic_func_args);
+                    __dynamic_func.call(this, dynamic_func_args);
 
                     return true;
                 }

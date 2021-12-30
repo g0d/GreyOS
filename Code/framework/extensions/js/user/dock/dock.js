@@ -36,17 +36,17 @@ function dock()
                                     "content_fill_mode"     :   "replace",
                                     "on_success"            :   function()
                                                                 {
-                                                                    success_callback.apply();
+                                                                    success_callback.call();
                                                                 },
                                     "on_timeout"            :   function()
                                                                 {
                                                                     if (time_out_callback !== null)
-                                                                        time_out_callback.apply();
+                                                                        time_out_callback.call();
                                                                 },
                                     "on_fail"               :   function()
                                                                 {
                                                                     if (fail_callback !== null)
-                                                                        fail_callback.apply();
+                                                                        fail_callback.call();
                                                                 }
                                 };
 

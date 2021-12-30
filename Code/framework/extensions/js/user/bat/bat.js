@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bat (Version: 1.0)
+    GreyOS - Bat (Version: 1.2)
 
     File name: bat.js
     Description: This file contains the Bat - System services template module.
@@ -14,64 +14,56 @@ function bat()
 {
     var self = this;
 
+    function service_config_model()
+    {
+        this.name = null;
+        this.icon = 'default';
+    }
+
     function dynamic_function_model()
     {
         this.name = null;
         this.body = null;
     }
 
-    this.set_config_model = function(config_model)
+    this.get_config = function()
     {
-        if (utils_sys.validation.misc.is_undefined(config_model))
+        if (is_init === false)
             return false;
 
-        if (!utils_sys.validation.misc.is_object(config_model))
-            return false;
-
-        self[config_model.constuctor] = config_model;
-
-        return true;
+        return service_config;
     };
 
     this.set_function = function(name, body)
     {
+        if (is_init === false)
+            return false;
+
         if (utils_sys.validation.alpha.is_symbol(name) || !utils_sys.validation.misc.is_function(body))
             return false;
 
-        var new_dynamic_function = new dynamic_function_model();
+        var __new_dynamic_function = new dynamic_function_model();
 
-        new_dynamic_function.name = name;
+        __new_dynamic_function.name = name;
 
-        dynamic_functions_list.push(new_dynamic_function);
+        dynamic_functions_list.push(__new_dynamic_function);
 
-        if (use_init === true)
-        {
-            new_dynamic_function.body = function(args)
-                                        {
-                                            if (is_init === true)
-                                                body.apply(this, args);
-                                        };
-        }
-        else
-            new_dynamic_function.body = function(args) { body.apply(this, args); };
+        __new_dynamic_function.body = function(args) { body.call(this, args); };
 
         return true;
     };
 
     this.exec = function(func_name, func_args = [])
     {
-        if (use_init === true)
-        {
-            if (is_init === false)
-                return false;
-        }
+        if (is_init === false)
+            return false;
 
         if (utils_sys.validation.alpha.is_symbol(func_name) || !utils_sys.validation.misc.is_array(func_args))
             return false;
 
-        var functions_list_length = dynamic_functions_list.length;
+        var __functions_list_length = dynamic_functions_list.length;
 
-        for (var i = 0; i < functions_list_length; i++)
+        for (var i = 0; i < __functions_list_length; i++)
         {
             if (dynamic_functions_list[i].name === func_name)
                 return dynamic_functions_list[i].body.call(this, func_args);
@@ -80,34 +72,55 @@ function bat()
         return false;
     };
 
-    this.use_init = function(use_init)
+    this.on = function(this_event, cmd)
     {
-        if (utils_sys.validation.misc.is_nothing(cosmos))
+        if (is_init === false)
             return false;
 
-        if (!utils_sys.validation.misc.is_bool(use_init))
+        if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(cmd))
             return false;
 
-        self.use_init = use_init;
+        if (utils_sys.misc.contains(this_event, events_list))
+            return morpheus.store(service_config.name, 'main', this_event, cmd, document);
 
-        return true;
+        return false;
     };
 
-    this.init = function(init_func)
+    this.register = function()
+    {
+        if (is_init === false)
+            return false;
+
+        morpheus.execute(service_config.name, 'main', 'register');
+
+        return matrix.register([service_config.name]);
+    };
+
+    this.unregister = function()
+    {
+        if (is_init === false)
+            return false;
+
+        morpheus.execute(service_config.name, 'main', 'unregister');
+
+        return matrix.unregister(service_config.name);
+    };
+
+    this.init = function(svc_name, icon = 'default')
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (use_init === true)
-        {
-            if (is_init === true)
-                return false;
+        if (utils_sys.validation.alpha.is_symbol(svc_name) || utils_sys.validation.alpha.is_symbol(icon))
+            return false;
 
-            is_init = true;
-        }
+        if (is_init === true)
+            return false;
 
-        if (!utils_sys.validation.misc.is_undefined(init_func) && utils_sys.validation.misc.is_function(init_func))
-            init_func.call();
+        service_config.name = svc_name + '_' + random.generate();
+        service_config.icon = icon;
+
+        is_init = true;
 
         return true;
     };
@@ -119,12 +132,17 @@ function bat()
 
         cosmos = cosmos_object;
 
+        matrix = cosmos.hub.access('matrix');
+
         return true;
     };
 
-    var use_init = true,
-        is_init = false,
+    var is_init = false,
         cosmos = null,
+        matrix = null,
+        events_list = ['register', 'unregister'],
         dynamic_functions_list = [],
-        utils_sys = new vulcan();
+        utils_sys = new vulcan(),
+        random = new pythia(),
+        service_config = new service_config_model();
 }

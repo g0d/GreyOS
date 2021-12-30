@@ -19,21 +19,16 @@ function trinity()
         
     }
 
-    this.num = function()
+    this.execute = function(func_name, func_args = [])
     {
-        return new_bat.exec('num');
-    };
-
-    this.list = function()
-    {
-        return new_bat.exec('list', [1]);
+        return new_bat.exec(func_name, func_args);
     };
 
     this.init = function()
     {
         new_bat.init();
         new_bat.set_function('num', function() { console.log('NUM!'); });
-        new_bat.set_function('list', function() { console.log(arguments[0]); });
+        new_bat.set_function('list', function(func_args) { console.log(func_args); });
 
         return true;
     };

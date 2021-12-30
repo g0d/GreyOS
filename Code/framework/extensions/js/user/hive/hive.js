@@ -798,7 +798,7 @@ function hive()
                                         honeycomb_views.swiping(false);
 
                                         if (callback !== null)
-                                            callback.apply();
+                                            callback.call();
                                     });
             }
 

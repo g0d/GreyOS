@@ -72,8 +72,8 @@ function boot_script()
         // Matrix - System services container
         var matrix_container = os_vm.hub.access('matrix');
 
-        // Put services in the container
-        matrix_container.put(sys_services);
+        // Register (put) services in the container
+        matrix_container.register(sys_services);
 
         //console.log(matrix_container.list());
 
@@ -396,9 +396,9 @@ function boot_script()
         // Matrix - System services container
         var matrix_container = os_vm.hub.access('matrix');
 
-        // Put services in the container
+        // Register (put) services in the container
         //matrix_container.backtrace(true);
-        matrix_container.put(sys_services);
+        matrix_container.register(sys_services);
 
         //console.log(matrix_container.list());
 

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.0)
+    GreyOS - Meta-Script (Version: 1.2)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) module.
@@ -114,7 +114,8 @@ function meta_script()
     {
         function app_api_model()
         {
-            var me = this;
+            var me = this,
+                new_app = null;
 
             function menu()
             {
@@ -648,13 +649,86 @@ function meta_script()
         return new app_api_model();
     }
 
-    this.service = function(service_config)
+    this.service = function()
     {
-        new_service = dev_box.get('bat');
+        function svc_api_model()
+        {
+            var me = this,
+                new_svc = null;
 
-        // Do stuf...
+            this.get_config = function()
+            {
+                if (new_svc === null)
+                    return false;
 
-        return true;
+                return new_svc.get_config();
+            };
+
+            this.set = function(name, body)
+            {
+                if (new_svc === null)
+                    return false;
+
+                return new_svc.set_function(name, body);
+            };
+
+            this.execute = function(func_name, func_args = [])
+            {
+                if (new_svc === null)
+                    return false;
+
+                return new_svc.exec(func_name, func_args);
+            };
+
+            this.on = function(event_name, callback)
+            {
+                if (new_svc === null)
+                    return false;
+
+                return new_svc.on(event_name, callback);
+            };
+
+            this.run = function(meta_caller)
+            {
+                if (new_svc === null)
+                    return false;
+
+                if (!utils_sys.validation.misc.is_object(meta_caller))
+                    return false;
+
+                me.on('register', function() { meta_caller.telemetry(me.get_config().name); });
+                me.on('unregister', function() { meta_caller.reset(); });
+
+                if (!new_svc.register())
+                    return false;
+
+                super_tray.add(me.get_config().name, me.get_config().icon);
+
+                return true;
+            };
+
+            this.terminate = function()
+            {
+                if (new_svc === null)
+                    return false;
+
+                if (!new_svc.unregister())
+                    return false;
+
+                super_tray.remove(me.get_config().name);
+
+                return true;
+            };
+
+            this.init = function(svc_id, icon = 'default')
+            {
+                new_svc = dev_box.get('bat');
+
+                return new_svc.init(svc_id, icon);
+            };
+        }
+
+        return new svc_api_model();
     };
 
     this.cosmos = function(cosmos_object)
@@ -700,8 +774,6 @@ function meta_script()
         super_tray = null,
         owl = null,
         infinity = null,
-        new_app = null,
-        new_service = null,
         utils_sys = new vulcan(),
         config_parser = new jap(),
         cc_reload = new f5(),
