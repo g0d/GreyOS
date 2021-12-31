@@ -2,7 +2,7 @@
     GreyOS - Meta-Parser (Version: 1.0)
 
     File name: meta_parser.js
-    Description: This file contains the Meta-Parser - Meta scripting language parser interface module.
+    Description: This file contains the Meta-Parser - Meta scripting language parser interface development module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021

@@ -16,6 +16,7 @@ function bat()
 
     function service_config_model()
     {
+        this.sys_name = null;
         this.name = null;
         this.icon = 'default';
     }
@@ -81,29 +82,35 @@ function bat()
             return false;
 
         if (utils_sys.misc.contains(this_event, events_list))
-            return morpheus.store(service_config.name, 'main', this_event, cmd, document);
+            return morpheus.store(service_config.sys_name, 'main', this_event, cmd, document);
 
         return false;
     };
 
-    this.register = function()
+    this.register = function(service_model)
     {
         if (is_init === false)
             return false;
 
-        morpheus.execute(service_config.name, 'main', 'register');
+        if (!matrix.register([service_model]))
+            return false;
 
-        return matrix.register([service_config.name]);
+        super_tray.add(service_config.sys_name, service_config.name, service_config.icon);
+
+        return morpheus.execute(service_config.sys_name, 'main', 'register');
     };
 
-    this.unregister = function()
+    this.unregister = function(service_id)
     {
         if (is_init === false)
             return false;
 
-        morpheus.execute(service_config.name, 'main', 'unregister');
+        if (!matrix.unregister(service_id))
+            return false;
 
-        return matrix.unregister(service_config.name);
+        super_tray.remove(service_config.sys_name);
+
+        return morpheus.execute(service_config.sys_name, 'main', 'unregister');
     };
 
     this.init = function(svc_name, icon = 'default')
@@ -117,7 +124,8 @@ function bat()
         if (is_init === true)
             return false;
 
-        service_config.name = svc_name + '_' + random.generate();
+        service_config.sys_name = svc_name + '_' + random.generate();
+        service_config.name = svc_name;
         service_config.icon = icon;
 
         is_init = true;
@@ -134,12 +142,17 @@ function bat()
 
         matrix = cosmos.hub.access('matrix');
 
+        morpheus = matrix.get('morpheus');
+        super_tray = matrix.get('super_tray');
+
         return true;
     };
 
     var is_init = false,
         cosmos = null,
         matrix = null,
+        super_tray = null,
+        morpheus = null,
         events_list = ['register', 'unregister'],
         dynamic_functions_list = [],
         utils_sys = new vulcan(),

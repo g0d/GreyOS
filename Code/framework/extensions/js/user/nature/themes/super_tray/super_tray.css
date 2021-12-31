@@ -38,6 +38,7 @@
 {
     display: none;
     position: absolute;
+    overflow: auto;
     background-color: #27272770;
     border: 2px solid #363a3c6e;
     box-shadow: 0 0 12px #282c2c5e !important;

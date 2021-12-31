@@ -2,7 +2,7 @@
     GreyOS - Bee (Version: 4.0)
 
     File name: bee.js
-    Description: This file contains the Bee - Floating window module.
+    Description: This file contains the Bee - Floating window development module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021

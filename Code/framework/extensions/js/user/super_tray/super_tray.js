@@ -1,5 +1,5 @@
 /*
-    GreyOS - Super Tray (Version: 1.0)
+    GreyOS - Super Tray (Version: 1.2)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area service module.
@@ -16,6 +16,7 @@ function super_tray()
 
     function tray_service_model()
     {
+        this.sys_id = null;
         this.id = null;
         this.icon = 'default';
         this.action = null;
@@ -35,7 +36,7 @@ function super_tray()
         {
             for (var i = 0; i < tray_services.num; i++)
             {
-                if (tray_services.list[i].id === service_id)
+                if (tray_services.list[i].sys_id === service_id)
                     return true;
             }
 
@@ -135,14 +136,14 @@ function super_tray()
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
                 __new_service = tray_services.list[index - 1],
-                __new_service_id = super_tray_id + '_service_' + __new_service.id,
+                __new_service_id = super_tray_id + '_service_' + __new_service.sys_id,
                 __dynamic_object = null;
 
             __dynamic_object = document.createElement('div');
 
             __dynamic_object.setAttribute('id', __new_service_id);
             __dynamic_object.setAttribute('class', 'super_tray_service');
-            __dynamic_object.setAttribute('data-id', __new_service.id);
+            __dynamic_object.setAttribute('data-id', __new_service.sys_id);
             __dynamic_object.setAttribute('title', __new_service.id);
 
             __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/user/nature/themes/super_tray/pix/' + 
@@ -164,7 +165,7 @@ function super_tray()
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
                 __existing_service = tray_services.list[index],
-                __dynamic_object = utils_sys.objects.by_id(super_tray_id + '_service_' + __existing_service.id);
+                __dynamic_object = utils_sys.objects.by_id(super_tray_id + '_service_' + __existing_service.sys_id);
 
             morpheus.delete(super_tray_id + '_service', 'click', __dynamic_object);
 
@@ -242,12 +243,12 @@ function super_tray()
         };
     }
 
-    this.add = function(service_id, icon = null, action = null)
+    this.add = function(sys_service_id, service_id, icon = null, action = null)
     {
         if (is_init === false)
             return false;
 
-        if (utils_sys.validation.alpha.is_symbol(service_id))
+        if (utils_sys.validation.alpha.is_symbol(sys_service_id) || utils_sys.validation.alpha.is_symbol(service_id))
             return false;
 
         if (icon !== null && utils_sys.validation.alpha.is_symbol(icon))
@@ -256,11 +257,12 @@ function super_tray()
         if (action !== null && !utils_sys.validation.misc.is_function(action))
             return false;
 
-        if (utils_int.service_exists(service_id))
+        if (utils_int.service_exists(sys_service_id))
             return false;
 
         var __new_tray_service = new tray_service_model();
 
+        __new_tray_service.sys_id = sys_service_id;
         __new_tray_service.id = service_id;
 
         if (icon !== null)
@@ -287,7 +289,7 @@ function super_tray()
 
         for (var i = 0; i < tray_services.num; i++)
         {
-            if (tray_services.list[i].id === service_id)
+            if (tray_services.list[i].sys_id === service_id)
             {
                 utils_int.remove_service_icon(i);
 

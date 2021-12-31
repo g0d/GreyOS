@@ -1,5 +1,5 @@
 /*
-    GreyOS - Matrix (Version: 1.6)
+    GreyOS - Matrix (Version: 1.8)
 
     File name: matrix.js
     Description: This file contains the Matrix - System services container module.
@@ -79,6 +79,8 @@ function matrix()
                 if (backtrace === true)
                     frog('MATRIX', 'Models :: Get', service_id);
 
+                services.list[i].cosmos(cosmos);
+
                 return services.list[i];
             }
         }
@@ -129,9 +131,6 @@ function matrix()
             if (backtrace === true)
                 frog('MATRIX', 'Models :: Register', __object_model.constructor.name);
         }
-
-        for (var i = 0; i < services.num; i++)
-            services.list[i].cosmos(cosmos);
 
         if (backtrace === true)
             frog('MATRIX', 'All models', services.list, 'Model count: ' + services.num);

@@ -25,7 +25,7 @@ function dock()
 
         function ajax_load(element_id, success_callback, time_out_callback = null, fail_callback = null)
         {
-            if (element_id === undefined)
+            if (utils_sys.validation.misc.is_undefined(element_id))
                 return false;
 
             var __bull_config = {

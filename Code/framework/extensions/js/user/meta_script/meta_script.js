@@ -2,7 +2,7 @@
     GreyOS - Meta-Script (Version: 1.2)
 
     File name: meta_script.js
-    Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) module.
+    Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021
@@ -19,6 +19,14 @@ function meta_script()
         this.app = {};
         this.service = {};
         this.notification = {};
+    }
+
+    function program_config_model()
+    {
+        this.model = null;
+        this.meta_caller = null;
+        this.app = null;
+        this.svc = null;
     }
 
     function interface()
@@ -112,6 +120,9 @@ function meta_script()
 
     this.app = function()
     {
+        if (is_program_loaded === false)
+            return false;
+
         function app_api_model()
         {
             var me = this,
@@ -573,14 +584,6 @@ function meta_script()
                 return new_app.settings.data.window.content(val);
             };
 
-            this.show = function(parent_app_id = null, headless = false)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.gui.actions.show(parent_app_id, headless);
-            };
-
             this.close = function(event)
             {
                 if (new_app === null)
@@ -605,20 +608,24 @@ function meta_script()
                 return new_app;
             };
 
-            this.run = function(meta_caller, parent_app_id = null, headless = false)
+            this.run = function(parent_app_id = null, headless = false)
             {
                 if (new_app === null)
                     return false;
 
-                if (!utils_sys.validation.misc.is_object(meta_caller))
-                    return false;
+                program_config.meta_caller.telemetry(me.get_system_id());
+
+                me.on('close', function()
+                               {
+                                   app_box.remove(program_config.model.name);
+
+                                   program_config.meta_caller.reset();
+                               });
+
+                app_box.replace([program_config.model]);
 
                 if (!swarm.bees.insert(new_app))
                     return false;
-
-                meta_caller.telemetry(me.get_system_id());
-
-                me.on('close', function() { meta_caller.reset(); });
 
                 return new_app.run(parent_app_id, headless);
             };
@@ -630,10 +637,10 @@ function meta_script()
 
                 var type = 1;
 
-                new_app = dev_box.get('bee');
-
                 if (resizable === false)
                     type = 2;
+
+                new_app = dev_box.get('bee');
 
                 return new_app.init(app_id, type);
             };
@@ -646,11 +653,16 @@ function meta_script()
             this.status = new status();
         }
 
-        return new app_api_model();
+        program_config.app = new app_api_model();
+
+        return program_config.app;
     }
 
     this.service = function()
     {
+        if (is_program_loaded === false)
+            return false;
+
         function svc_api_model()
         {
             var me = this,
@@ -688,23 +700,15 @@ function meta_script()
                 return new_svc.on(event_name, callback);
             };
 
-            this.run = function(meta_caller)
+            this.run = function()
             {
                 if (new_svc === null)
                     return false;
 
-                if (!utils_sys.validation.misc.is_object(meta_caller))
-                    return false;
+                me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
+                me.on('unregister', function() { program_config.meta_caller.reset(); });
 
-                me.on('register', function() { meta_caller.telemetry(me.get_config().name); });
-                me.on('unregister', function() { meta_caller.reset(); });
-
-                if (!new_svc.register())
-                    return false;
-
-                super_tray.add(me.get_config().name, me.get_config().icon);
-
-                return true;
+                return new_svc.register(program_config.model);
             };
 
             this.terminate = function()
@@ -712,12 +716,7 @@ function meta_script()
                 if (new_svc === null)
                     return false;
 
-                if (!new_svc.unregister())
-                    return false;
-
-                super_tray.remove(me.get_config().name);
-
-                return true;
+                return new_svc.unregister(program_config.model.name);
             };
 
             this.init = function(svc_id, icon = 'default')
@@ -728,8 +727,43 @@ function meta_script()
             };
         }
 
-        return new svc_api_model();
+        program_config.svc = new svc_api_model();
+
+        return program_config.svc;
     };
+
+    function program()
+    {
+        this.start = function(program_model, meta_caller)
+        {
+            if (!utils_sys.validation.misc.is_function(program_model) || 
+                !utils_sys.validation.misc.is_object(meta_caller))
+                return false;
+
+            program_config.model = program_model;
+            program_config.meta_caller = meta_caller;
+
+            is_program_loaded = true;
+
+            return true;
+        };
+
+        this.end = function()
+        {
+            if (is_program_loaded === false)
+                return false;
+
+            if (program_config.app !== null)
+                program_config.app.close(null);
+
+            if (program_config.svc !== null)
+                program_config.svc.terminate();
+
+            is_program_loaded = false;
+
+            return true;
+        };
+    }
 
     this.cosmos = function(cosmos_object)
     {
@@ -741,7 +775,6 @@ function meta_script()
         matrix = cosmos.hub.access('matrix');
         app_box = cosmos.hub.access('app_box');
         dev_box = cosmos.hub.access('dev_box');
-        colony = cosmos.hub.access('colony');
 
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
@@ -758,11 +791,11 @@ function meta_script()
         return true;
     };
 
-    var cosmos = null,
+    var is_program_loaded = false,
+        cosmos = null,
         matrix = null,
         app_box = null,
         dev_box = null,
-        colony = null,
         swarm = null,
         hive = null,
         forest = null,
@@ -777,8 +810,10 @@ function meta_script()
         utils_sys = new vulcan(),
         config_parser = new jap(),
         cc_reload = new f5(),
-        config_models = new config_models();
+        config_models = new config_models(),
+        program_config = new program_config_model();
 
     this.interface = new interface();
     this.system = new system();
+    this.program = new program();
 }

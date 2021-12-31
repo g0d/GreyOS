@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cloud Edit (Version: 2.0)
+    GreyOS - Cloud Edit (Version: 2.2)
 
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
@@ -28,11 +28,11 @@ function cloud_edit()
         this.ce = new ce_model();
     }
 
-    function ce_app_api()
+    function ce_program_api()
     {
-        this.telemetry = function(app_id)
+        this.telemetry = function(prog_id)
         {
-            program_app_id = app_id;
+            program_id = prog_id;
 
             return true;
         };
@@ -49,110 +49,67 @@ function cloud_edit()
 
         function run_code(event_object)
         {
-            var __code = null,
-                __dynamic_app = null
-                __this_app = null;
+            var __code = null;
 
-            if (event_object === undefined)
+            if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
             if (event_object.buttons !== 1)
                 return false;
 
+            if (program_is_running === true)
+                return utils_int.reset();
+
             __code = config.ce.editor.getValue();
 
-            if (__code === '')
-                return false;
-
-            if (app_is_running === true)
+            if (!executor.load(__code))
             {
-                program_ref.gui.actions.close(event_object);
-
-                return false;
-            }
-
-            if (__code.indexOf('navigator') >= 0 || __code.indexOf('window') >= 0 || 
-                __code.indexOf('document') >= 0 || __code.indexOf('location') >= 0 || 
-                __code.indexOf('eval') >= 0)
-            {
-                config.ce.status_label.innerHTML = '[INVALID]';
+                config.ce.status_label.innerHTML = '[EMPTY]';
                 config.ce.exec_button.value = 'Run';
                 config.ce.exec_button.classList.remove('ce_stop');
 
-                frog('CLOUD EDIT', '% Invalid %', 
-                     'The application is invalid!\nPlease check the template...');
+                frog('CLOUD EDIT', '% Empty %', 
+                     'No code detected!');
 
                 return false;
             }
 
-            try
+            if (executor.process(ce_api) !== true)
             {
-                __dynamic_app = new Function('return function ' + random_app_id + '()\
-                {\
-                    this.cosmos = function(cosmos_object) { return true; };\
-                    this.main = function(meta_script, meta_caller) { return eval(__code); };\
-                }')();
-
-                __this_app = eval('new ' + __dynamic_app);
-
-                app_box.replace([__dynamic_app]);
-                app_box.get(__dynamic_app.name);
-
-                if (!__this_app.main(meta_script, ce_api))
+                if (executor.error.last.code() === executor.error.codes.INVALID)
                 {
-                    app_box.remove(random_app_id);
-
                     config.ce.status_label.innerHTML = '[INVALID]';
                     config.ce.exec_button.value = 'Run';
                     config.ce.exec_button.classList.remove('ce_stop');
 
-                    frog('CLOUD EDIT', '% Parse Mismatch %', 
-                         'The application contains wrong arguments!');
-
-                    return false;
+                    frog('CLOUD EDIT', '% Invalid %', 
+                         executor.error.last.message() + '\nPlease check the template...');
                 }
-            }
-            catch(e)
-            {
-                if (program_app_id !== null)
+                else if (executor.error.last.code() === executor.error.codes.MISMATCH)
                 {
-                    program_ref = colony.get(program_app_id);
+                    config.ce.status_label.innerHTML = '[ERROR]';
+                    config.ce.exec_button.value = 'Run';
+                    config.ce.exec_button.classList.remove('ce_stop');
 
-                    if (utils_sys.validation.misc.is_object(program_ref))
-                        program_ref.gui.actions.close(null);
+                    frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
+                }
+                else if (executor.error.last.code() === executor.error.codes.OTHER)
+                {
+                    config.ce.status_label.innerHTML = '[ERROR]';
+                    config.ce.exec_button.value = 'Run';
+                    config.ce.exec_button.classList.remove('ce_stop');
+
+                    frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
                 }
 
-                config.ce.status_label.innerHTML = '[ERROR]';
-                config.ce.exec_button.value = 'Run';
-                config.ce.exec_button.classList.remove('ce_stop');
-
-                frog('CLOUD EDIT', '[!] Error [!]', e);
-
-                return false;
-            }
-
-            program_ref = colony.get(program_app_id);
-
-            if (!utils_sys.validation.misc.is_object(program_ref))
-            {
-                program_ref = null;
-
-                app_box.remove(random_app_id);
-
-                config.ce.status_label.innerHTML = '[ERROR]';
-                config.ce.exec_button.value = 'Run';
-                config.ce.exec_button.classList.remove('ce_stop');
-
-                frog('CLOUD EDIT', '[!] Error [!]', 'Program is incomplete!');
-
-                return false;
+                return executor.terminate();
             }
 
             config.ce.status_label.innerHTML = '[RUNNING]';
             config.ce.exec_button.value = 'Stop';
             config.ce.exec_button.classList.add('ce_stop');
 
-            app_is_running = true;
+            program_is_running = true;
 
             return true;
         }
@@ -226,14 +183,13 @@ function cloud_edit()
 
         this.reset = function()
         {
-            app_box.remove(random_app_id);
+            executor.terminate();
 
             config.ce.status_label.innerHTML = '[READY]';
             config.ce.exec_button.value = 'Run';
             config.ce.exec_button.classList.remove('ce_stop');
 
-            app_is_running = false;
-            program_ref = null;
+            program_is_running = false;
 
             return true;
         };
@@ -268,12 +224,10 @@ function cloud_edit()
 
         config.id = 'cloud_edit';
         config.content = '[*] Welcome to Cloud Edit!\n\n' + 
-                         '[!] Please load the test app template from: "/framework/extensions/js/user/cloud_edit/my_ms_app.js"\n';
+                         '[!] Please load the test template from: "/framework/extensions/js/user/cloud_edit/my_ms_program.js"\n';
 
         nature.theme([config.id]);
         nature.apply('new');
-
-        random_app_id = 'user_app_' + random.generate();
 
         infinity.init();
 
@@ -300,6 +254,7 @@ function cloud_edit()
                                    {
                                        cloud_edit_bee.gui.fx.fade.out();
 
+                                       utils_int.reset();
                                        utils_int.destroy_editor();
                                    });
 
@@ -314,11 +269,10 @@ function cloud_edit()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
-        app_box = cosmos.hub.access('app_box');
         dev_box = cosmos.hub.access('dev_box');
         colony = cosmos.hub.access('colony');
 
-        meta_script = matrix.get('meta_script');
+        executor = dev_box.get('executor');
         nature = matrix.get('nature');
         infinity = matrix.get('infinity');
 
@@ -326,22 +280,17 @@ function cloud_edit()
     };
 
     var is_init = false,
-        app_is_running = false,
+        program_is_running = false,
         cosmos = null,
         matrix = null,
-        app_box = null,
         dev_box = null,
         colony = null,
-        meta_script = null,
+        executor = null,
         nature = null,
         infinity = null,
         cloud_edit_bee = null,
-        program_ref = null,
-        program_app_id = null,
-        random_app_id = null,
         config = new config_model(),
-        ce_api = new ce_app_api(),
+        ce_api = new ce_program_api(),
         utils_int = new utilities(),
-        utils_sys = new vulcan(),
-        random = new pythia();
+        utils_sys = new vulcan();
 }
