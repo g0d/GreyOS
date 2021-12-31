@@ -1,5 +1,5 @@
 /*
-    GreyOS - Super Tray (Version: 1.2)
+    GreyOS - Super Tray (Version: 1.4)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area service module.
@@ -18,6 +18,7 @@ function super_tray()
     {
         this.sys_id = null;
         this.id = null;
+        this.name = null;
         this.icon = 'default';
         this.action = null;
     }
@@ -32,15 +33,50 @@ function super_tray()
     {
         var me = this;
 
-        this.service_exists = function(service_id)
+        this.service_exists = function(sys_service_id)
         {
             for (var i = 0; i < tray_services.num; i++)
             {
-                if (tray_services.list[i].sys_id === service_id)
+                if (tray_services.list[i].sys_id === sys_service_id)
                     return true;
             }
 
             return false;
+        };
+
+        this.fix_service_icon_names = function(service_id)
+        {
+            var __unique_entry = 0,
+                __count = 1,
+                __svc_name = null,
+                __icon_object = null;
+
+            for (var i = 0; i < tray_services.num; i++)
+            {
+                if (tray_services.list[i].id === service_id)
+                    __unique_entry++;
+            }
+
+            for (var i = 0; i < tray_services.num; i++)
+            {
+                if (tray_services.list[i].id === service_id)
+                {
+                    __svc_name = service_id + ' (' + __count + ')';
+
+                    if (tray_services.num === 1 || __unique_entry === 1)
+                        __svc_name = service_id;
+
+                    tray_services.list[i].name = __svc_name;
+
+                    __icon_object = utils_sys.objects.by_id(super_tray_id + '_service_' + tray_services.list[i].sys_id);
+
+                    __icon_object.setAttribute('title', __svc_name);
+
+                    __count++;
+                }
+            }
+
+            return true;
         };
 
         this.load_ui = function()
@@ -144,7 +180,7 @@ function super_tray()
             __dynamic_object.setAttribute('id', __new_service_id);
             __dynamic_object.setAttribute('class', 'super_tray_service');
             __dynamic_object.setAttribute('data-id', __new_service.sys_id);
-            __dynamic_object.setAttribute('title', __new_service.id);
+            __dynamic_object.setAttribute('title', __new_service.name);
 
             __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/user/nature/themes/super_tray/pix/' + 
                                                      __new_service.icon + '.png")';
@@ -264,6 +300,7 @@ function super_tray()
 
         __new_tray_service.sys_id = sys_service_id;
         __new_tray_service.id = service_id;
+        __new_tray_service.name = service_id;
 
         if (icon !== null)
             __new_tray_service.icon = icon;
@@ -275,26 +312,30 @@ function super_tray()
         tray_services.num++;
 
         utils_int.add_service_icon(tray_services.num);
+        utils_int.fix_service_icon_names(service_id);
 
         return true;
     };
 
-    this.remove = function(service_id)
+    this.remove = function(sys_service_id)
     {
         if (is_init === false)
             return false;
 
-        if (utils_sys.validation.alpha.is_symbol(service_id))
+        if (utils_sys.validation.alpha.is_symbol(sys_service_id))
             return false;
 
         for (var i = 0; i < tray_services.num; i++)
         {
-            if (tray_services.list[i].sys_id === service_id)
+            if (tray_services.list[i].sys_id === sys_service_id)
             {
                 utils_int.remove_service_icon(i);
 
                 tray_services.list.splice(i, 1);
                 tray_services.num--;
+
+                if (tray_services.num > 0)
+                    utils_int.fix_service_icon_names(tray_services.list[0].id);
 
                 return true;
             }
