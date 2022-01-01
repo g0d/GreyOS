@@ -329,13 +329,18 @@ function super_tray()
         {
             if (tray_services.list[i].sys_id === sys_service_id)
             {
+                var __common_svc_id = tray_services.list[i].id;
+
                 utils_int.remove_service_icon(i);
 
                 tray_services.list.splice(i, 1);
                 tray_services.num--;
 
-                if (tray_services.num > 0)
-                    utils_int.fix_service_icon_names(tray_services.list[0].id);
+                for (var j = 0; j < tray_services.num; j++)
+                {
+                    if (tray_services.list[j].id === __common_svc_id)
+                        utils_int.fix_service_icon_names(tray_services.list[j].id);
+                }
 
                 return true;
             }
