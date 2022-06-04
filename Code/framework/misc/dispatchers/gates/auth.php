@@ -44,6 +44,8 @@
 	}
 	else if ($_POST['mode'] === 'logout') 							// Logout
 		logout();
+	// else if ($_POST['mode'] === 'register') 						// Register
+	// 	register();
 	else if ($_POST['mode'] === 'status') 							// Status
 		status();
 	else
@@ -52,19 +54,31 @@
 	// Login
 	function login($username, $password)
 	{
-		if ($username === 'demo@greyos.gr' && $password === 'password')
+		$all_users = fetch_credentials();
+
+		if (!$all_users)
 		{
-			session_regenerate_id(true);
+			echo '-1';
 
-			UTIL::Set_Session_Variable('auth', array('login' => 1, 
-													 'user' => array('name' => $result[0], 
-																	 'ip' => $_SERVER['REMOTE_ADDR'], 
-																	 'agent' => $_SERVER['HTTP_USER_AGENT']), 
-													 'last_activity' => time()));
+			return false;
+		}
 
-			echo '1';
+		foreach ($all_users as $credentials)
+		{
+			if ($credentials['username'] === $username && $credentials['password'] === $password)
+			{
+				session_regenerate_id(true);
 
-			return true;
+				UTIL::Set_Session_Variable('auth', array('login' => 1, 
+														 'user' => array('name' => $result[0], 
+																		 'ip' => $_SERVER['REMOTE_ADDR'], 
+																		 'agent' => $_SERVER['HTTP_USER_AGENT']), 
+														 'last_activity' => time()));
+
+				echo '1';
+
+				return true;
+			}
 		}
 
 		global $db_conn_link;
@@ -159,5 +173,17 @@
 		UTIL::Set_Session_Variable('auth', null);
 
 		return null;
+	}
+
+	function fetch_credentials()
+	{
+		$path = UTIL::Absolute_Path('framework/config/users.cfg');
+		$data = file_get_contents($path);
+		$result = json_decode($data, true);
+
+		if (json_last_error() !== JSON_ERROR_NONE)
+			return false;
+
+		return $result;
 	}
 ?>

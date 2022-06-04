@@ -1,11 +1,11 @@
 /*
-    GreyOS - Bee (Version: 4.0)
+    GreyOS - Bee (Version: 4.1)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -4022,7 +4022,7 @@ function bee()
                                 me.size.max.width() - __resize_status_msg_diff + 'px';
 
                                 ui_objects.casement.data.style.height = 
-                                me.gui.size.height() + 'px';
+                                me.size.height() + 'px';
                             }
                         }
                         else
@@ -4065,7 +4065,7 @@ function bee()
                                     __new_width - __resize_status_msg_diff + 'px';
 
                                     ui_objects.casement.data.style.height = 
-                                    me.gui.size.height() + 'px';
+                                    me.size.height() + 'px';
                                 }
                             }
                         }
@@ -4088,7 +4088,7 @@ function bee()
                                 me.size.min.width() - __resize_status_msg_diff + 'px';
 
                                 ui_objects.casement.data.style.height = 
-                                me.gui.size.height() + 'px';
+                                me.size.height() + 'px';
                             }
                         }
                         else
@@ -4131,7 +4131,7 @@ function bee()
                                     __new_width - __resize_status_msg_diff + 'px';
 
                                     ui_objects.casement.data.style.height = 
-                                    me.gui.size.height() + 'px';
+                                    me.size.height() + 'px';
                                 }
                             }
                         }
