@@ -115,10 +115,15 @@ function infinity()
 
         this.clear = function()
         {
-            var __infinity_object = utils_sys.objects.by_id(self.settings.id());
+            var __infinity_id = self.settings.id(),
+                __infinity_object = utils_sys.objects.by_id(__infinity_id);
 
             if (__infinity_object !== null)
-                __infinity_object.style.display = 'none';
+            {
+                var __container = utils_sys.objects.by_id(self.settings.container());
+
+                __container.removeChild(__infinity_object);
+            }
 
             return false;
         };
@@ -192,7 +197,6 @@ function infinity()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
-
         nature = matrix.get('nature');
 
         return true;
