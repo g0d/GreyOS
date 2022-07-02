@@ -18,6 +18,8 @@ Also, you may give it a try at https://greyos.gr/ (Credentials: demo@greyos.gr /
 
 
 
+Hot News: GreyOS is the basis of VeNUS, the COP of PROBOTEK. VeNUS is the enterprise & closed-source interface that PROBOTEK utilizes for all its operations.
+
 
 
 Enjoy!
