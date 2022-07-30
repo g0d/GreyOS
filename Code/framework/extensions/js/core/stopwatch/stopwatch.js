@@ -1,7 +1,7 @@
 /*
     Stopwatch (High precision timer for JS)
 
-    File name: stopwatch.js (Version: 0.5)
+    File name: stopwatch.js (Version: 0.6)
     Description: This file contains the Stopwatch extension.
     Dependencies: Vulcan.
 
@@ -23,7 +23,11 @@ function stopwatch()
         callback.call(this, self);
 
         if (__is_one_shot)
+        {
+            __is_on = false;
+
             return;
+        }
 
         __delay += interval;
         __diff = (new Date().getTime() - __init_time) - __delay;
