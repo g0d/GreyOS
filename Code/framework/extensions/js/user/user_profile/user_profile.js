@@ -48,7 +48,6 @@ function user_profile()
                                                                     }
                                         };
 
-                heartbeat_config.url = 'gate=heartbeat';
                 heartbeat_config.service_name = 'Session Watchdog';
 
                 heartbeat(heartbeat_config);
