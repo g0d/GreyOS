@@ -33,7 +33,7 @@ function user_profile()
             {
                 var heartbeat_config = {
                                             "interval"          :   60000,
-                                            "response_timeout"  :   3000,
+                                            "response_timeout"  :   30000,
                                             "on_success"        :   function()
                                                                     {
                                                                         // All is OK
