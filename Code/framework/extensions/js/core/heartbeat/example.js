@@ -6,6 +6,5 @@ var heartbeat_config = {
                             "on_timeout"        :   function() {  }
                        };
 
-heartbeat_config.url = '/';
 heartbeat_config.service_name = 'micro-MVC';
 heartbeat(heartbeat_config);
