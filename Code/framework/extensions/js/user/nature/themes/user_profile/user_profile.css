@@ -132,6 +132,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    width: 160px;
     margin-bottom: 4px;
 }
 
@@ -140,6 +141,10 @@
     color: #777777;
     font-size: 14px;
     font-weight: 300;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 160px;
     margin-bottom: 7px;
 }
 
