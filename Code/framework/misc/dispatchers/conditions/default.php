@@ -16,7 +16,14 @@
 	
 	// Put your default dispatching conditions in here or add new files under conditions folder for further customization
 
-	
+	$this_route = MVC::Get_Route('this');
+
+	if ($this_route === 'beat')
+	{
+		unset($this_route);
+
+		exit(0);
+	}
 
 	// ----------------------------
 ?>

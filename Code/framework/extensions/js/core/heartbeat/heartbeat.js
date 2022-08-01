@@ -1,7 +1,7 @@
 /*
     Heartbeat (Ping Services)
 
-    File name: heartbeat.js (Version: 0.9)
+    File name: heartbeat.js (Version: 1.0)
     Description: This file contains the Heartbeat extension.
     Dependencies: Vulcan, BULL, JAP, Stopwatch and Sensei.
 
@@ -72,7 +72,7 @@ function heartbeat(user_config)
     if (utils.validation.misc.is_undefined(user_config.url))
         user_config.url = '';
 
-    ajax_config.url = user_config.url + '/';
+    ajax_config.url = user_config.url;
     ajax_config.response_timeout = user_config.response_timeout;
 
     ajax_config.on_success = function(service_name, callback)
