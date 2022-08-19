@@ -1,7 +1,7 @@
 /*
     BULL (AJAX System/Framework)
 
-    File name: bull.js (Version: 17.0)
+    File name: bull.js (Version: 18.0)
     Description: This file contains the BULL extension.
     Dependencies: Vulcan and JAP.
 
@@ -191,7 +191,7 @@ function bull()
         
         function stop_timer(timer_handler)
         {
-            if (utils.validation.misc.is_invalid(timer_handler))
+            if (!utils.validation.misc.is_invalid(timer_handler))
                 clearTimeout(timer_handler);
         }
         
@@ -235,8 +235,8 @@ function bull()
             __timeout_callback = null,
             __fail_callback = null,
             __timer_handler = null,
-            __is_timeout = false,
             __ajax_response = null,
+            __is_timeout = false,
             ajax = new ajax_model();
         
         init_ajax();
