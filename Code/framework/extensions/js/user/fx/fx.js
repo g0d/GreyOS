@@ -1,12 +1,12 @@
 /*
     FX (Colection of high quality fx for web apps)
 
-    File id: fx.js (Version: 2.6)
+    File id: fx.js (Version: 2.8)
     Description: This file contains the FX extension.
     Dependencies: Vulcan.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2014 - 2021
+    Copyright (C) 2014 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -70,9 +70,12 @@ function fx()
 
             function do_fade()
             {
+                var __element = element_validator(id, 1);
+
                 if (__inc === 0)
                 {
-                    utils.objects.by_id(id).style.display = 'block';
+                    if (__element !== false)
+                        __element.style.display = 'block';
 
                     self.opacity.apply(id, 0.0);
                 }
@@ -139,6 +142,8 @@ function fx()
 
             function do_fade()
             {
+                var __element = element_validator(id, 1);
+
                 if (__dec === 1)
                     self.opacity.reset(id);
 
@@ -146,7 +151,7 @@ function fx()
                 {
                     __dec -= step;
 
-                    if (utils.objects.by_id(id) !== null)
+                    if (__element !== false)
                         self.opacity.apply(id, __dec);
                 }
                 else
@@ -154,9 +159,9 @@ function fx()
                     clearInterval(__interval_id);
                     clearTimeout(__time_out);
 
-                    if (utils.objects.by_id(id) !== null)
+                    if (__element !== false)
                     {
-                        utils.objects.by_id(id).style.display = 'none';
+                        __element.style.display = 'none';
 
                         self.opacity.apply(id, 0.0);
                     }
@@ -212,14 +217,20 @@ function fx()
 
     function opacity()
     {
-        var __opacity = 1.0;
+        var __element = null,
+            __opacity = 1.0;
 
         this.apply = function(id, val)
         {
             if (utils.validation.alpha.is_symbol(id) || !utils.validation.numerics.is_float(val) || val < 0.0 || val > 1.0)
                 return false;
 
-            utils.objects.by_id(id).style.opacity = val;
+            __element = element_validator(id, 1);
+
+            if (__element === false)
+                return false;
+
+            __element.style.opacity = val;
 
             __opacity = val;
 
@@ -231,7 +242,12 @@ function fx()
             if (utils.validation.alpha.is_symbol(id))
                 return false;
 
-            utils.objects.by_id(id).style.opacity = 1.0;
+            __element = element_validator(id, 1);
+
+            if (__element === false)
+                return false;
+
+            __element.style.opacity = 1.0;
 
             __opacity = 1.0;
 
@@ -812,11 +828,11 @@ function fx()
         };
     }
 
+    var self = this,
+        utils = new vulcan();
+
     this.fade = new fade();
     this.opacity = new opacity();
     this.animation = new animation();
     this.visibility = new visibility();
-
-    var self = this,
-        utils = new vulcan();
 }
