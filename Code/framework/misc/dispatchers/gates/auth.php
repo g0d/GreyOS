@@ -48,6 +48,8 @@
 	// 	register();
 	else if ($_POST['mode'] === 'status') 							// Status
 		status();
+	else if ($_POST['mode'] === 'details')							// User details
+		details();
 	else
 		echo '-1';
 
@@ -70,7 +72,8 @@
 				session_regenerate_id(true);
 
 				UTIL::Set_Session_Variable('auth', array('login' => 1, 
-														 'user' => array('name' => $result[0], 
+														 'user' => array('profile' => $credentials['profile'],
+														 				 'email' => $username, 
 																		 'ip' => $_SERVER['REMOTE_ADDR'], 
 																		 'agent' => $_SERVER['HTTP_USER_AGENT']), 
 														 'last_activity' => time()));
@@ -102,7 +105,8 @@
 			session_regenerate_id(true);
 
 			UTIL::Set_Session_Variable('auth', array('login' => 1, 
-													 'user' => array('name' => $result[0], 
+													 'user' => array('profile' => $credentials['profile'],
+													 				 'email' => $username, 
 																	 'ip' => $_SERVER['REMOTE_ADDR'], 
 																	 'agent' => $_SERVER['HTTP_USER_AGENT']), 
 													 'last_activity' => time()));
@@ -165,7 +169,22 @@
 		return true;
 	}
 
-	// Destroy session
+	function details()
+	{
+		$user_settings = UTIL::Get_Session_Variable('auth');
+
+		if (empty($user_settings))
+		{
+			echo '0';
+
+			return false;
+		}
+
+		echo json_encode($user_settings);
+
+		return true;
+	}
+
 	function clear_session()
 	{
 		session_regenerate_id(true);

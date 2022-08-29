@@ -5,7 +5,7 @@
     Description: This file contains the User Profile module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -26,17 +26,17 @@ function user_profile()
 
                 msg_win.init('desktop');
                 msg_win.show('GreyOS', 'Your session has been terminated!',
-                function() { setTimeout(function(){ me.logout(); }, 2000); });
+                function() { setTimeout(function(){ location.reload(); /*me.logout();*/ }, 1000); });
             }
 
             function run_heartbeat()
             {
                 var heartbeat_config = {
-                                            "interval"          :   60000,
-                                            "response_timeout"  :   30000,
+                                            "interval"          :   90000,
+                                            "response_timeout"  :   60000,
                                             "on_success"        :   function()
                                                                     {
-                                                                        // All is OK
+                                                                        // OK
                                                                     },
                                             "on_fail"           :   function()
                                                                     {
@@ -44,7 +44,7 @@ function user_profile()
                                                                     },
                                             "on_timeout"        :   function()
                                                                     {
-                                                                        abnormal_logout();
+                                                                        // Wait more until fail
                                                                     }
                                         };
 
@@ -55,6 +55,27 @@ function user_profile()
             }
         
             setTimeout(function(){ run_heartbeat(); }, 1000);
+        };
+
+        this.details = function()
+        {
+            var __data = 'gate=auth&mode=details';
+
+            ajax_factory(__data, function(result)
+                                 {
+                                    user_details = JSON.parse(result);
+
+                                    utils_sys.objects.by_id('user_profile_name').innerHTML = user_details.user.profile;
+                                    utils_sys.objects.by_id('user_email').innerHTML = user_details.user.email;
+                                 },
+                                 function()
+                                 {
+                                     // Nothing...
+                                 },
+                                 function()
+                                 {
+                                    // No need to use this
+                                 });
         };
 
         this.logout = function()
@@ -85,6 +106,7 @@ function user_profile()
         {
             me.draw();
             me.attach_events();
+            me.details();
             me.session_watchdog();
 
             return true;
@@ -109,12 +131,12 @@ function user_profile()
                                                     <div id="profile_info">\
                                                         <div id="big_avatar"></div>\
                                                         <div id="user_data">\
-                                                            <div id="user_full_name">George Delaportas</div>\
-                                                            <div id="user_email">demo@greyos.gr</div>\
+                                                            <div id="user_profile_name"></div>\
+                                                            <div id="user_email"></div>\
                                                             <div id="user_account">Account</div>\
                                                             <div id="separator">|</div>\
                                                             <div id="user_settings">Settings</div>\
-                                                            <div id="user_reboot">Reboot system</div>\
+                                                            <div id="user_reboot">Refresh screen</div>\
                                                         </div>\
                                                     </div>\
                                                 </div>\
@@ -330,6 +352,7 @@ function user_profile()
     var is_init = false,
         is_profile_area_visible = false,
         user_profile_id = null,
+        user_details = null,
         cosmos = null,
         matrix = null,
         colony = null,

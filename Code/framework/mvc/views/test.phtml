@@ -173,7 +173,10 @@
 
         msg_box.init('main');
 
-        content_fetcher(content_id, '<?=LANG::Get('this');?>', function(response) { msg_box.show('micro-MVC', response); });
+        content_fetcher(content_id, '<?=LANG::Get('this');?>', 
+        function(response) { msg_box.show('micro-MVC', response); }, 
+        function() {}, 
+        function() {});
     }
 
     function send_data_to_server()

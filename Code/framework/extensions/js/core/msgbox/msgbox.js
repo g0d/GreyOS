@@ -1,12 +1,12 @@
 /*
     MsgBox (Message Window)
 
-    File name: msgbox.js (Version: 1.2)
+    File name: msgbox.js (Version: 1.4)
     Description: This file contains the MsgBox extension.
     Dependencies: Vulcan and Content Fetcher.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2017 - 2021
+    Copyright (C) 2017 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -43,22 +43,16 @@ function msgbox()
             html = '<div class="msg_window">' + 
                      '  <div id="' + win_title + '"></div>' + 
                      '  <div id="' + __msgbox_object.id + '_content"></div>' + 
-                     '  <div id="' + button_title + '"></div>' + 
+                     '  <div id="' + button_title + '">Close</div>' + 
                      '</div>';
 
             __msgbox_object.innerHTML = html;
 
             container.appendChild(__msgbox_object);
 
-            content_fetcher(win_title, null, 
-                            function()
-                            {
-                                utils.objects.by_id(button_title).innerHTML = 'Close';
+            button_object = utils.objects.by_id(button_title);
 
-                                button_object = utils.objects.by_id(button_title);
-
-                                utils.events.attach(button_title, button_object, 'click',  self.hide_win);
-                            });
+            utils.events.attach(button_title, button_object, 'click',  self.hide_win);
 
             return true;
         };

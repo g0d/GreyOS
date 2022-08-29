@@ -1,12 +1,12 @@
 /*
     WorkBox (Popup window)
 
-    File name: workbox.js (Version: 1.2)
+    File name: workbox.js (Version: 1.4)
     Description: This file contains the WorkBox extension.
     Dependencies: Vulcan and Content Fetcher.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2017
+    Copyright (C) 2017 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -20,7 +20,8 @@ function workbox()
 
         this.draw_screen = function(container_id, title, button_label)
         {
-            var __button_object = null,
+            var __title_object = null,
+                __button_object = null,
                 __container = utils.objects.by_id(container_id),
                 __html = null;
 
@@ -50,14 +51,22 @@ function workbox()
 
             __container.appendChild(__workbox_object);
 
+            __title_object = utils.objects.by_id(win_title_id);
+            __button_object = utils.objects.by_id(button_title_id);
+
             content_fetcher(win_title_id, null, 
-                            function(content)
+                            function()
                             {
-                                utils.objects.by_id(win_title_id).innerHTML = title;
-                                utils.objects.by_id(button_title_id).innerHTML = button_label;
-
-                                __button_object = utils.objects.by_id(button_title_id);
-
+                                __title_object.innerHTML = title;
+                                __button_object.innerHTML = button_label;
+                            },
+                            function()
+                            {
+                                __title_object.innerHTML = 'GreyOS';
+                                __button_object.innerHTML = 'Close';
+                            },
+                            function()
+                            {
                                 utils.events.attach(button_title_id, __button_object, 'click',  self.hide_win);
                             });
 

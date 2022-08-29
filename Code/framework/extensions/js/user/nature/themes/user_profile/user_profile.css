@@ -5,7 +5,7 @@
     Description: This file contains the User Profile theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -124,7 +124,7 @@
     margin-left: 10px;
 }
 
-#user_full_name
+#user_profile_name
 {
     font-size: 14px;
     font-weight: bold;

@@ -1,17 +1,17 @@
 /*
     Content Fetcher (Universal content loader)
 
-    File name: content_fetcher.js (Version: 0.3)
+    File name: content_fetcher.js (Version: 1.0)
     Description: This file contains the Content Fetcher extension.
     Dependencies: Vulcan and BULL.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2016
+    Copyright (C) 2016 - 2022
     Open Software License (OSL 3.0)
 */
 
 // Content Fetcher
-function content_fetcher(content_id, language_code, result_callback)
+function content_fetcher(content_id, language_code, success_cb, failure_cb, default_cb)
 {
     var data = null,
         ajax_config = null,
@@ -26,7 +26,9 @@ function content_fetcher(content_id, language_code, result_callback)
          !utils.validation.alpha.is_string(language_code)))
         return false;
 
-    if (!utils.validation.misc.is_function(result_callback))
+    if (!utils.validation.misc.is_function(success_cb) || 
+        !utils.validation.misc.is_function(failure_cb) || 
+        !utils.validation.misc.is_function(default_cb))
         return false;
 
     data = "gate=content&content_id=" + content_id;
@@ -39,7 +41,15 @@ function content_fetcher(content_id, language_code, result_callback)
                         "url"           :   "/",
                         "data"          :   data,
                         "ajax_mode"     :   "asynchronous",
-                        "on_success"    :   function(response) { result_callback.call(this, response); }
+                        "on_success"    :   function(response)
+                                            {
+                                                if (response !== 'undefined')
+                                                    success_cb.call(this, response);
+                                                else
+                                                    failure_cb.call(this, response);
+
+                                                default_cb.call(this);
+                                            }
                   };
 
     ajax.run(ajax_config);
