@@ -67,6 +67,8 @@
     "teal_mail"         :   "user",
     "cloud_edit"        :   "user",
     "radio_dude"        :   "user",
+    "ace"               :   "user",
+    "banana"            :   "user",
     "e_games"           :   "user",
     "i_fb"              :   "user",
     "i_twitter"         :   "user",
@@ -75,7 +77,9 @@
     "i_bassoon"         :   "user",
     "i_quakejs"         :   "user",
     "i_minecraft"       :   "user",
-    "i_webgl_preview"   :   "user",
-    "ace"               :   "user",
-    "banana"            :   "user"
+    "i_youdj"           :   "user",
+    "i_audiomass"       :   "user",
+    "i_vectorink"       :   "user",
+    "i_ganttio"         :   "user",
+    "i_webgl_preview"   :   "user"
 }

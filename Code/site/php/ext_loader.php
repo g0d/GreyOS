@@ -73,7 +73,10 @@
     UTIL::Load_Extension('oz', 'js');
     //UTIL::Load_Extension('sketch_pad', 'js');
     UTIL::Load_Extension('coyote', 'js');
+    UTIL::Load_Extension('banana', 'js');
+    UTIL::Load_Extension('splash', 'php');
     //UTIL::Load_Extension('teal_mail', 'js');
+    //UTIL::Load_Extension('e_games', 'js');
     //UTIL::Load_Extension('i_fb', 'js');
     //UTIL::Load_Extension('i_twitter', 'js');
     //UTIL::Load_Extension('i_linkedin', 'js');
@@ -83,8 +86,9 @@
     UTIL::Load_Extension('i_bassoon', 'js');
     UTIL::Load_Extension('i_quakejs', 'js');
     UTIL::Load_Extension('i_minecraft', 'js');
+    UTIL::Load_Extension('i_youdj', 'js');
+    UTIL::Load_Extension('i_audiomass', 'js');
+    UTIL::Load_Extension('i_vectorink', 'js');
+    UTIL::Load_Extension('i_ganttio', 'js');
     UTIL::Load_Extension('i_webgl_preview', 'js');
-    //UTIL::Load_Extension('e_games', 'js');
-    UTIL::Load_Extension('banana', 'js');
-    UTIL::Load_Extension('splash', 'php');
 ?>

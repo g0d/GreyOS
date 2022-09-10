@@ -5,7 +5,7 @@
     Description: This file contains the bootstrap facility.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -51,7 +51,8 @@ function boot_script()
                             trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
 
         // List of user applications
-        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, i_webgl_preview];
+        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, 
+                         i_youdj, i_audiomass, i_vectorink, i_ganttio, i_webgl_preview];
 
         // Add a VM to the hypervisor
         os_hypervisor.add([os_vm]);

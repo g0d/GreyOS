@@ -454,6 +454,126 @@
     background-image: url('pix/favorites/inactive/icon_games.png') !important;
 }
 
+#app_i_youdj
+{
+    background-image: url('pix/favorites/inactive/icon_app.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#app_i_youdj:hover
+{
+    background-image: url('pix/favorites/hover/icon_app.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.app_i_youdj_on
+{
+    background-image: url('pix/favorites/active/icon_app.png') !important;
+}
+
+.app_i_youdj_off
+{
+    background-image: url('pix/favorites/inactive/icon_app.png') !important;
+}
+
+#app_i_audiomass
+{
+    background-image: url('pix/favorites/inactive/icon_app.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#app_i_audiomass:hover
+{
+    background-image: url('pix/favorites/hover/icon_app.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.app_i_audiomass_on
+{
+    background-image: url('pix/favorites/active/icon_app.png') !important;
+}
+
+.app_i_audiomass_off
+{
+    background-image: url('pix/favorites/inactive/icon_app.png') !important;
+}
+
+#app_i_vectorink
+{
+    background-image: url('pix/favorites/inactive/icon_app.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#app_i_vectorink:hover
+{
+    background-image: url('pix/favorites/hover/icon_app.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.app_i_vectorink_on
+{
+    background-image: url('pix/favorites/active/icon_app.png') !important;
+}
+
+.app_i_vectorink_off
+{
+    background-image: url('pix/favorites/inactive/icon_app.png') !important;
+}
+
+#app_i_ganttio
+{
+    background-image: url('pix/favorites/inactive/icon_app.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#app_i_ganttio:hover
+{
+    background-image: url('pix/favorites/hover/icon_app.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.app_i_ganttio_on
+{
+    background-image: url('pix/favorites/active/icon_app.png') !important;
+}
+
+.app_i_ganttio_off
+{
+    background-image: url('pix/favorites/inactive/icon_app.png') !important;
+}
+
 #app_i_webgl_preview
 {
     background-image: url('pix/favorites/inactive/icon_star.png');

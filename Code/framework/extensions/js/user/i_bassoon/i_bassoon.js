@@ -44,7 +44,7 @@ function i_bassoon()
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_bassoon_bee.settings.general.id() + '_overlay" class="overlay"></div>\
                                  <iframe src="https://www.stef.be/bassoontracker/?file=demomods%2Fspacedeb.mod"></iframe>\
-                             </div>';
+                              </div>';
 
             i_bassoon_bee.settings.data.window.content(config.content);
 
@@ -110,10 +110,10 @@ function i_bassoon()
                                      utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'block';
                                  });
         i_bassoon_bee.on('dragging', function()
-                                    {
+                                     {
                                         i_bassoon_bee.gui.fx.opacity.settings.set(0.7);
                                         i_bassoon_bee.gui.fx.opacity.apply();
-                                    });
+                                     });
         i_bassoon_bee.on('dragged', function()
                                     {
                                         i_bassoon_bee.gui.fx.opacity.reset();
@@ -123,9 +123,9 @@ function i_bassoon()
         i_bassoon_bee.on('resize', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_bassoon_bee.on('resized', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'none'; });
         i_bassoon_bee.on('close', function()
-                                 {
+                                  {
                                     i_bassoon_bee.gui.fx.fade.out();
-                                 });
+                                  });
 
         return true;
     };
