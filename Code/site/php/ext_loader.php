@@ -6,12 +6,13 @@
         Description: This file contains the Extensions Loader facility.
         
         Coded by George Delaportas (G0D)
-        Copyright © 2013 - 2021
+        Copyright © 2013 - 2022
         Open Software License (OSL 3.0)
     */
 
     UTIL::Load_Extension('vulcan', 'js');
     UTIL::Load_Extension('pythia', 'js');
+    UTIL::Load_Extension('teal_fs', 'js');
     UTIL::Load_Extension('fx', 'js');
     UTIL::Load_Extension('jap', 'js');
     UTIL::Load_Extension('lava', 'js');
@@ -74,7 +75,6 @@
     //UTIL::Load_Extension('sketch_pad', 'js');
     UTIL::Load_Extension('coyote', 'js');
     UTIL::Load_Extension('banana', 'js');
-    UTIL::Load_Extension('splash', 'php');
     //UTIL::Load_Extension('teal_mail', 'js');
     //UTIL::Load_Extension('e_games', 'js');
     //UTIL::Load_Extension('i_fb', 'js');
@@ -93,4 +93,5 @@
     UTIL::Load_Extension('i_vectorink', 'js');
     UTIL::Load_Extension('i_ganttio', 'js');
     UTIL::Load_Extension('i_webgl_preview', 'js');
+    UTIL::Load_Extension('splash', 'php');
 ?>

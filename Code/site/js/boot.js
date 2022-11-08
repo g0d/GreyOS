@@ -48,7 +48,8 @@ function boot_script()
 
         // List of system services
         var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
+                            teal_fs, trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, 
+                            nature, chameleon];
 
         // List of user applications
         var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, 

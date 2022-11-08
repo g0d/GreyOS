@@ -1,6 +1,6 @@
 <?php
     /*
-        Active Directory integration (ADi)
+        Active Directory Integration (ADi)
 
         File name: adi.php (Version: 0.1)
         Description: This file contains the ADi extension.
