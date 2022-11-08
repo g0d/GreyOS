@@ -15,7 +15,7 @@ function f5()
     function reboot(message)
     {
         var __dynamic_object = null,
-            __message = 'Rebooting...';
+            __message = 'Unloading...';
 
         if (!utils_sys.validation.misc.is_undefined(message))
         {

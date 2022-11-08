@@ -514,6 +514,66 @@
     background-image: url('pix/favorites/inactive/icon_app.png') !important;
 }
 
+#app_i_soundtrap
+{
+    background-image: url('pix/favorites/inactive/icon_app.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#app_i_soundtrap:hover
+{
+    background-image: url('pix/favorites/hover/icon_app.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.app_i_soundtrap_on
+{
+    background-image: url('pix/favorites/active/icon_app.png') !important;
+}
+
+.app_i_soundtrap_off
+{
+    background-image: url('pix/favorites/inactive/icon_app.png') !important;
+}
+
+#app_i_ampedstudio
+{
+    background-image: url('pix/favorites/inactive/icon_app.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#app_i_ampedstudio:hover
+{
+    background-image: url('pix/favorites/hover/icon_app.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.app_i_ampedstudio_on
+{
+    background-image: url('pix/favorites/active/icon_app.png') !important;
+}
+
+.app_i_ampedstudio_off
+{
+    background-image: url('pix/favorites/inactive/icon_app.png') !important;
+}
+
 #app_i_vectorink
 {
     background-image: url('pix/favorites/inactive/icon_app.png');

@@ -88,6 +88,8 @@
     UTIL::Load_Extension('i_minecraft', 'js');
     UTIL::Load_Extension('i_youdj', 'js');
     UTIL::Load_Extension('i_audiomass', 'js');
+    UTIL::Load_Extension('i_soundtrap', 'js');
+    UTIL::Load_Extension('i_ampedstudio', 'js');
     UTIL::Load_Extension('i_vectorink', 'js');
     UTIL::Load_Extension('i_ganttio', 'js');
     UTIL::Load_Extension('i_webgl_preview', 'js');

@@ -172,6 +172,7 @@ option
 
 #search
 {
+    display: none;
     float: right;
     margin-right: 35px;
 }

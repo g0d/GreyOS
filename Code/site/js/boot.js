@@ -52,7 +52,7 @@ function boot_script()
 
         // List of user applications
         var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, 
-                         i_youdj, i_audiomass, i_vectorink, i_ganttio, i_webgl_preview];
+                         i_youdj, i_audiomass, i_soundtrap, i_ampedstudio, i_vectorink, i_ganttio, i_webgl_preview];
 
         // Add a VM to the hypervisor
         os_hypervisor.add([os_vm]);

@@ -136,7 +136,7 @@ function user_profile()
                                                             <div id="user_account">Account</div>\
                                                             <div id="separator">|</div>\
                                                             <div id="user_settings">Settings</div>\
-                                                            <div id="user_reboot">Refresh screen</div>\
+                                                            <div id="user_reboot">Reload Interface</div>\
                                                         </div>\
                                                     </div>\
                                                 </div>\
