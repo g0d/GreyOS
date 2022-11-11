@@ -1,3 +1,7 @@
+/*
+    Tests for current libs and future additions
+*/
+
 var tk = new task();
 tk.create('/framework/extensions/js/user/task/worker.js');
 tk.message.receive((x) => { console.log(x.data); });

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.2)
+    GreyOS - Meta-Script (Version: 1.3)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -82,6 +82,11 @@ function meta_script()
             this.tasks = function()
             {
                 return owl;
+            };
+
+            this.fs = function()
+            {
+                return teal_fs;
             };
 
             this.reboot = function()
@@ -786,6 +791,7 @@ function meta_script()
         octopus = matrix.get('octopus');
         super_tray = matrix.get('super_tray');
         owl = matrix.get('owl');
+        teal_fs = matrix.get('teal_fs');
         infinity = matrix.get('infinity');
 
         return true;
@@ -806,6 +812,7 @@ function meta_script()
         octopus = null,
         super_tray = null,
         owl = null,
+        teal_fs = null,
         infinity = null,
         utils_sys = new vulcan(),
         config_parser = new jap(),

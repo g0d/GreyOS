@@ -94,10 +94,10 @@ function i_soundtrap()
         i_soundtrap_bee.settings.general.single_instance(true);
         i_soundtrap_bee.settings.actions.can_edit_title(false);
         i_soundtrap_bee.settings.actions.can_use_menu(false);
-        i_soundtrap_bee.gui.position.left(280);
-        i_soundtrap_bee.gui.position.top(32);
-        i_soundtrap_bee.gui.size.width(1660);
-        i_soundtrap_bee.gui.size.height(960);
+        i_soundtrap_bee.gui.position.left(120);
+        i_soundtrap_bee.gui.position.top(20);
+        i_soundtrap_bee.gui.size.width(1600);
+        i_soundtrap_bee.gui.size.height(920);
         i_soundtrap_bee.gui.size.min.width(1200);
         i_soundtrap_bee.gui.size.min.height(800);
         i_soundtrap_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

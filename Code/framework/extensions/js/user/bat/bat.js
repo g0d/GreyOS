@@ -97,6 +97,9 @@ function bat()
 
         super_tray.add(service_config.sys_name, service_config.name, service_config.icon);
 
+        if (backtrace === true)
+            frog('BAT', 'Services :: Register', service_config);
+
         return morpheus.execute(service_config.sys_name, 'main', 'register');
     };
 
@@ -109,6 +112,9 @@ function bat()
             return false;
 
         super_tray.remove(service_config.sys_name);
+
+        if (backtrace === true)
+            frog('BAT', 'Services :: Unregister', service_config);
 
         return morpheus.execute(service_config.sys_name, 'main', 'unregister');
     };
@@ -133,6 +139,19 @@ function bat()
         return true;
     };
 
+    this.backtrace = function(val)
+    {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (!utils_sys.validation.misc.is_bool(val))
+            return false;
+
+        backtrace = val;
+
+        return true;
+    };
+
     this.cosmos = function(cosmos_object)
     {
         if (utils_sys.validation.misc.is_undefined(cosmos_object))
@@ -149,6 +168,7 @@ function bat()
     };
 
     var is_init = false,
+        backtrace = false,
         cosmos = null,
         matrix = null,
         super_tray = null,

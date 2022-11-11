@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Parser (Version: 1.0)
+    GreyOS - Meta-Parser (Version: 1.1)
 
     File name: meta_parser.js
     Description: This file contains the Meta-Parser - Meta scripting language parser interface development module.
@@ -70,12 +70,12 @@ function meta_parser()
                                                         {
                                                             "key"       :   { "name" : "type", "optional" : false },
                                                             "value"     :   { "type" : "string" },
-                                                            "choices"   :   ["app", "service"]
+                                                            "choices"   :   [ "app", "service" ]
                                                         },
                                                         {
                                                             "key"       :   { "name" : "mode", "optional" : false },
                                                             "value"     :   { "type" : "string" },
-                                                            "choices"   :   ["release", "debug"]
+                                                            "choices"   :   [ "release", "debug" ]
                                                         },
                                                         {
                                                             "key"       :   { "name" : "script", "optional" : false },

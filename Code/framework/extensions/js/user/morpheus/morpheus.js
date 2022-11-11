@@ -272,7 +272,7 @@ function morpheus()
             return false;
 
         if (backtrace === true)
-            frog('EVENTS MANAGER', 'Event :: Store', this_event);
+            frog('MORPHEUS', 'Event :: Store', this_event);
 
         return global_events_scheduler.include(uid, this_context, this_event, cmd, this_object);
     };
@@ -288,7 +288,7 @@ function morpheus()
             return false;
 
         if (backtrace === true)
-            frog('EVENTS MANAGER', 'Event :: Delete', this_event);
+            frog('MORPHEUS', 'Event :: Delete', this_event);
 
         return global_events_scheduler.remove(uid, this_event, this_object);
     };
@@ -302,7 +302,7 @@ function morpheus()
             return false;
 
         if (backtrace === true)
-            frog('EVENTS MANAGER', 'Event :: Clear', 'All for: ' + uid);
+            frog('MORPHEUS', 'Event :: Clear', 'All for: ' + uid);
 
         return global_events_scheduler.destroy(uid);
     };
@@ -318,7 +318,7 @@ function morpheus()
             return false;
 
         if (backtrace === true)
-            frog('EVENTS MANAGER', 'Event :: Execute', this_event);
+            frog('MORPHEUS', 'Event :: Execute', this_event);
 
         return global_events_scheduler.call(uid, this_context, this_event);
     };

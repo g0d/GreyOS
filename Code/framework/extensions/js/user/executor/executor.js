@@ -5,7 +5,7 @@
     Description: This file contains the Executor - User-level program execution development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2022
     Open Software License (OSL 3.0)
 */
 

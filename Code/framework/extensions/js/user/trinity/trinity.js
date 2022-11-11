@@ -2,7 +2,7 @@
     GreyOS - Trinity (Version: 1.0)
 
     File name: trinity.js
-    Description: This file contains the Trinity - Systems management service module.
+    Description: This file contains the Trinity - System management service module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021

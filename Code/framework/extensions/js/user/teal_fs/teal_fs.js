@@ -15,49 +15,78 @@ function teal_fs()
 {
     var self = this;
 
-    function teal_fs_model()
-    {
-        this.id = null;
-        this.file = null;
-    }
-
-    function teal_fs_manager_model()
-    {
-        this.create = function(worker_file)
-        {
-            
-        };
-    }
-
-    this.id = function()
+    this.read = function()
     {
         
     };
 
-    this.create = function(worker_file)
+    this.write = function()
     {
         
     };
 
-    this.destroy = function()
+    this.move = function()
     {
         
     };
 
-    function init()
+    this.delete = function()
     {
-        if (utils.validation.misc.is_undefined(Worker))
+        
+    };
+
+    this.close = function()
+    {
+        
+    };
+
+    this.link = function()
+    {
+        
+    };
+
+    this.permissions = function()
+    {
+        
+    };
+
+    this.metadata = function()
+    {
+        
+    };
+
+    this.list = function()
+    {
+        
+    };
+
+    this.backtrace = function(val)
+    {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        return this;
-    }
+        if (!utils_sys.validation.misc.is_bool(val))
+            return false;
 
-    var __is_teal_fs_created = false,
-        __teal_fs = new teal_fs_model(),
-        teal_fs_manager = new teal_fs_manager_model(),
-        rnd_gen = new pythia(),
-        utils = new vulcan();
+        backtrace = val;
 
-    // Initialize
-    init();
+        return true;
+    };
+
+    this.cosmos = function(cosmos_object)
+    {
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
+            return false;
+
+        cosmos = cosmos_object;
+
+        colony = cosmos.hub.access('colony');
+
+        return true;
+    };
+
+    var backtrace = false,
+        cosmos = null,
+        colony = null,
+        utils_sys = new vulcan();
 }

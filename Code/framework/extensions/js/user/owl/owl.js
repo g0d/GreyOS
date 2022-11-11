@@ -1,11 +1,11 @@
 /*
-    GreyOS - Owl (Version: 2.0)
+    GreyOS - Owl (Version: 2.1)
 
     File name: owl.js
     Description: This file contains the Owl - Bee tracer & status logger module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -150,12 +150,20 @@ function owl()
             for (var i = 0; i < collection.num; i++)
             {
                 if (bee_id === collection.list.bee.id[i] && status === collection.list.status[i])
+                {
+                    if (backtrace === true)
+                        frog('OWL', 'List :: Set', collection);
+
                     return true;
+                }
 
                 if (bee_id === collection.list.bee.id[i] && status !== collection.list.status[i])
                 {
                     collection.list.status[i] = status;
                     collection.list.epoch[i] = new Date().getTime();
+
+                    if (backtrace === true)
+                        frog('OWL', 'List :: Set', collection);
 
                     return true;
                 }
@@ -168,6 +176,9 @@ function owl()
             collection.list.status.push(status);
             collection.list.epoch.push(__current_epoch);
             collection.num++;
+
+            if (backtrace === true)
+                frog('OWL', 'List :: Set', collection);
 
             return true;
         };
@@ -192,6 +203,9 @@ function owl()
                     collection.list.status.splice(i, 1);
                     collection.list.epoch.splice(i, 1);
                     collection.num--;
+
+                    if (backtrace === true)
+                        frog('OWL', 'List :: Remove', collection);
 
                     return true;
                 }
@@ -226,6 +240,8 @@ function owl()
 
     this.list = function(match_status)
     {
+        var __list = null;
+
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
@@ -238,7 +254,9 @@ function owl()
         if (!utils_int.is_valid_status(match_status))
             return false;
 
-        return utils_int.match_status(match_status);
+        __list = utils_int.match_status(match_status);
+
+        return __list;
     };
 
     this.backtrace = function(val)

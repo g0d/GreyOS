@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 1.2)
+    GreyOS - User Profile (Version: 1.3)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -14,6 +14,12 @@ function user_profile()
 {
     var self = this;
 
+    function user_profile_model()
+    {
+        this.full_name = null;
+        this.email = null;
+    }
+
     function utilities()
     {
         var me = this;
@@ -26,7 +32,7 @@ function user_profile()
 
                 msg_win.init('desktop');
                 msg_win.show('GreyOS', 'Your session has been terminated!',
-                function() { setTimeout(function(){ location.reload(); /*me.logout();*/ }, 1000); });
+                function() { setTimeout(function(){ location.reload(); }, 1000); });
             }
 
             function run_heartbeat()
@@ -57,16 +63,24 @@ function user_profile()
             setTimeout(function(){ run_heartbeat(); }, 1000);
         };
 
-        this.details = function()
+        this.details = function(print)
         {
             var __data = 'gate=auth&mode=details';
 
             ajax_factory(__data, function(result)
                                  {
-                                    user_details = JSON.parse(result);
+                                    var __user_details = JSON.parse(result);
 
-                                    utils_sys.objects.by_id('user_profile_name').innerHTML = user_details.user.profile;
-                                    utils_sys.objects.by_id('user_email').innerHTML = user_details.user.email;
+                                    user_profile_data.full_name = __user_details.user.profile;
+                                    user_profile_data.email = __user_details.user.email;
+
+                                    if (print === true)
+                                    {
+                                        utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
+                                        utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
+                                    }
+                                    else
+                                        return user_profile_data;
                                  },
                                  function()
                                  {
@@ -106,7 +120,7 @@ function user_profile()
         {
             me.draw();
             me.attach_events();
-            me.details();
+            me.details(true);
             me.session_watchdog();
 
             return true;
@@ -296,6 +310,14 @@ function user_profile()
         };
     }
 
+    this.details = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return utils_int.details(false);
+    };
+
     this.logout = function()
     {
         utils_int.logout();
@@ -365,6 +387,7 @@ function user_profile()
         random = new pythia(),
         key_control = new key_manager(),
         cc_reload = new f5(),
+        user_profile_data = new user_profile_model(),
         utils_int = new utilities();
 
     this.settings = new settings();

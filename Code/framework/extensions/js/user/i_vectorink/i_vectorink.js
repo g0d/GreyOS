@@ -95,7 +95,7 @@ function i_vectorink()
         i_vectorink_bee.settings.actions.can_edit_title(false);
         i_vectorink_bee.settings.actions.can_use_menu(false);
         i_vectorink_bee.gui.position.left(250);
-        i_vectorink_bee.gui.position.top(50);
+        i_vectorink_bee.gui.position.top(30);
         i_vectorink_bee.gui.size.width(1300);
         i_vectorink_bee.gui.size.height(900);
         i_vectorink_bee.gui.size.min.width(900);
