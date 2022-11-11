@@ -1,4 +1,4 @@
-# GreyOS (Ver. 2.9 - Alpha)
+# GreyOS (Ver. 3.0 alpha)
 
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Logo.png)
 
