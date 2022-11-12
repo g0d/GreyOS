@@ -3,7 +3,7 @@
 
     File name: msgbox.js (Version: 1.4)
     Description: This file contains the MsgBox extension.
-    Dependencies: Vulcan and Content Fetcher.
+    Dependencies: Vulcan.
 
     Coded by George Delaportas (G0D) 
     Copyright (C) 2017 - 2022
