@@ -1,16 +1,16 @@
 /*
-    GreyOS - Meta-Parser (Version: 1.1)
+    GreyOS - Meta-Program Config (Version: 1.0)
 
-    File name: meta_parser.js
-    Description: This file contains the Meta-Parser - Meta scripting language parser interface development module.
+    File name: meta_program_config.js
+    Description: This file contains the Meta-Program Config validator extension.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2022
     Open Software License (OSL 3.0)
 */
 
-// Meta-Parser
-function meta_parser()
+// Meta-Program Config
+function meta_program_config()
 {
     var self = this;
 
@@ -34,10 +34,6 @@ function meta_parser()
                 console.log(meta_script);
             }
 
-            // 1. Use eval
-            // 2. Restrict/deny: document, window & navigator
-            // 3. Run
-
             return true;
         };
     }
@@ -50,7 +46,7 @@ function meta_parser()
         if (utils_sys.validation.misc.is_undefined(program_config))
             return false;
 
-        if (!program_parser.verify(program_config_model, program_config))
+        if (!config_parser.verify(program_config_model, program_config))
             return false;
 
         return utils_int.parse(program_config);
@@ -92,6 +88,6 @@ function meta_parser()
         app_box = null,
         program_config_model = null,
         utils_sys = new vulcan(),
-        program_parser = new jap(),
+        config_parser = new jap(),
         utils_int = new utilities();
 }

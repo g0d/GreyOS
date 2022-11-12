@@ -1,11 +1,11 @@
 /*
-    GreyOS - Teletraan (Version: 1.0)
+    GreyOS - Teletraan (Version: 1.1)
 
     File name: teletraan.js
     Description: This file contains the Teletraan - Centralized settings module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -17,6 +17,8 @@ function teletraan()
     function settings_model()
     {
         this.boot_mode = 0;
+        this.name = 'GreyOS';
+        this.version = '0.0';
         this.theme = null;
         this.max_apps = 1;
         this.apps_per_view = 8;

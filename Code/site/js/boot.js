@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 3.2)
+    GreyOS - Bootstrap facility (Version: 3.3)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -31,11 +31,13 @@ function boot_script()
     var os_settings = greyos.settings();
 
     // Set global settings
-    os_settings.set('boot_mode', 0);        // Boot modes: Normal (0) / Development (1)
-    os_settings.set('theme', 'tomorrow');   // Themes: 'bubble_gum', 'tomorrow'
-    os_settings.set('max_apps', 16);        // Maximum number of allowed active apps per session
-    os_settings.set('apps_per_view', 18);   // Apps per stack bar view
-    os_settings.set('stack_bars', 4);       // Number of stack bars
+    os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
+    os_settings.set('name', 'GreyOS');          // Meta-OS name
+    os_settings.set('version', '3.0 (alpha)');  // Meta-OS version
+    os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
+    os_settings.set('max_apps', 16);            // Maximum number of allowed active apps per session
+    os_settings.set('apps_per_view', 18);       // Apps per stack bar view
+    os_settings.set('stack_bars', 4);           // Number of stack bars
 
     // Initialization script
     var init_script = function()
@@ -44,7 +46,7 @@ function boot_script()
         var containers_list = [dev_box, app_box, matrix, colony];
 
         // List of development tools
-        var dev_tools = [bee, bat, meta_script, meta_parser, executor];
+        var dev_tools = [bee, bat, meta_program_config, meta_script, executor];
 
         // List of system services
         var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
@@ -341,6 +343,38 @@ function boot_script()
                                                                     });
             //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
 
+            var greyos_logo_art = `
+
+
+
+            GGGGGGGGGGGGG                                                                    OOOOOOOOO        SSSSSSSSSSSSSSS
+         GGG::::::::::::G                                                                  OO:::::::::OO    SS:::::::::::::::S
+       GG:::::::::::::::G                                                                OO:::::::::::::OO S:::::SSSSSS::::::S
+      G:::::GGGGGGGG::::G                                                               O:::::::OOO:::::::OS:::::S     SSSSSSS
+     G:::::G       GGGGGGrrrrr   rrrrrrrrr       eeeeeeeeeeee  yyyyyyy           yyyyyyyO::::::O   O::::::OS:::::S            
+    G:::::G              r::::rrr:::::::::r    ee::::::::::::ee y:::::y         y:::::y O:::::O     O:::::OS:::::S            
+    G:::::G              r:::::::::::::::::r  e::::::eeeee:::::eey:::::y       y:::::y  O:::::O     O:::::O S::::SSSS         
+    G:::::G    GGGGGGGGGGrr::::::rrrrr::::::re::::::e     e:::::e y:::::y     y:::::y   O:::::O     O:::::O  SS::::::SSSSS    
+    G:::::G    G::::::::G r:::::r     r:::::re:::::::eeeee::::::e  y:::::y   y:::::y    O:::::O     O:::::O    SSS::::::::SS  
+    G:::::G    GGGGG::::G r:::::r     rrrrrrre:::::::::::::::::e    y:::::y y:::::y     O:::::O     O:::::O       SSSSSS::::S 
+    G:::::G        G::::G r:::::r            e::::::eeeeeeeeeee      y:::::y:::::y      O:::::O     O:::::O            S:::::S
+     G:::::G       G::::G r:::::r            e:::::::e                y:::::::::y       O::::::O   O::::::O            S:::::S
+      G:::::GGGGGGGG::::G r:::::r            e::::::::e                y:::::::y        O:::::::OOO:::::::OSSSSSSS     S:::::S
+       GG:::::::::::::::G r:::::r             e::::::::eeeeeeee         y:::::y          OO:::::::::::::OO S::::::SSSSSS:::::S
+         GGG::::::GGG:::G r:::::r              ee:::::::::::::e        y:::::y             OO:::::::::OO   S:::::::::::::::SS 
+            GGGGGG   GGGG rrrrrrr                eeeeeeeeeeeeee       y:::::y                OOOOOOOOO      SSSSSSSSSSSSSSS   
+                                                                     y:::::y                                                  
+                                                                    y:::::y                                                   
+                                                                   y:::::y                                                    
+                                                                  y:::::y                                                     
+                                                                 yyyyyyy                                  Version: ` + os_settings.get('version') + `
+
+
+
+            `;
+
+            console.log('%c ' + greyos_logo_art, 'color: #A0A0A0;');
+
             // Calculate speed index
             os_benchmark.test(1000000);
 
@@ -367,7 +401,7 @@ function boot_script()
         var containers_list = [dev_box, app_box, matrix, colony];
 
         // List of development tools
-        var dev_tools = [bee, bat, meta_script, meta_parser, executor];
+        var dev_tools = [bee, bat, meta_program_config, meta_script, executor];
 
         // List of system services
         var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
@@ -532,6 +566,38 @@ function boot_script()
                                                                             event.preventDefault();
                                                                     });
             //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
+
+            var greyos_logo_art = `
+
+
+
+            GGGGGGGGGGGGG                                                                    OOOOOOOOO        SSSSSSSSSSSSSSS
+         GGG::::::::::::G                         [DEV MODE]                               OO:::::::::OO    SS:::::::::::::::S
+       GG:::::::::::::::G                                                                OO:::::::::::::OO S:::::SSSSSS::::::S
+      G:::::GGGGGGGG::::G                                                               O:::::::OOO:::::::OS:::::S     SSSSSSS
+     G:::::G       GGGGGGrrrrr   rrrrrrrrr       eeeeeeeeeeee  yyyyyyy           yyyyyyyO::::::O   O::::::OS:::::S            
+    G:::::G              r::::rrr:::::::::r    ee::::::::::::ee y:::::y         y:::::y O:::::O     O:::::OS:::::S            
+    G:::::G              r:::::::::::::::::r  e::::::eeeee:::::eey:::::y       y:::::y  O:::::O     O:::::O S::::SSSS         
+    G:::::G    GGGGGGGGGGrr::::::rrrrr::::::re::::::e     e:::::e y:::::y     y:::::y   O:::::O     O:::::O  SS::::::SSSSS    
+    G:::::G    G::::::::G r:::::r     r:::::re:::::::eeeee::::::e  y:::::y   y:::::y    O:::::O     O:::::O    SSS::::::::SS  
+    G:::::G    GGGGG::::G r:::::r     rrrrrrre:::::::::::::::::e    y:::::y y:::::y     O:::::O     O:::::O       SSSSSS::::S 
+    G:::::G        G::::G r:::::r            e::::::eeeeeeeeeee      y:::::y:::::y      O:::::O     O:::::O            S:::::S
+     G:::::G       G::::G r:::::r            e:::::::e                y:::::::::y       O::::::O   O::::::O            S:::::S
+      G:::::GGGGGGGG::::G r:::::r            e::::::::e                y:::::::y        O:::::::OOO:::::::OSSSSSSS     S:::::S
+       GG:::::::::::::::G r:::::r             e::::::::eeeeeeee         y:::::y          OO:::::::::::::OO S::::::SSSSSS:::::S
+         GGG::::::GGG:::G r:::::r              ee:::::::::::::e        y:::::y             OO:::::::::OO   S:::::::::::::::SS 
+            GGGGGG   GGGG rrrrrrr                eeeeeeeeeeeeee       y:::::y                OOOOOOOOO      SSSSSSSSSSSSSSS   
+                                                                     y:::::y                                                  
+                                                                    y:::::y                                                   
+                                                                   y:::::y                                                    
+                                                                  y:::::y                                                     
+                                                                 yyyyyyy                                  Version: ` + os_settings.get('version') + `
+
+
+
+            `;
+
+            console.log('%c ' + greyos_logo_art, 'color: #A0A0A0;');
 
             // Calculate speed index
             os_benchmark.test(1000000);

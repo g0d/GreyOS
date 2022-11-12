@@ -2,10 +2,10 @@
     GreyOS - Trinity (Version: 1.0)
 
     File name: trinity.js
-    Description: This file contains the Trinity - System management service module.
+    Description: This file contains the Trinity - System services management module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -19,6 +19,11 @@ function trinity()
         
     }
 
+    this.set_service = function(func_name, func_args = [], commands)
+    {
+        new_bat.set_function(func_name, function(func_args) { commands; });
+    };
+
     this.execute = function(func_name, func_args = [])
     {
         return new_bat.exec(func_name, func_args);
@@ -27,8 +32,6 @@ function trinity()
     this.init = function()
     {
         new_bat.init();
-        new_bat.set_function('num', function() { console.log('NUM!'); });
-        new_bat.set_function('list', function(func_args) { console.log(func_args); });
 
         return true;
     };
