@@ -53,9 +53,9 @@ function boot_script()
                             teal_fs, morpheus, panda, octopus, super_tray, parrot, owl, infinity, 
                             nature, chameleon];
 
-        // List of user applications
-        var user_apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, 
-                         i_youdj, i_audiomass, i_soundtrap, i_ampedstudio, i_vectorink, i_ganttio, i_webgl_preview];
+        // List of applications
+        var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, 
+                    i_youdj, i_audiomass, i_soundtrap, i_ampedstudio, i_vectorink, i_ganttio, i_webgl_preview];
 
         // Add a VM to the hypervisor
         os_hypervisor.add([os_vm]);
@@ -81,11 +81,11 @@ function boot_script()
 
         //console.log(matrix_container.list());
 
-        // App Box - Integrated/User applications container
+        // App Box - Integrated applications container
         var app_box_container = os_vm.hub.access('app_box');
 
-        // Add user applications in the container
-        app_box_container.add(user_apps);
+        // Add applications in the container
+        app_box_container.add(apps);
 
         //console.log(app_box_container.list());
 
@@ -418,8 +418,8 @@ function boot_script()
         var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
                             morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
 
-        // List of user applications
-        var user_apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, i_webgl_preview];
+        // List of applications
+        var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, i_webgl_preview];
 
         // Add a VM to the hypervisor
         //os_hypervisor.backtrace(true);
@@ -449,12 +449,12 @@ function boot_script()
 
         //console.log(matrix_container.list());
 
-        // App Box - Integrated/User applications container
+        // App Box - Integrated applications container
         var app_box_container = os_vm.hub.access('app_box');
 
-        // Add user applications in the container
+        // Add applications in the container
         //app_box_container.backtrace(true);
-        app_box_container.add(user_apps);
+        app_box_container.add(apps);
 
         //console.log(app_box_container.list());
 

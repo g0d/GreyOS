@@ -1,11 +1,11 @@
 /*
-    GreyOS - Super Tray (Version: 1.4)
+    GreyOS - Super Tray (Version: 1.5)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area service module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -391,6 +391,7 @@ function super_tray()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
+        roost = cosmos.hub.access('roost');
 
         morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
@@ -403,6 +404,7 @@ function super_tray()
         super_tray_id = null,
         cosmos = null,
         matrix = null,
+        roost = null,
         morpheus = null,
         nature = null,
         utils_sys = new vulcan(),

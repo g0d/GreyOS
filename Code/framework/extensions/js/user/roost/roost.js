@@ -75,7 +75,7 @@ function roost()
 
         for (var i = 0; i < bats.num; i++)
         {
-            if (bats.list[i].settings.general.id() === bat_id)
+            if (bats.list[i].get_config().sys_name === bat_id)
             {
                 if (backtrace === true)
                     frog('ROOST', 'Objects :: Get', bat_id);
@@ -98,7 +98,17 @@ function roost()
         var __objects_num = objects_array.length;
 
         if (__objects_num === 0 || (__objects_num > (bats.max - bats.num)))
+        {
+            if (backtrace === true)
+            {
+                if (__objects_num === 0)
+                    frog('ROOST', 'Objects :: List contains: ', null);
+                else
+                    frog('ROOST', 'Objects :: Max limit reached: ', bats.max);
+            }
+
             return false;
+        }
 
         for (var i = 0; i < __objects_num; i++)
         {
@@ -108,16 +118,6 @@ function roost()
                     frog('ROOST', 'Objects :: Invalid', objects_array[i]);
 
                 self.clear();
-
-                return false;
-            }
-
-            var __app_id = objects_array[i].settings.general.app_id();
-
-            if (self.is_single_instance(__app_id))
-            {
-                if (backtrace === true)
-                    frog('ROOST', 'Objects :: Duplication', __app_id);
 
                 return false;
             }
@@ -148,7 +148,7 @@ function roost()
 
         for (var i = 0; i < bats.num; i++)
         {
-            if (bats.list[i].settings.general.id() === bat_id)
+            if (bats.list[i].get_config().sys_name === bat_id)
             {
                 bats.list.splice(i, 1);
                 bats.num--;
@@ -191,10 +191,10 @@ function roost()
         if (!utils_sys.validation.misc.is_object(object))
             return false;
 
-        if (utils_sys.validation.misc.is_undefined(object.init) || utils_sys.validation.misc.is_undefined(object.run) || 
-            utils_sys.validation.misc.is_undefined(object.on) || utils_sys.validation.misc.is_undefined(object.settings) || 
-            utils_sys.validation.misc.is_undefined(object.gui) || utils_sys.validation.misc.is_undefined(object.status) || 
-            utils_sys.validation.misc.is_undefined(object.drone))
+        if (utils_sys.validation.misc.is_undefined(object.init) || 
+            utils_sys.validation.misc.is_undefined(object.register) || utils_sys.validation.misc.is_undefined(object.unregister) || 
+            utils_sys.validation.misc.is_undefined(object.exec) || utils_sys.validation.misc.is_undefined(object.on) || 
+            utils_sys.validation.misc.is_undefined(object.get_config) || utils_sys.validation.misc.is_undefined(object.set_function))
             return false;
 
         var bat_length = Object.keys(object).length;
@@ -203,26 +203,6 @@ function roost()
             return false;
 
         return true;
-    };
-
-    this.is_single_instance = function(app_id)
-    {
-        if (utils_sys.validation.misc.is_nothing(cosmos))
-            return false;
-
-        if (bats.num === 0)
-            return null;
-
-        if (utils_sys.validation.alpha.is_symbol(app_id))
-            return false;
-
-        for (var i = 0; i < bats.num; i++)
-        {
-            if (bats.list[i].settings.general.app_id() === app_id && bats.list[i].settings.general.single_instance())
-                return true;
-        }
-
-        return false;
     };
 
     this.backtrace = function(val)

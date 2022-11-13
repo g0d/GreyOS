@@ -1,8 +1,8 @@
 /*
-    GreyOS - Owl (Version: 2.1)
+    GreyOS - Owl (Version: 2.2)
 
     File name: owl.js
-    Description: This file contains the Owl - Bee tracer & status logger module.
+    Description: This file contains the Owl - Bee & Bat tracer & status logger module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2022
@@ -26,6 +26,25 @@ function owl()
             }
 
             this.bee = new bee_ids();
+            this.status = [];
+            this.epoch = [];
+        }
+
+        this.num = 0;
+        this.list = new list();
+    }
+
+    function bats_collection()
+    {
+        function list()
+        {
+            function bat_ids()
+            {
+                this.id = [];
+                this.svc_id = [];
+            }
+
+            this.bat = new bat_ids();
             this.status = [];
             this.epoch = [];
         }
@@ -280,6 +299,7 @@ function owl()
         cosmos = cosmos_object;
 
         colony = cosmos.hub.access('colony');
+        roost = cosmos.hub.access('roost');
 
         return true;
     };
@@ -287,8 +307,10 @@ function owl()
     var backtrace = false,
         cosmos = null,
         colony = null,
+        roost = null,
         utils_sys = new vulcan(),
         collection = new bees_collection(),
+        collection2 = new bats_collection(),
         utils_int = new utilities();
 
     this.status = new status();
