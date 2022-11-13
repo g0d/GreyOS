@@ -12,14 +12,14 @@ For detailed information on GreyOS you may check the [White Paper](https://githu
 
 Also, you may give it a try at https://greyos.gr/ (Credentials: demo@greyos.gr / password)
 
-![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-New%20Login.png)
+![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-@%20New%20Login.png)
 
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-%20Showcase.png)  
 
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-%20DAW%20Apps.png)
 
 
-Hot News: Since today, GreyOS is the basis of VeNUS, the COP of PROBOTEK. VeNUS is the enterprise & closed-source interface that PROBOTEK utilizes for all its operations.
+Hot News: Since 01/03/2021, GreyOS is the basis of VeNUS, the COP of PROBOTEK. VeNUS is the enterprise & closed-source interface that PROBOTEK utilizes for all its operations.
 
 
 
