@@ -12,7 +12,6 @@
 
     UTIL::Load_Extension('vulcan', 'js');
     UTIL::Load_Extension('pythia', 'js');
-    UTIL::Load_Extension('teal_fs', 'js');
     UTIL::Load_Extension('fx', 'js');
     UTIL::Load_Extension('jap', 'js');
     UTIL::Load_Extension('lava', 'js');
@@ -45,11 +44,15 @@
     UTIL::Load_Extension('dev_box', 'js');
     UTIL::Load_Extension('app_box', 'js');
     UTIL::Load_Extension('colony', 'js');
+    UTIL::Load_Extension('roost', 'js');
     //UTIL::Load_Extension('sand_box', 'js');
+    UTIL::Load_Extension('xenon', 'js');
+    UTIL::Load_Extension('teal_fs', 'js');
     UTIL::Load_Extension('owl', 'js');
     UTIL::Load_Extension('forest', 'js');
     UTIL::Load_Extension('swarm', 'js');
     UTIL::Load_Extension('hive', 'js');
+    UTIL::Load_Extension('trinity', 'js');
     UTIL::Load_Extension('krator', 'js');
     UTIL::Load_Extension('ui_controls', 'js');
     UTIL::Load_Extension('dock', 'js');
@@ -61,7 +64,6 @@
     UTIL::Load_Extension('meta_program_config', 'js');
     UTIL::Load_Extension('meta_script', 'js');
     UTIL::Load_Extension('executor', 'js');
-    UTIL::Load_Extension('trinity', 'js');
     UTIL::Load_Extension('morpheus', 'js');
     UTIL::Load_Extension('panda', 'js');
     UTIL::Load_Extension('octopus', 'js');

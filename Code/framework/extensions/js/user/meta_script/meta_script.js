@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.3)
+    GreyOS - Meta-Script (Version: 1.4)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -74,6 +74,11 @@ function meta_script()
 
         function os()
         {
+            this.info = function()
+            {
+                return xenon;
+            };
+
             this.date_time = function()
             {
                 return tik_tok;
@@ -781,6 +786,7 @@ function meta_script()
         app_box = cosmos.hub.access('app_box');
         dev_box = cosmos.hub.access('dev_box');
 
+        xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         forest = matrix.get('forest');
@@ -802,6 +808,7 @@ function meta_script()
         matrix = null,
         app_box = null,
         dev_box = null,
+        xenon = null,
         swarm = null,
         hive = null,
         forest = null,

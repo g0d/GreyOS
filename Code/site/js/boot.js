@@ -43,18 +43,18 @@ function boot_script()
     var init_script = function()
     {
         // List of containers
-        var containers_list = [dev_box, app_box, matrix, colony];
+        var containers_list = [dev_box, app_box, matrix, colony, roost];
 
         // List of development tools
         var dev_tools = [bee, bat, meta_program_config, meta_script, executor];
 
         // List of system services
-        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            teal_fs, trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, 
+        var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
+                            teal_fs, morpheus, panda, octopus, super_tray, parrot, owl, infinity, 
                             nature, chameleon];
 
         // List of user applications
-        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, 
+        var user_apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, 
                          i_youdj, i_audiomass, i_soundtrap, i_ampedstudio, i_vectorink, i_ganttio, i_webgl_preview];
 
         // Add a VM to the hypervisor
@@ -128,14 +128,11 @@ function boot_script()
             load_screen.show();
 
             // Load basic services and UI infrastructure
-            var new_trinity = matrix_container.get('trinity');
+            var new_xenon = matrix_container.get('xenon');
             var new_parrot = matrix_container.get('parrot');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
             var new_swarm = matrix_container.get('swarm');
-
-            // Initialize system monitoring service
-            new_trinity.init();
 
             // Set the theme in use
             new_chameleon.set(os_settings.get('theme'));
@@ -146,6 +143,9 @@ function boot_script()
 
             // Apply desktop theme
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
+
+            // Load OS settings
+            new_xenon.load([os_settings.get('name'), os_settings.get('version')]);
 
             // Initialize only the sound service (no UI)
             new_parrot.init();
@@ -246,7 +246,7 @@ function boot_script()
             load_screen.show();
 
             // Load all services and full UI infrastructure
-            var new_trinity = matrix_container.get('trinity');
+            var new_xenon = matrix_container.get('xenon');
             var new_octopus = matrix_container.get('octopus');
             var new_super_tray = matrix_container.get('super_tray');
             var new_parrot = matrix_container.get('parrot');
@@ -261,9 +261,6 @@ function boot_script()
             var new_eagle = matrix_container.get('eagle');
             var new_tik_tok = matrix_container.get('tik_tok');
 
-            // Initialize system monitoring service
-            new_trinity.init();
-
             // Set the theme in use
             new_chameleon.set(os_settings.get('theme'));
 
@@ -273,6 +270,9 @@ function boot_script()
 
             // Apply desktop theme
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
+
+            // Load OS settings
+            new_xenon.load([os_settings.get('name'), os_settings.get('version')]);
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');
@@ -398,17 +398,17 @@ function boot_script()
     var init_script_dev = function()
     {
         // List of containers
-        var containers_list = [dev_box, app_box, matrix, colony];
+        var containers_list = [dev_box, app_box, matrix, colony, roost];
 
         // List of development tools
         var dev_tools = [bee, bat, meta_program_config, meta_script, executor];
 
         // List of system services
-        var sys_services = [swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            trinity, morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
+        var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
+                            morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
 
         // List of user applications
-        var user_apps = [krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, i_webgl_preview];
+        var user_apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, i_webgl_preview];
 
         // Add a VM to the hypervisor
         //os_hypervisor.backtrace(true);
@@ -467,7 +467,7 @@ function boot_script()
             load_screen.show();
 
             // Load all services and full UI infrastructure
-            var new_trinity = matrix_container.get('trinity');
+            var new_xenon = matrix_container.get('xenon');
             var new_ui_controls = matrix_container.get('ui_controls');
             var new_dock = matrix_container.get('dock');
             var new_user_profile = matrix_container.get('user_profile');
@@ -482,9 +482,6 @@ function boot_script()
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
 
-            // Initialize system monitoring service
-            new_trinity.init();
-
             // Set the theme in use
             new_chameleon.set(os_settings.get('theme'));
 
@@ -494,6 +491,9 @@ function boot_script()
 
             // Apply desktop theme
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
+
+            // Load OS settings
+            new_xenon.load([os_settings.get('name'), os_settings.get('version')]);
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');

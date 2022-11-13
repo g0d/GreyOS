@@ -180,7 +180,6 @@ function radio_dude()
 
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
-        colony = cosmos.hub.access('colony');
 
         swarm = matrix.get('swarm');
         nature = matrix.get('nature');
