@@ -1,5 +1,5 @@
 /*
-    GreyOS - Super Tray (Version: 1.5)
+    GreyOS - Super Tray (Version: 1.4)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area service module.
@@ -279,31 +279,33 @@ function super_tray()
         };
     }
 
-    this.add = function(sys_service_id, service_id, icon = null, action = null)
+    this.add = function(bat_object, action = null)
     {
         if (is_init === false)
             return false;
 
-        if (utils_sys.validation.alpha.is_symbol(sys_service_id) || utils_sys.validation.alpha.is_symbol(service_id))
-            return false;
-
-        if (icon !== null && utils_sys.validation.alpha.is_symbol(icon))
+        if (!utils_sys.validation.misc.is_object(bat_object))
             return false;
 
         if (action !== null && !utils_sys.validation.misc.is_function(action))
             return false;
 
-        if (utils_int.service_exists(sys_service_id))
+        if (!roost.add([bat_object]))
+            return false;
+
+        var __service_config = bat_object.get_config();
+
+        if (utils_int.service_exists(__service_config.sys_name))
             return false;
 
         var __new_tray_service = new tray_service_model();
 
-        __new_tray_service.sys_id = sys_service_id;
-        __new_tray_service.id = service_id;
-        __new_tray_service.name = service_id;
+        __new_tray_service.sys_id = __service_config.sys_name;
+        __new_tray_service.id = __service_config.name;
+        __new_tray_service.name = __service_config.name;
 
-        if (icon !== null)
-            __new_tray_service.icon = icon;
+        if (__service_config.icon !== 'default')
+            __new_tray_service.icon = __service_config.icon;
 
         if (action !== null)
             __new_tray_service.action = action;
@@ -312,7 +314,7 @@ function super_tray()
         tray_services.num++;
 
         utils_int.add_service_icon(tray_services.num);
-        utils_int.fix_service_icon_names(service_id);
+        utils_int.fix_service_icon_names(__service_config.name);
 
         return true;
     };
@@ -342,6 +344,8 @@ function super_tray()
                         utils_int.fix_service_icon_names(tray_services.list[j].id);
                 }
 
+                roost.remove(sys_service_id);
+
                 return true;
             }
         }
@@ -358,6 +362,8 @@ function super_tray()
         tray_services.list = [];
 
         utils_int.clear_service_icons();
+
+        roost.clear();
 
         return true;
     };

@@ -5,7 +5,7 @@
     Description: This file contains the Bat - System services template module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -95,8 +95,6 @@ function bat()
         if (!matrix.register([service_model]))
             return false;
 
-        super_tray.add(service_config.sys_name, service_config.name, service_config.icon);
-
         if (backtrace === true)
             frog('BAT', 'Services :: Register', service_config);
 
@@ -110,8 +108,6 @@ function bat()
 
         if (!matrix.unregister(service_id))
             return false;
-
-        super_tray.remove(service_config.sys_name);
 
         if (backtrace === true)
             frog('BAT', 'Services :: Unregister', service_config);
@@ -162,7 +158,6 @@ function bat()
         matrix = cosmos.hub.access('matrix');
 
         morpheus = matrix.get('morpheus');
-        super_tray = matrix.get('super_tray');
 
         return true;
     };
@@ -171,7 +166,6 @@ function bat()
         backtrace = false,
         cosmos = null,
         matrix = null,
-        super_tray = null,
         morpheus = null,
         events_list = ['register', 'unregister'],
         dynamic_functions_list = [],

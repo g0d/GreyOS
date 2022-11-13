@@ -5,7 +5,7 @@
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -718,6 +718,8 @@ function meta_script()
                 me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
                 me.on('unregister', function() { program_config.meta_caller.reset(); });
 
+                super_tray.add(new_svc);
+
                 return new_svc.register(program_config.model);
             };
 
@@ -725,6 +727,8 @@ function meta_script()
             {
                 if (new_svc === null)
                     return false;
+
+                super_tray.remove(new_svc.get_config().sys_name);
 
                 return new_svc.unregister(program_config.model.name);
             };
