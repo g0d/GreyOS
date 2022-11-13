@@ -40,7 +40,7 @@ setInterval(function()
 
 console.log('NETWORK: ', navigator.connection);
 console.log('LOCATION: ', navigator.geolocation);
-console.log('| ===> CURRENT POS: ', navigator.geolocation.getCurrentPosition(
+console.log('| ===> ENABLE POS: ', navigator.geolocation.getCurrentPosition(
             function(pos) { },
             function(error) { },
             {
@@ -59,6 +59,9 @@ console.log('| ===> CLEAR WATCH: ', navigator.geolocation.clearWatch(0));
 
 
 console.log('SYSTEM CONSTRAINTS: ', navigator.mediaDevices.getSupportedConstraints());
+
+
+
 console.log('SHARE SCREEN: ', navigator.mediaDevices.getDisplayMedia(
             {
                 video:

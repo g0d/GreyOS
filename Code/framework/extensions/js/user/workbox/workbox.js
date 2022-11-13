@@ -62,7 +62,7 @@ function workbox()
                             },
                             function()
                             {
-                                __title_object.innerHTML = 'GreyOS';
+                                __title_object.innerHTML = 'Alert';
                                 __button_object.innerHTML = 'Close';
                             },
                             function()

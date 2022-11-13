@@ -31,7 +31,7 @@ function user_profile()
                 msg_win = new msgbox();
 
                 msg_win.init('desktop');
-                msg_win.show('GreyOS', 'Your session has been terminated!',
+                msg_win.show(os_name, 'Your session has been terminated!',
                 function() { setTimeout(function(){ location.reload(); }, 1000); });
             }
 
@@ -105,7 +105,7 @@ function user_profile()
                                      msg_win = new msgbox();
 
                                      msg_win.init('desktop');
-                                     msg_win.show('GreyOS', 'Logout error!', 
+                                     msg_win.show(os_name, 'Logout error!', 
                                                   function() { cc_reload.init(); });
                                  },
                                  function()
@@ -340,6 +340,8 @@ function user_profile()
 
         is_init = true;
 
+        os_name = xenon.load('os_name');
+
         self.settings.id('user_profile_' + random.generate());
         self.settings.container(container_id);
 
@@ -363,6 +365,7 @@ function user_profile()
         matrix = cosmos.hub.access('matrix');
         colony =  cosmos.hub.access('colony');
 
+        xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
@@ -375,9 +378,11 @@ function user_profile()
         is_profile_area_visible = false,
         user_profile_id = null,
         user_details = null,
+        os_name = null,
         cosmos = null,
         matrix = null,
         colony = null,
+        xenon = null,
         swarm = null,
         hive = null,
         morpheus = null,

@@ -155,7 +155,7 @@ function dock()
                                         msg_win = new msgbox();
 
                                         msg_win.init('desktop');
-                                        msg_win.show('GreyOS', 'The app is overflowing your screen. \
+                                        msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
                                                                 You need a larger screen or higher resolution to run it!');
                                     }
                                 }
@@ -376,6 +376,7 @@ function dock()
         app_box = cosmos.hub.access('app_box');
         colony = cosmos.hub.access('colony');
 
+        xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
@@ -392,6 +393,7 @@ function dock()
         dock_id = null,
         cosmos = null,
         matrix = null,
+        xenon = null,
         swarm = null,
         hive = null,
         app_box = null,

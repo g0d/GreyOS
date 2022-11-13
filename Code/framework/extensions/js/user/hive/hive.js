@@ -310,7 +310,7 @@ function hive()
                 msg_win = new msgbox();
 
                 msg_win.init('desktop');
-                msg_win.show('GreyOS', 'All stack views are full!');
+                msg_win.show(xenon.load('os_name'), 'All stack views are full!');
 
                 return false;
             }
@@ -1361,6 +1361,7 @@ function hive()
         matrix = cosmos.hub.access('matrix');
         colony = cosmos.hub.access('colony');
 
+        xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         forest = matrix.get('forest');
         morpheus = matrix.get('morpheus');
@@ -1374,6 +1375,7 @@ function hive()
         cosmos = null,
         matrix = null,
         colony = null,
+        xenon = null,
         swarm = null,
         forest = null,
         morpheus = null,

@@ -203,14 +203,14 @@ function krator()
 
             if (!utils_sys.validation.utilities.is_email(username_object.value))
             {
-                msg_win.show('GreyOS', 'The email format is invalid!');
+                msg_win.show(os_name, 'The email format is invalid!');
 
                 return;
             }
 
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show('GreyOS', 'Credentials are invalid!');
+                msg_win.show(os_name, 'Credentials are invalid!');
 
                 return;
             }
@@ -229,7 +229,7 @@ function krator()
                                },
                                function()
                                {
-                                    msg_win.show('GreyOS', 'Your credentials are wrong!');
+                                    msg_win.show(os_name, 'Your credentials are wrong!');
                                },
                                function()
                                {
@@ -247,21 +247,21 @@ function krator()
 
             if (!utils_sys.validation.utilities.is_email(username_object.value))
             {
-                msg_win.show('GreyOS', 'The email format is invalid!');
+                msg_win.show(os_name, 'The email format is invalid!');
     
                 return;
             }
     
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show('GreyOS', 'Please choose more complex credentials!');
+                msg_win.show(os_name, 'Please choose more complex credentials!');
     
                 return;
             }
     
             if (password_object.value !== password_comfirm_object.value)
             {
-                msg_win.show('GreyOS', 'Password confirmation failed!');
+                msg_win.show(os_name, 'Password confirmation failed!');
     
                 return;
             }
@@ -277,12 +277,12 @@ function krator()
     
             ajax_factory(data, function()
                                {
-                                    msg_win.show('GreyOS', 'Registration succeeded!', 
+                                    msg_win.show(os_name, 'Registration succeeded!', 
                                                  function() {  });
                                },
                                function()
                                {
-                                    msg_win.show('GreyOS', 'Registration failed!');
+                                    msg_win.show(os_name, 'Registration failed!');
                                },
                                function()
                                {
@@ -325,6 +325,8 @@ function krator()
 
         is_init = true;
 
+        os_name = xenon.load('os_name');
+
         krator_bee = dev_box.get('bee');
 
         config.id = 'krator';
@@ -335,7 +337,7 @@ function krator()
         // Declare bee's settings
         krator_bee.init(config.id, 2);
         krator_bee.settings.data.window.labels.title('Krator :: Login & Registration');
-        krator_bee.settings.data.window.labels.status_bar('GreyOS - Login/Registration');
+        krator_bee.settings.data.window.labels.status_bar(os_name + ' - Login/Registration');
         krator_bee.settings.actions.can_edit_title(false);
         krator_bee.settings.actions.can_use_menu(false);
         krator_bee.settings.actions.can_close(false);
@@ -370,6 +372,7 @@ function krator()
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
 
+        xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         nature = matrix.get('nature');
 
@@ -378,9 +381,11 @@ function krator()
 
     var is_init = false,
         is_login_ok = false,
+        os_name = null,
         cosmos = null,
         matrix = null,
         dev_box = null,
+        xenon = null,
         swarm = null,
         nature = null,
         msg_win = null,

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 3.3)
+    GreyOS - Bootstrap facility (Version: 3.4)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -54,7 +54,7 @@ function boot_script()
                             nature, chameleon];
 
         // List of user applications
-        var user_apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_minecraft, 
+        var user_apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, 
                          i_youdj, i_audiomass, i_soundtrap, i_ampedstudio, i_vectorink, i_ganttio, i_webgl_preview];
 
         // Add a VM to the hypervisor
@@ -144,8 +144,8 @@ function boot_script()
             // Apply desktop theme
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
-            // Load OS settings
-            new_xenon.load([os_settings.get('name'), os_settings.get('version')]);
+            // Store dynamic system settings
+            new_xenon.store({"os_name" : os_settings.get('name'), "os_version" : os_settings.get('version')});
 
             // Initialize only the sound service (no UI)
             new_parrot.init();
@@ -271,8 +271,8 @@ function boot_script()
             // Apply desktop theme
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
-            // Load OS settings
-            new_xenon.load([os_settings.get('name'), os_settings.get('version')]);
+            // Store dynamic system settings
+            new_xenon.store({"os_name" : os_settings.get('name'), "os_version" : os_settings.get('version')});
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');
@@ -342,6 +342,17 @@ function boot_script()
                                                                             event.preventDefault();
                                                                     });
             //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
+
+            var meta_description = os_utils.objects.selectors.first('meta[name="description"]').content;
+
+            meta_description = meta_description.replace('{os_name}', os_settings.get('name'));
+
+            os_utils.objects.selectors.first('meta[name="description"]').content = meta_description;
+            os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
+
+            //navigator.geolocation.getCurrentPosition(function(pos) { console.log(pos); }, 
+            //                                         function(error) { console.log(error); }, 
+            //                                         { enableHighAccuracy: true, timeout: 5000 });
 
             var greyos_logo_art = `
 
@@ -492,8 +503,8 @@ function boot_script()
             // Apply desktop theme
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
-            // Load OS settings
-            new_xenon.load([os_settings.get('name'), os_settings.get('version')]);
+            // Store dynamic system settings
+            new_xenon.store({"os_name" : os_settings.get('name'), "os_version" : os_settings.get('version')});
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');
@@ -566,6 +577,13 @@ function boot_script()
                                                                             event.preventDefault();
                                                                     });
             //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
+
+            var meta_description = os_utils.objects.selectors.first('meta[name="description"]').content;
+
+            meta_description = meta_description.replace('{os_name}', os_settings.get('name'));
+
+            os_utils.objects.selectors.first('meta[name="description"]').content = meta_description;
+            os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
 
             var greyos_logo_art = `
 

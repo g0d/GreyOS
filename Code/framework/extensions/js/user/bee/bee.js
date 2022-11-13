@@ -3450,7 +3450,7 @@ function bee()
                         msg_win = new msgbox();
 
                         msg_win.init('desktop');
-                        msg_win.show('GreyOS', 'The casement can not be deployed here as it overflows your screen!');
+                        msg_win.show(xenon.load('os_name'), 'The casement can not be deployed here as it overflows your screen!');
 
                         return false;
                     }
@@ -4623,6 +4623,7 @@ function bee()
         matrix = cosmos.hub.access('matrix');
         colony = cosmos.hub.access('colony');
 
+        xenon = matrix.get('xenon');
         morpheus = matrix.get('morpheus');
         owl = matrix.get('owl');
         swarm = matrix.get('swarm');
@@ -4640,6 +4641,7 @@ function bee()
         nature = null,
         morpheus = null,
         owl = null,
+        xenon = null,
         swarm = null,
         hive = null,
         colony = null,

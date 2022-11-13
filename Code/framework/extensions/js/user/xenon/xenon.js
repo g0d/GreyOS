@@ -16,47 +16,57 @@ function xenon()
 
     function sys_info_model()
     {
-        function options()
-        {
+        this.os_name = null;
+        this.os_version = null;
+        this.cpu_cores = navigator.hardwareConcurrency;
+        this.ram = navigator.deviceMemory;
+    }
 
+    this.store = function(user_settings)
+    {
+        var __this_user_setting = null;
+
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (!utils_sys.validation.misc.is_object(user_settings))
+            return false;
+
+        if (user_settings.hasOwnProperty('cpu_cores') || user_settings.hasOwnProperty('ram'))
+            return false;
+
+        for (__this_user_setting in user_settings)
+        {
+            if (!sys_info.hasOwnProperty(__this_user_setting))
+                return;
         }
 
-        this.num = 0;
-        this.options = new options();
-    }
+        for (__this_user_setting in user_settings)
+            sys_info[__this_user_setting] = user_settings[__this_user_setting];
 
-    function utilities()
-    {
-        
-    }
+        return true;
+    };
 
-    this.load = function(option, value)
+    this.load = function(setting)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (backtrace === true)
-            frog('XENON', 'List :: Set', collection);
+        if (utils_sys.validation.misc.is_nothing(setting))
+            return false;
 
-        return true;
+        if (!sys_info.hasOwnProperty(setting))
+            return false;
+
+        return sys_info[setting];
     };
 
     this.list = function()
     {
-        return sys_info;
-    };
-
-    this.backtrace = function(val)
-    {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (!utils_sys.validation.misc.is_bool(val))
-            return false;
-
-        backtrace = val;
-
-        return true;
+        return sys_info;
     };
 
     this.cosmos = function(cosmos_object)
@@ -69,9 +79,7 @@ function xenon()
         return true;
     };
 
-    var backtrace = false,
-        cosmos = null,
+    var cosmos = null,
         utils_sys = new vulcan(),
-        sys_info = new sys_info_model(),
-        utils_int = new utilities();
+        sys_info = new sys_info_model();
 }
