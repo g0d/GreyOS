@@ -193,7 +193,7 @@ function roost()
 
         if (utils_sys.validation.misc.is_undefined(object.init) || 
             utils_sys.validation.misc.is_undefined(object.register) || utils_sys.validation.misc.is_undefined(object.unregister) || 
-            utils_sys.validation.misc.is_undefined(object.exec) || utils_sys.validation.misc.is_undefined(object.on) || 
+            utils_sys.validation.misc.is_undefined(object.exec_function) || utils_sys.validation.misc.is_undefined(object.on) || 
             utils_sys.validation.misc.is_undefined(object.get_config) || utils_sys.validation.misc.is_undefined(object.set_function))
             return false;
 

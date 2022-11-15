@@ -129,7 +129,7 @@ function dock()
 
                                 parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
 
-                                if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+                                if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
                                     return false;
 
                                 var __app = app_box.get(__app_id);
@@ -167,7 +167,7 @@ function dock()
         {
             bee.on('closed', function()
                              {
-                                if (owl.status.get.by_app_id(app_id, 'RUN'))
+                                if (owl.status.applications.get.by_proc_id(app_id, 'RUN'))
                                     return false;
 
                                 utils_sys.objects.by_id('app_' + app_id).classList.remove('app_' + app_id + '_on');

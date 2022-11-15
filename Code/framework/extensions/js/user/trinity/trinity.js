@@ -2,7 +2,7 @@
     GreyOS - Trinity (Version: 1.0)
 
     File name: trinity.js
-    Description: This file contains the Trinity - Tasks Management module.
+    Description: This file contains the Trinity - Process Management UI (front-end) application.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021 - 2022

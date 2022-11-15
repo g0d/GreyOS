@@ -3585,7 +3585,7 @@ function bee()
 
                 if (parent_app_id === null)
                 {
-                    if (owl.status.get.by_app_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+                    if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
                         return false;
                 }
 
@@ -3598,7 +3598,7 @@ function bee()
                     if (!utils_int.gui_init())
                     {
                         if (parent_app_id === null)
-                            owl.status.set(my_bee_id, __app_id, 'FAIL');
+                            owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
 
                         utils_int.log('Show', 'ERROR');
 
@@ -3610,7 +3610,7 @@ function bee()
 
                 morpheus.execute(my_bee_id, 'system', 'running');
 
-                owl.status.set(my_bee_id, __app_id, 'RUN');
+                owl.status.applications.set(my_bee_id, __app_id, 'RUN');
 
                 if (headless === false)
                     utils_int.log('Show', 'OK');
@@ -3666,7 +3666,7 @@ function bee()
                     if (bee_statuses.in_hive())
                         ui_objects.casement.ui.style.visibility = 'hidden';
 
-                    owl.status.set(my_bee_id, __app_id, 'END');
+                    owl.status.applications.set(my_bee_id, __app_id, 'END');
 
                     me.actions.casement.hide(event_object, 
                     function()

@@ -54,7 +54,7 @@ function bat()
         return true;
     };
 
-    this.exec = function(func_name, func_args = [])
+    this.exec_function = function(func_name, func_args = [])
     {
         if (is_init === false)
             return false;
@@ -93,7 +93,13 @@ function bat()
             return false;
 
         if (!matrix.register([service_model]))
+        {
+            owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
+
             return false;
+        }
+
+        owl.status.services.set(service_config.sys_name, service_config.name, 'RUN');
 
         if (backtrace === true)
             frog('BAT', 'Services :: Register', service_config);
@@ -107,7 +113,13 @@ function bat()
             return false;
 
         if (!matrix.unregister(service_id))
+        {
+            owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
+
             return false;
+        }
+
+        owl.status.services.set(service_config.sys_name, service_config.name, 'END');
 
         if (backtrace === true)
             frog('BAT', 'Services :: Unregister', service_config);
@@ -158,6 +170,7 @@ function bat()
         matrix = cosmos.hub.access('matrix');
 
         morpheus = matrix.get('morpheus');
+        owl = matrix.get('owl');
 
         return true;
     };
@@ -167,6 +180,7 @@ function bat()
         cosmos = null,
         matrix = null,
         morpheus = null,
+        owl = null,
         events_list = ['register', 'unregister'],
         dynamic_functions_list = [],
         utils_sys = new vulcan(),

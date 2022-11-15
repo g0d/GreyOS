@@ -1,8 +1,8 @@
 /*
-    GreyOS - Owl (Version: 2.2)
+    GreyOS - Owl (Version: 2.4)
 
     File name: owl.js
-    Description: This file contains the Owl - Bee & Bat tracer & status logger module.
+    Description: This file contains the Owl - Process (Bee & Bat) tracer & status logger module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2022
@@ -13,19 +13,19 @@
 function owl()
 {
     var self = this;
-    var bees_status = ['RUN', 'END', 'FAIL'];
+    var process_status = ['RUN', 'END', 'FAIL'];
 
-    function bees_collection()
+    function bee_collection_module()
     {
         function list()
         {
             function bee_ids()
             {
-                this.id = [];
-                this.app_id = [];
+                this.sys_id = [];
+                this.proc_id = [];
             }
 
-            this.bee = new bee_ids();
+            this.process = new bee_ids();
             this.status = [];
             this.epoch = [];
         }
@@ -34,17 +34,17 @@ function owl()
         this.list = new list();
     }
 
-    function bats_collection()
+    function bat_collection_module()
     {
         function list()
         {
             function bat_ids()
             {
-                this.id = [];
-                this.svc_id = [];
+                this.sys_id = [];
+                this.proc_id = [];
             }
 
-            this.bat = new bat_ids();
+            this.process = new bat_ids();
             this.status = [];
             this.epoch = [];
         }
@@ -55,217 +55,343 @@ function owl()
 
     function utilities()
     {
-        this.is_valid_status = function(status)
+        var me = this;
+
+        function factory_process()
         {
-            var __status_num = bees_status.length;
-
-            for (var i = 0; i < __status_num; i++)
+            this.type_matching_status = function(collection, status, process_type)
             {
-                if (status === bees_status[i])
-                    return true;
-            }
-
-            return false;
-        };
-
-        this.match_status = function(status, app_id = null)
-        {
-            if (app_id === null)
-            {
-                var __matching_status_app_list = [];
+                var __status_process_list = [];
 
                 for (var i = 0; i < collection.num; i++)
                 {
                     if (collection.list.status[i] === status)
                     {
-                        var __bee_data = {
-                                            "id"     :   collection.list.bee.id[i], 
-                                            "app_id" :   collection.list.bee.app_id[i]
-                                         };
+                        var __process_data = {
+                                                "sys_id"    :   collection.list.process.sys_id[i], 
+                                                "proc_id"   :   collection.list.process.proc_id[i],
+                                                "type"      :   process_type
+                                             };
 
-                        __matching_status_app_list.push(__bee_data);
+                        __status_process_list.push(__process_data);
                     }
                 }
 
-                return __matching_status_app_list;
-            }
-            else
+                return __status_process_list;
+            };
+    
+            this.id_matching_status = function(collection, status, process_id)
             {
-                var __app_status_list = [],
-                    __app_status_num = 0;
+                var __status_list = [],
+                    __status_num = 0;
 
                 for (var i = 0; i < collection.num; i++)
                 {
-                    if (collection.list.bee.app_id[i] === app_id)
-                        __app_status_list.push(collection.list.status[i]);
+                    if (collection.list.process.proc_id[i] === process_id)
+                        __status_list.push(collection.list.status[i]);
                 }
 
-                __app_status_num = __app_status_list.length;
+                __status_num = __status_list.length;
 
-                for (var i = 0; i < __app_status_num; i++)
+                for (var i = 0; i < __status_num; i++)
                 {
-                    if (__app_status_list[i] === status)
+                    if (__status_list[i] === status)
                         return true;
                 }
+
+                return false;
+            };
+    
+            this.get_proc_by_sys_id = function(collection, sys_id)
+            {
+                if (collection.num === 0)
+                    return null;
+
+                if (utils_sys.validation.alpha.is_symbol(sys_id))
+                    return false;
+
+                for (var i = 0; i < collection.num; i++)
+                {
+                    if (collection.list.process.sys_id[i] === sys_id)
+                        return collection.list.status[i];
+                }
+
+                return false;
+            };
+    
+            this.get_proc_by_proc_id = function(collection, proc_id, match_status)
+            {
+                if (collection.num === 0)
+                    return null;
+
+                if (utils_sys.validation.alpha.is_symbol(proc_id) || utils_sys.validation.alpha.is_symbol(match_status))
+                    return false;
+
+                if (!me.is_valid_status(match_status))
+                    return false;
+
+                return me.match_status(match_status, null, proc_id);
+            };
+
+            this.set_proc_status = function(collection, sys_id, proc_id, status)
+            {
+                if (utils_sys.validation.alpha.is_symbol(sys_id) || utils_sys.validation.alpha.is_symbol(proc_id) || utils_sys.validation.alpha.is_symbol(status))
+                    return false;
+
+                if (!utils_int.is_valid_status(status))
+                    return false;
+
+                for (var i = 0; i < collection.num; i++)
+                {
+                    if (sys_id === collection.list.process.sys_id[i] && status === collection.list.status[i])
+                    {
+                        if (backtrace === true)
+                            frog('OWL', 'List :: Set', collection);
+
+                        return true;
+                    }
+
+                    if (sys_id === collection.list.process.sys_id[i] && status !== collection.list.status[i])
+                    {
+                        collection.list.status[i] = status;
+                        collection.list.epoch[i] = new Date().getTime();
+
+                        if (backtrace === true)
+                            frog('OWL', 'List :: Set', collection);
+
+                        return true;
+                    }
+                }
+
+                var __current_epoch = new Date().getTime();
+
+                collection.list.process.sys_id.push(sys_id);
+                collection.list.process.proc_id.push(proc_id);
+                collection.list.status.push(status);
+                collection.list.epoch.push(__current_epoch);
+                collection.num++;
+
+                if (backtrace === true)
+                    frog('OWL', 'List :: Set', collection);
+
+                return true;
+            };
+
+            this.remove_proc_status = function(collection, sys_id)
+            {
+                if (collection.num === 0)
+                    return null;
+
+                if (utils_sys.validation.alpha.is_symbol(sys_id))
+                    return false;
+
+                for (var i = 0; i < collection.num; i++)
+                {
+                    if (collection.list.process.sys_id[i] === sys_id)
+                    {
+                        collection.list.process.sys_id.splice(i, 1);
+                        collection.list.process.proc_id.splice(i, 1);
+                        collection.list.status.splice(i, 1);
+                        collection.list.epoch.splice(i, 1);
+                        collection.num--;
+
+                        if (backtrace === true)
+                            frog('OWL', 'List :: Remove', collection);
+
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+        }
+
+        this.is_valid_status = function(status)
+        {
+            var __status_num = process_status.length;
+
+            for (var i = 0; i < __status_num; i++)
+            {
+                if (status === process_status[i])
+                    return true;
             }
 
             return false;
         };
+
+        this.match_status = function(status, process_type = null, process_id = null)
+        {
+            if (process_id === null)
+            {
+                var __matching_status_process_list = [];
+
+                if (process_type === null)
+                {
+                    __matching_status_process_list.push(me.factory.type_matching_status(bee_collection, status, 'app'));
+                    __matching_status_process_list.push(me.factory.type_matching_status(bat_collection, status, 'svc'));
+                }
+                else if (process_type === 'app')
+                    __matching_status_process_list = me.factory.type_matching_status(bee_collection, status, process_type);
+                else
+                    __matching_status_process_list = me.factory.type_matching_status(bat_collection, status, process_type);                
+
+                return __matching_status_process_list;
+            }
+            else
+            {
+                if (me.factory.id_matching_status(bee_collection, status, process_id) === false)
+                    return me.factory.id_matching_status(bat_collection, status, process_id);
+                else
+                    return true;
+            }
+        };
+
+        this.factory = new factory_process();
     }
 
     function status()
     {
-        function get()
+        function apps()
         {
-            this.by_id = function(bee_id)
+            function get()
             {
-                if (utils_sys.validation.misc.is_nothing(cosmos))
-                    return false;
-
-                if (collection.num === 0)
-                    return null;
-    
-                if (utils_sys.validation.alpha.is_symbol(bee_id))
-                    return false;
-    
-                for (var i = 0; i < collection.num; i++)
+                this.by_sys_id = function(bee_id)
                 {
-                    if (collection.list.bee.id[i] === bee_id)
-                        return collection.list.status[i];
-                }
-    
-                return false;
-            };
+                    if (utils_sys.validation.misc.is_nothing(cosmos))
+                        return false;
 
-            this.by_app_id = function(app_id, match_status)
+                    return utils_int.factory.get_proc_by_sys_id(bee_collection, bee_id);
+                };
+
+                this.by_proc_id = function(app_id, match_status)
+                {
+                    if (utils_sys.validation.misc.is_nothing(cosmos))
+                        return false;
+
+                    return utils_int.factory.get_proc_by_proc_id(bee_collection, app_id, match_status);
+                };
+            }
+
+            this.set = function(bee_id, app_id, status)
             {
                 if (utils_sys.validation.misc.is_nothing(cosmos))
                     return false;
 
-                if (collection.num === 0)
-                    return null;
-
-                if (utils_sys.validation.alpha.is_symbol(app_id) || utils_sys.validation.alpha.is_symbol(match_status))
+                if (!colony.get(bee_id))
                     return false;
 
-                if (!utils_int.is_valid_status(match_status))
-                    return false;
-
-                return utils_int.match_status(match_status, app_id);
+                return utils_int.factory.set_proc_status(bee_collection, bee_id, app_id, status);
             };
+
+            this.remove = function(bee_id)
+            {
+                if (utils_sys.validation.misc.is_nothing(cosmos))
+                    return false;
+
+                return utils_int.factory.remove_proc_status(bee_collection, bee_id);
+            };
+
+            this.clear = function()
+            {
+                if (utils_sys.validation.misc.is_nothing(cosmos))
+                    return false;
+
+                bee_collection = new bee_collection_module();
+
+                return true;
+            };
+
+            this.get = new get();
         }
 
-        this.set = function(bee_id, app_id, status)
+        function svcs()
+        {
+            function get()
+            {
+                this.by_sys_id = function(bat_id)
+                {
+                    if (utils_sys.validation.misc.is_nothing(cosmos))
+                        return false;
+
+                    return utils_int.factory.get_proc_by_sys_id(bat_collection, bat_id);
+                };
+
+                this.by_proc_id = function(svc_id, match_status)
+                {
+                    if (utils_sys.validation.misc.is_nothing(cosmos))
+                        return false;
+
+                    return utils_int.factory.get_proc_by_proc_id(bat_collection, svc_id, match_status);
+                };
+            }
+
+            this.set = function(bat_id, svc_id, status)
+            {
+                if (utils_sys.validation.misc.is_nothing(cosmos))
+                    return false;
+
+                if (!roost.get(bat_id))
+                    return false;
+
+                return utils_int.factory.set_proc_status(bat_collection, bat_id, svc_id, status);
+            };
+
+            this.remove = function(bat_id)
+            {
+                if (utils_sys.validation.misc.is_nothing(cosmos))
+                    return false;
+
+                return utils_int.factory.remove_proc_status(bat_collection, bat_id);
+            };
+
+            this.clear = function()
+            {
+                if (utils_sys.validation.misc.is_nothing(cosmos))
+                    return false;
+
+                bat_collection = new bat_collection_module();
+
+                return true;
+            };
+
+            this.get = new get();
+        }
+
+        this.clear_all = function()
         {
             if (utils_sys.validation.misc.is_nothing(cosmos))
                 return false;
 
-            if (!colony.get(bee_id) || utils_sys.validation.alpha.is_symbol(status))
-                return false;
-
-            if (!utils_int.is_valid_status(status))
-                return false;
-
-            for (var i = 0; i < collection.num; i++)
-            {
-                if (bee_id === collection.list.bee.id[i] && status === collection.list.status[i])
-                {
-                    if (backtrace === true)
-                        frog('OWL', 'List :: Set', collection);
-
-                    return true;
-                }
-
-                if (bee_id === collection.list.bee.id[i] && status !== collection.list.status[i])
-                {
-                    collection.list.status[i] = status;
-                    collection.list.epoch[i] = new Date().getTime();
-
-                    if (backtrace === true)
-                        frog('OWL', 'List :: Set', collection);
-
-                    return true;
-                }
-            }
-
-            var __current_epoch = new Date().getTime();
-
-            collection.list.bee.id.push(bee_id);
-            collection.list.bee.app_id.push(app_id);
-            collection.list.status.push(status);
-            collection.list.epoch.push(__current_epoch);
-            collection.num++;
-
-            if (backtrace === true)
-                frog('OWL', 'List :: Set', collection);
+            bee_collection = new bee_collection_module();
+            bat_collection = new bat_collection_module();
 
             return true;
         };
 
-        this.remove = function(bee_id)
-        {
-            if (utils_sys.validation.misc.is_nothing(cosmos))
-                return false;
-
-            if (collection.num === 0)
-                return null;
-
-            if (utils_sys.validation.alpha.is_symbol(bee_id))
-                return false;
-
-            for (var i = 0; i < collection.num; i++)
-            {
-                if (collection.list.bee.id[i] === bee_id)
-                {
-                    collection.list.bee.id.splice(i, 1);
-                    collection.list.bee.app_id.splice(i, 1);
-                    collection.list.status.splice(i, 1);
-                    collection.list.epoch.splice(i, 1);
-                    collection.num--;
-
-                    if (backtrace === true)
-                        frog('OWL', 'List :: Remove', collection);
-
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        this.clear = function()
-        {
-            if (utils_sys.validation.misc.is_nothing(cosmos))
-                return false;
-
-            if (collection.num === 0)
-                return false;
-
-            collection = new bees_collection();
-
-            return true;
-        };
-
-        this.get = new get();
+        this.applications = new apps();
+        this.services = new svcs();
     }
 
-    this.num = function()
+    this.num = function(process_type)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        return collection.num;
+        if (utils_sys.validation.misc.is_undefined(process_type))
+            return (bee_collection.num + bat_collection.num);
+
+        if (process_type === 'app')
+            return bee_collection.num;
+        else if (process_type === 'svc')
+            return bat_collection.num;
+
+        return false;
     };
 
-    this.list = function(match_status)
+    this.list = function(match_status, process_type = null)
     {
-        var __list = null;
-
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
-
-        if (utils_sys.validation.misc.is_undefined(match_status))
-            return collection;
 
         if (utils_sys.validation.alpha.is_symbol(match_status))
             return false;
@@ -273,9 +399,15 @@ function owl()
         if (!utils_int.is_valid_status(match_status))
             return false;
 
-        __list = utils_int.match_status(match_status);
+        if (process_type === null)
+            return utils_int.match_status(match_status);
+        else
+        {
+            if (process_type !== 'app' && process_type !== 'svc')
+                return false;
 
-        return __list;
+            return utils_int.match_status(match_status, process_type);
+        }
     };
 
     this.backtrace = function(val)
@@ -309,8 +441,8 @@ function owl()
         colony = null,
         roost = null,
         utils_sys = new vulcan(),
-        collection = new bees_collection(),
-        collection2 = new bats_collection(),
+        bee_collection = new bee_collection_module(),
+        bat_collection = new bat_collection_module(),
         utils_int = new utilities();
 
     this.status = new status();

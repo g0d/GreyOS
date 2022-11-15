@@ -609,11 +609,12 @@ function vulcan()
                 self.validation.misc.is_invalid(attribute) || self.validation.alpha.is_symbol(attribute))
                 return false;
 
-            var __sources = document.head.getElementsByTagName(tag_type);
+            var __counter_i = 0,
+                __sources = document.head.getElementsByTagName(tag_type);
 
-            for (var i = 0; i < __sources.length; i++)
+            for (var __counter_i = 0; __counter_i < __sources.length; __counter_i++)
             {
-                if (__sources[i].attributes[attribute].value.indexOf(file_name) > -1)
+                if (__sources[__counter_i].attributes[attribute].value.indexOf(file_name) > -1)
                     return true;
             }
 

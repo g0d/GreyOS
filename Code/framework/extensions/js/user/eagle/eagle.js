@@ -1,5 +1,5 @@
 /*
-    GreyOS - Eagle (Version: 1.8)
+    GreyOS - Eagle (Version: 2.0)
 
     File name: eagle.js
     Description: This file contains the Eagle - "Alt-Tab"-like keys facility.
@@ -114,7 +114,7 @@ function eagle()
 
         this.draw_windows = function()
         {
-            var __running_apps = owl.list('RUN'),
+            var __running_apps = owl.list('RUN', 'app'),
                 __running_apps_num = 0,
                 __eagle_apps = null,
                 __this_picked_app = null,
@@ -135,7 +135,7 @@ function eagle()
 
             for (var i = 1; i <= __running_apps_num; i++)
             {
-                __this_picked_app = colony.get(__running_apps[i - 1].id);
+                __this_picked_app = colony.get(__running_apps[i - 1].sys_id);
 
                 if (__this_picked_app === null || __this_picked_app === false)
                     continue;
@@ -170,7 +170,7 @@ function eagle()
 
         this.switch_windows = function()
         {
-            var __running_apps = owl.list('RUN'),
+            var __running_apps = owl.list('RUN', 'app'),
                 __running_apps_num = 0,
                 __eagle_apps = null,
                 __this_picked_app = null,
@@ -212,7 +212,7 @@ function eagle()
                 scroll_multiplier++;
             }
 
-            __this_picked_app = colony.get(__running_apps[picked_window].id);
+            __this_picked_app = colony.get(__running_apps[picked_window].sys_id);
 
             __this_picked_app.gui.actions.set_top();
 

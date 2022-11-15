@@ -699,7 +699,7 @@ function meta_script()
                 if (new_svc === null)
                     return false;
 
-                return new_svc.exec(func_name, func_args);
+                return new_svc.exec_function(func_name, func_args);
             };
 
             this.on = function(event_name, callback)
