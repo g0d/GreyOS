@@ -105,3 +105,13 @@ navigator.usb.getDevices()
 
 navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
 navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
+
+// Bluetooth API - https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API (Bismuth)
+// Battery API - https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API (Volta)
+// Barcode - https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API (we will see...)
+// Notifications API - https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API (Iris)
+// Clipboard API - https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API (Consus)
+// Indexed DB - https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API (Mammoth)
+// Canvas API - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API (component as part of Cloud IDE)
+// WebRTC API - https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API (we will see...)
+// Sensors API - https://developer.mozilla.org/en-US/docs/Web/API/Sensor_APIs (we will see...)
