@@ -1,12 +1,12 @@
 /*
     Aether (AJAX Traffic Controller [TC] / QoS for web apps)
 
-    File name: aether.js (Version: 2.5)
+    File name: aether.js (Version: 2.6)
     Description: This file contains the Aether extension.
     Dependencies: Vulcan, BULL, Pythia, JAP, Centurion, Stopwatch and Sensei.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2014
+    Copyright (C) 2014 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -174,7 +174,7 @@ function aether()
         {
             this.test_init = function()
             {
-                if (__is_init === false)
+                if (is_init === false)
                 {
                     sensei('Aether', 'The scheduler is not running!');
 
@@ -220,7 +220,7 @@ function aether()
                 {
                     if (func === 'cancel')
                     {
-                        __is_init = false;
+                        is_init = false;
 
                         scheduler.stop();
                         repetitive_scheduler.stop();
@@ -236,9 +236,9 @@ function aether()
             {
                 var __factory_map = [];
 
-                __factory_map.push(['main', __config_definition_models['main'], main_config]);
-                __factory_map.push(['settings', __config_definition_models['settings'], main_config.settings]);
-                __factory_map.push(['tasks', __config_definition_models['tasks'], main_config.tasks]);
+                __factory_map.push(['main', config_definition_models['main'], main_config]);
+                __factory_map.push(['settings', config_definition_models['settings'], main_config.settings]);
+                __factory_map.push(['tasks', config_definition_models['tasks'], main_config.tasks]);
 
                 for (__index = 0; __index < __factory_map.length; __index++)
                 {
@@ -276,7 +276,7 @@ function aether()
                                     }
 
                                     __factory_map.push([__object_options[__option], 
-                                                        __config_definition_models[__object_options[__option]], 
+                                                        config_definition_models[__object_options[__option]], 
                                                         __task_option_config]);
 
                                     if (!config_parser.verify(__factory_map[3][1], __factory_map[3][2]))
@@ -325,7 +325,7 @@ function aether()
                                         "data"                  :   __this_task.data,
                                         "response_timeout"      :   __this_task.response_timeout
                                     },
-                    ajax = new bull();
+                    __ajax = new bull();
 
                 function ajax_call()
                 {
@@ -345,7 +345,7 @@ function aether()
                         __ajax_config.on_timeout = __this_task.timeout_callback;
                     }
 
-                    ajax.run(__ajax_config);
+                    __ajax.run(__ajax_config);
                 }
 
                 function ajax_prepare_delegate()
@@ -406,13 +406,13 @@ function aether()
                                                     "data"                  :   __this_task.data,
                                                     "ajax_mode"             :   "asynchronous"
                                                 },
-                            ping_tester = new centurion();
+                            __ping_tester = new centurion();
 
                         __qos_ajax_config.on_success = function()
                                                        {
-                                                            ping_tester.benchmark.end();
+                                                            __ping_tester.benchmark.end();
 
-                                                            var __ajax_latency = ping_tester.benchmark.latency();
+                                                            var __ajax_latency = __ping_tester.benchmark.latency();
 
                                                             if (((__task_latency.min !== system_constants.misc.IGNORE && __ajax_latency >= __task_latency.min) && 
                                                                 (__task_latency.max !== system_constants.misc.IGNORE && __ajax_latency <= __task_latency.max)) || 
@@ -427,9 +427,9 @@ function aether()
                                                             }
                                                        };
 
-                        ping_tester.benchmark.start();
+                        __ping_tester.benchmark.start();
 
-                        ajax.run(__qos_ajax_config);
+                        __ajax.run(__qos_ajax_config);
                     }
                     else
                         ajax_prepare_delegate();
@@ -441,137 +441,137 @@ function aether()
 
         this.init_config_definition_models = function()
         {
-            __config_definition_models['main'] = { "arguments"  :   [
-                                                                        {
-                                                                            "key"       :   { "name" : "settings", "optional" : false },
-                                                                            "value"     :   { "type" : "object" }
-                                                                        },
-                                                                        {
-                                                                            "key"       :   { "name" : "tasks", "optional" : false },
-                                                                            "value"     :   { "type" : "array" }
-                                                                        }
-                                                                    ]
-                                                 };
+            config_definition_models['main'] = { "arguments" : [
+                                                                    {
+                                                                        "key"       :   { "name" : "settings", "optional" : false },
+                                                                        "value"     :   { "type" : "object" }
+                                                                    },
+                                                                    {
+                                                                        "key"       :   { "name" : "tasks", "optional" : false },
+                                                                        "value"     :   { "type" : "array" }
+                                                                    }
+                                                               ]
+                                               };
 
-            __config_definition_models['settings'] = { "arguments"  :    [
-                                                                            {
-                                                                                "key"     :   { "name" : "chain_mode", "optional" : false },
-                                                                                "value"   :   {
-                                                                                                 "type"      :   "string",
-                                                                                                 "choices"   :   [
+            config_definition_models['settings'] = { "arguments" : [
+                                                                        {
+                                                                            "key"     :   { "name" : "chain_mode", "optional" : false },
+                                                                            "value"   :   {
+                                                                                                "type"      :   "string",
+                                                                                                "choices"   :   [
                                                                                                                     system_constants.settings.chain_mode.SERIAL,
                                                                                                                     system_constants.settings.chain_mode.PARALLEL,
                                                                                                                     system_constants.settings.chain_mode.DELAY,
                                                                                                                     system_constants.settings.chain_mode.CALLBACK
-                                                                                                                 ]
-                                                                                              }
-                                                                            },
-                                                                            {
-                                                                                "key"     :   { "name" : "init_delay", "optional" : true },
-                                                                                "value"   :   { "type" : "number" }
-                                                                            },
-                                                                            {
-                                                                                "key"     :   { "name" : "interval", "optional" : true },
-                                                                                "value"   :   { "type" : "number" }
-                                                                            },
-                                                                            {
-                                                                                "key"     :   { "name" : "optional_task_callbacks", "optional" : true },
-                                                                                "value"   :   { "type" : "boolean" }
-                                                                            },
-                                                                            {
-                                                                                "key"     :   { "name" : "scheduler_callback", "optional" : true },
-                                                                                "value"   :   { "type" : "function" }
-                                                                            }
-                                                                        ]
-                                                     };
-
-            __config_definition_models['tasks'] = { "arguments" :   [
-                                                                        {
-                                                                            "key"     :   { "name" : "type", "optional" : false },
-                                                                            "value"   :   {
-                                                                                             "type"     :   "string",
-                                                                                             "choices"  :   [
-                                                                                                                system_constants.tasks.type.DATA,
-                                                                                                                system_constants.tasks.type.REQUEST
-                                                                                                            ]
+                                                                                                                ]
                                                                                           }
                                                                         },
                                                                         {
-                                                                            "key"     :   { "name" : "url", "optional" : false },
-                                                                            "value"   :   { "type" : "string" }
-                                                                        },
-                                                                        {
-                                                                            "key"     :   { "name" : "data", "optional" : false },
-                                                                            "value"   :   { "type" : "string" }
-                                                                        },
-                                                                        {
-                                                                            "key"     :   { "name" : "response_timeout", "optional" : false },
+                                                                            "key"     :   { "name" : "init_delay", "optional" : true },
                                                                             "value"   :   { "type" : "number" }
                                                                         },
                                                                         {
-                                                                            "key"     :   { "name" : "callbacks", "optional" : false },
-                                                                            "value"   :   { "type" : "object" }
-                                                                        },
-                                                                        {
-                                                                            "key"     :   { "name" : "ajax_mode", "optional" : true },
-                                                                            "value"   :   {
-                                                                                             "type"     :   "string",
-                                                                                             "choices"  :   [
-                                                                                                                system_constants.tasks.ajax_mode.ASYNCHRONOUS,
-                                                                                                                system_constants.tasks.ajax_mode.SYNCHRONOUS
-                                                                                                            ]
-                                                                                          }
-                                                                        },
-                                                                        {
-                                                                            "key"     :   { "name" : "element_id", "optional" : true },
-                                                                            "value"   :   { "type" : "string" }
-                                                                        },
-                                                                        {
-                                                                            "key"     :   { "name" : "content_fill_mode", "optional" : true },
-                                                                            "value"   :   {
-                                                                                             "type"     :   "string",
-                                                                                             "choices"  :   [
-                                                                                                                system_constants.tasks.content_fill_mode.REPLACE,
-                                                                                                                system_constants.tasks.content_fill_mode.APPEND
-                                                                                                            ]
-                                                                                          }
-                                                                        },
-                                                                        {
-                                                                            "key"     :   { "name" : "priority", "optional" : true },
+                                                                            "key"     :   { "name" : "interval", "optional" : true },
                                                                             "value"   :   { "type" : "number" }
                                                                         },
                                                                         {
-                                                                            "key"     :   { "name" : "qos", "optional" : true },
-                                                                            "value"   :   { "type" : "object" }
+                                                                            "key"     :   { "name" : "optional_task_callbacks", "optional" : true },
+                                                                            "value"   :   { "type" : "boolean" }
                                                                         },
                                                                         {
-                                                                            "key"     :   { "name" : "repeat", "optional" : true },
-                                                                            "value"   :   { "type" : "object" }
-                                                                        },
-                                                                        {
-                                                                            "key"     :   { "name" : "delay", "optional" : true },
-                                                                            "value"   :   { "type" : "number" }
+                                                                            "key"     :   { "name" : "scheduler_callback", "optional" : true },
+                                                                            "value"   :   { "type" : "function" }
                                                                         }
                                                                     ]
-                                                  };
+                                                   };
 
-            __config_definition_models['callbacks'] = { "arguments" :  [
-                                                                            {
-                                                                                "key"     :   { "name" : "success", "optional" : false },
-                                                                                "value"   :   { "type" : "function" }
-                                                                            },
-                                                                            {
-                                                                                "key"     :   { "name" : "fail", "optional" : true },
-                                                                                "value"   :   { "type" : "function" }
-                                                                            },
-                                                                            {
-                                                                                "key"     :   { "name" : "timeout", "optional" : true },
-                                                                                "value"   :   { "type" : "function" }
-                                                                            }
-                                                                        ]
-                                                      };
+            config_definition_models['tasks'] = { "arguments" : [
+                                                                    {
+                                                                        "key"     :   { "name" : "type", "optional" : false },
+                                                                        "value"   :   {
+                                                                                            "type"     :   "string",
+                                                                                            "choices"  :   [
+                                                                                                                system_constants.tasks.type.DATA,
+                                                                                                                system_constants.tasks.type.REQUEST
+                                                                                                           ]
+                                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "url", "optional" : false },
+                                                                        "value"   :   { "type" : "string" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "data", "optional" : false },
+                                                                        "value"   :   { "type" : "string" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "response_timeout", "optional" : false },
+                                                                        "value"   :   { "type" : "number" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "callbacks", "optional" : false },
+                                                                        "value"   :   { "type" : "object" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "ajax_mode", "optional" : true },
+                                                                        "value"   :   {
+                                                                                            "type"     :   "string",
+                                                                                            "choices"  :   [
+                                                                                                                system_constants.tasks.ajax_mode.ASYNCHRONOUS,
+                                                                                                                system_constants.tasks.ajax_mode.SYNCHRONOUS
+                                                                                                           ]
+                                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "element_id", "optional" : true },
+                                                                        "value"   :   { "type" : "string" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "content_fill_mode", "optional" : true },
+                                                                        "value"   :   {
+                                                                                            "type"     :   "string",
+                                                                                            "choices"  :   [
+                                                                                                                system_constants.tasks.content_fill_mode.REPLACE,
+                                                                                                                system_constants.tasks.content_fill_mode.APPEND
+                                                                                                           ]
+                                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "priority", "optional" : true },
+                                                                        "value"   :   { "type" : "number" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "qos", "optional" : true },
+                                                                        "value"   :   { "type" : "object" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "repeat", "optional" : true },
+                                                                        "value"   :   { "type" : "object" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "delay", "optional" : true },
+                                                                        "value"   :   { "type" : "number" }
+                                                                    }
+                                                                ]
+                                                };
 
-            __config_definition_models['qos'] = { "arguments"   :   [
+            config_definition_models['callbacks'] = { "arguments" : [
+                                                                        {
+                                                                            "key"     :   { "name" : "success", "optional" : false },
+                                                                            "value"   :   { "type" : "function" }
+                                                                        },
+                                                                        {
+                                                                            "key"     :   { "name" : "fail", "optional" : true },
+                                                                            "value"   :   { "type" : "function" }
+                                                                        },
+                                                                        {
+                                                                            "key"     :   { "name" : "timeout", "optional" : true },
+                                                                            "value"   :   { "type" : "function" }
+                                                                        }
+                                                                    ]
+                                                    };
+
+            config_definition_models['qos'] = { "arguments"   :   [
                                                                         {
                                                                             "key"     :   { "name" : "latency", "optional" : true },
                                                                             "value"   :   { "type" : "object" }
@@ -580,10 +580,10 @@ function aether()
                                                                             "key"     :   { "name" : "bandwidth", "optional" : true },
                                                                             "value"   :   { "type" : "object" }
                                                                         }
-                                                                    ]
-                                                };
+                                                                  ]
+                                              };
 
-            __config_definition_models['latency'] = { "arguments"   :  [
+            config_definition_models['latency'] = { "arguments"   :  [
                                                                             {
                                                                                 "key"     :   { "name" : "min", "optional" : false },
                                                                                 "value"   :   { "type" : "number" }
@@ -592,22 +592,22 @@ function aether()
                                                                                 "key"     :   { "name" : "max", "optional" : false },
                                                                                 "value"   :   { "type" : "number" }
                                                                             }
-                                                                        ]
+                                                                     ]
+                                                  };
+
+            config_definition_models['bandwidth'] = { "arguments" :  [
+                                                                            {
+                                                                                "key"     :   { "name" : "min", "optional" : false },
+                                                                                "value"   :   { "type" : "number" }
+                                                                            },
+                                                                            {
+                                                                                "key"     :   { "name" : "max", "optional" : false },
+                                                                                "value"   :   { "type" : "number" }
+                                                                            }
+                                                                     ]
                                                     };
 
-            __config_definition_models['bandwidth'] = { "arguments" :  [
-                                                                            {
-                                                                                "key"     :   { "name" : "min", "optional" : false },
-                                                                                "value"   :   { "type" : "number" }
-                                                                            },
-                                                                            {
-                                                                                "key"     :   { "name" : "max", "optional" : false },
-                                                                                "value"   :   { "type" : "number" }
-                                                                            }
-                                                                        ]
-                                                      };
-
-            __config_definition_models['repeat'] = { "arguments" :  [
+            config_definition_models['repeat'] = { "arguments" :  [
                                                                         {
                                                                             "key"     :   { "name" : "times", "optional" : false },
                                                                             "value"   :   { "type" : "number" }
@@ -623,7 +623,7 @@ function aether()
                                                                                           }
                                                                         }
                                                                   ]
-                                                   };
+                                                 };
         };
 
         this.verify_config = function(main_config)
@@ -666,12 +666,12 @@ function aether()
             }
 
             if (settings_config.chain_mode === system_constants.settings.chain_mode.SERIAL)
-                __is_serial_chain_mode = true;
+                is_serial_chain_mode = true;
 
             if (settings_config.chain_mode === system_constants.settings.chain_mode.DELAY)
-                __is_delay_chain_mode = true;
+                is_delay_chain_mode = true;
 
-            __is_optional_task_callbacks = settings_config.optional_task_callbacks;
+            is_optional_task_callbacks = settings_config.optional_task_callbacks;
 
             __options_map = [];
 
@@ -686,8 +686,9 @@ function aether()
                 __tasks_response_timeout_sum = 0,
                 __tasks_delay_sum = 0,
                 __same_priorities_num = 0,
-                task_id_gen = new pythia(),
-                task_priority_gen = new pythia();
+                __is_async_warning_set = false,
+                __task_id_gen = new pythia(),
+                __task_priority_gen = new pythia();
 
             for (__index = 0; __index < tasks_config.length; __index++)
             {
@@ -695,7 +696,7 @@ function aether()
 
                 __new_task = system_models.generate_task();
 
-                __new_task.id = task_id_gen.generate();
+                __new_task.id = __task_id_gen.generate();
                 __new_task.type = __this_config_task.type;
 
                 if (__this_config_task.type === system_constants.tasks.type.DATA)
@@ -762,7 +763,7 @@ function aether()
                 for (__option in tasks_config[__index].callbacks)
                     __callbacks_found++;
 
-                if (!__is_optional_task_callbacks && __callbacks_found < system_config_keywords.callbacks.length)
+                if (!is_optional_task_callbacks && __callbacks_found < system_config_keywords.callbacks.length)
                 {
                     system_tools.reset();
 
@@ -778,7 +779,14 @@ function aether()
                     __new_task.ajax_mode = __this_config_task.ajax_mode;
 
                     if (__this_config_task.ajax_mode === system_constants.tasks.ajax_mode.SYNCHRONOUS)
-                        sensei('Aether', 'Warning: Use of synchronous AJAX causes unexpected\nscheduling in various cases!');
+                    {
+                        if (!__is_async_warning_set)
+                        {
+                            __is_async_warning_set = true;
+
+                            sensei('Aether', 'Warning: Use of synchronous AJAX causes unexpected\nscheduling in various cases!');
+                        }
+                    }
                 }
 
                 if (__this_config_task.hasOwnProperty('element_id'))
@@ -812,7 +820,7 @@ function aether()
                     __new_task.priority = __this_config_task.priority;
                 }
                 else
-                    __new_task.priority = task_priority_gen.generate();
+                    __new_task.priority = __task_priority_gen.generate();
 
                 if (__this_config_task.hasOwnProperty('qos'))
                 {
@@ -863,7 +871,7 @@ function aether()
                     __new_task.repeat = __this_config_task.repeat;
                 }
 
-                if (__is_delay_chain_mode && !__this_config_task.hasOwnProperty('delay'))
+                if (is_delay_chain_mode && !__this_config_task.hasOwnProperty('delay'))
                 {
                     system_tools.reset();
 
@@ -874,11 +882,11 @@ function aether()
 
                 if (__this_config_task.hasOwnProperty('delay'))
                 {
-                    if (__is_serial_chain_mode || __this_config_task.delay < 1 || __this_config_task.delay > system_constants.misc.MAX_DELAY)
+                    if (is_serial_chain_mode || __this_config_task.delay < 1 || __this_config_task.delay > system_constants.misc.MAX_DELAY)
                     {
                         system_tools.reset();
 
-                        if (__is_serial_chain_mode)
+                        if (is_serial_chain_mode)
                             sensei('Aether', 'Invalid use of the "delay" option when "chain_mode"\nis set to serial!');
                         else
                             sensei('Aether', 'Invalid range for "delay" option!');
@@ -1091,8 +1099,8 @@ function aether()
 
         this.reset = function()
         {
-            __is_init = false;
-            __config_definition_models = [];
+            is_init = false;
+            config_definition_models = [];
 
             system_models = new sys_models_class();
         };
@@ -1107,15 +1115,15 @@ function aether()
 
     this.schedule = function(json_config)
     {
-        if (__is_init === true || 
+        if (is_init === true || 
             !system_tools.verify_config(json_config) || 
             !system_tools.load_settings(json_config.settings) || 
             !system_tools.load_tasks(json_config.tasks) || 
             !system_tools.run())
             return false;
 
-        __is_init = true;
-        __config_definition_models = [];
+        is_init = true;
+        config_definition_models = [];
 
         return true;
     };
@@ -1141,11 +1149,11 @@ function aether()
         return system_constants;
     };
 
-    var __is_init = false,
-        __is_serial_chain_mode = false,
-        __is_delay_chain_mode = false,
-        __is_optional_task_callbacks = false,
-        __config_definition_models = [],
+    var is_init = false,
+        is_serial_chain_mode = false,
+        is_delay_chain_mode = false,
+        is_optional_task_callbacks = false,
+        config_definition_models = [],
         system_constants = new sys_constants_class(),
         system_models = new sys_models_class(),
         system_config_keywords = new config_keywords_class(),

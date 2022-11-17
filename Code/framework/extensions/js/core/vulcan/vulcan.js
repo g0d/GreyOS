@@ -5,7 +5,7 @@
     Description: This file contains the Vulcan extension.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2014 - 2021
+    Copyright (C) 2014 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -612,7 +612,7 @@ function vulcan()
             var __counter_i = 0,
                 __sources = document.head.getElementsByTagName(tag_type);
 
-            for (var __counter_i = 0; __counter_i < __sources.length; __counter_i++)
+            for (__counter_i = 0; __counter_i < __sources.length; __counter_i++)
             {
                 if (__sources[__counter_i].attributes[attribute].value.indexOf(file_name) > -1)
                     return true;

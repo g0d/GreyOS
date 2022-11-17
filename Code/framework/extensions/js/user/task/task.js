@@ -28,20 +28,20 @@ function task()
         {
             var __new_worker = new Worker(worker_file);
 
-            __task.id = rnd_gen.generate(),
-            __task.file = worker_file;
-            __task.worker = __new_worker;
+            task.id = rnd_gen.generate(),
+            task.file = worker_file;
+            task.worker = __new_worker;
 
-            __is_task_created = true;
+            is_task_created = true;
 
-            return __task.id;
+            return task.id;
         };
 
         this.destroy = function()
         {
-            __task.worker.terminate();
+            task.worker.terminate();
 
-            __is_task_created = false;
+            is_task_created = false;
 
             return true;
         };
@@ -49,9 +49,9 @@ function task()
         this.message = function(any)
         {
             if (utils.validation.misc.is_function(any))
-                 __task.worker.onmessage = function(e) { any.call(this, e); };
+                 task.worker.onmessage = function(e) { any.call(this, e); };
             else
-                __task.worker.postMessage(any);
+                task.worker.postMessage(any);
 
             return true;
         };
@@ -64,7 +64,7 @@ function task()
             if (!utils.validation.misc.is_function(callback))
                 return false;
 
-            if (__is_task_created === false)
+            if (is_task_created === false)
                 return false;
 
             return task_manager.message(callback);
@@ -75,7 +75,7 @@ function task()
             if (utils.validation.misc.is_invalid(data))
                 return false;
 
-            if (__is_task_created === false)
+            if (is_task_created === false)
                 return false;
 
             return task_manager.message(data);
@@ -84,10 +84,10 @@ function task()
 
     this.id = function()
     {
-        if (__is_task_created === false)
+        if (is_task_created === false)
             return false;
 
-        return __task.id;
+        return task.id;
     };
 
     this.create = function(worker_file)
@@ -95,7 +95,7 @@ function task()
         if (utils.validation.misc.is_invalid(worker_file) || !utils.validation.alpha.is_string(worker_file))
             return false;
 
-        if (__is_task_created === true)
+        if (is_task_created === true)
             return false;
 
         return task_manager.create(worker_file);
@@ -103,7 +103,7 @@ function task()
 
     this.destroy = function()
     {
-        if (__is_task_created === false)
+        if (is_task_created === false)
             return false;
 
         return task_manager.destroy();
@@ -117,8 +117,8 @@ function task()
         return this;
     }
 
-    var __is_task_created = false,
-        __task = new task_model(),
+    var is_task_created = false,
+        task = new task_model(),
         task_manager = new task_manager_model(),
         rnd_gen = new pythia(),
         utils = new vulcan();

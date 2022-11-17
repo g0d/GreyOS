@@ -268,7 +268,7 @@ function fx()
                 __distance = 0,
                 __last_step = 0,
                 __interval_id = null,
-                interval = new interval_model();
+                __interval_utility = new interval_model();
 
             if (__element === false)
                 return false;
@@ -379,28 +379,28 @@ function fx()
                     if (direction === 'up' || direction === 'left')
                         reverse_parameters();
 
-                    interval.run(function()
-                                 {
-                                    __distance = __distance + step;
+                    __interval_utility.run(function()
+                                           {
+                                                __distance = __distance + step;
 
-                                    if (dynamic_logic(distance, direction, 1))
-                                    {
-                                        if (dynamic_logic(distance, direction, 2))
-                                        {
-                                            __last_step = distance - (__distance - step);
-                                            __element.style[__pos] = __pos_val + offset + (__distance - step) + __last_step + 'px';
-                                        }
-                                        else
-                                            __element.style[__pos] = __pos_val + __distance + offset + 'px';
+                                                if (dynamic_logic(distance, direction, 1))
+                                                {
+                                                    if (dynamic_logic(distance, direction, 2))
+                                                    {
+                                                        __last_step = distance - (__distance - step);
+                                                        __element.style[__pos] = __pos_val + offset + (__distance - step) + __last_step + 'px';
+                                                    }
+                                                    else
+                                                        __element.style[__pos] = __pos_val + __distance + offset + 'px';
 
-                                        interval.stop(__interval_id);
+                                                    __interval_utility.stop(__interval_id);
 
-                                        if (!utils.validation.misc.is_undefined(callback))
-                                            callback.call();
-                                    }
-                                    else
-                                        __element.style[__pos] = __pos_val + __distance + 'px';
-                                 }, speed);
+                                                    if (!utils.validation.misc.is_undefined(callback))
+                                                        callback.call();
+                                                }
+                                                else
+                                                    __element.style[__pos] = __pos_val + __distance + 'px';
+                                           }, speed);
 
                     return true;
                 }
@@ -417,7 +417,7 @@ function fx()
                 __distance = 0,
                 __last_step = 0,
                 __interval_id = null,
-                interval = new interval_model();
+                __interval_utility = new interval_model();
 
             if (__element === false)
                 return false;
@@ -506,7 +506,7 @@ function fx()
 
             function execute_callback()
             {
-                interval.stop(__interval_id);
+                __interval_utility.stop(__interval_id);
 
                 if (!utils.validation.misc.is_undefined(callback))
                     callback.call();
@@ -559,35 +559,35 @@ function fx()
                         reverse_parameters();
                     }
 
-                    interval.run(function()
-                                 {
-                                    __distance = __distance + step;
+                    __interval_utility.run(function()
+                                           {
+                                                __distance = __distance + step;
 
-                                    if (__distance <= 0)
-                                    {
-                                        __element.style[__pos] = __pos_val + 'px';
-                                        __element.style[__dimension] = __dimension_val + 'px';
+                                                if (__distance <= 0)
+                                                {
+                                                    __element.style[__pos] = __pos_val + 'px';
+                                                    __element.style[__dimension] = __dimension_val + 'px';
 
-                                        execute_callback();
-                                    }
-                                    else
-                                    {
-                                        if (dynamic_logic(distance, direction, 1))
-                                        {
-                                            if (dynamic_logic(distance, direction, 2))
-                                            {
-                                                __last_step = distance - (__distance - step);
-                                                __element.style[__dimension] = Math.abs((__distance - step) + __last_step) + 'px';
-                                            }
-                                            else
-                                                __element.style[__dimension] = Math.abs(__distance) + 'px';
+                                                    execute_callback();
+                                                }
+                                                else
+                                                {
+                                                    if (dynamic_logic(distance, direction, 1))
+                                                    {
+                                                        if (dynamic_logic(distance, direction, 2))
+                                                        {
+                                                            __last_step = distance - (__distance - step);
+                                                            __element.style[__dimension] = Math.abs((__distance - step) + __last_step) + 'px';
+                                                        }
+                                                        else
+                                                            __element.style[__dimension] = Math.abs(__distance) + 'px';
 
-                                            execute_callback();
-                                        }
-                                        else
-                                            __element.style[__dimension] = Math.abs(__distance) + 'px';
-                                    }
-                                 }, speed);
+                                                        execute_callback();
+                                                    }
+                                                    else
+                                                        __element.style[__dimension] = Math.abs(__distance) + 'px';
+                                                }
+                                           }, speed);
 
                     return true;
                 }

@@ -1,12 +1,12 @@
 /*
 	Armadillo (JSON DB over the browser)
 
-	File: armadillo.js (Version: 1.0)
+	File: armadillo.js (Version: 1.1)
 	Description: This file contains the Armadillo extension.
 	Dependencies: Vulcan, Pythia and Sensei.
 
 	Coded by George Delaportas (G0D)
-    Copyright (C) 2017
+    Copyright (C) 2017 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -100,9 +100,9 @@ function armadillo()
 		// Generate record UID
 		this.generate_record_uid = function()
 		{
-			var uid = rnd_gen.generate();
+			var __uid = rnd_gen.generate();
 
-			if (helpers.duplicates_exist('record', uid))
+			if (helpers.duplicates_exist('record', __uid))
 			{
 				var __index = 0,
 					__this_db = data_repo.db_container[data_repo.selected_db],
@@ -114,10 +114,10 @@ function armadillo()
 
 				rnd_gen.load(__existing_id_array);
 
-				uid = rnd_gen.generate();
+				__uid = rnd_gen.generate();
 			}
 
-			return uid;
+			return __uid;
 		};
 
 		// DB exists

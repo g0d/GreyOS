@@ -6,7 +6,7 @@
     Dependencies: Vulcan and Centurion.
 
     Coded by George Delaportas (G0D)
-    Copyright (c) 2014
+    Copyright (c) 2014 - 2021
     Open Software License (OSL 3.0)
 */
 
@@ -28,20 +28,20 @@ function snail()
 
         performance.benchmark.end();
 
-        __benchmark_index = performance.benchmark.latency();
+        benchmark_index = performance.benchmark.latency();
 
         return true;
     };
 
     this.index = function()
     {
-        if (__benchmark_index === -1)
+        if (benchmark_index === -1)
             return false;
 
-        return __benchmark_index;
+        return benchmark_index;
     };
 
-    var __benchmark_index = -1,
+    var benchmark_index = -1,
         performance = new centurion(),
         utils = new vulcan();
 }

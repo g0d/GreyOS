@@ -7,9 +7,11 @@ var aether_config = {
                                             "optional_task_callbacks"   :   true,                   // OPTIONAL (Allow optional task callbacks: 'fail' and 'timeout' - DEFAULT: true)
                                             "scheduler_callback"        :   function()              // OPTIONAL (Function to execute after all tasks have been scheduled)
                                                                             {
+                                                                                console.log('');
                                                                                 console.log('------------------------------');
                                                                                 console.log('All tasks have been scheduled!');
                                                                                 console.log('------------------------------');
+                                                                                console.log('');
                                                                                 console.log('');
                                                                                 console.log('');
                                                                             }
@@ -121,5 +123,10 @@ var aether_config = {
                                             }
                                         ]
                      };
+
+console.log('------------------------------');
+console.log('Task scheduling in progress...');
+console.log('------------------------------');
+console.log('');
 
 my_aether.schedule(aether_config); // Schedule and run AJAX tasks

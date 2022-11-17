@@ -28,33 +28,33 @@ function workbox()
             if (__container === false || utils.validation.misc.is_invalid(__container))
                 return false;
 
-            __workbox_object = utils.objects.by_id('workbox');
+            workbox_object = utils.objects.by_id('workbox');
 
-            if (__workbox_object !== null)
-                __container.removeChild(__workbox_object);
+            if (workbox_object !== null)
+                __container.removeChild(workbox_object);
 
-            __workbox_object = document.createElement('div');
+            workbox_object = document.createElement('div');
 
-            __workbox_object.id = 'workbox';
-            __workbox_object.className = 'wb_screen';
+            workbox_object.id = 'workbox';
+            workbox_object.className = 'wb_screen';
 
-            var win_title_id = __workbox_object.id + '_title',
-                button_title_id = __workbox_object.id + '_button';
+            var __win_title_id = workbox_object.id + '_title',
+                __button_title_id = workbox_object.id + '_button';
 
             __html = '<div class="work_window">' + 
-                     '  <div id="' + win_title_id + '"></div>' + 
-                     '  <div id="' + __workbox_object.id + '_content"></div>' + 
-                     '  <div id="' + button_title_id + '"></div>' + 
+                     '  <div id="' + __win_title_id + '"></div>' + 
+                     '  <div id="' + workbox_object.id + '_content"></div>' + 
+                     '  <div id="' + __button_title_id + '"></div>' + 
                      '</div>';
 
-            __workbox_object.innerHTML = __html;
+            workbox_object.innerHTML = __html;
 
-            __container.appendChild(__workbox_object);
+            __container.appendChild(workbox_object);
 
-            __title_object = utils.objects.by_id(win_title_id);
-            __button_object = utils.objects.by_id(button_title_id);
+            __title_object = utils.objects.by_id(__win_title_id);
+            __button_object = utils.objects.by_id(__button_title_id);
 
-            content_fetcher(win_title_id, null, 
+            content_fetcher(__win_title_id, null, 
                             function()
                             {
                                 __title_object.innerHTML = title;
@@ -67,7 +67,7 @@ function workbox()
                             },
                             function()
                             {
-                                utils.events.attach(button_title_id, __button_object, 'click',  self.hide_win);
+                                utils.events.attach(__button_title_id, __button_object, 'click',  self.hide_win);
                             });
 
             return true;
@@ -75,45 +75,45 @@ function workbox()
 
         this.show_win = function(message)
         {
-            if (__timer !== null)
-                clearTimeout(__timer);
+            if (timer !== null)
+                clearTimeout(timer);
 
-            __workbox_object.childNodes[0].childNodes[3].innerHTML = message;
+            workbox_object.childNodes[0].childNodes[3].innerHTML = message;
 
-            __workbox_object.style.visibility = 'visible';
+            workbox_object.style.visibility = 'visible';
 
-            __workbox_object.classList.remove('wb_fade_out');
-            __workbox_object.classList.add('wb_fade_in');
+            workbox_object.classList.remove('wb_fade_out');
+            workbox_object.classList.add('wb_fade_in');
 
-            __is_open = true;
+            is_open = true;
 
-            if (__show_callback !== null)
+            if (global_show_callback !== null)
             {
-                __show_callback.call(this);
+                global_show_callback.call(this);
 
-                __show_callback = null;
+                global_show_callback = null;
             }
         };
 
         this.hide_win = function()
         {
-            if (__timer !== null)
-                clearTimeout(__timer);
+            if (timer !== null)
+                clearTimeout(timer);
 
-            __workbox_object.style.visibility = 'visible';
+            workbox_object.style.visibility = 'visible';
 
-            __workbox_object.classList.remove('wb_fade_in');
-            __workbox_object.classList.add('wb_fade_out');
+            workbox_object.classList.remove('wb_fade_in');
+            workbox_object.classList.add('wb_fade_out');
 
-            __timer = setTimeout(function() { __workbox_object.style.visibility = 'hidden'; }, 250);
+            timer = setTimeout(function() { workbox_object.style.visibility = 'hidden'; }, 250);
 
-            __is_open = false;
+            is_open = false;
 
-            if (__hide_callback !== null)
+            if (global_hide_callback !== null)
             {
-                __hide_callback.call(this);
+                global_hide_callback.call(this);
 
-                __hide_callback = null;
+                global_hide_callback = null;
             }
         };
     }
@@ -121,7 +121,7 @@ function workbox()
     // Show workbox (with optional callbacks on show & hide)
     this.show = function(message, show_callback, hide_callback)
     {
-        if (!__is_init || __is_open || !utils.validation.alpha.is_string(message) || 
+        if (!is_init || is_open || !utils.validation.alpha.is_string(message) || 
             (!utils.validation.misc.is_invalid(show_callback) && 
              !utils.validation.misc.is_function(show_callback)) || 
             (!utils.validation.misc.is_invalid(hide_callback) && 
@@ -129,10 +129,10 @@ function workbox()
             return false;
 
         if (utils.validation.misc.is_function(show_callback))
-            __show_callback = show_callback;
+            global_show_callback = show_callback;
 
         if (utils.validation.misc.is_function(hide_callback))
-            __hide_callback = hide_callback;
+            global_hide_callback = hide_callback;
 
         helpers.show_win(message);
 
@@ -142,13 +142,13 @@ function workbox()
     // Hide workbox (with optional hide callback)
     this.hide = function(hide_callback)
     {
-        if (!__is_init || !__is_open || 
+        if (!is_init || !is_open || 
             (!utils.validation.misc.is_invalid(hide_callback) && 
              !utils.validation.misc.is_function(hide_callback)))
             return false;
 
         if (utils.validation.misc.is_function(hide_callback))
-            __hide_callback = hide_callback;
+            global_hide_callback = hide_callback;
 
         helpers.hide_win();
 
@@ -158,16 +158,16 @@ function workbox()
     // Get workbox status
     this.is_open = function()
     {
-        if (!__is_init)
+        if (!is_init)
             return false;
 
-        return __is_open;
+        return is_open;
     };
 
     // Initialize
     this.init = function(container_id, title, button_label)
     {
-        if (__is_init)
+        if (is_init)
             return false;
 
         if (utils.validation.misc.is_invalid(container_id) || !utils.validation.alpha.is_string(container_id) || 
@@ -179,17 +179,17 @@ function workbox()
         if (!helpers.draw_screen(container_id, title, button_label))
             return false;
 
-        __is_init = true;
+        is_init = true;
 
         return true;
     };
 
-    var __is_init = false,
-        __is_open = false,
-        __workbox_object = null,
-        __show_callback = null,
-        __hide_callback = null,
-        __timer = null,
+    var is_init = false,
+        is_open = false,
+        workbox_object = null,
+        global_show_callback = null,
+        global_hide_callback = null,
+        timer = null,
         helpers = new general_helpers(),
         utils = new vulcan();
 }

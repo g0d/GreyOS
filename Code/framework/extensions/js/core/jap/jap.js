@@ -30,7 +30,7 @@ function jap()
 
             if (!utils.validation.misc.is_object(__attribute))
             {
-                if (!utils.misc.contains(__index, __def_keywords))
+                if (!utils.misc.contains(__index, def_keywords))
                     return true;
 
                 continue;
@@ -49,7 +49,7 @@ function jap()
                         if (utils.validation.numerics.is_number(__option))
                             continue;
 
-                        if (!utils.misc.contains(__property, __def_keywords))
+                        if (!utils.misc.contains(__property, def_keywords))
                             return true;
 
                         if (has_unknown_keywords(__attribute[__option][__property]))
@@ -58,7 +58,7 @@ function jap()
                 }
                 else
                 {
-                    if (!utils.misc.contains(__option, __def_keywords))
+                    if (!utils.misc.contains(__option, def_keywords))
                         return true;
 
                     if (has_unknown_keywords(__attribute[__option]))
@@ -97,7 +97,7 @@ function jap()
         var __this_key = null,
             __this_value = null;
 
-        __is_model_defined = false;
+        is_model_defined = false;
 
         if (definition_model.hasOwnProperty('ignore_keys_num') && !utils.validation.misc.is_bool(definition_model.ignore_keys_num))
         {
@@ -113,26 +113,26 @@ function jap()
             return false;
         }
 
-        __def_model_args = definition_model.arguments;
+        def_model_args = definition_model.arguments;
 
-        for (__counter = 0; __counter < __def_model_args.length; __counter++)
+        for (counter = 0; counter < def_model_args.length; counter++)
         {
-            if (!utils.validation.misc.is_object(__def_model_args[__counter]))
+            if (!utils.validation.misc.is_object(def_model_args[counter]))
             {
                 sensei('J.A.P', 'Invalid JSON object in "arguments" attribute!');
 
                 return false;
             }
 
-            if (!__def_model_args[__counter].hasOwnProperty('key') || !__def_model_args[__counter].hasOwnProperty('value'))
+            if (!def_model_args[counter].hasOwnProperty('key') || !def_model_args[counter].hasOwnProperty('value'))
             {
                 sensei('J.A.P', 'Missing "key" or "value" mandatory attributes!');
 
                 return false;
             }
 
-            __this_key = __def_model_args[__counter].key;
-            __this_value = __def_model_args[__counter].value;
+            __this_key = def_model_args[counter].key;
+            __this_value = def_model_args[counter].value;
 
             if (!utils.validation.misc.is_object(__this_key) || !utils.validation.misc.is_object(__this_value))
             {
@@ -162,7 +162,7 @@ function jap()
                 return false;
             }
 
-            if (!utils.validation.alpha.is_string(__this_value.type) || !utils.misc.contains(__this_value.type, __all_value_types))
+            if (!utils.validation.alpha.is_string(__this_value.type) || !utils.misc.contains(__this_value.type, all_value_types))
             {
                 sensei('J.A.P', 'Invalid specification for "type" property!');
 
@@ -171,7 +171,7 @@ function jap()
 
             if (__this_value.hasOwnProperty('choices'))
             {
-                if (!utils.misc.contains(__this_value.type, __types_with_choices))
+                if (!utils.misc.contains(__this_value.type, types_with_choices))
                 {
                     sensei('J.A.P', 'This type does not support the "choices" option!');
 
@@ -188,7 +188,7 @@ function jap()
 
             if (__this_value.hasOwnProperty('length'))
             {
-                if (utils.misc.contains(__this_value.type, __uncountable_value_types))
+                if (utils.misc.contains(__this_value.type, uncountable_value_types))
                 {
                     sensei('J.A.P', 'This type does not support the "length" option!');
 
@@ -205,7 +205,7 @@ function jap()
 
             if (__this_value.hasOwnProperty('regex'))
             {
-                if (utils.misc.contains(__this_value.type, __uncountable_value_types) || __this_value.type === 'array')
+                if (utils.misc.contains(__this_value.type, uncountable_value_types) || __this_value.type === 'array')
                 {
                     sensei('J.A.P', 'This type does not support the "regex" option!');
 
@@ -221,8 +221,8 @@ function jap()
             }
         }
 
-        __is_model_defined = true;
-        __json_def_model = definition_model;
+        is_model_defined = true;
+        json_def_model = definition_model;
 
         return true;
     };
@@ -230,7 +230,7 @@ function jap()
     // Validate configuration based on the definition model
     this.validate = function(config)
     {
-        if (!__is_model_defined)
+        if (!is_model_defined)
         {
             sensei('J.A.P', 'No definition model was specified!');
 
@@ -252,17 +252,17 @@ function jap()
             __mandatory_keys_not_found = 0,
             __model_keywords = [];
 
-        __def_model_args = __json_def_model.arguments;
+        def_model_args = json_def_model.arguments;
 
         if (utils.validation.misc.is_array(config))
             __is_multiple_keys_array = true;
 
-        for (__counter = 0; __counter < __def_model_args.length; __counter++)
+        for (counter = 0; counter < def_model_args.length; counter++)
         {
-            for (__json_key in __def_model_args[__counter])
+            for (__json_key in def_model_args[counter])
             {
-                if (!utils.validation.misc.is_undefined(__def_model_args[__counter][__json_key].name))
-                    __model_keywords.push(__def_model_args[__counter][__json_key].name);
+                if (!utils.validation.misc.is_undefined(def_model_args[counter][__json_key].name))
+                    __model_keywords.push(def_model_args[counter][__json_key].name);
             }
         }
 
@@ -271,9 +271,9 @@ function jap()
             if (__is_multiple_keys_array)
                 __mandatory_keys_not_found = 0;
 
-            for (__counter = 0; __counter < __def_model_args.length; __counter++)
+            for (counter = 0; counter < def_model_args.length; counter++)
             {
-                __this_key = __def_model_args[__counter].key;
+                __this_key = def_model_args[counter].key;
 
                 if (__is_multiple_keys_array)
                 {
@@ -318,7 +318,7 @@ function jap()
             __keys_exist++;
         }
 
-        if ((!__json_def_model.hasOwnProperty('ignore_keys_num') || __json_def_model.ignore_keys_num === false) && 
+        if ((!json_def_model.hasOwnProperty('ignore_keys_num') || json_def_model.ignore_keys_num === false) && 
             __mandatory_keys_not_found > 0)
         {
             sensei('J.A.P', 'Mandatory properties are missing!');
@@ -333,10 +333,10 @@ function jap()
             return false;
         }
 
-        for (__counter = 0; __counter < __def_model_args.length; __counter++)
+        for (counter = 0; counter < def_model_args.length; counter++)
         {
-            __this_key = __def_model_args[__counter].key;
-            __this_value = __def_model_args[__counter].value;
+            __this_key = def_model_args[counter].key;
+            __this_value = def_model_args[counter].value;
 
             if (__this_value.type !== '*')
             {
@@ -499,13 +499,13 @@ function jap()
     };
 
     var self = this,
-        __is_model_defined = false,
-        __counter = 0,
-        __json_def_model = null,
-        __def_model_args = null,
-        __def_keywords = ['ignore_keys_num', 'arguments', 'key', 'value', 'name', 'optional', 'type', 'choices', 'length', 'regex'],
-        __all_value_types = ['number', 'string', 'boolean', 'array', 'object', 'function', 'null', '*'],
-        __uncountable_value_types = ['boolean', 'object', 'function', 'null', '*'],
-        __types_with_choices = ['number', 'string', 'array'],
+        is_model_defined = false,
+        counter = 0,
+        json_def_model = null,
+        def_model_args = null,
+        def_keywords = ['ignore_keys_num', 'arguments', 'key', 'value', 'name', 'optional', 'type', 'choices', 'length', 'regex'],
+        all_value_types = ['number', 'string', 'boolean', 'array', 'object', 'function', 'null', '*'],
+        uncountable_value_types = ['boolean', 'object', 'function', 'null', '*'],
+        types_with_choices = ['number', 'string', 'array'],
         utils = new vulcan();
 }

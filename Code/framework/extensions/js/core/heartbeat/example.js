@@ -7,4 +7,5 @@ var heartbeat_config = {
                        };
 
 heartbeat_config.service_name = 'micro-MVC';
+
 heartbeat(heartbeat_config);

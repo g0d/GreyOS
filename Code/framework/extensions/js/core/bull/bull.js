@@ -1,12 +1,12 @@
 /*
     BULL (AJAX System/Framework)
 
-    File name: bull.js (Version: 18.0)
+    File name: bull.js (Version: 18.2)
     Description: This file contains the BULL extension.
     Dependencies: Vulcan and JAP.
 
     Coded by George Delaportas (G0D) / Contributions by Catalin Maftei
-    Copyright (C) 2013
+    Copyright (C) 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -16,7 +16,7 @@ function bull()
     // Initialize configuration
     function init_config()
     {
-        __config_definition_model = { "arguments" : [
+        config_definition_model = { "arguments" :   [
                                                         {
                                                             "key"     :   { "name" : "type", "optional" : false },
                                                             "value"   :   {
@@ -67,11 +67,11 @@ function bull()
                                                             "value"   :   { "type" : "function" }
                                                         }
                                                     ]
-                                };
+                                  };
     }
     
     // AJAX core infrastructure
-    function core()
+    function ajax_core()
     {
         function ajax_model()
         {
@@ -109,21 +109,21 @@ function bull()
         
         function state_changed()
         {
-            if (__is_timeout === true)
-            {
-                if (utils.validation.misc.is_function(__timeout_callback))
-                    __timeout_callback.call(this);
-                else
-                {
-                    if (utils.validation.misc.is_function(__fail_callback))
-                        __fail_callback.call(this);
-                }
-                
-                return false;
-            }
-            
             if (__xml_http.readyState === 4)
             {
+                if (__is_timeout === true)
+                {
+                    if (utils.validation.misc.is_function(__timeout_callback))
+                        __timeout_callback.call(this);
+                    else
+                    {
+                        if (utils.validation.misc.is_function(__fail_callback))
+                            __fail_callback.call(this);
+                    }
+                    
+                    return false;
+                }
+                
                 stop_timer(__timer_handler);
                 
                 __ajax_response = null;
@@ -150,17 +150,17 @@ function bull()
                     
                     if (utils.validation.misc.is_function(__success_callback))
                         __success_callback.call(this, result());
-                    
-                    return true;
                 }
                 else
                 {
                     if (utils.validation.misc.is_function(__fail_callback))
                         __fail_callback.call(this);
+                    
+                    return false;
                 }
             }
             
-            return false;
+            return true;
         }
         
         function result()
@@ -196,7 +196,7 @@ function bull()
         }
         
         this.data = function(url, data, element_id, content_fill_mode, success_callback, fail_callback, response_timeout, timeout_callback)
-        {            
+        {
             __data_div_id = element_id;
             __content_fill_mode = content_fill_mode;
             
@@ -245,7 +245,7 @@ function bull()
     // Run AJAX
     this.run = function(user_config)
     {
-        if (!config_parser.verify(__config_definition_model, user_config))
+        if (!config_parser.verify(config_definition_model, user_config))
             return false;
         
         if (utils.validation.misc.is_nothing(user_config.url) || utils.validation.misc.is_nothing(user_config.data) || 
@@ -256,25 +256,26 @@ function bull()
         
         if (user_config.type === 'data')        // AJAX data (Asynchronous)
         {
-            if (!utils.objects.by_id(user_config.element_id) || utils.validation.misc.is_invalid(user_config.content_fill_mode))
+            if (!utils.validation.misc.is_undefined(user_config.ajax_mode) || 
+                !utils.objects.by_id(user_config.element_id) || utils.validation.misc.is_invalid(user_config.content_fill_mode))
                 return false;
             
-            return new core().data(user_config.url, user_config.data, user_config.element_id, user_config.content_fill_mode, 
-                                   user_config.on_success, user_config.on_fail, 
-                                   user_config.response_timeout, user_config.on_timeout);
+            return new ajax_core().data(user_config.url, user_config.data, user_config.element_id, user_config.content_fill_mode, 
+                                        user_config.on_success, user_config.on_fail, 
+                                        user_config.response_timeout, user_config.on_timeout);
         }
         else                                    // AJAX request (Asynchronous [1] / Synchronous [2])
         {
             if (utils.validation.misc.is_invalid(user_config.ajax_mode))
                 return false;
             
-            return new core().request(user_config.url, user_config.data, user_config.ajax_mode, 
-                                      user_config.on_success, user_config.on_fail, 
-                                      user_config.response_timeout, user_config.on_timeout);
+            return new ajax_core().request(user_config.url, user_config.data, user_config.ajax_mode, 
+                                           user_config.on_success, user_config.on_fail, 
+                                           user_config.response_timeout, user_config.on_timeout);
         }
     };
     
-    var __config_definition_model = null,
+    var config_definition_model = null,
         utils = new vulcan(),
         config_parser = new jap();
     

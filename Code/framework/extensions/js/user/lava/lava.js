@@ -26,7 +26,7 @@ function lava()
 
             if (!utils.validation.misc.is_object(__attribute))
             {
-                if (!utils.misc.contains(__index, __def_keywords))
+                if (!utils.misc.contains(__index, def_keywords))
                     return true;
 
                 continue;
@@ -41,7 +41,7 @@ function lava()
                 if (utils.validation.numerics.is_number(__option))
                     continue;
 
-                if (!utils.misc.contains(__option, __def_keywords))
+                if (!utils.misc.contains(__option, def_keywords))
                     return true;
 
                 if (has_unknown_keywords(__attribute[__option]))
@@ -79,26 +79,26 @@ function lava()
         var __this_key = null,
             __this_value = null;
 
-        __is_model_defined = false;
+        is_model_defined = false;
 
-        for (__counter = 0; __counter < definition_model.length; __counter++)
+        for (counter = 0; counter < definition_model.length; counter++)
         {
-            if (!utils.validation.misc.is_object(definition_model[__counter]))
+            if (!utils.validation.misc.is_object(definition_model[counter]))
             {
                 sensei('L.A.Va', 'Invalid JSON object in the model!');
 
                 return false;
             }
 
-            if (!definition_model[__counter].hasOwnProperty('key') || !definition_model[__counter].hasOwnProperty('value'))
+            if (!definition_model[counter].hasOwnProperty('key') || !definition_model[counter].hasOwnProperty('value'))
             {
                 sensei('L.A.Va', 'Missing "key" or "value" mandatory attributes!');
 
                 return false;
             }
 
-            __this_key = definition_model[__counter].key;
-            __this_value = definition_model[__counter].value;
+            __this_key = definition_model[counter].key;
+            __this_value = definition_model[counter].value;
 
             if (!utils.validation.misc.is_object(__this_key) || !utils.validation.misc.is_object(__this_value))
             {
@@ -135,7 +135,7 @@ function lava()
                 return false;
             }
 
-            if (!utils.validation.alpha.is_string(__this_value.type) || !utils.misc.contains(__this_value.type, __all_value_types))
+            if (!utils.validation.alpha.is_string(__this_value.type) || !utils.misc.contains(__this_value.type, all_value_types))
             {
                 sensei('L.A.Va', 'Invalid specification for "type" property!');
 
@@ -144,7 +144,7 @@ function lava()
 
             if (__this_value.hasOwnProperty('choices'))
             {
-                if (!utils.misc.contains(__this_value.type, __types_with_choices))
+                if (!utils.misc.contains(__this_value.type, types_with_choices))
                 {
                     sensei('L.A.Va', 'This type does not support the "choices" option!');
 
@@ -161,7 +161,7 @@ function lava()
 
             if (__this_value.hasOwnProperty('length'))
             {
-                if (utils.misc.contains(__this_value.type, __uncountable_value_types))
+                if (utils.misc.contains(__this_value.type, uncountable_value_types))
                 {
                     sensei('L.A.Va', 'This type does not support the "length" option!');
 
@@ -178,7 +178,7 @@ function lava()
 
             if (__this_value.hasOwnProperty('regex'))
             {
-                if (utils.misc.contains(__this_value.type, __uncountable_value_types) || __this_value.type === 'array')
+                if (utils.misc.contains(__this_value.type, uncountable_value_types) || __this_value.type === 'array')
                 {
                     sensei('L.A.Va', 'This type does not support the "regex" option!');
 
@@ -194,8 +194,8 @@ function lava()
             }
         }
 
-        __is_model_defined = true;
-        __json_def_model = definition_model;
+        is_model_defined = true;
+        json_def_model = definition_model;
 
         return true;
     };
@@ -203,7 +203,7 @@ function lava()
     // Validate all fields based on the definition model
     this.validate = function()
     {
-        if (!__is_model_defined)
+        if (!is_model_defined)
         {
             sensei('L.A.Va', 'No definition model was specified!');
 
@@ -216,9 +216,9 @@ function lava()
             __keys_found = 0,
             __keys_optional = false;
 
-        for (__counter = 0; __counter < __json_def_model.length; __counter++)
+        for (counter = 0; counter < json_def_model.length; counter++)
         {
-            __this_key = __json_def_model[__counter].key;
+            __this_key = json_def_model[counter].key;
             __this_field = utils.objects.by_id(__this_key.id);
 
             if (__this_field === null)
@@ -234,17 +234,17 @@ function lava()
             __keys_found++;
         }
 
-        if (__keys_found < __json_def_model.length && __keys_optional === false)
+        if (__keys_found < json_def_model.length && __keys_optional === false)
         {
             sensei('L.A.Va', 'Defined non-optional elements differ from that on the page!');
 
             return false;
         }
 
-        for (__counter = 0; __counter < __json_def_model.length; __counter++)
+        for (counter = 0; counter < json_def_model.length; counter++)
         {
-            __this_key = __json_def_model[__counter].key;
-            __this_value = __json_def_model[__counter].value;
+            __this_key = json_def_model[counter].key;
+            __this_value = json_def_model[counter].value;
             __this_field = utils.objects.by_id(__this_key.id);
 
             if (__this_field === null && __keys_optional === true)
@@ -336,12 +336,12 @@ function lava()
     };
 
     var self = this,
-        __is_model_defined = false,
-        __counter = 0,
-        __json_def_model = null,
-        __def_keywords = ['key', 'value', 'id', 'optional', 'type', 'choices', 'length', 'regex'],
-        __all_value_types = ['number', 'string', 'boolean', 'array', 'object', 'function', 'null', '*'],
-        __uncountable_value_types = ['boolean', 'object', 'function', 'null', '*'],
-        __types_with_choices = ['number', 'string', 'array'],
+        is_model_defined = false,
+        counter = 0,
+        json_def_model = null,
+        def_keywords = ['key', 'value', 'id', 'optional', 'type', 'choices', 'length', 'regex'],
+        all_value_types = ['number', 'string', 'boolean', 'array', 'object', 'function', 'null', '*'],
+        uncountable_value_types = ['boolean', 'object', 'function', 'null', '*'],
+        types_with_choices = ['number', 'string', 'array'],
         utils = new vulcan();
 }
