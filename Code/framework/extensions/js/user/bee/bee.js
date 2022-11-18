@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 4.1)
+    GreyOS - Bee (Version: 4.2)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -195,6 +195,7 @@ function bee()
     {
         function system()
         {
+            this.initialized = false;
             this.running = false;
             this.active = false;
             this.in_hive = false;
@@ -373,13 +374,13 @@ function bee()
 
             populate_ui_config();
 
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
+            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
             {
                 ui_config.window.status_bar.ids.resize = ui_config.window.id + '_resize';
                 ui_config.window.status_bar.classes.resize = 'resize ' + ui_config.window.status_bar.ids.resize;
             }
 
-            if (self.settings.general.type() === 1)
+            if (__bee_settings.general.type() === 1)
             {
                 ui_config.window.control_bar.classes.container = 'ctrl_bar box_ctrl_bar ' + ui_config.window.control_bar.id;
                 ui_config.window.control_bar.classes.title = 'title box_title ' + ui_config.window.control_bar.ids.title;
@@ -394,27 +395,38 @@ function bee()
                 ui_config.window.control_bar.classes.close = 'close widget_close ' + ui_config.window.control_bar.ids.close;
             }
 
-            if (__bee_settings.data.window.labels.status_bar().length * 9.0 > __bee_gui.size.width())
-                __marquee_class = 'marquee';
+            if (self.settings.general.status_bar_marquee())
+            {
+                if (__bee_settings.data.window.labels.status_bar().length * 9.0 > __bee_gui.size.width())
+                    __marquee_class = 'marquee';
+            }
 
             __html = '<div id="' + ui_config.window.control_bar.id + '" class="' + ui_config.window.control_bar.classes.container + '">' + 
-                     '    <div id="' + ui_config.window.control_bar.ids.icon + '" class="' + ui_config.window.control_bar.classes.icon + '"></div>' + 
-                     '    <div id="' + ui_config.window.control_bar.ids.title + '" class="' + ui_config.window.control_bar.classes.title + '">' + 
+                     '    <div id="' + ui_config.window.control_bar.ids.icon + '" class="' + ui_config.window.control_bar.classes.icon + '"' + 
+                     '         title="' + __bee_settings.data.hints.icon() + '"></div>' + 
+                     '    <div id="' + ui_config.window.control_bar.ids.title + '" class="' + ui_config.window.control_bar.classes.title + '"' + 
+                     '         title="' + __bee_settings.data.hints.title() + '">' + 
                             __bee_settings.data.window.labels.title() + 
                      '    </div>';
 
-            if (self.settings.actions.can_edit_title())
-                __html += '    <div id="' + ui_config.window.control_bar.ids.pencil + '" class="' + ui_config.window.control_bar.classes.pencil + '"></div>';
+            if (__bee_settings.actions.can_edit_title())
+            {
+                __html += '    <div id="' + ui_config.window.control_bar.ids.pencil + '" class="' + ui_config.window.control_bar.classes.pencil + '"' + 
+                          '         title="' + __bee_settings.data.hints.pencil() + '"></div>';
+            }
 
-            if (self.settings.actions.can_close())
-                __html += '    <div id="' + ui_config.window.control_bar.ids.close + '" class="' + ui_config.window.control_bar.classes.close + '"></div>';
+            if (__bee_settings.actions.can_close())
+            {
+                __html += '    <div id="' + ui_config.window.control_bar.ids.close + '" class="' + ui_config.window.control_bar.classes.close + '"' + 
+                          '         title="' + __bee_settings.data.hints.close() + '"></div>';
+            }
 
-            if (self.settings.actions.can_edit_title() && self.settings.actions.can_close())
+            if (__bee_settings.actions.can_edit_title() && __bee_settings.actions.can_close())
                 __html += '    <div id="' + ui_config.window.control_bar.ids.separator + '" class="' + ui_config.window.control_bar.classes.separator + '"></div>';
 
             __html += '</div>';
 
-            if (self.settings.actions.can_use_menu())
+            if (__bee_settings.actions.can_use_menu())
             {
                 __html += '<div id="' + ui_config.window.menu.id + '" class="' + ui_config.window.menu.class + '">' + 
                           '    <div id="' + ui_config.window.menu.ids.put_to_stack + '" ' + 
@@ -433,18 +445,23 @@ function bee()
             }
 
             __html += '<div id="' + ui_config.window.content.id + '" class="' + ui_config.window.content.classes.container + '">' + 
-                      '    <div id="' + ui_config.window.content.ids.data + '" class="' + ui_config.window.content.classes.data + '">' + 
-                                        __bee_settings.data.window.content() + '</div>' + 
+                      '    <div id="' + ui_config.window.content.ids.data + '" class="' + ui_config.window.content.classes.data + '"' + 
+                      '         title="' + __bee_settings.data.hints.content() + '">' + 
+                                __bee_settings.data.window.content() + '</div>' + 
                       '</div>' + 
                       '<div id="' + ui_config.window.status_bar.id + '" class="' + ui_config.window.status_bar.classes.container + '">' + 
                       '    <div id="' + ui_config.window.status_bar.ids.message + '" class="' + 
                                         ui_config.window.status_bar.classes.message + '">' + 
-                      '      <div class="dynamic_msg ' + __marquee_class + '">' + __bee_settings.data.window.labels.status_bar() + '</div>' + 
+                      '      <div class="dynamic_msg ' + __marquee_class + '"' + 
+                      '           title="' + __bee_settings.data.hints.status_bar() + '">' + 
+                                __bee_settings.data.window.labels.status_bar() + '</div>' + 
                       '    </div>';
 
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
-                __html += '    <div id="' + ui_config.window.status_bar.ids.resize + '" class="' + 
-                                            ui_config.window.status_bar.classes.resize + '"></div>';
+            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+            {
+                __html += '    <div id="' + ui_config.window.status_bar.ids.resize + '" class="' + ui_config.window.status_bar.classes.resize + '"' + 
+                          '         title="' + __bee_settings.data.hints.resize() + '"></div>';
+            }
 
             __html += '</div>';
 
@@ -456,7 +473,7 @@ function bee()
             __dynamic_object.style.opacity = '1.0';
             __dynamic_object.style.display = 'block';
 
-            if (self.gui.fx.enabled.fade.into())
+            if (__bee_gui.fx.enabled.fade.into())
                 __dynamic_object.style.display = 'none';
 
             if (bee_statuses.in_hive())
@@ -505,12 +522,12 @@ function bee()
             ui_objects.window.control_bar.title.style.width = __bee_gui.size.width() - 100 + 'px';
             ui_objects.window.content.data.style.height = __bee_gui.size.height() - 88 + 'px';
 
-            if (self.settings.general.type() === 2 && !self.settings.actions.can_resize.widget())
+            if (__bee_settings.general.type() === 2 && !__bee_settings.actions.can_resize.widget())
                 ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 22 + 'px';
             else
                 ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 50 + 'px';
 
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
+            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
             {
                 ui_objects.window.status_bar.resize.style.width = 19 + 'px';
                 ui_objects.window.status_bar.resize.style.height = 19 + 'px';
@@ -546,7 +563,8 @@ function bee()
 
         function attach_events()
         {
-            var __bee_gui = self.gui,
+            var __bee_settings = self.settings,
+                __bee_gui = self.gui,
                 __handler = null;
 
             __handler = function(event) { __bee_gui.actions.menu.close(event); };
@@ -575,7 +593,7 @@ function bee()
 
             __handler = function(event)
                         {
-                            self.settings.actions.can_drag.enabled(false);
+                            __bee_settings.actions.can_drag.enabled(false);
 
                             last_mouse_button_clicked = event.buttons;
 
@@ -588,34 +606,34 @@ function bee()
             __handler = function(event) { __bee_gui.actions.menu.open(event); };
             morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, ui_objects.window.control_bar.icon);
 
-            if (self.settings.actions.can_edit_title())
+            if (__bee_settings.actions.can_edit_title())
             {
                 __handler = function(event) { __bee_gui.actions.edit_title(event); };
                 morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.pencil);
             }
 
-            if (self.settings.actions.can_close())
+            if (__bee_settings.actions.can_close())
             {
                 __handler = function(event) { __bee_gui.actions.close(event); };
                 morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.close);
             }
 
-            if (self.settings.actions.can_use_menu())
+            if (__bee_settings.actions.can_use_menu())
             {
-                if (self.settings.actions.can_use_casement())
+                if (__bee_settings.actions.can_use_casement())
                 {
                     __handler = function(event) { manage_casement(event); };
                     morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.manage_casement);
                 }
 
-                if (self.settings.actions.can_close())
+                if (__bee_settings.actions.can_close())
                 {
                     __handler = function(event) { __bee_gui.actions.close(event); };
                     morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.close);
                 }
             }
 
-            if (!self.settings.actions.can_select_text())
+            if (!__bee_settings.actions.can_select_text())
             {
                 __handler = function() { return false; };
                 morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.content.data);
@@ -624,7 +642,7 @@ function bee()
                 morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.content.data);
             }
 
-            if (self.settings.general.type() === 1 || self.settings.actions.can_resize.widget())
+            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
             {
                 __handler = function(event)
                             {
@@ -724,11 +742,13 @@ function bee()
             __title_div.setAttribute('id', ui_config.window.control_bar.ids.title);
             __title_div.setAttribute('class', 'title ' + __win_type_class_title);
             __title_div.setAttribute('style', 'width: ' + __title_width + 'px');
+            __title_div.setAttribute('title', self.settings.data.hints.title());
 
             __title_div.innerHTML = __new_title;
 
             __pencil_div.setAttribute('id', ui_config.window.control_bar.ids.pencil);
             __pencil_div.setAttribute('class', 'pencil');
+            __pencil_div.setAttribute('title', self.settings.data.hints.pencil());
 
             __ctrl_bar.appendChild(__title_div);
             __ctrl_bar.appendChild(__pencil_div);
@@ -878,13 +898,6 @@ function bee()
         {
             ui_objects.window.ui.style.zIndex = z_index + 2;
             ui_objects.casement.ui.style.zIndex = z_index + 1;
-
-            return true;
-        };
-
-        this.status_init = function()
-        {
-            bee_statuses = new supported_statuses();
 
             return true;
         };
@@ -1042,6 +1055,11 @@ function bee()
         this.on_event = function(val)
         {
             return validate('on_event', 'main', val);
+        };
+
+        this.initialized = function(val)
+        {
+            return validate('initialized', 'system', val);
         };
 
         this.running = function(val)
@@ -1297,6 +1315,7 @@ function bee()
                 __desktop_id = 0,
                 __single_instance = false,
                 __topmost = false,
+                __status_bar_marquee = true,
                 __backtrace = false;
 
             this.app_id = function()
@@ -1437,6 +1456,25 @@ function bee()
 
                     morpheus.execute(my_bee_id, 'system', 'in_hive');
                 }
+
+                return true;
+            };
+
+            this.status_bar_marquee = function(val)
+            {
+                if (is_init === false)
+                    return false;
+
+                if (utils_sys.validation.misc.is_undefined(val))
+                    return __status_bar_marquee;
+
+                if (bee_statuses.running())
+                    return false;
+
+                if (!utils_sys.validation.misc.is_bool(val))
+                    return false;
+
+                    __status_bar_marquee = val;
 
                 return true;
             };
@@ -1696,8 +1734,11 @@ function bee()
 
                         ui_objects.window.status_bar.message.childNodes[1].innerHTML = val;
 
-                        if (val.length * 9.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
-                            ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+                        if (self.settings.general.status_bar_marquee())
+                        {
+                            if (val.length * 9.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+                                ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+                        }
 
                         bee_statuses.status_bar_label_changed(true);
 
@@ -1785,6 +1826,7 @@ function bee()
                     __content = '',
                     __status_bar = '',
                     __icon = '',
+                    __pencil = '',
                     __close = '',
                     __resize = '';
 
@@ -1798,7 +1840,10 @@ function bee()
 
                     __title = val;
 
-                    // TODO: Add hints
+                    if (!ui_objects.window.control_bar.title)
+                        return false;
+
+                    ui_objects.window.control_bar.title.setAttribute('title', __title);
 
                     return true;
                 };
@@ -1813,7 +1858,10 @@ function bee()
 
                     __content = val;
 
-                    // TODO: Add hints
+                    if (!ui_objects.window.content.data)
+                        return false;
+
+                    ui_objects.window.content.data.setAttribute('title', __content);
 
                     return true;
                 };
@@ -1828,7 +1876,10 @@ function bee()
 
                     __status_bar = val;
 
-                    // TODO: Add hints
+                    if (!ui_objects.window.status_bar.message)
+                        return false;
+
+                    ui_objects.window.status_bar.message.setAttribute('title', __status_bar);
 
                     return true;
                 };
@@ -1843,7 +1894,28 @@ function bee()
 
                     __icon = val;
 
-                    // TODO: Add hints
+                    if (!ui_objects.window.control_bar.icon)
+                        return false;
+
+                    ui_objects.window.control_bar.icon.setAttribute('title', __icon);
+
+                    return true;
+                };
+
+                this.pencil = function(val)
+                {
+                    if (is_init === false)
+                        return false;
+
+                    if (utils_sys.validation.misc.is_undefined(val))
+                        return __pencil;
+
+                    __pencil = val;
+
+                    if (!ui_objects.window.control_bar.pencil)
+                        return false;
+
+                    ui_objects.window.control_bar.pencil.setAttribute('title', __pencil);
 
                     return true;
                 };
@@ -1858,7 +1930,10 @@ function bee()
 
                     __close = val;
 
-                    // TODO: Add hints
+                    if (!ui_objects.window.control_bar.close)
+                        return false;
+
+                    ui_objects.window.control_bar.close.setAttribute('title', __close);
 
                     return true;
                 };
@@ -1873,7 +1948,10 @@ function bee()
 
                     __resize = val;
 
-                    // TODO: Add hints
+                    if (!ui_objects.window.status_bar.resize)
+                        return false;
+
+                    ui_objects.window.status_bar.resize.setAttribute('title', __resize);
 
                     return true;
                 };
@@ -1901,6 +1979,14 @@ function bee()
 
         function system_status()
         {
+            this.initialized = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.initialized();
+            };
+
             this.running = function()
             {
                 if (is_init === false)
@@ -3575,21 +3661,19 @@ function bee()
                 if (!utils_sys.validation.misc.is_bool(headless))
                     return false;
 
-                var __app_id = self.settings.general.app_id();
-
                 if (bee_statuses.running())
                     return false;
 
                 if (utils_int.is_lonely_bee(my_bee_id))
                     return false;
 
+                var __app_id = self.settings.general.app_id();
+
                 if (parent_app_id === null)
                 {
                     if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
                         return false;
                 }
-
-                utils_int.status_init();
 
                 bee_statuses.running(true);
 
@@ -4159,11 +4243,14 @@ function bee()
                          ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
                     }
 
-                    if (self.settings.data.window.labels.status_bar().length * 9.0 < 
-                        utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
-                        ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
-                    else
-                        ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+                    if (self.settings.general.status_bar_marquee())
+                    {
+                        if (self.settings.data.window.labels.status_bar().length * 9.0 < 
+                            utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+                            ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
+                        else
+                            ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+                    }
 
                     morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
                     morpheus.execute(my_bee_id, 'gui', 'resizing');
@@ -4609,6 +4696,10 @@ function bee()
 
         nature.theme(['bee']);
         nature.apply('new');
+
+        bee_statuses.initialized(true);
+
+        morpheus.execute(my_bee_id, 'system', 'initialized');
 
         return true;
     };
