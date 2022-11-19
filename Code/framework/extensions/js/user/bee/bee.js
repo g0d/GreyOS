@@ -3541,6 +3541,9 @@ function bee()
                         return false;
                     }
 
+                    ui_objects.window.ui.style.borderTopRightRadius = '0px';
+                    ui_objects.window.ui.style.borderBottomRightRadius = '0px';
+
                     __casement.style.left = __pos_x + 'px';
 
                     if (self.status.gui.fx.fading.into.finished())
@@ -3565,6 +3568,9 @@ function bee()
                         function()
                         {
                             gfx.visibility.toggle(ui_config.casement.id, 1);
+
+                            ui_objects.window.ui.style.borderTopRightRadius = '6px';
+                            ui_objects.window.ui.style.borderBottomRightRadius = '6px';
 
                             __is_animating = false;
 

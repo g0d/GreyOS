@@ -5,7 +5,7 @@
     Description: This file contains the Bee theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -339,7 +339,6 @@
     background-color: #FFFFFF;
     height: 100%;
     padding: 4px;
-    padding-left: 12px;
     overflow: hidden;
 }
 
