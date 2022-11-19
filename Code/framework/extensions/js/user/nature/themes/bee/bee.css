@@ -339,6 +339,7 @@
     background-color: #FFFFFF;
     height: 100%;
     padding: 4px;
+    padding-left: 8px;
     overflow: hidden;
 }
 
