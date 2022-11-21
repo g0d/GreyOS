@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 4.2)
+    GreyOS - Bee (Version: 4.3)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -1316,7 +1316,9 @@ function bee()
                 __single_instance = false,
                 __topmost = false,
                 __status_bar_marquee = true,
-                __backtrace = false;
+                __resize_tooltip = false,
+                __backtrace = false,
+                __casement_width = 100;
 
             this.app_id = function()
             {
@@ -1474,7 +1476,45 @@ function bee()
                 if (!utils_sys.validation.misc.is_bool(val))
                     return false;
 
-                    __status_bar_marquee = val;
+                __status_bar_marquee = val;
+
+                return true;
+            };
+
+            this.resize_tooltip = function(val)
+            {
+                if (is_init === false)
+                    return false;
+
+                if (utils_sys.validation.misc.is_undefined(val))
+                    return __resize_tooltip;
+
+                if (bee_statuses.running())
+                    return false;
+
+                if (!utils_sys.validation.misc.is_bool(val))
+                    return false;
+
+                __resize_tooltip = val;
+
+                return true;
+            };
+
+            this.casement_width = function(val)
+            {
+                if (is_init === false)
+                    return false;
+
+                if (utils_sys.validation.misc.is_undefined(val))
+                    return __casement_width;
+
+                if (bee_statuses.running())
+                    return false;
+
+                if (!utils_sys.validation.numerics.is_integer(val) || val < 20 || val > 100)
+                    return false;
+
+                __casement_width = val;
 
                 return true;
             };
@@ -3527,7 +3567,7 @@ function bee()
 
                     var __pos_x = me.position.left(),
                         __casement = ui_objects.casement.ui,
-                        __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
+                        __casement_width = utils_sys.graphics.pixels_value(__casement.style.width) * (self.settings.general.casement_width() / 100),
                         __step = Math.ceil(__casement_width / 23),
                         __speed = Math.ceil(__step / 3);
 
@@ -3563,14 +3603,15 @@ function bee()
                     {
                         __is_animating = true;
 
-                        gfx.animation.roll(ui_config.casement.id, 1, 'left', 
-                        __casement_width, 0, __speed, __step, 
+                        gfx.animation.roll(ui_config.casement.id, 1, 'left', __casement_width, 0, __speed, __step, 
                         function()
                         {
                             gfx.visibility.toggle(ui_config.casement.id, 1);
 
                             ui_objects.window.ui.style.borderTopRightRadius = '6px';
                             ui_objects.window.ui.style.borderBottomRightRadius = '6px';
+
+                            __casement.style.width = __casement_width / (self.settings.general.casement_width() / 100) + 'px';
 
                             __is_animating = false;
 
@@ -3934,7 +3975,7 @@ function bee()
 
                 var __current_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
                     __current_height = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height),
-                    __casement_width = utils_sys.graphics.pixels_value(ui_objects.casement.ui.style.width),
+                    __casement_width = utils_sys.graphics.pixels_value(ui_objects.casement.ui.style.width) / (self.settings.general.casement_width() / 100),
                     __dynamic_casement_width = 0,
                     __dynamic_right_pos = 0;
 
@@ -4245,8 +4286,8 @@ function bee()
                             __new_height + 'px';
                         }
 
-                         ui_objects.casement.ui.style.width = ui_objects.window.ui.style.width;
-                         ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
+                        ui_objects.casement.ui.style.width =  ui_objects.window.ui.style.width;
+                        ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
                     }
 
                     if (self.settings.general.status_bar_marquee())
@@ -4257,6 +4298,9 @@ function bee()
                         else
                             ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
                     }
+
+                    if (self.settings.general.resize_tooltip())
+                        swarm.resize_tooltip(self, true);
 
                     morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
                     morpheus.execute(my_bee_id, 'gui', 'resizing');
@@ -4309,6 +4353,8 @@ function bee()
 
                     return true;
                 }
+
+                swarm.resize_tooltip(self, false);
 
                 bee_statuses.resizing(false);
                 bee_statuses.resize(false);

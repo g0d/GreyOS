@@ -1,11 +1,11 @@
 /*
-    GreyOS - Swarm (Version: 2.8)
+    GreyOS - Swarm (Version: 2.9)
 
     File name: swarm.js
     Description: This file contains the Swarm - Bees action area container module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -88,7 +88,11 @@ function swarm()
                                                    'width: ' + right + 'px; ' + 
                                                    'height: ' + bottom + 'px;');
 
+            __dynamic_object.innerHTML = '<div id="' + swarm_id + '_bee_resize_tooltip" class="bee_resize_tooltip"></di>';
+
             utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
+
+            resize_tooltip = utils_sys.objects.by_id(swarm_id + '_bee_resize_tooltip');
 
             __swarm_object = utils_sys.objects.by_id(swarm_id);
 
@@ -399,14 +403,12 @@ function swarm()
             if (is_init === false)
                 return false;
 
-            var i = 0;
-
             if (colony.num() === 0)
                 return false;
 
             if (utils_sys.validation.misc.is_undefined(objects_array))
             {
-                for (i = 0; i < colony.num(); i++)
+                for (var i = 0; i < colony.num(); i++)
                     utils_int.show_bee(colony, i);
             }
             else
@@ -421,10 +423,10 @@ function swarm()
 
                 for (var i = 0; i < __objects_num; i++)
                 {
-                    for (i = 0; i < colony.num(); i++)
+                    for (var j = 0; j < colony.num(); j++)
                     {
-                        if (colony.list(i).settings.general.id() === objects_array[i].settings.general.id())
-                            utils_int.show_bee(colony, i);
+                        if (colony.list(j).settings.general.id() === objects_array[i].settings.general.id())
+                            utils_int.show_bee(colony, j);
                     }
                 }
             }
@@ -467,6 +469,29 @@ function swarm()
             return bees_status.z_index;
         };
     }
+
+    this.resize_tooltip = function(bee, active = false)
+    {
+        if (is_init === false)
+            return false;
+
+        if (!colony.is_bee(bee))
+            return false;
+
+        if (active === false)
+            resize_tooltip.style.visibility = 'hidden';
+        else
+        {
+            resize_tooltip.style.visibility = 'visible';
+            resize_tooltip.style.zIndex = bees_status.z_index;
+
+            resize_tooltip.style.left = bee.gui.position.left() + bee.status.gui.size.width() + 5 + 'px';
+            resize_tooltip.style.top = bee.gui.position.top() + bee.status.gui.size.height() + 5 + 'px';
+            resize_tooltip.innerHTML = bee.status.gui.size.width() + ' x ' + bee.status.gui.size.height();
+        }
+
+        return true;
+    };
 
     this.init = function(container_id, left, top, right, bottom)
     {
@@ -527,6 +552,7 @@ function swarm()
 
     var is_init = false,
         swarm_id = null,
+        resize_tooltip = null,
         cosmos = null,
         matrix = null,
         colony = null,
