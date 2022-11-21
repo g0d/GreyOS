@@ -3973,16 +3973,15 @@ function bee()
                 if (event_object.buttons !== 1)
                     return false;
 
-                var __current_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
-                    __current_height = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height),
-                    __casement_width = utils_sys.graphics.pixels_value(ui_objects.casement.ui.style.width) / (self.settings.general.casement_width() / 100),
-                    __dynamic_casement_width = 0,
-                    __dynamic_right_pos = 0;
-
                 if (bee_statuses.drag() && self.settings.actions.can_drag.enabled())
                 {
                     var __pos_x = 0,
-                        __pos_y = 0;
+                        __pos_y = 0,
+                        __current_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
+                        __current_height = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height),
+                        __casement_width = utils_sys.graphics.pixels_value(ui_objects.casement.ui.style.width),
+                        __dynamic_casement_width = 0,
+                        __dynamic_right_pos = 0;
 
                     bee_statuses.mouse_clicked(true);
                     bee_statuses.dragging(true);
@@ -3998,7 +3997,7 @@ function bee()
                         ui_objects.window.ui.style.left = '0px';
                         ui_objects.window.ui.style.top = '0px';
 
-                        ui_objects.casement.ui.style.left = __dynamic_casement_width + 'px';
+                        ui_objects.casement.ui.style.left = __current_width + 'px';
                         ui_objects.casement.ui.style.top = '0px';
                     }
                     else
@@ -4008,7 +4007,7 @@ function bee()
                             ui_objects.window.ui.style.left = '0px';
                             ui_objects.window.ui.style.top = __pos_y + 'px';
 
-                            ui_objects.casement.ui.style.left = __dynamic_casement_width + 'px';
+                            ui_objects.casement.ui.style.left = __current_width + 'px';
                             ui_objects.casement.ui.style.top = __pos_y + 'px';
                         }
 
@@ -4017,7 +4016,7 @@ function bee()
                             ui_objects.window.ui.style.left = __pos_x + 'px';
                             ui_objects.window.ui.style.top = '0px';
 
-                            ui_objects.casement.ui.style.left = __pos_x + __dynamic_casement_width + 'px';
+                            ui_objects.casement.ui.style.left = __pos_x + __current_width + 'px';
                             ui_objects.casement.ui.style.top = '0px';
                         }
                     }
@@ -4073,7 +4072,7 @@ function bee()
                                 ui_objects.window.ui.style.top = 
                                 swarm.settings.bottom() - __current_height + 'px';
 
-                                ui_objects.casement.ui.style.left = __dynamic_casement_width + 'px';
+                                ui_objects.casement.ui.style.left = __current_width + 'px';
                                 ui_objects.casement.ui.style.top = swarm.settings.bottom() - __current_height + 'px';
                             }
                             else
@@ -4082,7 +4081,7 @@ function bee()
                                 ui_objects.window.ui.style.top = 
                                 swarm.settings.bottom() - __current_height + 'px';
 
-                                ui_objects.casement.ui.style.left = __pos_x + __dynamic_casement_width + 'px';
+                                ui_objects.casement.ui.style.left = __pos_x + __current_width + 'px';
                                 ui_objects.casement.ui.style.top = swarm.settings.bottom() - __current_height + 'px';
                             }
                         }
@@ -4102,7 +4101,7 @@ function bee()
                         ui_objects.window.ui.style.left = __pos_x + 'px';
                         ui_objects.window.ui.style.top = __pos_y + 'px';
 
-                        ui_objects.casement.ui.style.left = __pos_x + __dynamic_casement_width + 'px';
+                        ui_objects.casement.ui.style.left = __pos_x + __current_width + 'px';
                         ui_objects.casement.ui.style.top = __pos_y + 'px';
                     }
 
@@ -4286,7 +4285,10 @@ function bee()
                             __new_height + 'px';
                         }
 
-                        ui_objects.casement.ui.style.width =  ui_objects.window.ui.style.width;
+                        //var __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
+
+                        ui_objects.casement.ui.style.left = me.position.left() + me.size.width() + 'px';
+                        ui_objects.casement.ui.style.width = me.size.width() * (self.settings.general.casement_width() / 100);
                         ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
                     }
 
