@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 4.3)
+    GreyOS - Bee (Version: 4.4)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -532,6 +532,8 @@ function bee()
                 ui_objects.window.status_bar.resize.style.width = 19 + 'px';
                 ui_objects.window.status_bar.resize.style.height = 19 + 'px';
             }
+
+            ui_objects.casement.ui.style.width = __bee_gui.size.width() * (__bee_settings.general.casement_width() / 100) + 'px';
 
             __bee_gui.actions.set_top();
 
@@ -3565,13 +3567,13 @@ function bee()
                     if (__is_animating === true || !self.settings.actions.can_use_casement())
                         return false;
 
-                    var __pos_x = me.position.left(),
+                    var __window_pos_x = me.position.left(),
                         __casement = ui_objects.casement.ui,
-                        __casement_width = utils_sys.graphics.pixels_value(__casement.style.width) * (self.settings.general.casement_width() / 100),
+                        __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
                         __step = Math.ceil(__casement_width / 23),
                         __speed = Math.ceil(__step / 3);
 
-                    if ((__pos_x + (__casement_width * 2)) >= swarm.settings.right())
+                    if ((__window_pos_x + (__casement_width * 2)) >= swarm.settings.right())
                     {
                         msg_win = new msgbox();
 
@@ -3584,7 +3586,7 @@ function bee()
                     ui_objects.window.ui.style.borderTopRightRadius = '0px';
                     ui_objects.window.ui.style.borderBottomRightRadius = '0px';
 
-                    __casement.style.left = __pos_x + 'px';
+                    __casement.style.left = __window_pos_x + 'px';
 
                     if (self.status.gui.fx.fading.into.finished())
                         animate_casement();
@@ -3610,8 +3612,6 @@ function bee()
 
                             ui_objects.window.ui.style.borderTopRightRadius = '6px';
                             ui_objects.window.ui.style.borderBottomRightRadius = '6px';
-
-                            __casement.style.width = __casement_width / (self.settings.general.casement_width() / 100) + 'px';
 
                             __is_animating = false;
 
@@ -3975,8 +3975,8 @@ function bee()
 
                 if (bee_statuses.drag() && self.settings.actions.can_drag.enabled())
                 {
-                    var __pos_x = 0,
-                        __pos_y = 0,
+                    var __pos_x = me.position.left() + (swarm.area.mouse.x() - me.mouse.relative.x()),
+                        __pos_y = me.position.top() + (swarm.area.mouse.y() - me.mouse.relative.y()),
                         __current_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
                         __current_height = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height),
                         __casement_width = utils_sys.graphics.pixels_value(ui_objects.casement.ui.style.width),
@@ -3988,9 +3988,6 @@ function bee()
 
                     if (bee_statuses.casement_deployed())
                         __dynamic_casement_width = __casement_width + 2;
-
-                    __pos_x = me.position.left() + (swarm.area.mouse.x() - me.mouse.relative.x());
-                    __pos_y = me.position.top() + (swarm.area.mouse.y() - me.mouse.relative.y());
 
                     if (__pos_x <= 0 && __pos_y <= 0)
                     {
@@ -4116,7 +4113,8 @@ function bee()
                         __resize_y_offset = utils_sys.graphics.pixels_value(ui_objects.window.status_bar.resize.style.height),
                         __resize_title_diff = 100,
                         __resize_data_diff = 88,
-                        __resize_status_msg_diff = 50;
+                        __resize_status_msg_diff = 50,
+                        __final_window_width = 0;
 
                     __size_x = swarm.area.mouse.x() - me.position.left() - 
                                me.size.width() + __resize_x_offset;
@@ -4285,17 +4283,16 @@ function bee()
                             __new_height + 'px';
                         }
 
-                        //var __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
+                        __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
 
-                        ui_objects.casement.ui.style.left = me.position.left() + me.size.width() + 'px';
-                        ui_objects.casement.ui.style.width = me.size.width() * (self.settings.general.casement_width() / 100);
+                        ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
+                        ui_objects.casement.ui.style.width = __final_window_width * (self.settings.general.casement_width() / 100) + 'px';
                         ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
                     }
 
                     if (self.settings.general.status_bar_marquee())
                     {
-                        if (self.settings.data.window.labels.status_bar().length * 9.0 < 
-                            utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+                        if (self.settings.data.window.labels.status_bar().length * 9.0 < __final_window_width)
                             ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
                         else
                             ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');

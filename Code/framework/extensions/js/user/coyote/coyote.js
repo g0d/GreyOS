@@ -318,7 +318,7 @@ function coyote()
         coyote_bee.init(config.id, 1);
         coyote_bee.settings.data.window.labels.title('Coyote');
         coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
-        coyote_bee.settings.general.casement_width(100);
+        //coyote_bee.settings.general.casement_width(50);
         coyote_bee.gui.position.left(70);
         coyote_bee.gui.position.top(10);
         coyote_bee.gui.size.width(720);
