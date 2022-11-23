@@ -3544,7 +3544,7 @@ function bee()
                         __is_animating = true;
 
                         gfx.visibility.toggle(ui_config.casement.id, 1);
-                        gfx.animation.roll(ui_config.casement.id, 1, 'right', __casement_width, 0, __speed, __step,
+                        gfx.animation.roll(ui_config.casement.id, 1, 'right', __casement_width, __casement_offset, __speed, __step,
                         function()
                         {
                             bee_statuses.casement_deployed(true);
@@ -3568,12 +3568,14 @@ function bee()
                         return false;
 
                     var __window_pos_x = me.position.left(),
+                        __window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
                         __casement = ui_objects.casement.ui,
                         __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
+                        __casement_offset = __window_width - __casement_width,
                         __step = Math.ceil(__casement_width / 23),
                         __speed = Math.ceil(__step / 3);
 
-                    if ((__window_pos_x + (__casement_width * 2)) >= swarm.settings.right())
+                    if ((__window_pos_x + (__window_width + __casement_width )) >= swarm.settings.right())
                     {
                         msg_win = new msgbox();
 
