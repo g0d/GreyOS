@@ -18,7 +18,7 @@
     // Class: [BROWSER]
     class BROWSER extends WINDOW
     {
-        // To Do: Code here...
+        // TODO: Code here...
     }
 
     /* ------------------------- END ------------------------- */

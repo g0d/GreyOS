@@ -642,6 +642,16 @@ function meta_script()
                 return new_app;
             };
 
+            this.reflection = function()
+            {
+                if (new_app === null)
+                    return false;
+
+                // TODO: get source code written by programmer
+
+                return null;
+            };
+
             this.run = function(parent_app_id = null, headless = false)
             {
                 if (new_app === null)
