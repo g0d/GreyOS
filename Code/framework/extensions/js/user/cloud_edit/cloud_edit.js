@@ -237,6 +237,7 @@ function cloud_edit()
         cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
         cloud_edit_bee.settings.data.window.content(config.content);
         cloud_edit_bee.settings.data.hints.icon('Cloud Edit is cool!');
+        cloud_edit_bee.settings.actions.can_edit_title(false);
         cloud_edit_bee.gui.position.left(330);
         cloud_edit_bee.gui.position.top(80);
         cloud_edit_bee.gui.size.width(800);

@@ -157,6 +157,33 @@ function meta_script()
                 };
             }
 
+            function main()
+            {
+                this.set_title = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.data.window.labels.title(val);
+                };
+
+                this.set_content = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.data.window.content(val);
+                };
+
+                this.set_status = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.data.window.labels.status_bar(val);
+                };
+            }
+
             function casement()
             {
                 this.deploy = function(event, callback)
@@ -183,14 +210,6 @@ function meta_script()
                     return new_app.settings.data.casement.labels.title(val);
                 };
 
-                this.set_status = function(val)
-                {
-                    if (new_app === null)
-                        return false;
-
-                    return new_app.settings.data.casement.labels.status(val);
-                };
-
                 this.set_content = function(val)
                 {
                     if (new_app === null)
@@ -198,10 +217,26 @@ function meta_script()
 
                     return new_app.settings.data.casement.content(val);
                 };
+
+                this.set_status = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.data.casement.labels.status(val);
+                };
             }
 
             function position()
             {
+                this.set_top = function()
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.gui.actions.set_top();
+                };
+
                 this.left = function(val)
                 {
                     if (new_app === null)
@@ -498,6 +533,49 @@ function meta_script()
                 this.mouse = new mouse();
             }
 
+            function settings()
+            {
+                this.topmost = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.general.topmost(val);
+                };
+
+                this.status_bar_marquee = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.general.status_bar_marquee(val);
+                };
+
+                this.use_resize_tooltip = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.general.resize_tooltip(val);
+                };
+
+                this.casement_width = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.general.casement_width(val);
+                };
+
+                this.single_instance = function(val)
+                {
+                    if (new_app === null)
+                        return false;
+
+                    return new_app.settings.general.single_instance(val);
+                };    
+            }
+
             this.get_app_id = function()
             {
                 if (new_app === null)
@@ -522,46 +600,6 @@ function meta_script()
                 return new_app.settings.general.desktop_id();
             };
 
-            this.set_topmost = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.general.topmost(val);
-            };
-
-            this.set_status_bar_marquee = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.general.status_bar_marquee(val);
-            };
-
-            this.set_resize_tooltip = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.general.resize_tooltip(val);
-            };
-
-            this.set_casement_width = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.general.casement_width(val);
-            };
-
-            this.set_single_instance = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.general.single_instance(val);
-            };
-
             this.get_last_error = function()
             {
                 if (new_app === null)
@@ -578,44 +616,12 @@ function meta_script()
                 return new_app.error.codes;
             };
 
-            this.set_top = function()
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.gui.actions.set_top();
-            };
-
             this.get_keys = function(event)
             {
                 if (new_app === null)
                     return false;
 
                 return new_app.gui.actions.keys.get(event);
-            };
-
-            this.set_title = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.data.window.labels.title(val);
-            };
-
-            this.set_status = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.data.window.labels.status_bar(val);
-            };
-
-            this.set_content = function(val)
-            {
-                if (new_app === null)
-                    return false;
-
-                return new_app.settings.data.window.content(val);
             };
 
             this.close = function(event)
@@ -647,7 +653,7 @@ function meta_script()
                 if (new_app === null)
                     return false;
 
-                // TODO: get source code written by programmer
+                // TODO: Get source code written by programmer
 
                 return null;
             };
@@ -690,11 +696,13 @@ function meta_script()
             };
 
             this.menu = new menu();
+            this.main = new main();
             this.casement = new casement();
             this.position = new position();
             this.size = new size();
             this.can = new can();
             this.status = new status();
+            this.settings = new settings();
         }
 
         program_config.app = new app_api_model();
