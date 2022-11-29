@@ -377,12 +377,28 @@ function meta_script()
             {
                 function mouse()
                 {
-                    this.click = function()
+                    this.event = function()
                     {
                         if (new_app === null)
                             return false;
 
                         return new_app.status.gui.mouse_clicked();
+                    };
+
+                    this.click = function()
+                    {
+                        if (new_app === null)
+                            return false;
+
+                        return new_app.status.gui.mouseclick();
+                    };
+
+                    this.dblclick = function()
+                    {
+                        if (new_app === null)
+                            return false;
+
+                        return new_app.status.gui.mousedblclick();
                     };
 
                     this.down = function()
@@ -409,12 +425,55 @@ function meta_script()
                         return new_app.status.gui.mousemove();
                     };
 
+                    this.over = function()
+                    {
+                        if (new_app === null)
+                            return false;
+
+                        return new_app.status.gui.mouseover();
+                    };
+
                     this.out = function()
                     {
                         if (new_app === null)
                             return false;
 
                         return new_app.status.gui.mouseout();
+                    };
+                }
+
+                function keyboard()
+                {
+                    this.event = function()
+                    {
+                        if (new_app === null)
+                            return false;
+
+                        return new_app.status.gui.key_pressed();
+                    };
+
+                    this.press = function()
+                    {
+                        if (new_app === null)
+                            return false;
+
+                        return new_app.status.gui.keypress();
+                    };
+
+                    this.down = function()
+                    {
+                        if (new_app === null)
+                            return false;
+
+                        return new_app.status.gui.keydown();
+                    };
+
+                    this.up = function()
+                    {
+                        if (new_app === null)
+                            return false;
+
+                        return new_app.status.gui.keyup();
                     };
                 }
 
@@ -474,14 +533,6 @@ function meta_script()
                     return new_app.status.gui.casement_deployed();
                 };
 
-                this.key_pressed = function()
-                {
-                    if (new_app === null)
-                        return false;
-
-                    return new_app.status.gui.key_pressed();
-                };
-
                 this.focused = function()
                 {
                     if (new_app === null)
@@ -531,6 +582,7 @@ function meta_script()
                 };
 
                 this.mouse = new mouse();
+                this.keyboard = new keyboard();
             }
 
             function settings()

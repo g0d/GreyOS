@@ -1074,11 +1074,6 @@ function bee()
             return validate('active', 'system', val);
         };
 
-        this.in_hive = function(val)
-        {
-            return validate('in_hive', 'system', val);
-        };
-
         this.id_changed = function(val)
         {
             return validate('id_changed', 'system', val);
@@ -1092,6 +1087,11 @@ function bee()
         this.desktop_changed = function(val)
         {
             return validate('desktop_changed', 'system', val);
+        };
+
+        this.in_hive = function(val)
+        {
+            return validate('in_hive', 'system', val);
         };
 
         this.open = function(val)
@@ -1199,16 +1199,6 @@ function bee()
             return validate('resize_enabled', 'gui', val);
         };
 
-        this.key_pressed = function(val)
-        {
-            return validate('key_pressed', 'gui', val);
-        };
-
-        this.mouse_clicked = function(val)
-        {
-            return validate('mouse_clicked', 'gui', val);
-        };
-
         this.title_on_edit = function(val)
         {
             return validate('title_on_edit', 'gui', val);
@@ -1252,6 +1242,16 @@ function bee()
         this.opacity_changed = function(val)
         {
             return validate('opacity_changed', 'gui', val);
+        };
+
+        this.mouse_clicked = function(val)
+        {
+            return validate('mouse_clicked', 'gui', val);
+        };
+
+        this.key_pressed = function(val)
+        {
+            return validate('key_pressed', 'gui', val);
         };
 
         this.keydown = function(val)
@@ -2080,6 +2080,25 @@ function bee()
 
         function gui_status()
         {
+            function position_status()
+            {
+                this.left = function()
+                {
+                    if (is_init === false)
+                        return false;
+
+                    return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.left);
+                };
+
+                this.top = function()
+                {
+                    if (is_init === false)
+                        return false;
+
+                    return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.top);
+                };
+            }
+
             function size_status()
             {
                 this.width = function()
@@ -2288,22 +2307,6 @@ function bee()
                 return bee_statuses.resized();
             };
 
-            this.touch = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.touch();
-            };
-
-            this.touched = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.touched();
-            };
-
             this.menu_activated = function()
             {
                 if (is_init === false)
@@ -2326,22 +2329,6 @@ function bee()
                     return false;
 
                 return bee_statuses.resize_enabled();
-            };
-
-            this.key_pressed = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.key_pressed();
-            };
-
-            this.mouse_clicked = function()
-            {
-                if (is_init === false)
-                    return false;
-
-                return bee_statuses.mouse_clicked();
             };
 
             this.title_changed = function()
@@ -2368,28 +2355,36 @@ function bee()
                 return bee_statuses.content_changed();
             };
 
-            this.keydown = function()
+            this.mouse_clicked = function()
             {
                 if (is_init === false)
                     return false;
 
-                return bee_statuses.keydown();
+                return bee_statuses.mouse_clicked();
             };
 
-            this.keyup = function()
+            this.key_pressed = function()
             {
                 if (is_init === false)
                     return false;
 
-                return bee_statuses.keyup();
+                return bee_statuses.key_pressed();
             };
 
-            this.keypress = function()
+            this.touch = function()
             {
                 if (is_init === false)
                     return false;
 
-                return bee_statuses.keypress();
+                return bee_statuses.touch();
+            };
+
+            this.touched = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.touched();
             };
 
             this.mouseclick = function()
@@ -2397,7 +2392,7 @@ function bee()
                 if (is_init === false)
                     return false;
 
-                return bee_statuses.mouseclick();
+                return bee_statuses.click();
             };
 
             this.mousedblclick = function()
@@ -2405,7 +2400,7 @@ function bee()
                 if (is_init === false)
                     return false;
 
-                return bee_statuses.mousedblclick();
+                return bee_statuses.dblclick();
             };
 
             this.mousedown = function()
@@ -2448,6 +2443,31 @@ function bee()
                 return bee_statuses.mousemove();
             };
 
+            this.keydown = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.keydown();
+            };
+
+            this.keyup = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.keyup();
+            };
+
+            this.keypress = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.keypress();
+            };
+
+            this.position = new position_status();
             this.size = new size_status();
             this.fx = new fx_status();
         }
