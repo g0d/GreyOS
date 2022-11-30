@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bat (Version: 1.2)
+    GreyOS - Bat (Version: 1.3)
 
     File name: bat.js
     Description: This file contains the Bat - System services template module.
@@ -132,14 +132,17 @@ function bat()
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (utils_sys.validation.alpha.is_symbol(svc_name) || utils_sys.validation.alpha.is_symbol(icon))
+        if (utils_sys.validation.misc.is_undefined(svc_name) || 
+            utils_sys.validation.alpha.is_blank(svc_name) || 
+            utils_sys.validation.alpha.is_symbol(svc_name) || 
+            utils_sys.validation.alpha.is_symbol(icon))
             return false;
 
         if (is_init === true)
             return false;
 
-        service_config.sys_name = svc_name + '_' + random.generate();
-        service_config.name = svc_name;
+        service_config.sys_name = svc_name.trim() + '_' + random.generate();
+        service_config.name = svc_name.trim();
         service_config.icon = icon;
 
         is_init = true;

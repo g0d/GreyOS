@@ -284,8 +284,8 @@ function bee()
 
     function utilities()
     {
-        var me = this;
-        var last_mouse_button_clicked = 0;
+        var me = this,
+            __last_mouse_button_clicked = 0;
 
         function populate_ui_config()
         {
@@ -597,7 +597,7 @@ function bee()
                         {
                             __bee_settings.actions.can_drag.enabled(false);
 
-                            last_mouse_button_clicked = event.buttons;
+                            __last_mouse_button_clicked = event.buttons;
 
                             bee_statuses.active(true);
 
@@ -906,7 +906,7 @@ function bee()
 
         this.last_mouse_button = function()
         {
-            return last_mouse_button_clicked;
+            return __last_mouse_button_clicked;
         };
 
         this.log = function(func, result)
@@ -1341,11 +1341,11 @@ function bee()
                 if (bee_statuses.running())
                     return false;
 
-                if (utils_sys.validation.alpha.is_symbol(val))
+                if (utils_sys.validation.alpha.is_blank(val) || utils_sys.validation.alpha.is_symbol(val))
                     return false;
 
-                __app_id = val;
-                __system_app_id = val + '_app_' + random.generate();
+                __app_id = val.trim();
+                __system_app_id = val.trim() + '_app_' + random.generate();
 
                 bee_statuses.id_changed(true);
 
@@ -3021,7 +3021,7 @@ function bee()
                         if (!me.fx.enabled.opacity())
                             return false;
 
-                        return settings.opacity;
+                        return __fx_settings.opacity;
                     };
 
                     this.set = function(val)
@@ -3034,7 +3034,7 @@ function bee()
 
                         me.fx.enabled.opacity(true);
 
-                        settings.opacity = val;
+                        __fx_settings.opacity = val;
 
                         bee_statuses.opacity_changed(true);
 
@@ -3054,8 +3054,8 @@ function bee()
                     if (!me.fx.enabled.opacity())
                         return false;
 
-                    gfx.opacity.apply(my_bee_id, settings.opacity);
-                    gfx.opacity.apply(ui_config.casement.id, settings.opacity);
+                    gfx.opacity.apply(my_bee_id, __fx_settings.opacity);
+                    gfx.opacity.apply(ui_config.casement.id, __fx_settings.opacity);
 
                     return true;
                 };
@@ -3128,9 +3128,9 @@ function bee()
                     {
                         me.fx.enabled.fade[type](true);
 
-                        settings.fade[type].step = ssd_array[0];
-                        settings.fade[type].speed = ssd_array[1];
-                        settings.fade[type].delay = ssd_array[2];
+                        __fx_settings.fade[type].step = ssd_array[0];
+                        __fx_settings.fade[type].speed = ssd_array[1];
+                        __fx_settings.fade[type].delay = ssd_array[2];
                     }
                     else if (mode === 4)
                     {
@@ -3194,13 +3194,13 @@ function bee()
                             return false;
 
                         if (option === 1)
-                            return settings.fade[type].step;
+                            return __fx_settings.fade[type].step;
 
                         else if (option === 2)
-                            return settings.fade[type].speed;
+                            return __fx_settings.fade[type].speed;
 
                         else
-                            return settings.fade[type].delay;
+                            return __fx_settings.fade[type].delay;
                     }
                     else
                     {
@@ -3216,9 +3216,9 @@ function bee()
                             (!utils_sys.validation.numerics.is_integer(ssd_array[2]) || ssd_array[2] < 0))
                             return false;
 
-                        settings.fade[type].step = ssd_array[0];
-                        settings.fade[type].speed = ssd_array[1];
-                        settings.fade[type].delay = ssd_array[2];
+                        __fx_settings.fade[type].step = ssd_array[0];
+                        __fx_settings.fade[type].speed = ssd_array[1];
+                        __fx_settings.fade[type].delay = ssd_array[2];
 
                         __fade_settings.type = type;
                         __fade_settings.step = ssd_array[0];
@@ -3358,7 +3358,7 @@ function bee()
                 this.settings = new fade_settings();
             }
 
-            var settings = new fx_settings();
+            var __fx_settings = new fx_settings();
 
             this.enabled = new fx_enabled();
             this.opacity = new opacity();
@@ -3940,12 +3940,12 @@ function bee()
 
                 if (self.settings.general.topmost())
                 {
-                    var new_topmost_z_index = me.position.topmost_z_index() + __z_index;
+                    var __new_topmost_z_index = me.position.topmost_z_index() + __z_index;
 
-                    me.position.topmost_z_index(new_topmost_z_index);
-                    me.position.z_index(new_topmost_z_index + 2);
+                    me.position.topmost_z_index(__new_topmost_z_index);
+                    me.position.z_index(__new_topmost_z_index + 2);
     
-                    utils_int.set_z_index(new_topmost_z_index);
+                    utils_int.set_z_index(__new_topmost_z_index);
                 }
                 else
                 {
@@ -4652,12 +4652,12 @@ function bee()
             if (utils_sys.validation.misc.is_undefined(new_func_name) || utils_sys.validation.misc.is_undefined(new_func_code))
                 return false;
 
-            var new_drone = new drone_object();
+            var __new_drone = new drone_object();
 
-            new_drone.name = new_func_name;
-            new_drone.code = new_func_code;
+            __new_drone.name = new_func_name;
+            __new_drone.code = new_func_code;
 
-            __drones.push(new_drone);
+            __drones.push(__new_drone);
 
             return true;
         };
@@ -4762,7 +4762,7 @@ function bee()
 
         is_init = true;
 
-        if (!self.settings.general.id(bee_id) || !self.settings.general.type(type))
+        if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id) || !self.settings.general.type(type))
             return false;
 
         my_bee_id = self.settings.general.id();

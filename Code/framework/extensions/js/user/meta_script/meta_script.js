@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.5)
+    GreyOS - Meta-Script (Version: 1.6)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -136,24 +136,26 @@ function meta_script()
         function app_api_model()
         {
             var me = this,
-                new_app = null;
+                __new_app = null,
+                __is_init = false,
+                __is_run = false;
 
             function menu()
             {
                 this.open = function(event)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.actions.menu.open(event);
+                    return __new_app.gui.actions.menu.open(event);
                 };
 
                 this.close = function(event)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.actions.menu.close(event);
+                    return __new_app.gui.actions.menu.close(event);
                 };
             }
 
@@ -161,26 +163,26 @@ function meta_script()
             {
                 this.set_title = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.data.window.labels.title(val);
+                    return __new_app.settings.data.window.labels.title(val);
                 };
 
                 this.set_content = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.data.window.content(val);
+                    return __new_app.settings.data.window.content(val);
                 };
 
                 this.set_status = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.data.window.labels.status_bar(val);
+                    return __new_app.settings.data.window.labels.status_bar(val);
                 };
             }
 
@@ -188,42 +190,42 @@ function meta_script()
             {
                 this.deploy = function(event, callback)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.actions.casement.deploy(event, callback);
+                    return __new_app.gui.actions.casement.deploy(event, callback);
                 };
 
                 this.hide = function(event, callback)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.actions.casement.hide(event, callback);
+                    return __new_app.gui.actions.casement.hide(event, callback);
                 };
 
                 this.set_title = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.data.casement.labels.title(val);
+                    return __new_app.settings.data.casement.labels.title(val);
                 };
 
                 this.set_content = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.data.casement.content(val);
+                    return __new_app.settings.data.casement.content(val);
                 };
 
                 this.set_status = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.data.casement.labels.status(val);
+                    return __new_app.settings.data.casement.labels.status(val);
                 };
             }
 
@@ -231,26 +233,26 @@ function meta_script()
             {
                 this.set_top = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.actions.set_top();
+                    return __new_app.gui.actions.set_top();
                 };
 
                 this.left = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.position.left(val);
+                    return __new_app.gui.position.left(val);
                 };
 
                 this.top = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.position.top(val);
+                    return __new_app.gui.position.top(val);
                 };
             }
 
@@ -260,18 +262,18 @@ function meta_script()
                 {
                     this.width = function(val)
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.gui.size.min.width(val);
+                        return __new_app.gui.size.min.width(val);
                     };
 
                     this.height = function(val)
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.gui.size.min.height(val);
+                        return __new_app.gui.size.min.height(val);
                     };
                 }
 
@@ -279,35 +281,35 @@ function meta_script()
                 {
                     this.width = function(val)
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.gui.size.max.width(val);
+                        return __new_app.gui.size.max.width(val);
                     };
 
                     this.height = function(val)
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.gui.size.max.height(val);
+                        return __new_app.gui.size.max.height(val);
                     };
                 }
 
                 this.width = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.size.width(val);
+                    return __new_app.gui.size.width(val);
                 };
 
                 this.height = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.gui.size.height(val);
+                    return __new_app.gui.size.height(val);
                 };
 
                 this.min = new min();
@@ -318,58 +320,58 @@ function meta_script()
             {
                 this.open = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.actions.can_open(val);
+                    return __new_app.settings.actions.can_open(val);
                 };
 
                 this.close = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.actions.can_close(val);
+                    return __new_app.settings.actions.can_close(val);
                 };
 
                 this.edit_title = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.actions.can_edit_title(val);
+                    return __new_app.settings.actions.can_edit_title(val);
                 };
 
                 this.use_menu = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.actions.can_use_menu(val);
+                    return __new_app.settings.actions.can_use_menu(val);
                 };
 
                 this.use_casement = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.actions.can_use_casement(val);
+                    return __new_app.settings.actions.can_use_casement(val);
                 };
 
                 this.drag = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.actions.can_drag.enabled(val);
+                    return __new_app.settings.actions.can_drag.enabled(val);
                 };
 
                 this.resize = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.actions.can_resize.enabled(val);
+                    return __new_app.settings.actions.can_resize.enabled(val);
                 };
             }
 
@@ -379,66 +381,66 @@ function meta_script()
                 {
                     this.event = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mouse_clicked();
+                        return __new_app.status.gui.mouse_clicked();
                     };
 
                     this.click = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mouseclick();
+                        return __new_app.status.gui.mouseclick();
                     };
 
                     this.dblclick = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mousedblclick();
+                        return __new_app.status.gui.mousedblclick();
                     };
 
                     this.down = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mousedown();
+                        return __new_app.status.gui.mousedown();
                     };
 
                     this.up = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mouseup();
+                        return __new_app.status.gui.mouseup();
                     };
 
                     this.move = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mousemove();
+                        return __new_app.status.gui.mousemove();
                     };
 
                     this.over = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mouseover();
+                        return __new_app.status.gui.mouseover();
                     };
 
                     this.out = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.mouseout();
+                        return __new_app.status.gui.mouseout();
                     };
                 }
 
@@ -446,139 +448,139 @@ function meta_script()
                 {
                     this.event = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.key_pressed();
+                        return __new_app.status.gui.key_pressed();
                     };
 
                     this.press = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.keypress();
+                        return __new_app.status.gui.keypress();
                     };
 
                     this.down = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.keydown();
+                        return __new_app.status.gui.keydown();
                     };
 
                     this.up = function()
                     {
-                        if (new_app === null)
+                        if (__new_app === null)
                             return false;
 
-                        return new_app.status.gui.keyup();
+                        return __new_app.status.gui.keyup();
                     };
                 }
 
                 this.running = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.system.running();
+                    return __new_app.status.system.running();
                 };
 
                 this.opened = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.gui.opened();
+                    return __new_app.status.gui.opened();
                 };
 
                 this.closed = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.gui.closed();
+                    return __new_app.status.gui.closed();
                 };
 
                 this.dragged = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.gui.dragged();
+                    return __new_app.status.gui.dragged();
                 };
 
                 this.resized = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.gui.resized();
+                    return __new_app.status.gui.resized();
                 };
 
                 this.menu_activated = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.gui.menu_activated();
+                    return __new_app.status.gui.menu_activated();
                 };
 
                 this.casement_deployed = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.gui.casement_deployed();
+                    return __new_app.status.gui.casement_deployed();
                 };
 
                 this.focused = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.system.active();
+                    return __new_app.status.system.active();
                 };
 
                 this.in_stack_bar = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.system.in_hive();
+                    return __new_app.status.system.in_hive();
                 };
 
                 this.desktop_changed = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.system.desktop_changed();
+                    return __new_app.status.system.desktop_changed();
                 };
 
                 this.content_updated = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.data.content_changed();
+                    return __new_app.status.data.content_changed();
                 };
 
                 this.title_updated = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.data.labels.title_changed();
+                    return __new_app.status.data.labels.title_changed();
                 };
 
                 this.status_updated = function()
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.status.data.labels.status_bar_label_changed();
+                    return __new_app.status.data.labels.status_bar_label_changed();
                 };
 
                 this.mouse = new mouse();
@@ -589,120 +591,122 @@ function meta_script()
             {
                 this.topmost = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.general.topmost(val);
+                    return __new_app.settings.general.topmost(val);
                 };
 
                 this.status_bar_marquee = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.general.status_bar_marquee(val);
+                    return __new_app.settings.general.status_bar_marquee(val);
                 };
 
                 this.use_resize_tooltip = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.general.resize_tooltip(val);
+                    return __new_app.settings.general.resize_tooltip(val);
                 };
 
                 this.casement_width = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.general.casement_width(val);
+                    return __new_app.settings.general.casement_width(val);
                 };
 
                 this.single_instance = function(val)
                 {
-                    if (new_app === null)
+                    if (__new_app === null)
                         return false;
 
-                    return new_app.settings.general.single_instance(val);
+                    return __new_app.settings.general.single_instance(val);
                 };    
             }
 
             this.get_app_id = function()
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.settings.general.app_id();
+                return __new_app.settings.general.app_id();
             };
 
             this.get_system_id = function()
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.settings.general.id();
+                return __new_app.settings.general.id();
             };
 
             this.get_desktop_id = function()
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.settings.general.desktop_id();
+                return __new_app.settings.general.desktop_id();
             };
 
             this.get_last_error = function()
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.error.last();
+                return __new_app.error.last();
             };
 
             this.get_error_codes = function()
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.error.codes;
+                return __new_app.error.codes;
             };
 
             this.get_keys = function(event)
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.gui.actions.keys.get(event);
+                return __new_app.gui.actions.keys.get(event);
             };
 
             this.close = function(event)
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.gui.actions.close(event);
+                __is_run = false;
+
+                return __new_app.gui.actions.close(event);
             };
 
             this.on = function(event_name, callback)
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app.on(event_name, callback);
+                return __new_app.on(event_name, callback);
             };
 
             this.object = function()
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
-                return new_app;
+                return __new_app;
             };
 
             this.reflection = function()
             {
-                if (new_app === null)
+                if (__new_app === null)
                     return false;
 
                 // TODO: Get source code written by programmer
@@ -712,7 +716,7 @@ function meta_script()
 
             this.run = function(parent_app_id = null, headless = false)
             {
-                if (new_app === null)
+                if (__new_app === null || __is_run === true)
                     return false;
 
                 program_config.meta_caller.telemetry(me.get_system_id());
@@ -726,25 +730,39 @@ function meta_script()
 
                 app_box.replace([program_config.model]);
 
-                if (!swarm.bees.insert(new_app))
+                if (!swarm.bees.insert(__new_app))
                     return false;
 
-                return new_app.run(parent_app_id, headless);
+                var __result = __new_app.run(parent_app_id, headless);
+
+                if (__result === true)
+                    __is_run = true;
+
+                return __result;
             };
 
             this.init = function(app_id, resizable = true)
             {
+                if (__is_init === true)
+                    return false;
+
                 if (!utils_sys.validation.misc.is_bool(resizable))
                     return false;
 
-                var type = 1;
+                var __type = 1,
+                    __result = null;
 
                 if (resizable === false)
-                    type = 2;
+                    __type = 2;
 
-                new_app = dev_box.get('bee');
+                __new_app = dev_box.get('bee');
 
-                return new_app.init(app_id, type);
+                __result = __new_app.init(app_id, __type);
+
+                if (__result === true)
+                    __is_init = true;
+
+                return __result;
             };
 
             this.menu = new menu();
@@ -770,68 +788,85 @@ function meta_script()
         function svc_api_model()
         {
             var me = this,
-                new_svc = null;
+                __new_svc = null,
+                __is_init = false,
+                __is_run = false;
 
             this.get_config = function()
             {
-                if (new_svc === null)
+                if (__new_svc === null)
                     return false;
 
-                return new_svc.get_config();
+                return __new_svc.get_config();
             };
 
             this.set = function(name, body)
             {
-                if (new_svc === null)
+                if (__new_svc === null)
                     return false;
 
-                return new_svc.set_function(name, body);
+                return __new_svc.set_function(name, body);
             };
 
             this.execute = function(func_name, func_args = [])
             {
-                if (new_svc === null)
+                if (__new_svc === null)
                     return false;
 
-                return new_svc.exec_function(func_name, func_args);
+                return __new_svc.exec_function(func_name, func_args);
             };
 
             this.on = function(event_name, callback)
             {
-                if (new_svc === null)
+                if (__new_svc === null)
                     return false;
 
-                return new_svc.on(event_name, callback);
+                return __new_svc.on(event_name, callback);
+            };
+
+            this.terminate = function()
+            {
+                if (__new_svc === null)
+                    return false;
+
+                super_tray.remove(__new_svc.get_config().sys_name);
+
+                __is_run = false;
+
+                return __new_svc.unregister(program_config.model.name);
             };
 
             this.run = function()
             {
-                if (new_svc === null)
+                if (__new_svc === null || __is_run === true)
                     return false;
 
                 me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
                 me.on('unregister', function() { program_config.meta_caller.reset(); });
 
-                super_tray.add(new_svc);
+                super_tray.add(__new_svc);
 
-                return new_svc.register(program_config.model);
-            };
+                var __result = __new_svc.register(program_config.model);
 
-            this.terminate = function()
-            {
-                if (new_svc === null)
-                    return false;
+                if (__result === true)
+                    __is_run = true;
 
-                super_tray.remove(new_svc.get_config().sys_name);
-
-                return new_svc.unregister(program_config.model.name);
+                return __result;
             };
 
             this.init = function(svc_id, icon = 'default')
             {
-                new_svc = dev_box.get('bat');
+                if (__is_init === true)
+                    return false;
 
-                return new_svc.init(svc_id, icon);
+                __new_svc = dev_box.get('bat');
+
+                var __result = __new_svc.init(svc_id, icon);
+
+                if (__result === true)
+                    __is_init = true;
+
+                return __result;
             };
         }
 
