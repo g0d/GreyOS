@@ -1,5 +1,5 @@
 /*
-    GreyOS - Roost (Version: 1.0)
+    GreyOS - Roost (Version: 1.1)
 
     File name: roost.js
     Description: This file contains the Roost - Bat keeper container module.

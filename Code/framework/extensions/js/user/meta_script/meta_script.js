@@ -25,8 +25,8 @@ function meta_script()
     {
         this.model = null;
         this.meta_caller = null;
-        this.app = null;
-        this.svc = null;
+        this.apps = [];
+        this.svcs = [];
     }
 
     function interface()
@@ -725,7 +725,7 @@ function meta_script()
                                {
                                    app_box.remove(program_config.model.name);
 
-                                   program_config.meta_caller.reset();
+                                   //program_config.meta_caller.reset();
                                });
 
                 app_box.replace([program_config.model]);
@@ -775,9 +775,11 @@ function meta_script()
             this.settings = new settings();
         }
 
-        program_config.app = new app_api_model();
+        global_app_index++;
 
-        return program_config.app;
+        program_config.apps.push(new app_api_model());
+
+        return program_config.apps[global_app_index];
     }
 
     this.service = function()
@@ -842,14 +844,18 @@ function meta_script()
                     return false;
 
                 me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
-                me.on('unregister', function() { program_config.meta_caller.reset(); });
+                me.on('unregister', function() { /*program_config.meta_caller.reset();*/ });
 
-                super_tray.add(__new_svc);
+                matrix.unregister(program_config.model.name);
 
                 var __result = __new_svc.register(program_config.model);
 
                 if (__result === true)
+                {
+                    super_tray.add(__new_svc);
+
                     __is_run = true;
+                }
 
                 return __result;
             };
@@ -870,9 +876,11 @@ function meta_script()
             };
         }
 
-        program_config.svc = new svc_api_model();
+        global_svc_index++
 
-        return program_config.svc;
+        program_config.svcs.push(new svc_api_model());
+
+        return program_config.svcs[global_svc_index];
     };
 
     function program()
@@ -896,11 +904,11 @@ function meta_script()
             if (is_program_loaded === false)
                 return false;
 
-            if (program_config.app !== null)
-                program_config.app.close(null);
+            for (var i = 0; i < program_config.apps.length; i++)
+                program_config.apps[i].close(null);
 
-            if (program_config.svc !== null)
-                program_config.svc.terminate();
+            for (var i = 0; i < program_config.svcs.length; i++)
+                program_config.svcs[i].terminate();
 
             is_program_loaded = false;
 
@@ -937,6 +945,8 @@ function meta_script()
     };
 
     var is_program_loaded = false,
+        global_app_index = -1,
+        global_svc_index = -1,
         cosmos = null,
         matrix = null,
         app_box = null,

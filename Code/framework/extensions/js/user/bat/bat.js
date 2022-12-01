@@ -1,8 +1,8 @@
 /*
-    GreyOS - Bat (Version: 1.3)
+    GreyOS - Bat (Version: 1.4)
 
     File name: bat.js
-    Description: This file contains the Bat - System services template module.
+    Description: This file contains the Bat - System services development module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021 - 2022
@@ -46,10 +46,9 @@ function bat()
         var __new_dynamic_function = new dynamic_function_model();
 
         __new_dynamic_function.name = name;
+        __new_dynamic_function.body = function(args) { body.call(this, args); };
 
         dynamic_functions_list.push(__new_dynamic_function);
-
-        __new_dynamic_function.body = function(args) { body.call(this, args); };
 
         return true;
     };
@@ -67,10 +66,14 @@ function bat()
         for (var i = 0; i < __functions_list_length; i++)
         {
             if (dynamic_functions_list[i].name === func_name)
-                return dynamic_functions_list[i].body.call(this, func_args);
+            {
+                var func_body = dynamic_functions_list[i].body;
+
+                on_run_calls_list.push({func_args, func_body});
+            }
         }
 
-        return false;
+        return true;
     };
 
     this.on = function(this_event, cmd)
@@ -104,7 +107,17 @@ function bat()
         if (backtrace === true)
             frog('BAT', 'Services :: Register', service_config);
 
-        return morpheus.execute(service_config.sys_name, 'main', 'register');
+        var __result = morpheus.execute(service_config.sys_name, 'main', 'register');
+
+        if (__result === true)
+        {
+            var __calls_list_length = on_run_calls_list.length;
+
+            for (var i = 0; i < __calls_list_length; i++)
+                on_run_calls_list[i]['func_body'].call(this, on_run_calls_list[i]['func_args']);
+        }
+
+        return __result;
     };
 
     this.unregister = function(service_id)
@@ -186,6 +199,7 @@ function bat()
         owl = null,
         events_list = ['register', 'unregister'],
         dynamic_functions_list = [],
+        on_run_calls_list = [],
         utils_sys = new vulcan(),
         random = new pythia(),
         service_config = new service_config_model();
