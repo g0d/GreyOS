@@ -5,7 +5,7 @@
     Description: This file contains the GreyOS - Tomorrow CSS theme.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2022
     Open Software License (OSL 3.0)
 */
 
@@ -455,6 +455,26 @@ option
 {
     border: 2px solid #dbf878a6 !important;
     background-color: #ffffff85 !important;
+}
+
+.menu
+{
+    background-color: #1f092bf0;
+    border-width: 1px;
+    border-color: #ffffff9c;
+    box-shadow: 0px 0px 4px #222222;
+}
+
+.menu_option
+{
+    color: white;
+    background-color: #2885834f;
+}
+
+.menu_option:hover
+{
+    color: #FFFFFF;
+    background-color: #50748bb3;
 }
 
 .gui
