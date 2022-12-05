@@ -18,6 +18,7 @@
     UTIL::Load_Extension('snail', 'js');
     UTIL::Load_Extension('centurion', 'js');
     UTIL::Load_Extension('bull', 'js');
+    UTIL::Load_Extension('taurus', 'js');
     UTIL::Load_Extension('aether', 'js');
     UTIL::Load_Extension('sensei', 'js');
     UTIL::Load_Extension('stopwatch', 'js');
@@ -29,6 +30,7 @@
     UTIL::Load_Extension('key_manager', 'js');
     UTIL::Load_Extension('ajax_factory', 'js');
     UTIL::Load_Extension('content_fetcher', 'js');
+    UTIL::Load_Extension('armadillo', 'js');
     UTIL::Load_Extension('ultron', 'js');
     UTIL::Load_Extension('boot_screen', 'js');
     UTIL::Load_Extension('loading_screen', 'js');

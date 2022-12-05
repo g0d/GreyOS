@@ -12,6 +12,7 @@
     "stopwatch"                 :       "core",
     "vulcan"                    :       "core",
     "meta_os"                   :       "user",
+    "taurus"                    :       "user",
     "aether"                    :       "user",
     "armadillo"                 :       "user",
     "fx"                        :       "user",
