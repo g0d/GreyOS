@@ -21,13 +21,13 @@ Finally, you can try booting GreyOS directly from a device with the [Meta-USB IS
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-%20DAW%20Apps.png)
 
 
-Hot News: Since 01/03/2021, GreyOS is the basis of VeNUS, the COP of PROBOTEK. VeNUS is the enterprise & closed-source interface that PROBOTEK utilizes for all its operations.
+Hot News: As of March 1st 2021, GreyOS is the basis of VeNUS, the COP of PROBOTEK. VeNUS is the enterprise & closed-source interface that PROBOTEK utilizes for all its operations.
 
 
 
 Enjoy!
 
 George Delaportas (G0D/ViR4X)  
-Copyright (C) 2015 - 2022 GreyOS  
+Copyright (C) 2015 - 2023 GreyOS  
 Open Software License (OSL 3.0)  
 Supported by [PROBOTEK](https://probotek.eu/)
