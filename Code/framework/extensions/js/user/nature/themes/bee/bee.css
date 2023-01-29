@@ -314,8 +314,8 @@
     border-style: solid;
     border-width: 2px;
     border-color: #D3D3D3;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
     overflow: hidden;
     box-shadow: 0 0 12px #585e5e;
 }
