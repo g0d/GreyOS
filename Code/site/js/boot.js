@@ -318,12 +318,13 @@ function boot_script()
         function init_environment()
         {
             var cc_reload = new f5();
-
+            /*
             os_utils.events.attach('greyos', window, 'resize', 
             function() 
             {
                 cc_reload.init();
             });
+            */
             os_utils.events.attach('greyos', document, 'keydown', 
             function(event) 
             {
@@ -558,12 +559,13 @@ function boot_script()
         function init_environment()
         {
             var cc_reload = new f5();
-
+            /*
             os_utils.events.attach('greyos', window, 'resize', 
             function() 
             {
                 cc_reload.init();
             });
+            */
             os_utils.events.attach('greyos', document, 'keydown', 
             function(event) 
             {
