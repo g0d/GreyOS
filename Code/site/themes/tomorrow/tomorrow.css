@@ -5,7 +5,7 @@
     Description: This file contains the GreyOS - Tomorrow CSS theme.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2022
+    Copyright © 2021 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -620,6 +620,28 @@ option
 .radio_dude_selected_stream:hover
 {
     color: #ffffff !important;
+}
+
+.msg_window
+{
+    background-color: #2d465ab8 !important;
+}
+
+#msgbox_title
+{
+    background-color: #66acaeb3 !important;
+
+}
+
+#msgbox_button
+{
+    background-color: #45454acf !important;
+    border: solid 1px #596b69 !important;
+}
+
+#msgbox_button:hover
+{
+    background-color: #5b5a63d1 !important;
 }
 
 #xmass
