@@ -628,7 +628,7 @@ function hive()
 
             return true;
         };
-
+/*
         this.redraw_hive = function(event)
         {
             var __swarm_id = swarm.settings.id(),
@@ -659,7 +659,7 @@ function hive()
 
             return true;
         };
-
+*/
         this.draw_hive_bee = function(honeycomb_id, bee_id, mode)
         {
             var __dynamic_object = null,
