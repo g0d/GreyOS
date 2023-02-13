@@ -1,11 +1,11 @@
 /*
-    GreyOS - Octopus (Version: 2.0)
+    GreyOS - Octopus (Version: 2.2)
 
     File name: octopus-new.js
-    Description: This file contains the Octopus - Media devices management service module.
+    Description: This file contains the Octopus - Devices management service module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2023
     Open Software License (OSL 3.0)
 */
 
