@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bat (Version: 1.4)
+    GreyOS - Bat (Version: 1.5)
 
     File name: bat.js
     Description: This file contains the Bat - System services development module.
@@ -154,7 +154,7 @@ function bat()
         if (is_init === true)
             return false;
 
-        service_config.sys_name = svc_name.trim() + '_' + random.generate();
+        service_config.sys_name = svc_name.toLowerCase().replace(/\s/g,'_') + '_' + random.generate();
         service_config.name = svc_name.trim();
         service_config.icon = icon;
 

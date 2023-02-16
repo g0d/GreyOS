@@ -223,8 +223,7 @@ function cloud_edit()
         cloud_edit_bee = dev_box.get('bee');
 
         config.id = 'cloud_edit';
-        config.content = '[*] Welcome to Cloud Edit!\n\n' + 
-                         '[!] Please load the test template from: "/framework/extensions/js/user/cloud_edit/my_ms_program.js"\n';
+        config.content = `// Welcome to Cloud Edit!\n// Please load the test template from https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
 
         nature.theme([config.id]);
         nature.apply('new');

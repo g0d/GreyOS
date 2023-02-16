@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 4.5)
+    GreyOS - Bee (Version: 4.6)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -1345,7 +1345,7 @@ function bee()
                     return false;
 
                 __app_id = val.trim();
-                __system_app_id = val.trim() + '_app_' + random.generate();
+                __system_app_id = val.toLowerCase().replace(/\s/g,'_') + '_app_' + random.generate();
 
                 bee_statuses.id_changed(true);
 
