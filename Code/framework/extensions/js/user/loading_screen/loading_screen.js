@@ -23,7 +23,7 @@ function loading_screen()
             __loading_screen = document.createElement('div');
             __loading_screen.id = 'loading_screen';
             __loading_screen.innerHTML = '<div id="loading_screen_content">\
-                                            <img src="/site/pix/greyos_logo.png">\
+                                            <img src="/site/pix/greyos_logo.png" alt="GreyOS Logo">\
                                             <div id="loading_indicator">LOADING...</div>\
                                           </div>';
             __loading_screen.style.display = 'block';

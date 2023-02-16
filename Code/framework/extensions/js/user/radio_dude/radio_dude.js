@@ -1,11 +1,11 @@
 /*
-    GreyOS - Radio Dude (Version: 2.6)
+    GreyOS - Radio Dude (Version: 2.7)
 
     File name: radio_dude.js
     Description: This file contains the Radio Dude - Radio player application.
 
     Coded by George Delaportas (G0D) and John Inglessis (negle)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -62,6 +62,8 @@ function radio_dude()
                                                         '      </div>' + 
                                                         '  </div>' + 
                                                         '</div>');
+
+            radio_dude_bee.settings.data.casement.content(``);
 
             return true;
         };
@@ -149,7 +151,9 @@ function radio_dude()
         // Declare bee's settings
         radio_dude_bee.init(config.id, 2);
         radio_dude_bee.settings.data.window.labels.title('Radio Dude');
-        radio_dude_bee.settings.data.window.labels.status_bar('Music babe... M U S I C!');
+        radio_dude_bee.settings.data.window.labels.status_bar('Music babe... [ M U S I C ]');
+        radio_dude_bee.settings.data.casement.labels.title('Weather');
+        radio_dude_bee.settings.data.casement.labels.status('');
         radio_dude_bee.settings.general.single_instance(true);
         radio_dude_bee.gui.position.static(true);
         radio_dude_bee.gui.position.left(930);

@@ -43,7 +43,7 @@ function i_webgl_preview()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_webgl_preview_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe id= "' + i_webgl_preview_bee.settings.general.id() + '_frame" \
+                                 <iframe id= "' + i_webgl_preview_bee.settings.general.id() + '_frame"  title="Play Canvas"\
                                          src="https://playcanv.as/p/RqJJ9oU9/" scrolling="no">\
                                  </iframe>\
                              </div>';

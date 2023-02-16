@@ -29,7 +29,7 @@ function f5()
 
         __dynamic_object.setAttribute('id', 'f5_screen');
         __dynamic_object.innerHTML = '<div id="f5_screen_content">\
-                                          <img src="/site/pix/greyos_logo.png">\
+                                          <img src="/site/pix/greyos_logo.png" alt="GreyOS Logo">\
                                           <div id="f5_screen_message">' + __message + '</div>\
                                       </div>';
 

@@ -43,7 +43,7 @@ function i_quakejs()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_quakejs_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe id= "' + i_quakejs_bee.settings.general.id() + '_frame" \
+                                 <iframe id= "' + i_quakejs_bee.settings.general.id() + '_frame" title="Quake JS"\
                                          src="https://fte.triptohell.info/demo" scrolling="no">\
                                  </iframe>\
                              </div>';

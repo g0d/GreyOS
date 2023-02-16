@@ -43,7 +43,7 @@ function i_bassoon()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_bassoon_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe src="https://www.stef.be/bassoontracker/?file=demomods%2Fspacedeb.mod"></iframe>\
+                                 <iframe title="Bassoon" src="https://www.stef.be/bassoontracker/?file=demomods%2Fspacedeb.mod"></iframe>\
                               </div>';
 
             i_bassoon_bee.settings.data.window.content(config.content);

@@ -1,11 +1,11 @@
 /*
-    GreyOS - Coyote (Version: 2.5)
+    GreyOS - Coyote (Version: 2.6)
 
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
 
     Coded by George Delaportas (G0D) and John Inglessis (negle)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -68,7 +68,7 @@ function coyote()
                                                     '  </div>' + 
                                                     '</div>' + 
                                                     '<div id="' + coyote_bee.settings.general.id() + '_overlay" class="max_screen_overlay"></div>' + 
-                                                    '<iframe id="' + coyote_bee.settings.general.id() + '_frame" class="coyote_frame" src="https://probotek.eu/"></iframe>');
+                                                    '<iframe id="' + coyote_bee.settings.general.id() + '_frame" class="coyote_frame" title="Coyote" src="https://probotek.eu/"></iframe>');
 
             utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
 
@@ -201,19 +201,31 @@ function coyote()
         if (is_init === false)
             return false;
 
-        if (url === undefined || event_object === undefined)
+        if (url === undefined)
             return false;
 
-        if (coyote_bee.gui.keys.get(event_object) === 13)
-        {
-            if (url.match(/http:/gi) === null)
-                url = 'http://' + url;
+        var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box');
 
+        __address_box.value = url;
+
+        if (event_object === undefined)
+        {
             utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').src = url;
 
             config.index++;
 
             config.pages[config.index] = url;
+        }
+        else
+        {
+            if (coyote_bee.gui.keys.get(event_object) === 13)
+            {
+                utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').src = url;
+
+                config.index++;
+
+                config.pages[config.index] = url;
+            }
         }
 
         return true;
@@ -251,7 +263,7 @@ function coyote()
 
         if (mode === 1)
         {
-            __page_info.style.left = '89px';
+            __page_info.style.left = '87px';
             __page_info.style.top = '30px';
             __address_box.style.width = screen.width - 167 + 'px';
             __frame.style.height = '90.5%';
@@ -270,7 +282,7 @@ function coyote()
         }
         else
         {
-            __page_info.style.left = '93px';
+            __page_info.style.left = '91px';
             __page_info.style.top = '34px';
             __address_box.style.width = (coyote_bee.status.gui.size.width() - 185) + 'px';
             __frame.style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';

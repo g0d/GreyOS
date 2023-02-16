@@ -1,11 +1,11 @@
 /*
-    GreyOS - Krator :: Login & registration form (Version: 1.0)
+    GreyOS - Krator :: Login & registration form (Version: 1.1)
 
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -62,7 +62,7 @@ function krator()
                                         </div>\
                                         <br>\
                                         <div class="control_item">\
-                                            <button id="login_button" class="button">\
+                                            <button id="login_button" class="button" type="button">\
                                                 Login\
                                             </button>\
                                         </div>\
@@ -91,7 +91,7 @@ function krator()
                                     </div>\
                                     <br>\
                                     <div class="control_item">\
-                                        <button id="register_button" class="button">\
+                                        <button id="register_button" class="button" type="button">\
                                             Register\
                                         </button>\
                                     </div>\

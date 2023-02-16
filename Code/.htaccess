@@ -1,5 +1,5 @@
 # HTACCESS configuration file
-# Copyright (C) 2016 - 2020
+# Copyright (C) 2016 - 2023
 # Open Software License (OSL 3.0)
 
 Options All -Indexes
@@ -83,19 +83,19 @@ AddType application/x-font-woff .woff
 <ifModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 day"
-    ExpiresByType image/x-icon "access plus 86400 seconds"
-    ExpiresByType image/jpg "access plus 86400 seconds"
-    ExpiresByType image/jpeg "access plus 86400 seconds"
-    ExpiresByType image/png "access plus 86400 seconds"
-    ExpiresByType image/gif "access plus 86400 seconds"
-    ExpiresByType video/mp4 "access plus 86400 seconds"
-    ExpiresByType video/webm "access plus 86400 seconds"
-    ExpiresByType text/css "access plus 86400 seconds"
-    ExpiresByType text/javascript "access plus 86400 seconds"
-    ExpiresByType application/javascript "access plus 86400 seconds"
-    ExpiresByType application/x-javascript "access plus 86400 seconds"
-    ExpiresByType text/html "access plus 86400 seconds"
-    ExpiresByType application/xhtml+xml "access plus 86400 seconds"
+    ExpiresByType image/x-icon "access plus 1 day"
+    ExpiresByType image/jpg "access plus 1 day"
+    ExpiresByType image/jpeg "access plus 1 day"
+    ExpiresByType image/png "access plus 1 day"
+    ExpiresByType image/gif "access plus 1 day"
+    ExpiresByType video/mp4 "access plus 1 day"
+    ExpiresByType video/webm "access plus 1 day"
+    ExpiresByType text/css "access plus 1 day"
+    ExpiresByType text/javascript "access plus 1 day"
+    ExpiresByType application/javascript "access plus 1 day"
+    ExpiresByType application/x-javascript "access plus 1 day"
+    ExpiresByType text/html "access plus 1 day"
+    ExpiresByType application/xhtml+xml "access plus 1 day"
 </ifModule>
 
 # Enable compression of files
@@ -109,7 +109,18 @@ AddType application/x-font-woff .woff
   #AddOutputFilterByType DEFLATE font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype
 </ifModule>
 
+# Enable short tags for PHP 5
 <IfModule mod_php5.c>
+  php_value short_open_tag 1
+</IfModule>
+
+# Enable short tags for PHP 7
+<IfModule mod_php7.c>
+  php_value short_open_tag 1
+</IfModule>
+
+# Enable short tags for PHP 8+
+<IfModule mod_php.c>
   php_value short_open_tag 1
 </IfModule>
 

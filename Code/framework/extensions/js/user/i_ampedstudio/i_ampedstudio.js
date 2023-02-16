@@ -43,7 +43,7 @@ function i_ampedstudio()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_ampedstudio_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe src="https://app.ampedstudio.com/"></iframe>\
+                                 <iframe title="AmpedStudio" src="https://app.ampedstudio.com/"></iframe>\
                               </div>';
 
             i_ampedstudio_bee.settings.data.window.content(config.content);

@@ -1,11 +1,11 @@
 /*
-    GreyOS - Boot Screen (Version: 1.2)
+    GreyOS - Boot Screen (Version: 1.3)
 
     File name: boot_screen.js
     Description: This file contains the Boot Screen utility.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -22,7 +22,7 @@ function boot_screen()
 
             __dynamic_object.setAttribute('id', 'boot_screen');
             __dynamic_object.innerHTML = '<div id="boot_screen_content">\
-                                              <img src="/site/pix/greyos_logo.png">\
+                                              <img src="/site/pix/greyos_logo.png" alt="GreyOS Logo">\
                                               <br>\
                                               <div id="boot_screen_message"></div>\
                                           </div>';
@@ -33,7 +33,7 @@ function boot_screen()
 
     this.init = function()
     {
-        if (navigator.vendor.indexOf('Google') === -1)
+        if (navigator.userAgent.indexOf('Chrome') === -1)
         {
             utils_int.draw_boot_screen();
 
@@ -41,7 +41,7 @@ function boot_screen()
 
             __boot_message.innerHTML = 'Your browser is incompatible!' + 
                                        '<br>' +
-                                       'Use Chrome or Chromium to access the Meta-OS.';
+                                       'Use a Chrome-based browser to access the Meta-OS.';
 
             return false;
         }

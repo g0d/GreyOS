@@ -43,7 +43,7 @@ function i_soundtrap()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_soundtrap_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe src="https://www.soundtrap.com/studio/"></iframe>\
+                                 <iframe title="SoundTrap" src="https://www.soundtrap.com/studio/"></iframe>\
                               </div>';
 
             i_soundtrap_bee.settings.data.window.content(config.content);

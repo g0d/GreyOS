@@ -43,7 +43,7 @@ function i_youdj()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_youdj_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe src="https://youdj.online/"></iframe>\
+                                 <iframe title="YouDJ" src="https://youdj.online/"></iframe>\
                               </div>';
 
             i_youdj_bee.settings.data.window.content(config.content);

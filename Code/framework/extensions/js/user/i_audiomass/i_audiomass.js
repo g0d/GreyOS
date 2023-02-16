@@ -43,7 +43,7 @@ function i_audiomass()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_audiomass_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe src="https://audiomass.co/"></iframe>\
+                                 <iframe title="AudioMass" src="https://audiomass.co/"></iframe>\
                               </div>';
 
             i_audiomass_bee.settings.data.window.content(config.content);

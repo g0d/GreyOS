@@ -356,8 +356,8 @@
 
 .marquee
 {
-    animation: marquee 5s linear 3s infinite alternate;
     -webkit-animation: marquee 5s linear 3s infinite alternate;
+    animation: marquee 5s linear 3s infinite alternate;
 }
 
 @keyframes marquee

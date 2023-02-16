@@ -1317,7 +1317,7 @@ function bee()
                 __desktop_id = 0,
                 __single_instance = false,
                 __topmost = false,
-                __status_bar_marquee = true,
+                __status_bar_marquee = false,
                 __resize_tooltip = false,
                 __backtrace = false,
                 __casement_width = 100;

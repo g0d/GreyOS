@@ -43,7 +43,7 @@ function i_vectorink()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_vectorink_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe src="https://vectorink.io/app/"></iframe>\
+                                 <iframe title="VectorInk" src="https://vectorink.io/app/"></iframe>\
                               </div>';
 
             i_vectorink_bee.settings.data.window.content(config.content);

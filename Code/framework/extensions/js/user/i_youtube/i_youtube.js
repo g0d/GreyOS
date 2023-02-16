@@ -341,7 +341,7 @@ function i_youtube()
                     '</div>' +
                     '<div class="yt_player_content yt_player_embed" data-link="embed">' +
                     '<textarea class="yt_player_embed_text_content" onclick="this.focus(); this.select()" readonly>' +
-                    '<iframe width="420" height="315" src="//www.youtube.com/embed/' + 
+                    '<iframe title="YouTube video" width="420" height="315" src="//www.youtube.com/embed/' + 
                     config.video_id + '" frameborder="0" allowfullscreen></iframe>' +
                     '</textarea>' +
                     '</div>' +

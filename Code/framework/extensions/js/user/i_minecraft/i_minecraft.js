@@ -43,7 +43,7 @@ function i_minecraft()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_minecraft_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe id= "' + i_minecraft_bee.settings.general.id() + '_frame" \
+                                 <iframe id= "' + i_minecraft_bee.settings.general.id() + '_frame" title="Minecraft" \
                                          src="https://classic.minecraft.net/" scrolling="no">\
                                  </iframe>\
                              </div>';

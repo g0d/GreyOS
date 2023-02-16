@@ -1,11 +1,11 @@
 /*
-    GreyOS - User Profile (Version: 1.3)
+    GreyOS - User Profile (Version: 1.4)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -183,7 +183,7 @@ function user_profile()
                                                     </div>\
                                                     <div id="logout">\
                                                         <div id="logout_icon"></div>\
-                                                        <button id="logout_button" class="button">Logout</button>\
+                                                        <button id="logout_button" class="button" type="button">Logout</button>\
                                                     </div>\
                                                 </div>\
                                             </div>';

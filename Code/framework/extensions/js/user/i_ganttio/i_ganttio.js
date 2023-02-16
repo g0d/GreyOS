@@ -43,7 +43,7 @@ function i_ganttio()
         {
             config.content = '<div class="' + config.id + '">\
                                  <div id="' + i_ganttio_bee.settings.general.id() + '_overlay" class="overlay"></div>\
-                                 <iframe src="https://app.gantt.io/"></iframe>\
+                                 <iframe title="GanttIO" src="https://app.gantt.io/"></iframe>\
                               </div>';
 
             i_ganttio_bee.settings.data.window.content(config.content);

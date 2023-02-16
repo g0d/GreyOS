@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="description" content="A minimalistic weather dashboard"/>
+		<title>Weather</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"/>
+		<link rel="preconnect" href="https://fonts.googleapis.com"/>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+		<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+		<link href="assets/favicon.png" type="image/x-icon" rel="icon"/>
+		<link href="styles.css" rel="stylesheet" type="text/css"/>
+		<script src="https://kit.fontawesome.com/50cde61edc.js" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	</head>
+	<body class="dark">
+		<div class="container">
+			<header class="container text-md-start my-2 mt-3">
+				<div class="row align-items-center">
+					<h1 class="col-md-6">Weather Now</h1>
+					<div class="w-100 d-md-none d-block"></div>
+					<form class="input-group col p-1 search-form">
+						<button class="btn btn-outline-primary"
+								id="geolocation-btn"
+								type="button">
+							<i class="fa-solid fa-location-arrow"></i>
+						</button>
+						<input type="search"
+							   placeholder="Search City..."
+							   class="form-control"
+							   id="search-input"
+							   autocapitalize="on"
+							   autocomplete="address-level2"/>
+						<button type="submit" class="btn btn-outline-primary me-2 search-btn">
+							<i class="fa-solid fa-magnifying-glass-location"></i>
+						</button>
+					</form>
+				</div>
+			</header>
+			<div class="row d-flex">
+				<div class="local-overview col ms-lg-4 mt-4">
+					<div class="mx-3 my-4">
+						<h2>Forecast in <span id="location"></span></h2>
+						<h3 id="today"></h3>
+					</div>
+					<div class="container flex-md-row flex-column">
+						<div class="row">
+							<section class="temp-overview col-lg-5">
+								<div class="current-weather card">
+									<div class="card-body">
+										<div class="d-flex">
+											<h1 class="flex-grow-1">
+												<span id="temp-now"></span>°<span class="fahrenheit">C</span>
+											</h1>
+											<h3 class="text-end pt-2">
+												<small>High:</small>
+												<span class="temps" id="high-temp"></span>°<span class="fahrenheit">C</span>
+												<br/>
+												<small>Low:</small>
+												<span class="temps" id="low-temp">30</span>°<span class="fahrenheit">C</span>
+											</h3>
+										</div>
+										<br/><br/>
+										<div class="d-flex">
+											<div class="flex-grow-1">
+												<p>
+													<span id="description-temp">Mostly Sunny</span><br/>
+													Feels like
+													<span class="temps" id="feels-like"></span>°<span class="fahrenheit">C</span>
+													<br/>
+													<small id="condition-msg"></small>
+												</p>
+											</div>
+											<div>
+												<img src="" width="85px" alt="Weather icon" class="weather-icon default-main-icon"/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</section>
+							<div class="w-100 d-lg-none d-block"></div>
+							<section
+								class="temp-details col-lg-4 col-md-5 mt-3 mt-md-2 mt-lg-0">
+								<div class="card p-1 initial">
+									<ul class="list-group list-group-flush">
+										<li class="list-group-item d-flex">
+											<strong class="flex-grow-1">Visibility</strong>
+											<span id="visibility">0</span>km
+											<i class="fa-solid fa-eye-slash align-self-center"></i>
+										</li>
+										<li class="list-group-item d-flex">
+											<strong class="flex-grow-1">Dew Point</strong><span id="dew-point" class="temps"></span>°<span class="fahrenheit">C</span>
+											<i class="fa-solid fa-droplet align-self-center"></i>
+										</li>
+										<li class="list-group-item d-flex">
+											<strong class="flex-grow-1">Wind</strong>
+											<span id="wind">0</span>
+											<span id="wind-unit">km/h</span>
+											<i class="fa-solid fa-wind align-self-center"></i>
+										</li>
+
+										<li class="list-group-item d-flex">
+											<strong class="flex-grow-1"> Humidity</strong>
+											<span id="humidity">0</span>%
+											<i class="fa-solid fa-water align-self-center"></i>
+										</li>
+
+										<li class="list-group-item d-flex">
+											<strong class="flex-grow-1">Cloudiness</strong>
+											<span id="clouds"></span>%
+											<i class="fa-solid fa-cloud align-self-center"></i>
+										</li>
+									</ul>
+								</div>
+							</section>
+							<div class="w-100 d-md-none d-block"></div>
+							<section class="sun-time col-md mt-3 mt-md-2 mt-lg-0">
+								<div class="card">
+									<img src="assets/day-landscape.png" alt="Day landscape" class="card-img w-100" id="scenery"/>
+									<div class="card-img-overlay text-center">
+										<i class="fa-solid fa-sun"></i>
+										<h3 lass="fw-light">Sunrise</h3>
+										<h2 id="sunrise-time"></h2>
+										<br/>
+										<i class="fa-solid fa-moon"></i>
+										<h3 lass="fw-lighter">Sunset</h3>
+										<h2 id="sunset-time"></h2>
+									</div>
+								</div>
+							</section>
+						</div>
+					</div>
+					<section class="full-forecast d-flex justify-content-md-around my-4"></section>
+				</div>
+				<div class="w-100 d-lg-none d-block mb-2"></div>
+			</div>
+		</div>
+		<script src="main.js"></script>
+	</body>
+</html>

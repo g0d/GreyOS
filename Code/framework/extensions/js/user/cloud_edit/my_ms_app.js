@@ -11,7 +11,7 @@ function gui()
 
 ms_app.init('my_ms_test', true);                    // Resizable: true / Fixed: false
 ms_app.main.set_title('GreyOS :: My Meta-Script App');
-ms_app.settings.status_bar_marquee(false);
+ms_app.settings.status_bar_marquee(true);
 ms_app.settings.use_resize_tooltip(true);
 ms_app.position.left(920);                          // Changes dynamically to help you use running apps
 ms_app.position.top(170);                           // Changes dynamically to help you use running apps
