@@ -6,7 +6,7 @@
         Description: This file contains the Teal FS - VFS extension.
         
         Coded by George Delaportas (G0D)
-        Copyright (c) 2022
+        Copyright (C) 2022
         Open Software License (OSL 3.0)
     */
     

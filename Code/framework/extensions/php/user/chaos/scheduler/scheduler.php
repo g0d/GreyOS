@@ -12,7 +12,7 @@
         Coded by George Delaportas (G0D)
 
         GreyOS Inc.
-        Copyright (c) 2013
+        Copyright (C) 2013
 
     */
     

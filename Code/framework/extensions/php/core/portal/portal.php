@@ -1,12 +1,12 @@
 <?php
 	/*
-		Portal (REST Framework using POST)
+		Portal (REST Framework for GET / POST)
 
-		File name: portal.php (Version: 2.2)
+		File name: portal.php (Version: 2.4)
 		Description: This file contains the Portal extension.
 
 		Coded by George Delaportas (G0D)
-		Copyright (C) 2016
+		Copyright (C) 2016 - 2023
 		Open Software License (OSL 3.0)
 	*/
 
@@ -14,7 +14,7 @@
     if (!defined('micro_mvc'))
 		exit();
 
-	function Portal($url, $mode, $params_list = array(), $credentials = array(), $cookies_list = array(), $timeout_options = array())
+	function Portal($url, $mode, $header_options = array(), $post_params_list = array(), $credentials = array(), $cookies_list = array(), $timeout_options = array())
 	{
 		if (empty($url) || empty($mode) || 
 			($mode !== 'get' && $mode !== 'post'))
@@ -26,6 +26,14 @@
 		$cookies = null;
 
 		$curl = curl_init();
+
+		if (!empty($header_options))
+		{
+			foreach ($header_options as $key => $value)
+				$params .= $key . ':' . $value;
+
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array($params));
+		}
 
 		curl_setopt($curl, CURLOPT_HEADER, false);
 		curl_setopt($curl, CURLOPT_ENCODING, 'gzip');
@@ -47,14 +55,6 @@
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
 		curl_setopt($curl, CURLOPT_TIMEOUT, $opt_timeout);
 
-		if (!empty($params_list))
-		{
-			foreach ($params_list as $key => $value)
-				$params .= $key . '=' . $value . '&';
-
-			rtrim($params, '&');
-		}
-
 		if (!empty($credentials) && count($credentials) == 2 && 
 			isset($credentials['username']) && isset($credentials['password']))
 		{
@@ -66,8 +66,16 @@
 
 		if ($mode === 'post')
 		{
-			curl_setopt($curl, CURLOPT_POST, count($params_list));
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
+			if (!empty($post_params_list))
+			{
+				foreach ($post_params_list as $key => $value)
+					$params .= $key . '=' . $value . '&';
+
+				rtrim($params, '&');
+
+				curl_setopt($curl, CURLOPT_POST, count($post_params_list));
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
+			}
 		}
 
 		if (!empty($cookies_list))

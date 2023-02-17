@@ -6,7 +6,7 @@
     Dependencies: Vulcan.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2017
+    Copyright (C) 2017 - 2022
     Open Software License (OSL 3.0)
 */
 

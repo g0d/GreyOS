@@ -1,9 +1,9 @@
 {
+    "portal"            :   "core",
     "teal_fs"           :   "core",
     "adi"               :   "user",
     "anti_hijack"       :   "user",
     "ms_sql"            :   "user",
-    "portal"            :   "user",
     "ra"                :   "user",
     "splash"            :   "user",
     "woody"             :   "user",

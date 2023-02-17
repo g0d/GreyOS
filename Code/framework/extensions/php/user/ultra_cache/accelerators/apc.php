@@ -6,7 +6,7 @@
         Description: This file contains the APC[u] Accelerator.
         
         Coded by George Delaportas (G0D)
-        Copyright (c) 2017
+        Copyright (C) 2017
         Open Software License (OSL 3.0)
     */
     

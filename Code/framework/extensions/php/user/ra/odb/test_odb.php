@@ -6,7 +6,7 @@
         Description: This file contains the Test Object-DB model class.
 
         Coded by George Delaportas (G0D)
-        Copyright (c) 2020
+        Copyright (C) 2020
         Open Software License (OSL 3.0)
     */
 

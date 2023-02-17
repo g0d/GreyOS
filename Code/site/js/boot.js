@@ -160,7 +160,7 @@ function boot_script()
             new_parrot.init();
 
             // Initialize desktop module
-            new_swarm.init('desktop', 12, 102, window.innerWidth - 28, window.innerHeight - 118);
+            new_swarm.init('desktop', 12, 100, window.innerWidth - 28, window.innerHeight - 120);
 
             // Show login/register windows
             run_krator_app();
@@ -222,7 +222,7 @@ function boot_script()
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
             matrix_container.get('forest').init('desktop');
-            matrix_container.get('swarm').reset('desktop', 44, 102, window.innerWidth - 60, window.innerHeight - 118);
+            matrix_container.get('swarm').reset('desktop', 44, 100, window.innerWidth - 60, window.innerHeight - 118);
             matrix_container.get('hive').init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             matrix_container.get('eagle').init('desktop');
             matrix_container.get('tik_tok').init('clock');
@@ -289,7 +289,7 @@ function boot_script()
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
             new_forest.init('desktop');
-            new_swarm.init('desktop', 44, 102, window.innerWidth - 60, window.innerHeight - 118);
+            new_swarm.init('desktop', 44, 100, window.innerWidth - 60, window.innerHeight - 118);
             new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
@@ -530,7 +530,7 @@ function boot_script()
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
             new_forest.init('desktop');
-            new_swarm.init('desktop', 44, 102, window.innerWidth - 60, window.innerHeight - 118);
+            new_swarm.init('desktop', 44, 100, window.innerWidth - 60, window.innerHeight - 118);
             new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
             new_tik_tok.init('clock');

@@ -6,7 +6,7 @@
     Dependencies: Vulcan and Centurion.
 
     Coded by George Delaportas (G0D)
-    Copyright (c) 2014 - 2021
+    Copyright (C) 2014 - 2021
     Open Software License (OSL 3.0)
 */
 
