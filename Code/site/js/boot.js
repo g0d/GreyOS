@@ -33,7 +33,7 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '3.0 (alpha)');  // Meta-OS version
+    os_settings.set('version', '3.1 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
     os_settings.set('max_services', 50);        // Maximum number of allowed active services per session
     os_settings.set('max_apps', 16);            // Maximum number of allowed active apps per session

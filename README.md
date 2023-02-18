@@ -1,4 +1,4 @@
-# GreyOS (Ver. 3.0 alpha) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/889562a17e174c438fd56d35780822b0)](https://www.codacy.com/gh/g0d/GreyOS/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=g0d/GreyOS&amp;utm_campaign=Badge_Grade)
+# GreyOS (Ver. 3.1 alpha) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/889562a17e174c438fd56d35780822b0)](https://www.codacy.com/gh/g0d/GreyOS/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=g0d/GreyOS&amp;utm_campaign=Badge_Grade)
 
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Logo.png)
 

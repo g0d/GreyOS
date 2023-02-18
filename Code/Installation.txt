@@ -6,11 +6,13 @@
 3. If you have multiple folders or installed micro-MVC in a subfolder, better use the: Name-based Virtual Host feature
 
 [Awesome! Framework - Installation]
-If you use Windows you don't need to do anything.
-If you use Linux run Awesome!.sh.
+- If you use Windows you don't need to do anything
+- If you use Linux run Awesome!.sh
+
+
 
 Best,
 George Delaportas (G0D)
-Copyright (C) 2015-2020 micro-MVC
+Copyright (C) 2015 - 2023 micro-MVC
 Open Software License (OSL 3.0)
 Supported by PROBOTEK (https://probotek.eu/)

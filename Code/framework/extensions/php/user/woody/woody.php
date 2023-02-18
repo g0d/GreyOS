@@ -51,7 +51,7 @@
 
             if ($message === null)
             {
-                $message = file_get_contents(UTIL::Absolute_Path('framework/extensions/php/user/woody/msg.html'));
+                $message = file_get_contents(UTIL::Absolute_Path('framework/extensions/php/user/woody/message.html'));
 
                 if ($message === false)
                     return false;

@@ -5,7 +5,7 @@
     Description: This file contains the Coyote theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -136,7 +136,7 @@
 .page_info
 {
     position: absolute;
-    left: 91px;
+    left: 90px;
     top: 34px;
     background-image: url('pix/info.png');
 }
@@ -166,12 +166,14 @@
 
 .adress_bar
 {
-    float: right;
+    float: none;
     clear: none;
+    width: inherit;
 }
 
 .address_box
 {
+    float: right;
     text-indent: 20px;
     width: 535px;
     height: 18px;

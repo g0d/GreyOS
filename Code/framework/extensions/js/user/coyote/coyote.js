@@ -265,7 +265,7 @@ function coyote()
         {
             __page_info.style.left = '87px';
             __page_info.style.top = '30px';
-            __address_box.style.width = screen.width - 167 + 'px';
+            __address_box.style.width = 'Calc(100vw - 167px)';
             __frame.style.height = '90.5%';
             __full_screen.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/coyote/pix/full_screen_hover.png')";
 
@@ -282,7 +282,7 @@ function coyote()
         }
         else
         {
-            __page_info.style.left = '91px';
+            __page_info.style.left = '90px';
             __page_info.style.top = '34px';
             __address_box.style.width = (coyote_bee.status.gui.size.width() - 185) + 'px';
             __frame.style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';

@@ -23,8 +23,10 @@
                 require('framework/errors/404.phtml');
             else
             {
+                UTIL::Autoload_Extensions();
+                
                 require('site/php/ext_loader.php');
-
+                
                 if ($this_route === 'root')
                     MVC::Go_To($this_route);
                 else

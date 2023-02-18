@@ -1,0 +1,10 @@
+{
+    "js"    :   ["vulcan", "pythia", "fx", "jap", "lava", "snail", "centurion", "bull", "taurus", "aether", "sensei", 
+                 "stopwatch", "heartbeat", "msgbox", "workbox", "task", "parallel", "key_manager", "ajax_factory", "content_fetcher", 
+                 "armadillo", "ultron", "boot_screen", "loading_screen", "f5", "linux_mode", "frog", "teletraan", "meta_os", 
+                 "scenario", "multiverse", "cosmos", "matrix", "dev_box", "app_box", "colony", "roost", "xenon", "teal_fs", "owl", 
+                 "forest", "swarm", "hive", "trinity", "krator", "ui_controls", "dock", "user_profile", "chameleon", "nature", 
+                 "eagle", "tik_tok", "meta_program_config", "meta_script", "executor", "morpheus", "panda", "octopus", 
+                 "super_tray", "parrot", "infinity", "max_screen", "bee", "bat", "oz", "coyote", "radio_dude", "cloud_edit"],
+    "php"   :   ["splash"]
+}

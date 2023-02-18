@@ -6,7 +6,7 @@
         Description: This file contains the "UTIL" class.
         
         Coded by George Delaportas (G0D)
-        Copyright (C) 2015
+        Copyright (C) 2015 - 2023
         Open Software License (OSL 3.0)
     */
     
@@ -48,6 +48,23 @@
         private static function Fetch_Extensions($ext_type)
         {
             $ext_path = self::Absolute_Path('framework/config/registry/' . $ext_type . '.json');
+            $ext_data = file_get_contents($ext_path);
+            $result = json_decode($ext_data, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE)
+                return false;
+            
+            return $result;
+        }
+        
+        /**
+        * UTIL::Fetch_Extensions - Fetch all configured extensions for autoloading
+        *
+        * @return array
+        */
+        private static function Fetch_Autoload_Extensions()
+        {
+            $ext_path = self::Absolute_Path('framework/config/misc/ext_autoload.json');
             $ext_data = file_get_contents($ext_path);
             $result = json_decode($ext_data, true);
             
@@ -370,7 +387,7 @@
         * UTIL::Fetch_Template - Fetch a template passing any arguments
         *
         * @param string $template_name A templates name
-        * @param string $arguments_array An array of arguments (default: null)
+        * @param string $arguments_array A 2-dimensional array of arguments of the form: "($searches, $replaces)" (default: null)
         *
         * @return string Template contents
         */
@@ -599,16 +616,20 @@
         *
         * @param string $extension Extension name
         * @param string $ext_type Extension type ("php" / "js")
+        * @param string $clear_cache Cache control for JS extensions only - Options: "true / false" (default: true)
         *
         * @return bool
         */
-        public static function Load_Extension($extension, $ext_type)
+        public static function Load_Extension($extension, $ext_type, $clear_cache = true)
         {
             if (empty($extension))
                 return false;
             
             if ($ext_type === 'php')            // PHP extensions
             {
+                if ($clear_cache !== true)
+                    return false;
+                
                 $absolute_path = self::Absolute_Path('framework/extensions/php');
                 $result = self::Process_Dir($absolute_path, true);
                 
@@ -669,6 +690,9 @@
             }
             else if ($ext_type === 'js')        // Javascript extensions
             {
+                if (!is_bool($clear_cache))
+                    return false;
+                
                 $absolute_path = self::Absolute_Path('framework/extensions/js');
                 $result = self::Process_Dir($absolute_path, true);
                 
@@ -677,6 +701,11 @@
                     return false;
                 
                 $ext_reg = self::Fetch_Extensions($ext_type);
+                
+                if ($clear_cache)
+                    $cache_reset = '?version=' . time();
+                else
+                    $cache_reset = '';
                 
                 if ($extension === 'all')
                 {
@@ -693,7 +722,7 @@
                             if ($dir_path_name === $file_name && !self::Check_Extension_Cache($file_name))
                             {
                                 echo '<script src="/framework/extensions/js/' . $ext_reg[$file_name] . '/' . 
-                                      $dir_path_name . '/' . $file['filename'] . '"></script>';
+                                      $dir_path_name . '/' . $file['filename'] . $cache_reset . '"></script>';
                             }
                         }
                     }
@@ -716,7 +745,7 @@
                                 if (!self::Check_Extension_Cache($extension))
                                 {
                                     echo '<script src="/framework/extensions/js/' . $ext_reg[$file_name] . '/' . 
-                                          $extension . '/' . $file['filename'] . '"></script>';
+                                          $extension . '/' . $file['filename'] . $cache_reset . '"></script>';
                                 }
                                 
                                 break;
@@ -729,6 +758,27 @@
             }
             else
                 return false;
+        }
+        
+        /**
+        * UTIL::Autoload_Extensions - Autoload all PHP & JS extensions set in the config file
+        *
+        * @return bool
+        */
+        public static function Autoload_Extensions()
+        {
+            $extensions_array = self::Fetch_Autoload_Extensions();
+            
+            if (empty($extensions_array))
+                return false;
+            
+            foreach ($extensions_array as $ext_type => $ext_names_array)
+            {
+                foreach ($ext_names_array as $ext_name)
+                    self::Load_Extension($ext_name, $ext_type);
+            }
+            
+            return true;
         }
     }
 ?>

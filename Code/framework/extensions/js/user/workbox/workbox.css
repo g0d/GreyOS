@@ -49,17 +49,17 @@
     margin-left: auto;
     margin-right: auto;
     padding: 8px;
-    transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
+    transition: background .25s ease-in-out;
 }
 
 #workbox_button:hover
 {
     background-color: #424040;
-    transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
+    transition: background .25s ease-in-out;
 }
 
 .wb_screen
@@ -91,9 +91,9 @@
 
 .wb_fade_in
 {
-    animation: info_fade_in 0.25s ease-in forwards;
     -moz-animation: info_fade_in 0.25s ease-in forwards;
     -webkit-animation: info_fade_in 0.25s ease-in forwards;
+    animation: info_fade_in 0.25s ease-in forwards;
 }
 
 @keyframes info_fade_in
@@ -113,9 +113,9 @@
 
 .wb_fade_out
 {
-    animation: info_fade_out 0.25s ease-in forwards;
     -moz-animation: info_fade_out 0.25s ease-in forwards;
     -webkit-animation: info_fade_out 0.25s ease-in forwards;
+    animation: info_fade_out 0.25s ease-in forwards;
 }
 
 @keyframes info_fade_out

@@ -1,7 +1,7 @@
 /*
     Vulcan (General JS Programming Utilities)
 
-    File name: vulcan.js (Version: 2.3)
+    File name: vulcan.js (Version: 2.5)
     Description: This file contains the Vulcan extension.
 
     Coded by George Delaportas (G0D)
@@ -481,9 +481,9 @@ function vulcan()
             return __result;
         };
 
-        this.apply_theme = function(directory, theme)
+        this.apply_theme = function(directory, theme, clear_cache = true)
         {
-            if (self.validation.misc.is_invalid(directory) || self.validation.alpha.is_symbol(theme))
+            if (self.validation.misc.is_invalid(directory) || self.validation.alpha.is_symbol(theme) || !self.validation.misc.is_bool(clear_cache))
                 return false;
 
             if (self.validation.misc.is_undefined(theme))
@@ -492,13 +492,17 @@ function vulcan()
             if (self.system.source_exists(theme, 'link', 'href'))
                 return false;
 
-            var __dynamic_object = null;
+            var __dynamic_object = null,
+                __cache_reset = '';
+
+            if (clear_cache)
+                __cache_reset = '?version=' + Date.now();
 
             __dynamic_object = document.createElement('link');
             __dynamic_object.setAttribute('rel', 'stylesheet');
             __dynamic_object.setAttribute('type', 'text/css');
             __dynamic_object.setAttribute('media', 'screen');
-            __dynamic_object.setAttribute('href', directory + '/' + theme + '.css');
+            __dynamic_object.setAttribute('href', directory + '/' + theme + '.css' + __cache_reset);
 
             self.objects.by_tag('head')[0].appendChild(__dynamic_object);
 
@@ -509,6 +513,11 @@ function vulcan()
     function misc()
     {
         var __self = this;
+
+        this.active_language = function()
+        {
+            return location.pathname.substring(1, 3);
+        };
 
         this.contains = function(subject, list)
         {
@@ -594,19 +603,24 @@ function vulcan()
     {
         var __self = this;
 
-        this.require = function(js_file_path, js_file_name)
+        this.require = function(js_file_path, js_file_name, clear_cache = true)
         {
             if (self.validation.misc.is_invalid(js_file_path) || 
-                self.validation.misc.is_invalid(js_file_name) || self.validation.alpha.is_symbol(js_file_name))
+                self.validation.misc.is_invalid(js_file_name) || self.validation.alpha.is_symbol(js_file_name) || 
+                !self.validation.misc.is_bool(clear_cache))
                 return false;
 
             if (__self.source_exists(js_file_name, 'script', 'src'))
                 return false;
 
-            var __dynamic_object = null;
+            var __dynamic_object = null,
+                __cache_reset = '';
+
+            if (clear_cache)
+                __cache_reset = '?version=' + Date.now();
 
             __dynamic_object = document.createElement('script');
-            __dynamic_object.setAttribute('src', js_file_path + '/' + js_file_name + '.js');
+            __dynamic_object.setAttribute('src', js_file_path + '/' + js_file_name + '.js' + __cache_reset);
 
             self.objects.by_tag('head')[0].appendChild(__dynamic_object);
 

@@ -1,11 +1,11 @@
 /*
-    GreyOS - Swarm (Version: 3.0)
+    GreyOS - Swarm (Version: 3.1)
 
     File name: swarm.js
     Description: This file contains the Swarm - Bees action area container module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -483,10 +483,20 @@ function swarm()
         else
         {
             resize_tooltip.style.visibility = 'visible';
-            resize_tooltip.style.zIndex = bees_status.z_index;
+            resize_tooltip.style.zIndex = bees_status.z_index + 1;
 
-            resize_tooltip.style.left = bee.gui.position.left() + bee.status.gui.size.width() + 5 + 'px';
-            resize_tooltip.style.top = bee.gui.position.top() + bee.status.gui.size.height() + 5 + 'px';
+            if ((bee.gui.position.left() + bee.status.gui.size.width()) > (self.settings.right() - 80) || 
+                (bee.gui.position.top() + bee.status.gui.size.height()) > (self.settings.bottom() - 20))
+            {
+                resize_tooltip.style.left = bee.gui.position.left() + bee.status.gui.size.width() - 92 + 'px';
+                resize_tooltip.style.top = bee.gui.position.top() + bee.status.gui.size.height() - 50 + 'px';
+            }
+            else
+            {
+                resize_tooltip.style.left = bee.gui.position.left() + bee.status.gui.size.width() + 10 + 'px';
+                resize_tooltip.style.top = bee.gui.position.top() + bee.status.gui.size.height() + 10 + 'px';
+            }
+            
             resize_tooltip.innerHTML = bee.status.gui.size.width() + ' x ' + bee.status.gui.size.height();
         }
 
