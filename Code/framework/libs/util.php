@@ -616,7 +616,7 @@
         *
         * @param string $extension Extension name
         * @param string $ext_type Extension type ("php" / "js")
-        * @param string $clear_cache Cache control for JS extensions only - Options: "true / false" (default: true)
+        * @param string $clear_cache Cache control | Applies for JS extensions only - Options: "true / false" (default: true)
         *
         * @return bool
         */
@@ -763,10 +763,15 @@
         /**
         * UTIL::Autoload_Extensions - Autoload all PHP & JS extensions set in the config file
         *
+        * @param string $clear_cache Cache control | Applies for JS extensions only - Options: "true / false" (default: true)
+        *
         * @return bool
         */
-        public static function Autoload_Extensions()
+        public static function Autoload_Extensions($clear_cache = true)
         {
+            if (!is_bool($clear_cache))
+                return false;
+            
             $extensions_array = self::Fetch_Autoload_Extensions();
             
             if (empty($extensions_array))
@@ -775,7 +780,7 @@
             foreach ($extensions_array as $ext_type => $ext_names_array)
             {
                 foreach ($ext_names_array as $ext_name)
-                    self::Load_Extension($ext_name, $ext_type);
+                    self::Load_Extension($ext_name, $ext_type, $clear_cache);
             }
             
             return true;
