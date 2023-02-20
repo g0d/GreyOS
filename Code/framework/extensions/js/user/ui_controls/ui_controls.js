@@ -1,11 +1,11 @@
 /*
-    GreyOS - UI Controls (Version: 1.6)
+    GreyOS - UI Controls (Version: 1.8)
 
     File name: main.js
     Description: This file contains the UI Controls module.
 
     Coded by John Inglessis (negle) and George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -17,7 +17,7 @@ function ui_controls()
     function config_model()
     {
         this.active_control = ['all_windows', 'view'];
-        this.is_grid = false;
+        this.is_boxified = false;
         this.is_stack = false;
     }
 
@@ -41,8 +41,8 @@ function ui_controls()
                 return false;
 
             __controls_div.innerHTML = '<div id="placement" class="actions">' + 
-                                       '    <div id="snap_to_grid" class="placement_icons" title="Snap to grid"></div>' + 
-                                       '    <div id="stack_all" class="placement_icons" title="Stack all windows"></div>' + 
+                                       '    <div id="boxify_all" class="placement_icons" title="Boxify/unboxify all windows"></div>' + 
+                                       '    <div id="stack_all" class="placement_icons" title="Stack/unstack all windows"></div>' + 
                                        '</div>';
 
             return true;
@@ -56,8 +56,8 @@ function ui_controls()
             var __selector = '#top_panel #bottom_area #action_icons #placement ' + '#' + id,
                 __control = utils_sys.objects.selectors.first(__selector);
 
-            if (id === 'snap_to_grid')
-                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/snap_hover.png')";
+            if (id === 'boxify_all')
+                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify_hover.png')";
             else if (id === 'stack_all')
                 __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack_hover.png')";
             else
@@ -74,8 +74,8 @@ function ui_controls()
             var __selector = '#top_panel #bottom_area #action_icons #placement' + ' #' + id,
                 __control = utils_sys.objects.selectors.first(__selector);
 
-            if (id === 'snap_to_grid')
-                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/snap.png')";
+            if (id === 'boxify_all')
+                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify.png')";
             else if (id === 'stack_all')
                 __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack.png')";
             else
@@ -88,8 +88,8 @@ function ui_controls()
         {
             var __handler = null;
 
-            __handler = function() { self.placement.grid(); };
-            morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('snap_to_grid'));
+            __handler = function() { self.placement.boxify(); };
+            morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('boxify_all'));
 
             __handler = function() { self.placement.stack(); };
             morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('stack_all'));
@@ -138,7 +138,7 @@ function ui_controls()
 
     function placement()
     {
-        this.grid = function()
+        this.boxify = function()
         {
             if (is_init === false)
                 return false;
@@ -146,17 +146,17 @@ function ui_controls()
             if (!colony.list())
                 return false;
 
-            if (config.is_grid === false)
+            if (config.is_boxified === false)
             {
-                utils_int.make_active('snap_to_grid', 'placement');
+                utils_int.make_active('boxify_all', 'placement');
 
-                config.is_grid = true;
+                config.is_boxified = true;
             }
             else
             {
-                utils_int.make_inactive('snap_to_grid', 'placement');
+                utils_int.make_inactive('boxify_all', 'placement');
 
-                config.is_grid = false;
+                config.is_boxified = false;
             }
 
             return true;
@@ -181,7 +181,7 @@ function ui_controls()
                     return false;
 
                 for (var i = 0; i < __bees_length; i++)
-                    hive.stack.bees.insert(__bees[i], 1);
+                    hive.stack.bees.insert(__bees[i], null);
 
                 config.is_stack = true;
             }

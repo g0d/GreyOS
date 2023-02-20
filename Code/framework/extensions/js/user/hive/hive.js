@@ -1,11 +1,11 @@
 /*
-    GreyOS - Hive (Version: 3.4)
+    GreyOS - Hive (Version: 3.5)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -422,8 +422,9 @@ function hive()
                 var __this_hive_bee = colony.get(__this_bee);
 
                 if (utils_sys.objects.by_id(__this_bee) === null)
-                {
-                    if (__this_hive_bee === false)
+                {console.error('{ *** [ ! ( ^ ) ! ] *** }');
+                /*
+                if (__this_hive_bee === false)
                         return false;
 
                     if (__this_hive_bee.status.gui.closed())
@@ -432,6 +433,7 @@ function hive()
                     swarm.bees.insert(__this_hive_bee);
 
                     __this_hive_bee.settings.general.in_hive(false);
+
                     __this_hive_bee.gui.position.top(self.settings.top() - __this_hive_bee.gui.size.height() - 33);
                     __this_hive_bee.gui.position.left(coords.mouse_x - 
                                                       Math.floor(__this_hive_bee.gui.size.width() / 2) + 
@@ -443,6 +445,7 @@ function hive()
                     __this_hive_bee.drone.execute('enable_drag');
 
                     __this_hive_bee.gui.position.top(__this_hive_bee.gui.position.top() + __this_hive_bee.gui.size.height() - 85);
+                */
                 }
 
                 utils_sys.objects.by_id(__this_bee).style.display = 'block';
@@ -955,7 +958,11 @@ function hive()
                 if (is_init === false)
                     return false;
 
-                if (!colony.is_bee(object) || !utils_int.validate_honeycomb_range(honeycomb_view))
+                if (!colony.is_bee(object) || 
+                    (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view)))
+                    return false;
+
+                if (honeycomb_views.swiping())
                     return false;
 
                 var __bee_id = object.settings.general.id();
@@ -963,15 +970,35 @@ function hive()
                 if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
                     return false;
 
-                if (!honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id))
-                    return false;
+                if (honeycomb_view === null)
+                {
+                    for (var i = 0; i < honeycomb_views.num(); i++)
+                    {
+                        if (honeycomb_views.list(i).id === honeycomb_views.visible() && 
+                            honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+                        {
+                            honeycomb_views.list(i).bees.add(__bee_id);
 
-                if (!colony.add([object]))
-                    return false;
+                            colony.get(__bee_id).settings.general.in_hive(true);
 
-                utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
+                            swarm.bees.remove(__bee_id);
 
-                object.settings.general.in_hive(true);
+                            utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id);
+
+                    swarm.bees.remove(__bee_id);
+
+                    utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
+                }
+
+                swarm.settings.active_bee(null);
 
                 return true;
             };
@@ -1023,11 +1050,11 @@ function hive()
 
                             honeycomb_views.list(i).bees.add(__this_bee);
 
+                            colony.get(__this_bee).settings.general.in_hive(true);
+
                             swarm.bees.remove(__this_bee);
 
                             utils_int.draw_hive_bee(honeycomb_views.visible(), __this_bee, 0);
-
-                            colony.get(__this_bee).settings.general.in_hive(true);
 
                             swarm.settings.active_bee(null);
 

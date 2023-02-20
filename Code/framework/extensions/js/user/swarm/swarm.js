@@ -1,5 +1,5 @@
 /*
-    GreyOS - Swarm (Version: 3.1)
+    GreyOS - Swarm (Version: 3.2)
 
     File name: swarm.js
     Description: This file contains the Swarm - Bees action area container module.
@@ -29,7 +29,7 @@ function swarm()
     function bee_status_model()
     {
         this.active_bee_id = null;
-        this.snap_to_grid = false;
+        this.boxified = false;
         this.stacked = false;
         this.z_index = 0;
     }
@@ -63,10 +63,21 @@ function swarm()
         {
             var __hive = matrix.get('hive');
 
+            if (timer !== null)
+                clearTimeout(timer);
+
             if ((coords.mouse_y + self.settings.top()) >= (window.innerHeight - 
                                                            (document.documentElement.scrollTop + 
                                                             document.body.scrollTop - document.body.clientTop) - 75))
-                __hive.stack.toggle('on');
+            {
+                if (self.status.active_bee() !== null)
+                {
+                    if (!colony.get(self.status.active_bee()).status.gui.resizing())
+                        __hive.stack.toggle('on');
+                }
+                else
+                    timer = setTimeout(function() { __hive.stack.toggle('on'); }, 1000);
+            }
             else
                 __hive.stack.toggle('off');
 
@@ -221,7 +232,7 @@ function swarm()
             return true;
         };
 
-        this.snap_to_grid = function(val)
+        this.boxified = function(val)
         {
             if (is_init === false)
                 return false;
@@ -229,7 +240,7 @@ function swarm()
             if (!utils_sys.validation.misc.is_bool(val))
                 return false;
 
-            bees_status.snap_to_grid = val;
+            bees_status.boxified = val;
 
             return true;
         };
@@ -445,12 +456,12 @@ function swarm()
             return bees_status.active_bee_id;
         };
 
-        this.snap_to_grid = function()
+        this.boxified = function()
         {
             if (is_init === false)
                 return false;
 
-            return bees_status.snap_to_grid;
+            return bees_status.boxified;
         };
 
         this.stacked = function()
@@ -578,6 +589,7 @@ function swarm()
         colony = null,
         morpheus = null,
         nature = null,
+        timer = null,
         utils_sys = new vulcan(),
         random = new pythia(),
         coords = new mouse_coords_model(),

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 4.6)
+    GreyOS - Bee (Version: 4.7)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -650,6 +650,8 @@ function bee()
                             {
                                 coords(event, 2);
 
+                                swarm.settings.active_bee(my_bee_id);
+
                                 bee_statuses.resize(true);
                                 bee_statuses.active(true);
 
@@ -660,11 +662,14 @@ function bee()
 
                 __handler = function()
                 {
+                    bee_statuses.mouse_clicked(false);
+
+                    bee_statuses.resizing(false);
                     bee_statuses.resize(false);
 
                     morpheus.execute(my_bee_id, 'gui', 'resized');
                 };
-                morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, ui_objects.window.status_bar.resize);
+                morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
             }
 
             __handler = function() { return false; };
@@ -4357,8 +4362,8 @@ function bee()
                     if (bee_statuses.resizing())
                         bee_statuses.resized(true);
 
-                    bee_statuses.dragging(false);
                     bee_statuses.drag(false);
+                    bee_statuses.dragging(false);
 
                     bee_statuses.touch(false);
                     bee_statuses.touched(true);

@@ -28,15 +28,15 @@
     height: 20px;
 }
 
-#snap_to_grid
+#boxify_all
 {
-    background-image: url('pix/snap.png');
+    background-image: url('pix/boxify.png');
     width: 21px;
 }
 
-#snap_to_grid:hover
+#boxify_all:hover
 {
-    background-image: url('pix/snap_hover.png');
+    background-image: url('pix/boxify_hover.png');
 }
 
 #stack_all
