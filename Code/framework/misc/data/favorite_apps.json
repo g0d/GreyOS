@@ -1,1 +1,62 @@
-[{"app_id":"coyote","position":"0","title":"Coyote :: A Web browser inside the browser ;-) Click me!"},{"app_id":"radio_dude","position":"1","title":"Radio Dude :: Put some tunes in your life. Click me!"},{"app_id":"i_bassoon","position":"2","title":"iBassoon :: 3rd-party integrated DAW for fun. Click me!"},{"app_id":"cloud_edit","position":"3","title":"Cloud Edit :: Integrated code editor for GreyOS. Click me!"},{"app_id":"i_ganttio","position":"4","title":"iGanttIO :: 3rd-party integrated Gantt charts creator. Click me!"},{"app_id":"i_youdj","position":"5","title":"iYouDJ :: 3rd-party integrated DJ studio. Click me!"},{"app_id":"i_audiomass","position":"6","title":"iAudioMass :: 3rd-party integrated audio editor. Click me!"},{"app_id":"i_soundtrap","position":"7","title":"iSoundTrap :: 3rd-party integrated DAW. Click me!"},{"app_id":"i_ampedstudio","position":"8","title":"iAmpedStudio :: 3rd-party integrated DAW. Click me!"},{"app_id":"i_vectorink","position":"9","title":"iVectorInk :: 3rd-party integrated vector graphics designer. Click me!"},{"app_id":"i_quakejs","position":"10","title":"iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"},{"app_id":"i_webgl_preview","position":"11","title":"iWebGL (Preview) :: 3rd-party integrated showcase. Click me!"}]
+[
+    {
+        "app_id": "coyote",
+        "position": "0",
+        "title": "Coyote :: A Web browser inside the browser ;-) Click me!"
+    },
+    {
+        "app_id": "radio_dude",
+        "position": "1",
+        "title": "Radio Dude :: Put some tunes in your life. Click me!"
+    },
+    {
+        "app_id": "i_bassoon",
+        "position": "2",
+        "title": "iBassoon :: 3rd-party integrated DAW for fun. Click me!"
+    },
+    {
+        "app_id": "cloud_edit",
+        "position": "3",
+        "title": "Cloud Edit :: Integrated code editor for GreyOS. Click me!"
+    },
+    {
+        "app_id": "i_ganttio",
+        "position": "4",
+        "title": "iGanttIO :: 3rd-party integrated Gantt charts creator. Click me!"
+    },
+    {
+        "app_id": "i_youdj",
+        "position": "5",
+        "title": "iYouDJ :: 3rd-party integrated DJ studio. Click me!"
+    },
+    {
+        "app_id": "i_audiomass",
+        "position": "6",
+        "title": "iAudioMass :: 3rd-party integrated audio editor. Click me!"
+    },
+    {
+        "app_id": "i_soundtrap",
+        "position": "7",
+        "title": "iSoundTrap :: 3rd-party integrated DAW. Click me!"
+    },
+    {
+        "app_id": "i_ampedstudio",
+        "position": "8",
+        "title": "iAmpedStudio :: 3rd-party integrated DAW. Click me!"
+    },
+    {
+        "app_id": "i_vectorink",
+        "position": "9",
+        "title": "iVectorInk :: 3rd-party integrated vector graphics designer. Click me!"
+    },
+    {
+        "app_id": "i_quakejs",
+        "position": "10",
+        "title": "iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"
+    },
+    {
+        "app_id": "i_webgl_preview",
+        "position": "11",
+        "title": "iWebGL (Preview) :: 3rd-party integrated showcase. Click me!"
+    }
+]

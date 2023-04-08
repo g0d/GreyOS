@@ -1,0 +1,24365 @@
+
+function ajax_factory(ajax_data, success_cb, failure_cb, default_cb)
+{
+ var ajax = new bull(),
+ utils = new vulcan(),
+ bull_config = {
+ "type" : "request",
+ "url" : "/",
+ "data" : ajax_data,
+ "method" : "post",
+ "ajax_mode" : "asynchronous",
+ "on_success" : function(response)
+ {
+ if (response !== '0' && response !== '-1' && response !== 'undefined')
+ success_cb.call(this, response);
+ else
+ failure_cb.call(this, response);
+ default_cb.call(this);
+ }
+ };
+ if (!utils.validation.misc.is_function(success_cb) ||
+ !utils.validation.misc.is_function(failure_cb) ||
+ !utils.validation.misc.is_function(default_cb))
+ return false;
+ ajax.run(bull_config);
+ return true;
+}
+function bull()
+{
+ function init_config()
+ {
+ config_definition_model = { "arguments" : [
+ {
+ "key" : { "name" : "type", "optional" : false },
+ "value" : {
+ "type" : "string",
+ "choices" : ["data", "request"]
+ }
+ },
+ {
+ "key" : { "name" : "url", "optional" : false },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "data", "optional" : true },
+ "value" : { "type" : "*" }
+ },
+ {
+ "key" : { "name" : "element_id", "optional" : true },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "method", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : ["get", "post"]
+ }
+ },
+ {
+ "key" : { "name" : "ajax_mode", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : ["asynchronous", "synchronous"]
+ }
+ },
+ {
+ "key" : { "name" : "content_fill_mode", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : ["replace", "append"]
+ }
+ },
+ {
+ "key" : { "name" : "response_timeout", "optional" : true },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "on_success", "optional" : true },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "on_fail", "optional" : true },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "on_timeout", "optional" : true },
+ "value" : { "type" : "function" }
+ }
+ ]
+ };
+ }
+ function ajax_core()
+ {
+ function ajax_model()
+ {
+ this.http_session = function(url, data, method, mode)
+ {
+ __xml_http.open(method.toUpperCase(), url, mode);
+ if (method === 'post' && !utils.validation.misc.is_object(data))
+ __xml_http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+ __xml_http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+ if (mode === true)
+ __xml_http.onreadystatechange = state_changed;
+ __xml_http.send(data);
+ if (mode === false)
+ state_changed();
+ };
+ this.create_object = function()
+ {
+ var __xml_http_obj = null;
+ if (window.XMLHttpRequest)
+ __xml_http_obj = new XMLHttpRequest();
+ else
+ __xml_http_obj = new ActiveXObject("Microsoft.XMLHTTP");
+ return __xml_http_obj;
+ };
+ }
+ function state_changed()
+ {
+ if (__xml_http.readyState === 4)
+ {
+ if (__is_timeout === true)
+ {
+ if (utils.validation.misc.is_function(__timeout_callback))
+ __timeout_callback.call(this);
+ else
+ {
+ if (utils.validation.misc.is_function(__fail_callback))
+ __fail_callback.call(this);
+ }
+ return false;
+ }
+ stop_timer(__timer_handler);
+ __ajax_response = null;
+ __is_timeout = false;
+ if (__xml_http.status === 200)
+ {
+ if (__data_div_id === null)
+ __ajax_response = __xml_http.responseText;
+ else
+ {
+ var __container = utils.objects.by_id(__data_div_id);
+ if (utils.validation.misc.is_invalid(__container))
+ return false;
+ __ajax_response = __xml_http.responseText;
+ if (__content_fill_mode === 'replace')
+ __container.innerHTML = __ajax_response;
+ else
+ __container.innerHTML += __ajax_response;
+ }
+ if (utils.validation.misc.is_function(__success_callback))
+ __success_callback.call(this, result());
+ }
+ else
+ {
+ if (utils.validation.misc.is_function(__fail_callback))
+ __fail_callback.call(this);
+ return false;
+ }
+ }
+ return true;
+ }
+ function result()
+ {
+ if (utils.validation.misc.is_undefined(__ajax_response))
+ return null;
+ return __ajax_response;
+ }
+ function init_ajax()
+ {
+ __xml_http = ajax.create_object();
+ }
+ function set_callbacks(success_callback, fail_callback, timeout_callback)
+ {
+ __success_callback = success_callback;
+ __fail_callback = fail_callback;
+ __timeout_callback = timeout_callback;
+ }
+ function run_timer(response_timeout)
+ {
+ if (utils.validation.numerics.is_integer(response_timeout))
+ __timer_handler = setTimeout(function() { __is_timeout = true; }, response_timeout);
+ }
+ function stop_timer(timer_handler)
+ {
+ if (!utils.validation.misc.is_invalid(timer_handler))
+ clearTimeout(timer_handler);
+ }
+ this.data = function(url, data, element_id, content_fill_mode, success_callback, fail_callback, response_timeout, timeout_callback)
+ {
+ __data_div_id = element_id;
+ __content_fill_mode = content_fill_mode;
+ set_callbacks(success_callback, fail_callback, timeout_callback);
+ run_timer(response_timeout);
+ ajax.http_session(url, data, 'post', true);
+ return null;
+ };
+ this.request = function(url, data, method, ajax_mode, success_callback, fail_callback, response_timeout, timeout_callback)
+ {
+ set_callbacks(success_callback, fail_callback, timeout_callback);
+ run_timer(response_timeout);
+ if (ajax_mode === 'asynchronous')
+ ajax.http_session(url, data, method, true);
+ else
+ {
+ ajax.http_session(url, data, method, false);
+ if (!utils.validation.misc.is_invalid(__ajax_response))
+ return __ajax_response;
+ }
+ return null;
+ };
+ var __xml_http = null,
+ __data_div_id = null,
+ __content_fill_mode = null,
+ __success_callback = null,
+ __timeout_callback = null,
+ __fail_callback = null,
+ __timer_handler = null,
+ __ajax_response = null,
+ __is_timeout = false,
+ ajax = new ajax_model();
+ init_ajax();
+ }
+ this.run = function(user_config)
+ {
+ if (!config_parser.verify(config_definition_model, user_config))
+ return false;
+ if (utils.validation.misc.is_nothing(user_config.url) ||
+ !utils.validation.misc.is_invalid(user_config.response_timeout) &&
+ (!utils.validation.numerics.is_integer(user_config.response_timeout) ||
+ user_config.response_timeout < 1 || user_config.response_timeout > 60000))
+ return false;
+ if (utils.validation.misc.is_invalid(user_config.data))
+ user_config.data = null;
+ if (user_config.type === 'data') // [AJAX Data] => Modes: Asynchronous / Methods: POST
+ {
+ if (utils.validation.misc.is_invalid(user_config.data) ||
+ !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) ||
+ !utils.objects.by_id(user_config.element_id) || utils.validation.misc.is_invalid(user_config.content_fill_mode))
+ return false;
+ return new ajax_core().data(user_config.url, user_config.data, user_config.element_id, user_config.content_fill_mode,
+ user_config.on_success, user_config.on_fail,
+ user_config.response_timeout, user_config.on_timeout);
+ }
+ else // [AJAX Request] => Modes: Asynchronous, Synchronous / Methods: GET, POST
+ {
+ if (utils.validation.misc.is_invalid(user_config.ajax_mode))
+ return false;
+ if (utils.validation.misc.is_invalid(user_config.method))
+ user_config.method = 'get';
+ else
+ user_config.method = user_config.method.toLowerCase();
+ return new ajax_core().request(user_config.url, user_config.data, user_config.method, user_config.ajax_mode,
+ user_config.on_success, user_config.on_fail,
+ user_config.response_timeout, user_config.on_timeout);
+ }
+ };
+ var config_definition_model = null,
+ utils = new vulcan(),
+ config_parser = new jap();
+ init_config();
+}
+function centurion()
+{
+ function epoch()
+ {
+ return new Date().getTime();
+ }
+ function actions_model()
+ {
+ this.started = false;
+ this.ended = false;
+ this.latency_set = false;
+ }
+ function results_model()
+ {
+ this.initial_msec = -1;
+ this.final_msec = -1;
+ this.latency = -1;
+ }
+ function benchmark()
+ {
+ this.start = function()
+ {
+ if (actions_list.started)
+ return false;
+ results_list.initial_msec = epoch();
+ actions_list.started = true;
+ actions_list.ended = false;
+ actions_list.latency_set = false;
+ return true;
+ };
+ this.end = function()
+ {
+ if (!actions_list.started)
+ return false;
+ results_list.final_msec = epoch();
+ actions_list.started = false;
+ actions_list.ended = true;
+ return true;
+ };
+ this.latency = function()
+ {
+ if (!actions_list.ended)
+ return false;
+ results_list.latency = results_list.final_msec - results_list.initial_msec;
+ actions_list.started = false;
+ actions_list.latency_set = true;
+ return results_list.latency;
+ };
+ }
+ function status()
+ {
+ function actions()
+ {
+ this.is_started = function()
+ {
+ return actions_list.started;
+ };
+ this.is_ended = function()
+ {
+ return actions_list.ended;
+ };
+ this.is_latency_set = function()
+ {
+ return actions_list.latency_set;
+ };
+ }
+ function results()
+ {
+ this.initial_msec = function()
+ {
+ return results_list.initial_msec;
+ };
+ this.final_msec = function()
+ {
+ return results_list.final_msec;
+ };
+ this.latency = function()
+ {
+ return results_list.latency;
+ };
+ }
+ this.actions = new actions();
+ this.results = new results();
+ }
+ function init()
+ {
+ self.benchmark = new benchmark();
+ self.status = new status();
+ }
+ var self = this,
+ actions_list = new actions_model(),
+ results_list = new results_model();
+ init();
+}
+function content_fetcher(content_id, language_code, success_cb, failure_cb, default_cb)
+{
+ var data = null,
+ ajax_config = null,
+ utils = new vulcan(),
+ ajax = new bull();
+ if (utils.validation.misc.is_undefined(content_id))
+ return false;
+ if (!utils.validation.alpha.is_string(content_id) ||
+ (!utils.validation.misc.is_nothing(language_code) &&
+ !utils.validation.alpha.is_string(language_code)))
+ return false;
+ if (!utils.validation.misc.is_function(success_cb) ||
+ !utils.validation.misc.is_function(failure_cb) ||
+ !utils.validation.misc.is_function(default_cb))
+ return false;
+ data = "gate=content&content_id=" + content_id;
+ if (!utils.validation.misc.is_nothing(language_code))
+ data += '&language_code=' + language_code;
+ ajax_config = {
+ "type" : "request",
+ "url" : "/",
+ "data" : data,
+ "method" : "post",
+ "ajax_mode" : "asynchronous",
+ "on_success" : function(response)
+ {
+ if (response !== 'undefined')
+ success_cb.call(this, response);
+ else
+ failure_cb.call(this, response);
+ default_cb.call(this);
+ }
+ };
+ ajax.run(ajax_config);
+ return true;
+}
+function heartbeat(user_config)
+{
+ var utils = new vulcan(),
+ timer = new stopwatch(),
+ ajax = new bull(),
+ config_parser = new jap(),
+ config_definition_model = { "arguments" : [
+ {
+ "key" : { "name" : "interval", "optional" : false },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "url", "optional" : true },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "service_name", "optional" : false },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "response_timeout", "optional" : false },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "on_success", "optional" : false },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "on_fail", "optional" : true },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "on_timeout", "optional" : true },
+ "value" : { "type" : "function" }
+ }
+ ]
+ },
+ ajax_config = {
+ "type" : "request",
+ "method" : "post",
+ "ajax_mode" : "asynchronous"
+ };
+ if (!config_parser.verify(config_definition_model, user_config))
+ return false;
+ if (!utils.validation.numerics.is_integer(user_config.interval) || user_config.interval < 1 ||
+ utils.validation.misc.is_nothing(user_config.service_name) ||
+ !utils.validation.numerics.is_integer(user_config.response_timeout) || user_config.response_timeout < 1)
+ return false;
+ function message(service, status, callback)
+ {
+ sensei(service, 'Status: <' + status + '>');
+ callback.call(this, service);
+ }
+ if (utils.validation.misc.is_undefined(user_config.url))
+ user_config.url = '';
+ ajax_config.url = user_config.url;
+ ajax_config.response_timeout = user_config.response_timeout;
+ ajax_config.on_success = function(service_name, callback)
+ {
+ return function()
+ {
+ message(service_name, 'SUCCESS', callback);
+ };
+ }(user_config.service_name, user_config.on_success);
+ if (!utils.validation.misc.is_invalid(user_config.on_fail))
+ {
+ ajax_config.on_fail = function(service_name, callback)
+ {
+ return function()
+ {
+ message(service_name, 'FAIL', callback);
+ };
+ }(user_config.service_name, user_config.on_fail);
+ }
+ if (!utils.validation.misc.is_invalid(user_config.on_timeout))
+ {
+ ajax_config.on_timeout = function(service_name, callback)
+ {
+ return function()
+ {
+ message(service_name, 'TIMEOUT', callback);
+ };
+ }(user_config.service_name, user_config.on_timeout);
+ }
+ timer.start(user_config.interval, function() { ajax.run(ajax_config); });
+ return true;
+}
+function jap()
+{
+ function has_unknown_keywords(definition_model)
+ {
+ if (!utils.validation.misc.is_object(definition_model))
+ return false;
+ var __index = null,
+ __attribute = null,
+ __option = null,
+ __property = null;
+ for (__index in definition_model)
+ {
+ __attribute = definition_model[__index];
+ if (!utils.validation.misc.is_object(__attribute))
+ {
+ if (!utils.misc.contains(__index, def_keywords))
+ return true;
+ continue;
+ }
+ if ((utils.validation.misc.is_object(__attribute) && Object.getOwnPropertyNames(__attribute).length === 0) ||
+ (utils.validation.misc.is_array(__attribute) && __attribute.length === 0))
+ return true;
+ for (__option in __attribute)
+ {
+ if (utils.validation.misc.is_object(__attribute[__option]))
+ {
+ for (__property in __attribute[__option])
+ {
+ if (utils.validation.numerics.is_number(__option))
+ continue;
+ if (!utils.misc.contains(__property, def_keywords))
+ return true;
+ if (has_unknown_keywords(__attribute[__option][__property]))
+ return true;
+ }
+ }
+ else
+ {
+ if (!utils.misc.contains(__option, def_keywords))
+ return true;
+ if (has_unknown_keywords(__attribute[__option]))
+ return true;
+ }
+ }
+ }
+ return false;
+ }
+ this.define = function(definition_model)
+ {
+ if (!utils.validation.misc.is_object(definition_model))
+ {
+ sensei('J.A.P', 'Invalid definition model!');
+ return false;
+ }
+ if (definition_model.length === 0)
+ {
+ sensei('J.A.P', 'The definition model is null!');
+ return false;
+ }
+ if (has_unknown_keywords(definition_model))
+ {
+ sensei('J.A.P', 'The definition model contains unknown keywords!');
+ return false;
+ }
+ var __this_key = null,
+ __this_value = null;
+ is_model_defined = false;
+ if (definition_model.hasOwnProperty('ignore_keys_num') && !utils.validation.misc.is_bool(definition_model.ignore_keys_num))
+ {
+ sensei('J.A.P', 'Missing or invalid "ignore_keys_num" attribute!');
+ return false;
+ }
+ if (!definition_model.hasOwnProperty('arguments') || !utils.validation.misc.is_object(definition_model.arguments))
+ {
+ sensei('J.A.P', 'Missing or invalid "arguments" attribute!');
+ return false;
+ }
+ def_model_args = definition_model.arguments;
+ for (counter = 0; counter < def_model_args.length; counter++)
+ {
+ if (!utils.validation.misc.is_object(def_model_args[counter]))
+ {
+ sensei('J.A.P', 'Invalid JSON object in "arguments" attribute!');
+ return false;
+ }
+ if (!def_model_args[counter].hasOwnProperty('key') || !def_model_args[counter].hasOwnProperty('value'))
+ {
+ sensei('J.A.P', 'Missing "key" or "value" mandatory attributes!');
+ return false;
+ }
+ __this_key = def_model_args[counter].key;
+ __this_value = def_model_args[counter].value;
+ if (!utils.validation.misc.is_object(__this_key) || !utils.validation.misc.is_object(__this_value))
+ {
+ sensei('J.A.P', 'A "key" or "value" attribute does not point to a JSON object!');
+ return false;
+ }
+ if (!__this_key.hasOwnProperty('name') || !__this_key.hasOwnProperty('optional'))
+ {
+ sensei('J.A.P', 'Missing "name" or "optional" mandatory properties!');
+ return false;
+ }
+ if (!utils.validation.alpha.is_string(__this_key.name) || !utils.validation.misc.is_bool(__this_key.optional))
+ {
+ sensei('J.A.P', 'Invalid specification for "name" or "optional" property!');
+ return false;
+ }
+ if (!__this_value.hasOwnProperty('type'))
+ {
+ sensei('J.A.P', 'Missing "type" mandatory property!');
+ return false;
+ }
+ if (!utils.validation.alpha.is_string(__this_value.type) || !utils.misc.contains(__this_value.type, all_value_types))
+ {
+ sensei('J.A.P', 'Invalid specification for "type" property!');
+ return false;
+ }
+ if (__this_value.hasOwnProperty('choices'))
+ {
+ if (!utils.misc.contains(__this_value.type, types_with_choices))
+ {
+ sensei('J.A.P', 'This type does not support the "choices" option!');
+ return false;
+ }
+ if (!utils.validation.misc.is_array(__this_value.choices) || __this_value.choices.length < 1)
+ {
+ sensei('J.A.P', 'The "choices" option has to be an array with at least\none element!');
+ return false;
+ }
+ }
+ if (__this_value.hasOwnProperty('length'))
+ {
+ if (utils.misc.contains(__this_value.type, uncountable_value_types))
+ {
+ sensei('J.A.P', 'This type does not support the "length" option!');
+ return false;
+ }
+ if (!utils.validation.numerics.is_integer(__this_value.length) || __this_value.length < 1)
+ {
+ sensei('J.A.P', 'The "length" option has to be a positive integer!');
+ return false;
+ }
+ }
+ if (__this_value.hasOwnProperty('regex'))
+ {
+ if (utils.misc.contains(__this_value.type, uncountable_value_types) || __this_value.type === 'array')
+ {
+ sensei('J.A.P', 'This type does not support the "regex" option!');
+ return false;
+ }
+ if (!utils.validation.misc.is_object(__this_value.regex) || __this_value.regex === '')
+ {
+ sensei('J.A.P', 'Invalid "regex" option!');
+ return false;
+ }
+ }
+ }
+ is_model_defined = true;
+ json_def_model = definition_model;
+ return true;
+ };
+ this.validate = function(config)
+ {
+ if (!is_model_defined)
+ {
+ sensei('J.A.P', 'No definition model was specified!');
+ return false;
+ }
+ if (!utils.validation.misc.is_object(config))
+ {
+ sensei('J.A.P', 'Invalid JSON object!');
+ return false;
+ }
+ var __json_key = null,
+ __this_key = null,
+ __this_value = null,
+ __is_multiple_keys_array = false,
+ __keys_exist = 0,
+ __mandatory_keys_not_found = 0,
+ __model_keywords = [];
+ def_model_args = json_def_model.arguments;
+ if (utils.validation.misc.is_array(config))
+ __is_multiple_keys_array = true;
+ for (counter = 0; counter < def_model_args.length; counter++)
+ {
+ for (__json_key in def_model_args[counter])
+ {
+ if (!utils.validation.misc.is_undefined(def_model_args[counter][__json_key].name))
+ __model_keywords.push(def_model_args[counter][__json_key].name);
+ }
+ }
+ for (__json_key in config)
+ {
+ if (__is_multiple_keys_array)
+ __mandatory_keys_not_found = 0;
+ for (counter = 0; counter < def_model_args.length; counter++)
+ {
+ __this_key = def_model_args[counter].key;
+ if (__is_multiple_keys_array)
+ {
+ for (__this_value in config[__json_key])
+ {
+ if (!utils.misc.contains(__this_value, __model_keywords))
+ {
+ sensei('J.A.P', 'Unknown keyword: "' + __this_value + '" in the configuration model!');
+ return false;
+ }
+ }
+ }
+ else
+ {
+ if (!utils.misc.contains(__json_key, __model_keywords))
+ {
+ sensei('J.A.P', 'Unknown keyword: "' + __json_key + '" in the configuration model!');
+ return false;
+ }
+ }
+ if (__this_key.optional === false)
+ {
+ if (__is_multiple_keys_array)
+ {
+ if (!config[__json_key].hasOwnProperty(__this_key.name))
+ __mandatory_keys_not_found++;
+ }
+ else
+ {
+ if (!config.hasOwnProperty(__this_key.name))
+ __mandatory_keys_not_found++;
+ }
+ }
+ }
+ if (__is_multiple_keys_array && __mandatory_keys_not_found > 0)
+ break;
+ __keys_exist++;
+ }
+ if ((!json_def_model.hasOwnProperty('ignore_keys_num') || json_def_model.ignore_keys_num === false) &&
+ __mandatory_keys_not_found > 0)
+ {
+ sensei('J.A.P', 'Mandatory properties are missing!');
+ return false;
+ }
+ if (__keys_exist === 0)
+ {
+ sensei('J.A.P', 'The JSON object is null!');
+ return false;
+ }
+ for (counter = 0; counter < def_model_args.length; counter++)
+ {
+ __this_key = def_model_args[counter].key;
+ __this_value = def_model_args[counter].value;
+ if (__this_value.type !== '*')
+ {
+ if (__this_value.type === 'null')
+ {
+ if (config[__this_key.name] !== null)
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" accepts only "null" values!');
+ return false;
+ }
+ }
+ else if (__this_value.type === 'number')
+ {
+ if (__is_multiple_keys_array)
+ {
+ for (__json_key in config)
+ {
+ if (utils.validation.misc.is_undefined(config[__json_key][__this_key.name]))
+ continue;
+ if (utils.validation.misc.is_nothing(config[__json_key][__this_key.name].toString().trim()) ||
+ !utils.validation.numerics.is_number(Number(config[__json_key][__this_key.name])))
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" accepts only "numeric" values!');
+ return false;
+ }
+ }
+ }
+ else
+ {
+ if (utils.validation.misc.is_undefined(config[__this_key.name]))
+ continue;
+ if (utils.validation.misc.is_nothing(config[__this_key.name].toString().trim()) ||
+ !utils.validation.numerics.is_number(Number(config[__this_key.name])))
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" accepts only "numeric" values!');
+ return false;
+ }
+ }
+ }
+ else if (__this_value.type === 'array')
+ {
+ if (!utils.validation.misc.is_array(config[__this_key.name]))
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" accepts only "array" values!');
+ return false;
+ }
+ }
+ else
+ {
+ if (__is_multiple_keys_array)
+ {
+ for (__json_key in config)
+ {
+ if (utils.validation.misc.is_undefined(config[__json_key][__this_key.name]))
+ continue;
+ if (typeof config[__json_key][__this_key.name] !== __this_value.type)
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" has a type mismatch!');
+ return false;
+ }
+ }
+ }
+ else
+ {
+ if (utils.validation.misc.is_undefined(config[__this_key.name]))
+ continue;
+ if (typeof config[__this_key.name] !== __this_value.type)
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" has a type mismatch!');
+ return false;
+ }
+ }
+ }
+ }
+ if (__this_value.hasOwnProperty('choices'))
+ {
+ if (__is_multiple_keys_array)
+ {
+ for (__json_key in config)
+ {
+ if (utils.validation.misc.is_undefined(config[__json_key][__this_key.name]))
+ continue;
+ if (!utils.misc.contains(config[__json_key][__this_key.name], __this_value.choices))
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" does not contain any\ndefined choices!');
+ return false;
+ }
+ }
+ }
+ else
+ {
+ if (utils.validation.misc.is_undefined(config[__this_key.name]))
+ continue;
+ if (!utils.misc.contains(config[__this_key.name], __this_value.choices))
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" does not contain any\ndefined choices!');
+ return false;
+ }
+ }
+ }
+ if (__this_value.hasOwnProperty('length'))
+ {
+ if (__this_value.type === 'array')
+ {
+ if (config[__this_key.name].length > __this_value.length)
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" has exceeded the defined length!');
+ return false;
+ }
+ }
+ else
+ {
+ if (config[__this_key.name].toString().length > __this_value.length)
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" has exceeded the defined length!');
+ return false;
+ }
+ }
+ }
+ if (__this_value.hasOwnProperty('regex'))
+ {
+ if (!utils.validation.utilities.reg_exp(__this_value.regex, config[__this_key.name]))
+ {
+ sensei('J.A.P', 'Argument: "' + __this_key.name + '" has not matched the specified regex!');
+ return false;
+ }
+ }
+ }
+ return true;
+ };
+ this.verify = function(definition_model, config)
+ {
+ if (self.define(definition_model))
+ return self.validate(config);
+ return false;
+ };
+ var self = this,
+ is_model_defined = false,
+ counter = 0,
+ json_def_model = null,
+ def_model_args = null,
+ def_keywords = ['ignore_keys_num', 'arguments', 'key', 'value', 'name', 'optional', 'type', 'choices', 'length', 'regex'],
+ all_value_types = ['number', 'string', 'boolean', 'array', 'object', 'function', 'null', '*'],
+ uncountable_value_types = ['boolean', 'object', 'function', 'null', '*'],
+ types_with_choices = ['number', 'string', 'array'],
+ utils = new vulcan();
+}
+function yoda()
+{
+ this.fetch = function(dynamic_contents, lang, label = null)
+ {
+ if (!utils.validation.misc.is_object(dynamic_contents) || utils.validation.misc.is_undefined(lang) ||
+ utils.validation.alpha.is_symbol(lang) || lang.length !== 2 ||
+ utils.validation.misc.is_undefined(label))
+ return false;
+ if (label !== null)
+ {
+ for (var this_record of dynamic_contents[lang])
+ {
+ if (this_record.hasOwnProperty(label))
+ return this_record[label];
+ }
+ }
+ return dynamic_contents[lang];
+ };
+ this.get = function(dynamic_contents, lang, label = null)
+ {
+ if (!is_init)
+ return false;
+ if (!utils.validation.misc.is_object(dynamic_contents) || utils.validation.misc.is_undefined(lang) ||
+ utils.validation.alpha.is_symbol(lang) || lang.length !== 2 ||
+ utils.validation.misc.is_undefined(label))
+ return false;
+ if (!available_langs.hasOwnProperty(lang))
+ return false;
+ if (label !== null)
+ {
+ for (var this_record of dynamic_contents[lang])
+ {
+ if (this_record.hasOwnProperty(label))
+ return this_record[label];
+ }
+ }
+ return dynamic_contents[lang];
+ };
+ this.set = function(dynamic_contents, lang, label)
+ {
+ if (!is_init)
+ return false;
+ if (!utils.validation.misc.is_object(dynamic_contents) || utils.validation.misc.is_undefined(lang) ||
+ utils.validation.alpha.is_symbol(lang) || lang.length !== 2 ||
+ utils.validation.misc.is_undefined(label))
+ return false;
+ if (!available_langs.hasOwnProperty(lang))
+ return false;
+ available_langs[lang].push(label);
+ return available_langs;
+ };
+ this.list = function(dynamic_contents, lang = null)
+ {
+ if (!is_init)
+ return false;
+ if (!utils.validation.misc.is_object(dynamic_contents))
+ return false;
+ if (lang !== null)
+ {
+ if (utils.validation.alpha.is_symbol(lang) || lang.length !== 2)
+ return false;
+ else
+ return dynamic_contents[lang];
+ }
+ return dynamic_contents;
+ };
+ this.reset = function(dynamic_contents)
+ {
+ if (!is_init)
+ return false;
+ if (!utils.validation.misc.is_object(dynamic_contents))
+ return false;
+ available_langs = {};
+ dynamic_contents = [];
+ return true;
+ };
+ this.init = function(languages_array)
+ {
+ if (is_init)
+ return false;
+ if (!utils.validation.misc.is_array(languages_array))
+ return false;
+ var this_lang = null;
+ for (this_lang of languages_array)
+ {
+ if (this_lang.length !== 2)
+ return false;
+ available_langs[this_lang] = [];
+ }
+ is_init = true;
+ return true;
+ };
+ var is_init = false,
+ available_langs = {},
+ utils = new vulcan();
+}
+function key_manager()
+{
+ var __keyboard_key = null;
+ function key_constants()
+ {
+ this.ESCAPE = 27;
+ this.ENTER = 13;
+ this.BACKSPACE = 8;
+ this.TAB = 9;
+ this.SHIFT = 16;
+ this.CONTROL = 17;
+ this.ALT = 18;
+ }
+ this.scan = function(key_event)
+ {
+ try
+ {
+ if (typeof key_event.keyCode === 'undefined')
+ __keyboard_key = key_event.button;
+ else
+ __keyboard_key = key_event.keyCode;
+ return true;
+ }
+ catch(e)
+ {
+ console.log(e);
+ return false;
+ }
+ };
+ this.get = function()
+ {
+ return __keyboard_key;
+ };
+ this.keys = new key_constants();
+}
+function msgbox()
+{
+ function general_helpers()
+ {
+ var self = this;
+ this.draw_screen = function(container_id)
+ {
+ var __button_object = null,
+ __container = utils.objects.by_id(container_id),
+ __html = null;
+ if (__container === false || utils.validation.misc.is_undefined(__container) || __container === null)
+ return false;
+ msgbox_object = utils.objects.by_id('msgbox');
+ if (msgbox_object !== null)
+ __container.removeChild(msgbox_object);
+ msgbox_object = document.createElement('div');
+ msgbox_object.id = 'msgbox';
+ msgbox_object.className = 'mb_screen';
+ var __win_title = msgbox_object.id + '_title',
+ __button_title = msgbox_object.id + '_button';
+ __html = '<div class="msg_window">' +
+ ' <div id="' + __win_title + '"></div>' +
+ ' <div id="' + msgbox_object.id + '_content"></div>' +
+ ' <div id="' + __button_title + '">Close</div>' +
+ '</div>';
+ msgbox_object.innerHTML = __html;
+ __container.appendChild(msgbox_object);
+ __button_object = utils.objects.by_id(__button_title);
+ utils.events.attach(__button_title, __button_object, 'click', self.hide_win);
+ return true;
+ };
+ this.show_win = function(title, message)
+ {
+ if (timer !== null)
+ clearTimeout(timer);
+ msgbox_object.childNodes[0].childNodes[1].innerHTML = title;
+ msgbox_object.childNodes[0].childNodes[3].innerHTML = message;
+ msgbox_object.style.visibility = 'visible';
+ msgbox_object.classList.remove('mb_fade_out');
+ msgbox_object.classList.add('mb_fade_in');
+ is_open = true;
+ };
+ this.hide_win = function()
+ {
+ if (timer !== null)
+ clearTimeout(timer);
+ msgbox_object.style.visibility = 'visible';
+ msgbox_object.classList.remove('mb_fade_in');
+ msgbox_object.classList.add('mb_fade_out');
+ timer = setTimeout(function() { msgbox_object.style.visibility = 'hidden'; }, 250);
+ is_open = false;
+ if (global_hide_callback !== null)
+ {
+ global_hide_callback.call(this);
+ global_hide_callback = null;
+ }
+ };
+ }
+ this.show = function(title, message, hide_callback)
+ {
+ if (!is_init || is_open ||
+ !utils.validation.alpha.is_string(title) ||
+ !utils.validation.alpha.is_string(message) ||
+ (!utils.validation.misc.is_invalid(hide_callback) &&
+ !utils.validation.misc.is_function(hide_callback)))
+ return false;
+ if (utils.validation.misc.is_function(hide_callback))
+ global_hide_callback = hide_callback;
+ helpers.show_win(title, message);
+ return true;
+ };
+ this.hide = function(callback)
+ {
+ if (!is_init || !is_open ||
+ (!utils.validation.misc.is_invalid(callback) &&
+ !utils.validation.misc.is_function(callback)))
+ return false;
+ if (utils.validation.misc.is_function(callback))
+ global_hide_callback = callback;
+ helpers.hide_win();
+ return true;
+ };
+ this.is_open = function()
+ {
+ if (!is_init)
+ return false;
+ return is_open;
+ };
+ this.init = function(container_id)
+ {
+ if (is_init)
+ return false;
+ if (utils.validation.misc.is_invalid(container_id) || !utils.validation.alpha.is_string(container_id))
+ return false;
+ utils.graphics.apply_theme('/framework/extensions/js/core/msgbox', 'msgbox');
+ if (!helpers.draw_screen(container_id))
+ return false;
+ is_init = true;
+ return true;
+ };
+ var is_init = false,
+ is_open = false,
+ msgbox_object = null,
+ global_hide_callback = null,
+ timer = null,
+ helpers = new general_helpers(),
+ utils = new vulcan();
+}
+function pythia()
+{
+ function loop(rnd_num)
+ {
+ var __results_length = results.length,
+ __index = 0;
+ if (__results_length === 0 || rnd_num >= results[__results_length - 1])
+ {
+ if (rnd_num === max_random_num)
+ return rnd_num;
+ else
+ {
+ if (rnd_num === results[__results_length - 1])
+ rnd_num++;
+ results.push(rnd_num);
+ return rnd_num;
+ }
+ }
+ for (__index = 0; __index < __results_length; __index++)
+ {
+ if (rnd_num === results[__index])
+ rnd_num++;
+ else
+ {
+ if (rnd_num < results[__index])
+ {
+ results.splice(__index, 0, rnd_num);
+ break;
+ }
+ }
+ }
+ return rnd_num;
+ }
+ this.generate = function()
+ {
+ var __this_rnd_num = Math.floor((Math.random() * max_random_num) + 1);
+ return loop(__this_rnd_num);
+ };
+ this.load = function(values_array)
+ {
+ if (!utils.validation.misc.is_array(values_array) || values_array.length === 0)
+ return false;
+ var __index = 0,
+ __values_length = values_array.length;
+ for (__index = 0; __index++; __index < __values_length)
+ {
+ if (!utils.validation.numerics.is_integer(values_array[__index]))
+ {
+ results = [];
+ return false;
+ }
+ results.push(values_array[__index]);
+ }
+ return true;
+ };
+ this.reset = function()
+ {
+ results = [];
+ return null;
+ };
+ var max_random_num = Number.MAX_SAFE_INTEGER,
+ results = [],
+ utils = new vulcan();
+}
+function sensei(title, message)
+{
+ var __index = 0,
+ __stars = '',
+ utils = new vulcan();
+ if ((!utils.validation.misc.is_invalid(title) && !utils.validation.alpha.is_string(title)) ||
+ (!utils.validation.misc.is_invalid(message) && !utils.validation.alpha.is_string(message)))
+ return false;
+ for (__index = 0; __index < title.length - 2; __index++)
+ __stars += '*';
+ console.log('-------------------------- ' + title + ' --------------------------');
+ console.log(message);
+ console.log('-------------------------- ' + __stars + ' --------------------------');
+ console.log('');
+ return true;
+}
+function stopwatch()
+{
+ function instance(interval, callback)
+ {
+ if (!is_on)
+ return;
+ clearTimeout(timer_handler);
+ callback.call(this, self);
+ if (is_one_shot)
+ {
+ is_on = false;
+ return;
+ }
+ delay += interval;
+ diff = (new Date().getTime() - init_time) - delay;
+ timer_handler = setTimeout(function() { instance(interval, callback); }, (interval - diff));
+ }
+ this.start = function(interval, callback, run_once)
+ {
+ if (is_on)
+ return false;
+ if (!utils.validation.numerics.is_integer(interval) || interval < 1 ||
+ !utils.validation.misc.is_function(callback) ||
+ (!utils.validation.misc.is_undefined(run_once) && !utils.validation.misc.is_bool(run_once)))
+ return false;
+ timer_handler = setTimeout(function() { instance(interval, callback); }, interval);
+ is_on = true;
+ is_one_shot = run_once;
+ return true;
+ };
+ this.stop = function()
+ {
+ if (!is_on)
+ return false;
+ clearTimeout(timer_handler);
+ is_on = false;
+ return true;
+ };
+ var self = this,
+ is_on = false,
+ is_one_shot = false,
+ init_time = new Date().getTime(),
+ delay = 0,
+ diff = 0,
+ timer_handler = null,
+ utils = new vulcan();
+}
+function vulcan()
+{
+ function validation()
+ {
+ function alpha()
+ {
+ var __self = this;
+ this.is_string = function(val)
+ {
+ if (typeof val !== 'string')
+ return false;
+ return true;
+ };
+ this.is_symbol = function(val)
+ {
+ if (!__self.is_string(val))
+ return false;
+ if (val.match(/[!$%^&*()+\-|~=`{}\[\]:";'<>?,\/]/))
+ return true;
+ return false;
+ };
+ this.is_blank = function(val)
+ {
+ if (!__self.is_string(val))
+ return false;
+ if (!val.trim())
+ return true;
+ return false;
+ };
+ }
+ function numerics()
+ {
+ var __self = this;
+ this.is_number = function(val)
+ {
+ if (self.validation.misc.is_array(val) && val.length === 0)
+ return false;
+ if (!isNaN(val - parseFloat(val)))
+ return true;
+ return false;
+ };
+ this.is_integer = function(val)
+ {
+ if (__self.is_number(val) && (val % 1 === 0) && !self.misc.contains('.', val.toString()))
+ return true;
+ return false;
+ };
+ this.is_float = function(val)
+ {
+ if (val === 0.0)
+ return true;
+ if (__self.is_number(val) && (val % 1 !== 0))
+ return true;
+ return false;
+ };
+ }
+ function misc()
+ {
+ var __self = this;
+ this.is_undefined = function(val)
+ {
+ if (val === undefined)
+ return true;
+ return false;
+ };
+ this.is_nothing = function(val)
+ {
+ if (val === null || val === '')
+ return true;
+ return false;
+ };
+ this.is_bool = function(val)
+ {
+ if (typeof val === 'boolean')
+ return true;
+ return false;
+ };
+ this.is_array = function(val)
+ {
+ if (Array.isArray(val))
+ return true;
+ return false;
+ };
+ this.is_function = function(val)
+ {
+ if (typeof val === 'function')
+ return true;
+ return false;
+ };
+ this.is_object = function(val)
+ {
+ if (typeof val === 'object')
+ return true;
+ return false;
+ };
+ this.is_invalid = function(val)
+ {
+ if (__self.is_undefined(val) || __self.is_nothing(val))
+ return true;
+ return false;
+ };
+ }
+ function utilities()
+ {
+ this.is_email = function(val)
+ {
+ var __pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+ return __pattern.test(String(val).toLowerCase());
+ };
+ this.is_phone = function(val)
+ {
+ var __pattern = /^\+?\d{2}[- ]?\d{3}[- ]?\d{5}$/;
+ return __pattern.test(String(val).toLowerCase());
+ };
+ this.reg_exp = function(pattern, expression)
+ {
+ return pattern.test(String(expression)).toLowerCase();
+ };
+ }
+ this.alpha = new alpha();
+ this.numerics = new numerics();
+ this.misc = new misc();
+ this.utilities = new utilities();
+ }
+ function events()
+ {
+ function controller()
+ {
+ var __controlling_list = [];
+ function caller_model()
+ {
+ this.caller_id = null;
+ this.object_events = [];
+ }
+ function object_events_model()
+ {
+ this.object = null;
+ this.events = [];
+ }
+ function final_event(caller_index, object_index, event_index, func)
+ {
+ var __result = __controlling_list[caller_index].object_events[object_index].events[event_index][func];
+ __controlling_list[caller_index].object_events[object_index].events.splice(event_index, 1);
+ return __result;
+ }
+ this.insert = function(caller_id, object, func, handler)
+ {
+ var __counter_i = 0,
+ __counter_j = 0,
+ __callers = __controlling_list.length,
+ __this_control_list = null,
+ __objects_num = 0,
+ __func_handler = [];
+ for (__counter_i = 0; __counter_i < __callers; __counter_i++)
+ {
+ __this_control_list = __controlling_list[__counter_i];
+ if (__this_control_list.caller_id === caller_id)
+ {
+ __objects_num = __this_control_list.object_events.length;
+ for (__counter_j = 0; __counter_j < __objects_num; __counter_j++)
+ {
+ if (__this_control_list.object_events[__counter_j].object === object)
+ {
+ __func_handler[func] = handler;
+ __this_control_list.object_events[__counter_j].events.push(__func_handler);
+ return true;
+ }
+ }
+ }
+ }
+ var __new_caller_model = new caller_model(),
+ __new_object_events_model = new object_events_model();
+ __func_handler[func] = handler;
+ __new_object_events_model.object = object;
+ __new_object_events_model.events.push(__func_handler);
+ __new_caller_model.caller_id = caller_id;
+ __new_caller_model.object_events.push(__new_object_events_model);
+ __controlling_list.push(__new_caller_model);
+ return true;
+ };
+ this.fetch = function(caller_id, object, func, handler)
+ {
+ var __counter_i = 0,
+ __counter_j = 0,
+ __counter_k = 0,
+ __callers = __controlling_list.length,
+ __objects_num = 0,
+ __control_list_i = null,
+ __control_list_j = null,
+ __control_list_k = null;
+ for (__counter_i = 0; __counter_i < __callers; __counter_i++)
+ {
+ __control_list_i = __controlling_list[__counter_i];
+ if (__control_list_i.caller_id === caller_id)
+ {
+ __objects_num = __control_list_i.object_events.length;
+ for (__counter_j = 0; __counter_j < __objects_num; __counter_j++)
+ {
+ __control_list_j = __control_list_i.object_events[__counter_j];
+ if (__control_list_j.object === object)
+ {
+ var __events = __control_list_j.events.length;
+ for (__counter_k = 0; __counter_k < __events; __counter_k++)
+ {
+ __control_list_k = __control_list_j.events[__counter_k];
+ if (self.validation.misc.is_invalid(handler))
+ {
+ if (self.validation.misc.is_undefined(__control_list_k[func]))
+ continue;
+ return final_event(__counter_i, __counter_j, __counter_k, func);
+ }
+ else
+ {
+ if (self.validation.misc.is_undefined(__control_list_k[func]))
+ continue;
+ if (!self.validation.misc.is_function(handler))
+ return false;
+ var __this_handler = __control_list_k[func];
+ if (__this_handler.toString() === handler.toString())
+ return final_event(__counter_i, __counter_j, __counter_k, func);
+ }
+ }
+ }
+ }
+ }
+ }
+ return false;
+ };
+ }
+ this.attach = function(caller_id, object, func, handler)
+ {
+ if (self.validation.alpha.is_symbol(caller_id) ||
+ self.validation.misc.is_invalid(object) || !self.validation.misc.is_object(object) ||
+ self.validation.alpha.is_symbol(func) || !self.validation.misc.is_function(handler))
+ return false;
+ if (object.tagName === 'SELECT' ||
+ self.validation.misc.is_undefined(object.length) ||
+ self.validation.misc.is_undefined(object.item)) // Single element
+ {
+ if (!__controller.insert(caller_id, object, func, handler))
+ return false;
+ object.addEventListener(func, handler, false);
+ }
+ else // Multiple elements
+ {
+ var __counter_i = 0,
+ __object_length = object.length;
+ for (__counter_i = 0; __counter_i < __object_length; __counter_i++)
+ {
+ if (!__controller.insert(caller_id, object[__counter_i], func, handler))
+ return false;
+ object[__counter_i].addEventListener(func, handler, false);
+ }
+ }
+ return true;
+ };
+ this.detach = function(caller_id, object, func, handler)
+ {
+ if (self.validation.alpha.is_symbol(caller_id) ||
+ self.validation.misc.is_invalid(object) || !self.validation.misc.is_object(object) ||
+ self.validation.alpha.is_symbol(func))
+ return false;
+ var __handler = null;
+ if (object.tagName === 'SELECT' ||
+ self.validation.misc.is_undefined(object.length) ||
+ self.validation.misc.is_undefined(object.item)) // Single element
+ {
+ __handler = __controller.fetch(caller_id, object, func, handler);
+ if (!__handler)
+ return false;
+ object.removeEventListener(func, __handler, false);
+ }
+ else // Multiple elements
+ {
+ var __counter_i = 0,
+ __object_length = object.length;
+ for (__counter_i = 0; __counter_i < __object_length; __counter_i++)
+ {
+ __handler = __controller.fetch(caller_id, object[__counter_i], func, handler);
+ if (!__handler)
+ return false;
+ object[__counter_i].removeEventListener(func, __handler, false);
+ }
+ }
+ return true;
+ };
+ var __controller = new controller();
+ }
+ function conversions()
+ {
+ this.object_to_array = function(conversion_mode, model)
+ {
+ return Object.keys(model).map(function(key)
+ {
+ if (conversion_mode === true)
+ return [key, model[key]];
+ else
+ return model[key];
+ });
+ };
+ this.replace_link = function(mode, text, attributes, url_info)
+ {
+ if (!self.validation.numerics.is_integer(mode) || mode < 0 || mode > 2 || !self.validation.alpha.is_string(text))
+ return false;
+ if (!self.validation.misc.is_undefined(attributes))
+ {
+ if (attributes !== null)
+ {
+ if (!self.validation.misc.is_object(attributes))
+ return false;
+ var __this_attribute = null,
+ __final_attributes = null,
+ __valid_attributes = ['id', 'class', 'style', 'title', 'dir', 'lang', 'accesskey', 'tabindex',
+ 'contenteditable', 'draggable', 'spellcheck', 'target', 'rel'];
+ for (__this_attribute in attributes)
+ {
+ if (!self.misc.contains(__this_attribute, __valid_attributes) && __this_attribute.indexOf('data-') !== 0)
+ return false;
+ __final_attributes += __this_attribute + '="' + attributes[__this_attribute] + '" ';
+ }
+ }
+ }
+ if (mode === 1)
+ {
+ var __match = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+ if (self.validation.misc.is_undefined(__final_attributes))
+ return text.replace(__match, "<a href='$1'>$1</a>");
+ else
+ return text.replace(__match, "<a " + __final_attributes + "href='$1'>$1</a>");
+ }
+ else if (mode === 2)
+ {
+ if (self.validation.misc.is_undefined(url_info) || !self.validation.misc.is_object(url_info))
+ return false;
+ var __counter_i = 0,
+ __url_info_length = url_info.length;
+ for (__counter_i = 0; __counter_i < __url_info_length; __counter_i++ )
+ {
+ if (!self.validation.misc.is_object(url_info[__counter_i]))
+ return false;
+ if (self.validation.misc.is_undefined(__final_attributes))
+ {
+ text = text.replace(url_info[__counter_i].expanded_url,
+ '<a href="' + url_info[__counter_i].expanded_url + '">' +
+ url_info[__counter_i].display_url + '</a>');
+ }
+ else
+ {
+ text = text.replace(url_info[__counter_i].expanded_url,
+ '<a ' + __final_attributes + 'href="' +
+ url_info[__counter_i].expanded_url + '">' +
+ url_info[__counter_i].display_url + '</a>');
+ }
+ }
+ return text;
+ }
+ else
+ return false;
+ };
+ }
+ function graphics()
+ {
+ this.pixels_value = function(pixels)
+ {
+ var __result = null;
+ __result = parseInt(pixels.substring(0, pixels.length - 2), 10);
+ if (!self.validation.numerics.is_integer(__result))
+ return false;
+ return __result;
+ };
+ this.apply_theme = function(directory, theme, clear_cache = true)
+ {
+ if (self.validation.misc.is_invalid(directory) || self.validation.alpha.is_symbol(theme) || !self.validation.misc.is_bool(clear_cache))
+ return false;
+ if (self.validation.misc.is_undefined(theme))
+ theme = 'default';
+ if (self.system.source_exists(theme, 'link', 'href'))
+ return false;
+ var __dynamic_object = null,
+ __cache_reset = '';
+ if (clear_cache)
+ __cache_reset = '?version=' + Date.now();
+ __dynamic_object = document.createElement('link');
+ __dynamic_object.setAttribute('rel', 'stylesheet');
+ __dynamic_object.setAttribute('type', 'text/css');
+ __dynamic_object.setAttribute('media', 'screen');
+ __dynamic_object.setAttribute('href', directory + '/' + theme + '.css' + __cache_reset);
+ self.objects.by_tag('head')[0].appendChild(__dynamic_object);
+ return true;
+ };
+ }
+ function misc()
+ {
+ var __self = this;
+ this.active_language = function()
+ {
+ return location.pathname.substring(1, 3);
+ };
+ this.contains = function(subject, list)
+ {
+ if (list.indexOf(subject) === -1)
+ return false;
+ return true;
+ };
+ this.sort = function(array, mode, by_property)
+ {
+ var __modes = ['asc', 'desc'],
+ __order = null,
+ __result = null;
+ if (!self.validation.misc.is_array(array) || !__self.contains(mode, __modes) ||
+ (!self.validation.misc.is_invalid(by_property) && !self.validation.alpha.is_string(by_property)))
+ return false;
+ if (mode === 'asc')
+ __order = 1;
+ else
+ __order = -1;
+ if (self.validation.misc.is_invalid(by_property))
+ __result = array.sort(function(a, b) { return __order * (a - b); });
+ else
+ __result = array.sort(function(a, b) { return __order * (a[by_property] - b[by_property]); });
+ return __result;
+ };
+ }
+ function objects()
+ {
+ this.by_tag = function(html_tag)
+ {
+ if (self.validation.misc.is_invalid(html_tag))
+ return false;
+ return document.getElementsByTagName(html_tag);
+ };
+ this.by_id = function(id)
+ {
+ if (self.validation.misc.is_invalid(id))
+ return false;
+ return document.getElementById(id);
+ };
+ this.by_class = function(class_name)
+ {
+ if (self.validation.misc.is_invalid(class_name))
+ return false;
+ return document.getElementsByClassName(class_name);
+ };
+ function selectors()
+ {
+ this.first = function(query)
+ {
+ if (self.validation.misc.is_invalid(query))
+ return false;
+ return document.querySelector(query);
+ };
+ this.all = function(query)
+ {
+ if (self.validation.misc.is_invalid(query))
+ return false;
+ return document.querySelectorAll(query);
+ };
+ }
+ this.selectors = new selectors();
+ }
+ function system()
+ {
+ var __self = this;
+ this.require = function(js_file_path, js_file_name, clear_cache = true)
+ {
+ if (self.validation.misc.is_invalid(js_file_path) ||
+ self.validation.misc.is_invalid(js_file_name) || self.validation.alpha.is_symbol(js_file_name) ||
+ !self.validation.misc.is_bool(clear_cache))
+ return false;
+ if (__self.source_exists(js_file_name, 'script', 'src'))
+ return false;
+ var __dynamic_object = null,
+ __cache_reset = '';
+ if (clear_cache)
+ __cache_reset = '?version=' + Date.now();
+ __dynamic_object = document.createElement('script');
+ __dynamic_object.setAttribute('src', js_file_path + '/' + js_file_name + '.js' + __cache_reset);
+ self.objects.by_tag('head')[0].appendChild(__dynamic_object);
+ return true;
+ };
+ this.source_exists = function(file_name, tag_type, attribute)
+ {
+ if (self.validation.misc.is_invalid(file_name) || self.validation.alpha.is_symbol(file_name) ||
+ self.validation.misc.is_invalid(tag_type) || self.validation.alpha.is_symbol(tag_type) ||
+ self.validation.misc.is_invalid(attribute) || self.validation.alpha.is_symbol(attribute))
+ return false;
+ var __counter_i = 0,
+ __sources = document.head.getElementsByTagName(tag_type);
+ for (__counter_i = 0; __counter_i < __sources.length; __counter_i++)
+ {
+ if (__sources[__counter_i].attributes[attribute].value.indexOf(file_name) > -1)
+ return true;
+ }
+ return false;
+ };
+ }
+ function init()
+ {
+ self.validation = new validation();
+ self.events = new events();
+ self.conversions = new conversions();
+ self.graphics = new graphics();
+ self.misc = new misc();
+ self.objects = new objects();
+ self.system = new system();
+ }
+ var self = this;
+ init();
+}
+function meta_os()
+{
+ function boot()
+ {
+ this.start = function()
+ {
+ return new boot_screen();
+ };
+ this.loader = function()
+ {
+ return new scenario();
+ };
+ this.environment = function()
+ {
+ return new linux_mode();
+ };
+ }
+ function system()
+ {
+ function io()
+ {
+ this.keyboard = function()
+ {
+ return new key_manager();
+ };
+ this.mouse = function()
+ {
+ return null;
+ };
+ this.screen = function()
+ {
+ return null;
+ };
+ }
+ function hypervisor()
+ {
+ this.console = function()
+ {
+ return new multiverse();
+ };
+ this.vm = function()
+ {
+ return new cosmos();
+ };
+ }
+ this.timers = function()
+ {
+ return new stopwatch();
+ };
+ this.io = new io();
+ this.hypervisor = new hypervisor();
+ }
+ function utilities()
+ {
+ this.general = function()
+ {
+ return new vulcan();
+ };
+ this.benchmark = function()
+ {
+ return new snail();
+ };
+ }
+ this.settings = function()
+ {
+ return new teletraan();
+ };
+ this.boot = new boot();
+ this.system = new system();
+ this.utilities = new utilities();
+}
+function taurus()
+{
+ function init_config()
+ {
+ config_definition_model = { "arguments" : [
+ {
+ "key" : { "name" : "type", "optional" : false },
+ "value" : {
+ "type" : "string",
+ "choices" : ["data", "request"]
+ }
+ },
+ {
+ "key" : { "name" : "url", "optional" : false },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "data", "optional" : true },
+ "value" : { "type" : "*" }
+ },
+ {
+ "key" : { "name" : "element_id", "optional" : true },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "method", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : ["get", "post"]
+ }
+ },
+ {
+ "key" : { "name" : "ajax_mode", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : ["asynchronous", "synchronous"]
+ }
+ },
+ {
+ "key" : { "name" : "content_fill_mode", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : ["replace", "append"]
+ }
+ },
+ {
+ "key" : { "name" : "response_timeout", "optional" : true },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "on_success", "optional" : true },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "on_fail", "optional" : true },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "on_timeout", "optional" : true },
+ "value" : { "type" : "function" }
+ }
+ ]
+ };
+ }
+ function ajax_core()
+ {
+ var __data_div_id = null,
+ __content_fill_mode = null,
+ __success_callback = null,
+ __timeout_callback = null,
+ __fail_callback = null,
+ __timer_handler = null,
+ __ajax_response = null,
+ __content_type = null,
+ __is_timeout = false;
+ function set_callbacks(success_callback, fail_callback, timeout_callback)
+ {
+ __success_callback = success_callback;
+ __fail_callback = fail_callback;
+ __timeout_callback = timeout_callback;
+ }
+ function run_bad_callbacks()
+ {
+ if (__is_timeout === true)
+ {
+ if (utils.validation.misc.is_function(__timeout_callback))
+ __timeout_callback.call(this);
+ else
+ {
+ if (utils.validation.misc.is_function(__fail_callback))
+ __fail_callback.call(this);
+ }
+ }
+ else
+ {
+ if (utils.validation.misc.is_function(__fail_callback))
+ __fail_callback.call(this);
+ }
+ }
+ function run_timer(response_timeout)
+ {
+ if (utils.validation.numerics.is_integer(response_timeout))
+ __timer_handler = setTimeout(function() { __is_timeout = true; }, response_timeout);
+ }
+ function stop_timer(timer_handler)
+ {
+ if (!utils.validation.misc.is_invalid(timer_handler))
+ clearTimeout(timer_handler);
+ }
+ this.data = function(url, data, element_id, content_fill_mode, success_callback, fail_callback, response_timeout, timeout_callback)
+ {
+ __data_div_id = element_id;
+ __content_fill_mode = content_fill_mode;
+ set_callbacks(success_callback, fail_callback, timeout_callback);
+ run_timer(response_timeout);
+ if (!utils.validation.misc.is_object(data))
+ __content_type = { 'Content-Type': 'application/x-www-form-urlencoded' };
+ else
+ __content_type = {};
+ fetch(url, {
+ method: 'POST',
+ mode: 'cors',
+ cache: 'no-cache',
+ credentials: 'same-origin',
+ headers: __content_type,
+ redirect: 'error',
+ referrerPolicy: 'no-referrer',
+ body: data
+ }).then((response) => {
+ stop_timer(__timer_handler);
+ if (response.ok)
+ {
+ var __container = utils.objects.by_id(__data_div_id);
+ if (utils.validation.misc.is_invalid(__container))
+ return false;
+ response.text().then((data) =>
+ {
+ if (__content_fill_mode === 'replace')
+ __container.innerHTML = data;
+ else
+ __container.innerHTML += data;
+ if (utils.validation.misc.is_function(__success_callback))
+ __success_callback.call(this, data);
+ });
+ }
+ else
+ run_bad_callbacks();
+ });
+ return null;
+ };
+ this.request = async function(url, data, method, success_callback, fail_callback, response_timeout, timeout_callback)
+ {
+ set_callbacks(success_callback, fail_callback, timeout_callback);
+ run_timer(response_timeout);
+ if (method === 'post' && !utils.validation.misc.is_object(data))
+ __content_type = { 'Content-Type': 'application/x-www-form-urlencoded' };
+ else
+ __content_type = {};
+ __ajax_response = await fetch(url, {
+ method: method.toUpperCase(),
+ mode: 'cors',
+ cache: 'no-cache',
+ credentials: 'same-origin',
+ headers: __content_type,
+ redirect: 'error',
+ referrerPolicy: 'no-referrer',
+ body: data
+ });
+ stop_timer(__timer_handler);
+ if (__ajax_response.ok)
+ {
+ __ajax_response.text().then((data) =>
+ {
+ if (utils.validation.misc.is_function(__success_callback))
+ __success_callback.call(this, data);
+ });
+ }
+ else
+ run_bad_callbacks();
+ return null;
+ };
+ }
+ this.run = function(user_config)
+ {
+ if (!config_parser.verify(config_definition_model, user_config))
+ return false;
+ if (utils.validation.misc.is_nothing(user_config.url) ||
+ !utils.validation.misc.is_invalid(user_config.response_timeout) &&
+ (!utils.validation.numerics.is_integer(user_config.response_timeout) ||
+ user_config.response_timeout < 1 || user_config.response_timeout > 60000))
+ return false;
+ if (utils.validation.misc.is_invalid(user_config.data))
+ user_config.data = null;
+ if (window.fetch)
+ {
+ if (user_config.type === 'data') // [AJAX Data] => Modes: Asynchronous / Methods: POST
+ {
+ if (utils.validation.misc.is_invalid(user_config.data) ||
+ !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) ||
+ !utils.objects.by_id(user_config.element_id) || utils.validation.misc.is_invalid(user_config.content_fill_mode))
+ return false;
+ return new ajax_core().data(user_config.url, user_config.data, user_config.element_id, user_config.content_fill_mode,
+ user_config.on_success, user_config.on_fail,
+ user_config.response_timeout, user_config.on_timeout);
+ }
+ else // [AJAX Request] => Modes: Asynchronous, Synchronous / Methods: GET, POST
+ {
+ if (user_config.ajax_mode === 'asynchronous') // Fetch => Asynchronous mode
+ {
+ if (utils.validation.misc.is_invalid(user_config.ajax_mode))
+ return false;
+ if (utils.validation.misc.is_invalid(user_config.method))
+ user_config.method = 'get';
+ else
+ user_config.method = user_config.method.toLowerCase();
+ return new ajax_core().request(user_config.url, user_config.data, user_config.method,
+ user_config.on_success, user_config.on_fail,
+ user_config.response_timeout, user_config.on_timeout);
+ }
+ else // BULL => Synchronous mode
+ return new bull().run(user_config);
+ }
+ }
+ else
+ return new bull().run(user_config);
+ };
+ var config_definition_model = null,
+ utils = new vulcan(),
+ config_parser = new jap();
+ init_config();
+}
+function aether()
+{
+ function sys_constants_class()
+ {
+ function settings_group()
+ {
+ function chain_mode_model()
+ {
+ this.SERIAL = 'serial';
+ this.PARALLEL = 'parallel';
+ this.DELAY = 'delay';
+ this.CALLBACK = 'callback';
+ }
+ this.chain_mode = new chain_mode_model();
+ }
+ function tasks_group()
+ {
+ function type_model()
+ {
+ this.DATA = 'data';
+ this.REQUEST = 'request';
+ }
+ function http_method_model()
+ {
+ this.GET = 'get';
+ this.POST = 'post';
+ }
+ function ajax_mode_model()
+ {
+ this.ASYNCHRONOUS = 'asynchronous';
+ this.SYNCHRONOUS = 'synchronous';
+ }
+ function content_fill_mode_model()
+ {
+ this.REPLACE = 'replace';
+ this.APPEND = 'append';
+ }
+ function repeat_model()
+ {
+ this.SERIAL = 'serial';
+ this.PARALLEL = 'parallel';
+ }
+ this.type = new type_model();
+ this.http_method = new http_method_model();
+ this.ajax_mode = new ajax_mode_model();
+ this.content_fill_mode = new content_fill_mode_model();
+ this.repeat = new repeat_model();
+ }
+ function misc_group()
+ {
+ this.IGNORE = -1;
+ this.MAX_PRIORITY = Number.MAX_SAFE_INTEGER;
+ this.MAX_LATENCY = 60000;
+ this.MAX_BANDWIDTH = 10737418240;
+ this.MAX_DELAY = 86400000;
+ }
+ this.settings = new settings_group();
+ this.tasks = new tasks_group();
+ this.misc = new misc_group();
+ }
+ function sys_models_class()
+ {
+ function settings_model()
+ {
+ this.chain_mode = null;
+ this.init_delay = -1;
+ this.interval = -1;
+ this.optional_task_callbacks = true;
+ this.scheduler_callback = null;
+ }
+ function task_model()
+ {
+ this.id = null;
+ this.type = null;
+ this.url = null;
+ this.data = null;
+ this.response_timeout = -1;
+ this.callbacks = null;
+ this.ajax_mode = null;
+ this.element_id = null;
+ this.content_fill_mode = null;
+ this.priority = -1;
+ this.qos = null;
+ this.repeat = null;
+ this.delay = -1;
+ this.canceled = false;
+ }
+ function tasks_list_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ this.generate_task = function()
+ {
+ return new task_model();
+ };
+ this.settings = new settings_model();
+ this.tasks = new tasks_list_model();
+ }
+ function config_keywords_class()
+ {
+ function main_group()
+ {
+ return ['settings', 'tasks'];
+ }
+ function settings_group()
+ {
+ return ['chain_mode', 'init_delay', 'interval', 'optional_task_callbacks', 'scheduler_callback'];
+ }
+ function tasks_group()
+ {
+ return ['type', 'url', 'data', 'response_timeout', 'callbacks', 'ajax_mode', 'element_id', 'content_fill_mode',
+ 'priority', 'qos', 'repeat', 'delay'];
+ }
+ function callbacks_group()
+ {
+ return ['success', 'fail', 'timeout'];
+ }
+ function qos_group()
+ {
+ return ['latency', 'bandwidth'];
+ }
+ function range_group()
+ {
+ return ['min', 'max'];
+ }
+ function repeat_group()
+ {
+ return ['times', 'mode'];
+ }
+ this.main = new main_group();
+ this.settings = new settings_group();
+ this.tasks = new tasks_group();
+ this.callbacks = new callbacks_group();
+ this.qos = new qos_group();
+ this.range = new range_group();
+ this.repeat = new repeat_group();
+ }
+ function sys_tools_class()
+ {
+ var __index = 0,
+ __entry = null;
+ function factory_model()
+ {
+ this.test_init = function()
+ {
+ if (is_init === false)
+ {
+ sensei('Aether', 'The scheduler is not running!');
+ return false;
+ }
+ return true;
+ };
+ this.check_task_id = function(func, task_id)
+ {
+ if (!utils.validation.misc.is_undefined(task_id))
+ {
+ if (utils.validation.numerics.is_number(task_id) && task_id > 0)
+ {
+ var __entry = null;
+ for (__entry in system_models.tasks.list)
+ {
+ if (system_models.tasks.list[__entry].id === task_id)
+ {
+ if (func === 'cancel')
+ {
+ system_models.tasks.list[__entry].canceled = true;
+ return true;
+ }
+ else
+ return system_models.tasks.list[__entry];
+ }
+ }
+ return false;
+ }
+ else
+ {
+ sensei('Aether', 'Invalid task ID!');
+ return false;
+ }
+ }
+ else
+ {
+ if (func === 'cancel')
+ {
+ is_init = false;
+ scheduler.stop();
+ repetitive_scheduler.stop();
+ return true;
+ }
+ else
+ return system_models.tasks.list;
+ }
+ };
+ this.config_verification = function(main_config)
+ {
+ var __factory_map = [];
+ __factory_map.push(['main', config_definition_models['main'], main_config]);
+ __factory_map.push(['settings', config_definition_models['settings'], main_config.settings]);
+ __factory_map.push(['tasks', config_definition_models['tasks'], main_config.tasks]);
+ for (__index = 0; __index < __factory_map.length; __index++)
+ {
+ if (!config_parser.verify(__factory_map[__index][1], __factory_map[__index][2]))
+ return false;
+ if (__index === 2)
+ {
+ var __record = 0,
+ __option = 0,
+ __object_options = ['callbacks', 'qos', 'latency', 'bandwidth', 'repeat'],
+ __object_exceptions = ['latency', 'bandwidth'],
+ __task_option_config = null;
+ for (__record = 0; __record < __factory_map[__index][2].length; __record++)
+ {
+ for (__entry in __factory_map[__index][2][__record])
+ {
+ for (__option in __object_options)
+ {
+ if (!utils.validation.misc.is_undefined(main_config.tasks[__record]['qos']) &&
+ utils.misc.contains(__object_options[__option], __object_exceptions))
+ {
+ __task_option_config = main_config.tasks[__record]['qos'][__object_options[__option]];
+ if (utils.validation.misc.is_undefined(__task_option_config))
+ continue;
+ }
+ else
+ {
+ if (utils.validation.misc.is_undefined(main_config.tasks[__record][__object_options[__option]]))
+ continue;
+ __task_option_config = main_config.tasks[__record][__object_options[__option]];
+ }
+ __factory_map.push([__object_options[__option],
+ config_definition_models[__object_options[__option]],
+ __task_option_config]);
+ if (!config_parser.verify(__factory_map[3][1], __factory_map[3][2]))
+ return false;
+ __factory_map.pop();
+ }
+ }
+ }
+ }
+ }
+ __factory_map = [];
+ return true;
+ };
+ this.range_validator = function(range_values, check)
+ {
+ if ((range_values[0] === system_constants.misc.IGNORE && range_values[1] === system_constants.misc.IGNORE) ||
+ (range_values[0] !== system_constants.misc.IGNORE && range_values[0] < 1) ||
+ (range_values[1] !== system_constants.misc.IGNORE && (range_values[1] > system_constants.misc[check] || range_values[1] <= range_values[0])))
+ {
+ system_tools.reset();
+ sensei('Aether', 'Range validation error!');
+ return false;
+ }
+ return true;
+ };
+ this.ajax_task_set = function(task)
+ {
+ var __this_task = task.args,
+ __task_type = task.type,
+ __task_repeat = task.repeat,
+ __task_qos = task.qos,
+ __task_latency = null,
+ __task_bandwidth = null,
+ __index = 0,
+ __ajax_config = {
+ "type" : __task_type,
+ "url" : __this_task.url,
+ "data" : __this_task.data,
+ "response_timeout" : __this_task.response_timeout
+ },
+ __ajax = new bull();
+ function ajax_call()
+ {
+ if (__task_type === 'data')
+ {
+ __ajax_config.element_id = __this_task.element_id;
+ __ajax_config.content_fill_mode = __this_task.content_fill_mode;
+ __ajax_config.on_success = __this_task.success_callback;
+ __ajax_config.on_fail = __this_task.fail_callback;
+ __ajax_config.on_timeout = __this_task.timeout_callback;
+ }
+ else
+ {
+ __ajax_config.method = __this_task.method;
+ __ajax_config.ajax_mode = __this_task.ajax_mode;
+ __ajax_config.on_success = __this_task.success_callback;
+ __ajax_config.on_fail = __this_task.fail_callback;
+ __ajax_config.on_timeout = __this_task.timeout_callback;
+ }
+ __ajax.run(__ajax_config);
+ }
+ function ajax_prepare_delegate()
+ {
+ if (!utils.validation.misc.is_invalid(__task_repeat))
+ {
+ if (__task_repeat.mode === system_constants.tasks.repeat.SERIAL)
+ {
+ if (__task_repeat.times === -1)
+ setInterval(function() { ajax_call(); }, __this_task.response_timeout);
+ else
+ {
+ for (__index = 0; __index < (__task_repeat.times + 1); __index++)
+ setTimeout(function() { ajax_call(); }, __this_task.response_timeout);
+ }
+ }
+ else
+ {
+ if (__task_repeat.times === -1)
+ setInterval(function() { ajax_call(); }, 1);
+ else
+ {
+ for (__index = 0; __index < (__task_repeat.times + 1); __index++)
+ ajax_call();
+ }
+ }
+ }
+ else
+ ajax_call();
+ }
+ if (task.canceled)
+ return;
+ if (!utils.validation.misc.is_invalid(__task_qos))
+ {
+ __task_latency = __task_qos.latency;
+ __task_bandwidth = __task_qos.bandwidth;
+ if (!utils.validation.misc.is_invalid(__task_bandwidth))
+ {
+ var __ajax_bandwidth = 0;
+ if (!utils.validation.misc.is_nothing(__this_task.data))
+ __ajax_bandwidth = __this_task.data.length;
+ else
+ __ajax_bandwidth = __task_bandwidth.min;
+ if ((__task_bandwidth.min !== system_constants.misc.IGNORE && __ajax_bandwidth < __task_bandwidth.min) ||
+ (__task_bandwidth.max !== system_constants.misc.IGNORE && __ajax_bandwidth > __task_bandwidth.max))
+ {
+ sensei('Aether', 'Task ID: ' + task.id + '\nOff-range bandwidth: ' + __ajax_bandwidth + ' bytes');
+ return;
+ }
+ }
+ if (!utils.validation.misc.is_invalid(__task_latency))
+ {
+ var __qos_ajax_config = {
+ "type" : "request",
+ "url" : __this_task.url,
+ "data" : __this_task.data,
+ "method" : __this_task.method,
+ "ajax_mode" : "asynchronous"
+ },
+ __ping_tester = new centurion();
+ __qos_ajax_config.on_success = function()
+ {
+ __ping_tester.benchmark.end();
+ var __ajax_latency = __ping_tester.benchmark.latency();
+ if (((__task_latency.min !== system_constants.misc.IGNORE && __ajax_latency >= __task_latency.min) &&
+ (__task_latency.max !== system_constants.misc.IGNORE && __ajax_latency <= __task_latency.max)) ||
+ (__task_latency.max === system_constants.misc.IGNORE && __ajax_latency >= __task_latency.min) ||
+ (__task_latency.min === system_constants.misc.IGNORE && __ajax_latency <= __task_latency.max))
+ ajax_prepare_delegate();
+ else
+ {
+ sensei('Aether', 'Task ID: ' + task.id + '\nOff-range latency: ' + __ajax_latency + ' ms');
+ return;
+ }
+ };
+ __ping_tester.benchmark.start();
+ __ajax.run(__qos_ajax_config);
+ }
+ else
+ ajax_prepare_delegate();
+ }
+ else
+ ajax_prepare_delegate();
+ };
+ }
+ this.init_config_definition_models = function()
+ {
+ config_definition_models['main'] = { "arguments" : [
+ {
+ "key" : { "name" : "settings", "optional" : false },
+ "value" : { "type" : "object" }
+ },
+ {
+ "key" : { "name" : "tasks", "optional" : false },
+ "value" : { "type" : "array" }
+ }
+ ]
+ };
+ config_definition_models['settings'] = { "arguments" : [
+ {
+ "key" : { "name" : "chain_mode", "optional" : false },
+ "value" : {
+ "type" : "string",
+ "choices" : [
+ system_constants.settings.chain_mode.SERIAL,
+ system_constants.settings.chain_mode.PARALLEL,
+ system_constants.settings.chain_mode.DELAY,
+ system_constants.settings.chain_mode.CALLBACK
+ ]
+ }
+ },
+ {
+ "key" : { "name" : "init_delay", "optional" : true },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "interval", "optional" : true },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "optional_task_callbacks", "optional" : true },
+ "value" : { "type" : "boolean" }
+ },
+ {
+ "key" : { "name" : "scheduler_callback", "optional" : true },
+ "value" : { "type" : "function" }
+ }
+ ]
+ };
+ config_definition_models['tasks'] = { "arguments" : [
+ {
+ "key" : { "name" : "type", "optional" : false },
+ "value" : {
+ "type" : "string",
+ "choices" : [
+ system_constants.tasks.type.DATA,
+ system_constants.tasks.type.REQUEST
+ ]
+ }
+ },
+ {
+ "key" : { "name" : "url", "optional" : false },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "data", "optional" : true },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "callbacks", "optional" : false },
+ "value" : { "type" : "object" }
+ },
+ {
+ "key" : { "name" : "response_timeout", "optional" : false },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "method", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : [
+ system_constants.tasks.http_method.GET,
+ system_constants.tasks.http_method.POST
+ ]
+ }
+ },
+ {
+ "key" : { "name" : "ajax_mode", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : [
+ system_constants.tasks.ajax_mode.ASYNCHRONOUS,
+ system_constants.tasks.ajax_mode.SYNCHRONOUS
+ ]
+ }
+ },
+ {
+ "key" : { "name" : "element_id", "optional" : true },
+ "value" : { "type" : "string" }
+ },
+ {
+ "key" : { "name" : "content_fill_mode", "optional" : true },
+ "value" : {
+ "type" : "string",
+ "choices" : [
+ system_constants.tasks.content_fill_mode.REPLACE,
+ system_constants.tasks.content_fill_mode.APPEND
+ ]
+ }
+ },
+ {
+ "key" : { "name" : "priority", "optional" : true },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "qos", "optional" : true },
+ "value" : { "type" : "object" }
+ },
+ {
+ "key" : { "name" : "repeat", "optional" : true },
+ "value" : { "type" : "object" }
+ },
+ {
+ "key" : { "name" : "delay", "optional" : true },
+ "value" : { "type" : "number" }
+ }
+ ]
+ };
+ config_definition_models['callbacks'] = { "arguments" : [
+ {
+ "key" : { "name" : "success", "optional" : false },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "fail", "optional" : true },
+ "value" : { "type" : "function" }
+ },
+ {
+ "key" : { "name" : "timeout", "optional" : true },
+ "value" : { "type" : "function" }
+ }
+ ]
+ };
+ config_definition_models['qos'] = { "arguments" : [
+ {
+ "key" : { "name" : "latency", "optional" : true },
+ "value" : { "type" : "object" }
+ },
+ {
+ "key" : { "name" : "bandwidth", "optional" : true },
+ "value" : { "type" : "object" }
+ }
+ ]
+ };
+ config_definition_models['latency'] = { "arguments" : [
+ {
+ "key" : { "name" : "min", "optional" : false },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "max", "optional" : false },
+ "value" : { "type" : "number" }
+ }
+ ]
+ };
+ config_definition_models['bandwidth'] = { "arguments" : [
+ {
+ "key" : { "name" : "min", "optional" : false },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "max", "optional" : false },
+ "value" : { "type" : "number" }
+ }
+ ]
+ };
+ config_definition_models['repeat'] = { "arguments" : [
+ {
+ "key" : { "name" : "times", "optional" : false },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "mode", "optional" : false },
+ "value" : {
+ "type" : "string",
+ "choices" : [
+ system_constants.tasks.repeat.SERIAL,
+ system_constants.tasks.repeat.PARALLEL
+ ]
+ }
+ }
+ ]
+ };
+ };
+ this.verify_config = function(main_config)
+ {
+ if (!utils.validation.misc.is_object(main_config)||
+ !main_config.hasOwnProperty('settings') || !main_config.hasOwnProperty('tasks') ||
+ !utils.validation.misc.is_object(main_config.settings) || !utils.validation.misc.is_object(main_config.tasks))
+ {
+ sensei('Aether', 'Invalid configuration!');
+ return false;
+ }
+ return system_tools.factory.config_verification(main_config);
+ };
+ this.load_settings = function(settings_config)
+ {
+ var __options_map = system_config_keywords.settings;
+ for (__entry in __options_map)
+ {
+ if (settings_config.hasOwnProperty(__options_map[__entry]))
+ {
+ if (__options_map[__entry] === 'init_delay' || __options_map[__entry] === 'interval')
+ {
+ if (settings_config[__options_map[__entry]] < 1 ||
+ settings_config[__options_map[__entry]] > system_constants.misc.MAX_DELAY)
+ {
+ __options_map = [];
+ sensei('Aether', 'Invalid range for "' + __options_map[__entry] + '" option!');
+ return false;
+ }
+ }
+ system_models.settings[__options_map[__entry]] = settings_config[__options_map[__entry]];
+ }
+ }
+ if (settings_config.chain_mode === system_constants.settings.chain_mode.SERIAL)
+ is_serial_chain_mode = true;
+ if (settings_config.chain_mode === system_constants.settings.chain_mode.DELAY)
+ is_delay_chain_mode = true;
+ is_optional_task_callbacks = settings_config.optional_task_callbacks;
+ __options_map = [];
+ return true;
+ };
+ this.load_tasks = function(tasks_config)
+ {
+ var __this_config_task = null,
+ __new_task = null,
+ __option = null,
+ __tasks_response_timeout_sum = 0,
+ __tasks_delay_sum = 0,
+ __same_priorities_num = 0,
+ __is_async_warning_set = false,
+ __task_id_gen = new pythia(),
+ __task_priority_gen = new pythia();
+ for (__index = 0; __index < tasks_config.length; __index++)
+ {
+ __this_config_task = tasks_config[__index];
+ __new_task = system_models.generate_task();
+ __new_task.id = __task_id_gen.generate();
+ __new_task.type = __this_config_task.type;
+ if (__this_config_task.type === system_constants.tasks.type.DATA)
+ {
+ if (!__this_config_task.hasOwnProperty('data') ||
+ !__this_config_task.hasOwnProperty('element_id') || !__this_config_task.hasOwnProperty('content_fill_mode') ||
+ __this_config_task.hasOwnProperty('method')|| __this_config_task.hasOwnProperty('ajax_mode'))
+ {
+ system_tools.reset();
+ sensei('Aether', 'Task type: "data" requires fields: "data", "element_id" and\n"content_fill_mode" to operate!');
+ return false;
+ }
+ }
+ else
+ {
+ if (!__this_config_task.hasOwnProperty('method') || !__this_config_task.hasOwnProperty('ajax_mode') ||
+ __this_config_task.hasOwnProperty('element_id') || __this_config_task.hasOwnProperty('content_fill_mode'))
+ {
+ system_tools.reset();
+ sensei('Aether', 'Task type: "request" requires fields: "method" and\n"ajax_mode" to operate!');
+ return false;
+ }
+ }
+ if (utils.validation.misc.is_nothing(__this_config_task.url))
+ {
+ system_tools.reset();
+ sensei('Aether', 'Field: "url" can\'t be empty!');
+ return false;
+ }
+ __new_task.url = __this_config_task.url;
+ if (!__this_config_task.hasOwnProperty('data'))
+ __new_task.data = '1';
+ else
+ {
+ if (!utils.validation.misc.is_nothing(__this_config_task.data))
+ __new_task.data = __this_config_task.data;
+ else
+ __new_task.data = '1';
+ }
+ if (__this_config_task.response_timeout < 1 || __this_config_task.response_timeout > system_constants.misc.MAX_DELAY)
+ {
+ system_tools.reset();
+ sensei('Aether', 'Invalid range for "response_timeout" option!');
+ return false;
+ }
+ __new_task.response_timeout = __this_config_task.response_timeout;
+ __tasks_response_timeout_sum += __new_task.response_timeout;
+ var __callbacks_found = 0;
+ for (__option in tasks_config[__index].callbacks)
+ __callbacks_found++;
+ if (!is_optional_task_callbacks && __callbacks_found < system_config_keywords.callbacks.length)
+ {
+ system_tools.reset();
+ sensei('Aether', 'When "optional_task_callbacks" is set to false all task\ncallbacks have to be present!');
+ return false;
+ }
+ __new_task.callbacks = __this_config_task.callbacks;
+ if (__this_config_task.hasOwnProperty('method'))
+ __new_task.method = __this_config_task.method;
+ if (__this_config_task.hasOwnProperty('ajax_mode'))
+ {
+ __new_task.ajax_mode = __this_config_task.ajax_mode;
+ if (__this_config_task.ajax_mode === system_constants.tasks.ajax_mode.SYNCHRONOUS)
+ {
+ if (!__is_async_warning_set)
+ {
+ __is_async_warning_set = true;
+ sensei('Aether', 'Warning: Use of synchronous AJAX causes unexpected\nscheduling in various cases!');
+ }
+ }
+ }
+ if (__this_config_task.hasOwnProperty('element_id'))
+ {
+ if (!utils.objects.by_id(__this_config_task.element_id))
+ {
+ system_tools.reset();
+ sensei('Aether', 'Field: "element_id" does not point to an existing element!');
+ return false;
+ }
+ __new_task.element_id = __this_config_task.element_id;
+ }
+ if (__this_config_task.hasOwnProperty('content_fill_mode'))
+ __new_task.content_fill_mode = __this_config_task.content_fill_mode;
+ if (__this_config_task.hasOwnProperty('priority'))
+ {
+ if (__this_config_task.priority < 1 || __this_config_task.priority > system_constants.misc.MAX_PRIORITY)
+ {
+ system_tools.reset();
+ sensei('Aether', 'Unsupported value for "priority" option!');
+ return false;
+ }
+ __new_task.priority = __this_config_task.priority;
+ }
+ else
+ __new_task.priority = __task_priority_gen.generate();
+ if (__this_config_task.hasOwnProperty('qos'))
+ {
+ var __qos = __this_config_task.qos,
+ __range_values = [],
+ __check = null;
+ for (__option in __qos)
+ {
+ if (utils.misc.contains(__option, system_config_keywords.qos))
+ {
+ __range_values = [__qos[__option].min, __qos[__option].max];
+ if (__option === 'latency')
+ __check = 'MAX_LATENCY';
+ else
+ __check = 'MAX_BANDWIDTH';
+ if (!system_tools.factory.range_validator(__range_values, __check))
+ {
+ system_tools.reset();
+ sensei('Aether', 'Invalid range for "' + __option + '" option!');
+ return false;
+ }
+ }
+ }
+ __new_task.qos = __qos;
+ }
+ if (__this_config_task.hasOwnProperty('repeat'))
+ {
+ for (__entry in __this_config_task.repeat)
+ {
+ if (__entry === 'times' && __this_config_task.repeat[__entry] < 1 &&
+ __this_config_task.repeat[__entry] !== system_constants.misc.IGNORE)
+ {
+ system_tools.reset();
+ sensei('Aether', 'Unsupported value for "' + __entry + '" option!');
+ return false;
+ }
+ }
+ __new_task.repeat = __this_config_task.repeat;
+ }
+ if (is_delay_chain_mode && !__this_config_task.hasOwnProperty('delay'))
+ {
+ system_tools.reset();
+ sensei('Aether', 'When "chain_mode" is set to delay all tasks must have the\n"delay" option!');
+ return false;
+ }
+ if (__this_config_task.hasOwnProperty('delay'))
+ {
+ if (is_serial_chain_mode || __this_config_task.delay < 1 || __this_config_task.delay > system_constants.misc.MAX_DELAY)
+ {
+ system_tools.reset();
+ if (is_serial_chain_mode)
+ sensei('Aether', 'Invalid use of the "delay" option when "chain_mode"\nis set to serial!');
+ else
+ sensei('Aether', 'Invalid range for "delay" option!');
+ return false;
+ }
+ __new_task.delay = __this_config_task.delay;
+ __tasks_delay_sum += __new_task.delay;
+ }
+ system_models.tasks.num++;
+ system_models.tasks.list.push(__new_task);
+ }
+ if (!utils.misc.sort(system_models.tasks.list, 'asc', 'priority'))
+ {
+ system_tools.reset();
+ sensei('Aether', 'Unable to sort tasks!');
+ return false;
+ }
+ if (system_models.settings.interval !== -1 &&
+ ((system_models.settings.chain_mode === system_constants.settings.chain_mode.DELAY ||
+ system_models.settings.chain_mode === system_constants.settings.chain_mode.CALLBACK) &&
+ __tasks_delay_sum > system_models.settings.interval))
+ {
+ sensei('Aether', 'Warning: Scheduler loop interval is lower than the sum\nof delay in tasks. ' +
+ 'This may lead to strange\nbehaviour due to the asynchronous nature of AJAX!');
+ }
+ if (system_models.settings.interval !== -1 &&
+ ((system_models.settings.chain_mode === system_constants.settings.chain_mode.SERIAL ||
+ system_models.settings.chain_mode === system_constants.settings.chain_mode.CALLBACK) &&
+ __tasks_response_timeout_sum > system_models.settings.interval))
+ {
+ sensei('Aether', 'Warning: Scheduler loop interval is lower than the sum\nof response time outs in tasks. ' +
+ 'This may lead to strange\nbehaviour due to the asynchronous nature of AJAX!');
+ }
+ for (__index = 0; __index < system_models.tasks.num - 1; __index++)
+ {
+ if (system_models.tasks.list[__index].priority === system_models.tasks.list[__index + 1].priority)
+ __same_priorities_num++;
+ }
+ if (__same_priorities_num > 0)
+ {
+ sensei('Aether', 'Warning: One or more AJAX tasks have the same priority.\n' +
+ 'Please consider providing distinct priorities for\nbetter scheduling!');
+ }
+ return true;
+ };
+ this.process_tasks = function(process_callback)
+ {
+ var __index = 0,
+ __this_task = null,
+ __all_tasks = system_models.tasks.list,
+ __modes_list = system_constants.settings.chain_mode,
+ __task_config_map = null,
+ __scheduled_tasks_list = [];
+ function go(mode, scheduled_tasks_list)
+ {
+ function scheduler_callback_action()
+ {
+ if (system_models.settings.scheduler_callback !== null)
+ system_models.settings.scheduler_callback.call(this);
+ }
+ function repeater_delegate(mode, index)
+ {
+ var __task_entry = null,
+ __task_delay = null;
+ if (mode === __modes_list.SERIAL || mode === __modes_list.DELAY || mode === __modes_list.CALLBACK)
+ {
+ if (index < __all_tasks.length - 1)
+ index++;
+ else
+ {
+ if ((mode === __modes_list.SERIAL || mode === __modes_list.CALLBACK) && index === __all_tasks.length - 1)
+ scheduler_callback_action();
+ return;
+ }
+ }
+ __task_entry = scheduled_tasks_list[index][0];
+ __task_delay = scheduled_tasks_list[index][1];
+ if (mode === __modes_list.CALLBACK)
+ {
+ var __old_success_callback = __task_entry.args.success_callback,
+ __new_success_callback = function()
+ {
+ __old_success_callback.call(this);
+ repeater_delegate(mode, index);
+ };
+ __task_entry.args.success_callback = __new_success_callback;
+ }
+ if (__task_delay === -1)
+ {
+ system_tools.factory.ajax_task_set(__task_entry);
+ if (mode === __modes_list.SERIAL || mode === __modes_list.DELAY)
+ repeater_delegate(mode, index);
+ }
+ else
+ {
+ setTimeout(function()
+ {
+ system_tools.factory.ajax_task_set(__task_entry);
+ if (mode === __modes_list.DELAY)
+ {
+ repeater_delegate(mode, index);
+ if (index === __all_tasks.length - 1)
+ setTimeout(scheduler_callback_action, __task_delay);
+ }
+ }, __task_delay);
+ }
+ }
+ function repeater(mode)
+ {
+ if (mode === __modes_list.SERIAL || mode === __modes_list.DELAY || mode === __modes_list.CALLBACK)
+ repeater_delegate(mode, -1);
+ else
+ {
+ for (__index = 0; __index < scheduled_tasks_list.length; __index++)
+ repeater_delegate(mode, __index);
+ scheduler_callback_action();
+ }
+ if (utils.validation.misc.is_function(process_callback))
+ process_callback.call(this);
+ }
+ repeater(mode);
+ }
+ for (__index in __all_tasks)
+ {
+ __this_task = __all_tasks[__index];
+ __task_config_map = {
+ "id" : __this_task.id,
+ "type" : __this_task.type,
+ "priority" : __this_task.priority,
+ "args" : {
+ "url" : __this_task.url,
+ "data" : __this_task.data,
+ "success_callback" : __this_task.callbacks.success,
+ "fail_callback" : __this_task.callbacks.fail,
+ "response_timeout" : __this_task.response_timeout,
+ "timeout_callback" : __this_task.callbacks.timeout
+ },
+ "repeat" : __this_task.repeat,
+ "qos" : __this_task.qos,
+ "canceled" : __this_task.canceled
+ };
+ if (__this_task.type === system_constants.tasks.type.DATA)
+ {
+ __task_config_map.args.element_id = __this_task.element_id;
+ __task_config_map.args.content_fill_mode = __this_task.content_fill_mode;
+ }
+ else
+ __task_config_map.args.ajax_mode = __this_task.ajax_mode;
+ __scheduled_tasks_list.push([__task_config_map, __this_task.delay]);
+ }
+ go(system_models.settings.chain_mode, __scheduled_tasks_list);
+ };
+ this.run = function()
+ {
+ function do_tasks()
+ {
+ if (system_models.settings.interval === -1)
+ system_tools.process_tasks();
+ else
+ {
+ system_tools.process_tasks(function()
+ {
+ repetitive_scheduler.start(system_models.settings.interval,
+ system_tools.process_tasks, false);
+ });
+ }
+ }
+ if (system_models.settings.init_delay === -1)
+ do_tasks();
+ else
+ scheduler.start(system_models.settings.init_delay, do_tasks, true);
+ return true;
+ };
+ this.reset = function()
+ {
+ is_init = false;
+ config_definition_models = [];
+ system_models = new sys_models_class();
+ };
+ this.factory = new factory_model();
+ }
+ function init()
+ {
+ system_tools.init_config_definition_models();
+ }
+ this.schedule = function(json_config)
+ {
+ if (is_init === true ||
+ !system_tools.verify_config(json_config) ||
+ !system_tools.load_settings(json_config.settings) ||
+ !system_tools.load_tasks(json_config.tasks) ||
+ !system_tools.run())
+ return false;
+ is_init = true;
+ config_definition_models = [];
+ return true;
+ };
+ this.cancel = function(task_id)
+ {
+ if (!system_tools.factory.test_init())
+ return false;
+ return system_tools.factory.check_task_id('cancel', task_id);
+ };
+ this.status = function(task_id)
+ {
+ if (!system_tools.factory.test_init())
+ return false;
+ return system_tools.factory.check_task_id('status', task_id);
+ };
+ this.constants = function()
+ {
+ return system_constants;
+ };
+ var is_init = false,
+ is_serial_chain_mode = false,
+ is_delay_chain_mode = false,
+ is_optional_task_callbacks = false,
+ config_definition_models = [],
+ system_constants = new sys_constants_class(),
+ system_models = new sys_models_class(),
+ system_config_keywords = new config_keywords_class(),
+ system_tools = new sys_tools_class(),
+ config_parser = new jap(),
+ scheduler = new stopwatch(),
+ repetitive_scheduler = new stopwatch(),
+ utils = new vulcan();
+ init();
+}
+function armadillo()
+{
+ function data_repo_model()
+ {
+ this.db_container = []; // DB container
+ this.selected_db = null; // Selected DB
+ this.selected_record = null; // Selected record
+ }
+ function helpers_model()
+ {
+ this.init_storage = function()
+ {
+ var __container = localStorage.getItem('armadillo');
+ if (!__container)
+ localStorage.setItem('armadillo', JSON.stringify([]));
+ data_repo.db_container = JSON.parse(__container);
+ if (self.log_enabled)
+ sensei('Armadillo', 'Storage has been initialized!');
+ return null;
+ };
+ this.empty_storage = function()
+ {
+ data_repo.db_container = [];
+ data_repo.selected_db = null;
+ data_repo.selected_record = null;
+ localStorage.clear();
+ if (self.log_enabled)
+ sensei('Armadillo', 'Storage is now empty!');
+ return null;
+ };
+ this.db_name_exists = function(name, db_array)
+ {
+ var __this_name = null;
+ for (__this_name in db_array)
+ {
+ if (__this_name == name)
+ return true;
+ }
+ return false;
+ };
+ this.duplicates_exist = function(mode, attribute)
+ {
+ if (mode === 'db')
+ {
+ if (helpers.db_name_exists(attribute, data_repo.db_container))
+ {
+ if (self.log_enabled)
+ sensei('Armadillo', 'A DB with the same name exists!');
+ return true;
+ }
+ }
+ else if (mode === 'record')
+ {
+ return helpers.super_iterator([attribute], function()
+ {
+ if (self.log_enabled)
+ sensei('Armadillo', 'A record with the same ID exists!');
+ return true;
+ });
+ }
+ return false;
+ };
+ this.generate_record_uid = function()
+ {
+ var __uid = rnd_gen.generate();
+ if (helpers.duplicates_exist('record', __uid))
+ {
+ var __index = 0,
+ __this_db = data_repo.db_container[data_repo.selected_db],
+ __records_length = __this_db.length;
+ __existing_id_array = [];
+ for (__index = 0; __index < __records_length; __index++)
+ __existing_id_array.push(__this_db[__index].id);
+ rnd_gen.load(__existing_id_array);
+ __uid = rnd_gen.generate();
+ }
+ return __uid;
+ };
+ this.db_exists = function(db_name)
+ {
+ if (!utils.validation.alpha.is_string(db_name))
+ return false;
+ if (helpers.db_name_exists(db_name, data_repo.db_container))
+ return true;
+ if (self.log_enabled)
+ sensei('Armadillo', 'DB does not exist!');
+ return false;
+ };
+ this.super_iterator = function(values, exec_code)
+ {
+ var __index = 0,
+ __this_db = data_repo.db_container[data_repo.selected_db],
+ __records_length = __this_db.length;
+ for (__index = 0; __index < __records_length; __index++)
+ {
+ if (__this_db[__index].id == values[0])
+ return exec_code.call(this, [__index, __this_db, values[1]]);
+ }
+ return false;
+ };
+ }
+ function db_context()
+ {
+ this.set = function(db_name)
+ {
+ if (helpers.db_exists(db_name))
+ return false;
+ data_repo.db_container[db_name] = [];
+ data_repo.selected_db = db_name;
+ data_repo.selected_record = null;
+ localStorage.setItem('armadillo', JSON.stringify(data_repo.db_container));
+ return true;
+ };
+ this.get = function(db_name)
+ {
+ if (!utils.validation.misc.is_invalid(db_name) && !helpers.db_exists(db_name))
+ return false;
+ data_repo.selected_record = null;
+ if (utils.validation.misc.is_invalid(db_name))
+ {
+ if (data_repo.selected_db === null)
+ return false;
+ return data_repo.db_container[data_repo.selected_db];
+ }
+ else
+ return data_repo.db_container[db_name];
+ };
+ this.remove = function(db_name)
+ {
+ if (!helpers.db_exists(db_name))
+ return false;
+ var __db_name = null,
+ __new_db_container = null;
+ for (__db_name in data_repo.db_container)
+ {
+ if (__db_name != db_name)
+ __new_db_container[__db_name] = data_repo.db_container[db_name];
+ }
+ data_repo.db_container = __new_db_container;
+ data_repo.selected_db = null;
+ data_repo.selected_record = null;
+ localStorage.setItem('armadillo', JSON.stringify(data_repo.db_container));
+ return true;
+ };
+ this.use = function(db_name)
+ {
+ if (!helpers.db_exists(db_name))
+ return false;
+ data_repo.selected_db = db_name;
+ data_repo.selected_record = null;
+ return true;
+ };
+ }
+ function records_context()
+ {
+ this.insert = function(record)
+ {
+ if (data_repo.selected_db === null || !utils.validation.misc.is_object(record) || record.hasOwnProperty('id'))
+ return false;
+ record.id = helpers.generate_record_uid();
+ data_repo.db_container[data_repo.selected_db].push(record);
+ data_repo.selected_record = record;
+ localStorage.setItem('armadillo', JSON.stringify(data_repo.db_container));
+ return true;
+ };
+ this.select = function(record_id)
+ {
+ if (data_repo.selected_db === null || !utils.validation.numerics.is_number(record_id))
+ return false;
+ return helpers.super_iterator([record_id], function(env)
+ {
+ data_repo.selected_record = env[1][env[0]];
+ return data_repo.selected_record;
+ });
+ };
+ this.fetch = function()
+ {
+ if (data_repo.selected_db === null)
+ return false;
+ data_repo.selected_record = null;
+ return data_repo.db_container[data_repo.selected_db];
+ };
+ this.save = function(record)
+ {
+ if (data_repo.selected_db === null ||
+ !utils.validation.misc.is_object(record) || !record.hasOwnProperty('id') ||
+ !helpers.duplicates_exist('record', record.id))
+ return false;
+ return helpers.super_iterator([record.id, record], function(env)
+ {
+ env[1][env[0]] = env[2];
+ data_repo.db_container[data_repo.selected_db] = env[1];
+ data_repo.selected_record = env[1][env[0]];
+ localStorage.setItem('armadillo', JSON.stringify(data_repo.db_container));
+ return true;
+ });
+ };
+ this.delete = function(record_id)
+ {
+ if (data_repo.selected_db === null || !utils.validation.numerics.is_number(record_id))
+ return false;
+ return helpers.super_iterator([record_id], function(env)
+ {
+ env[1].splice(env[0], 1);
+ data_repo.selected_record = null;
+ localStorage.setItem('armadillo', JSON.stringify(data_repo.db_container));
+ return true;
+ });
+ };
+ this.clear = function()
+ {
+ if (data_repo.selected_db === null)
+ return false;
+ data_repo.db_container[data_repo.selected_db] = [];
+ data_repo.selected_record = null;
+ localStorage.setItem('armadillo', JSON.stringify(data_repo.db_container));
+ return true;
+ };
+ }
+ this.reset = function()
+ {
+ helpers.empty_storage();
+ return null;
+ };
+ function init()
+ {
+ if (typeof(Storage) === 'undefined')
+ return false;
+ helpers.init_storage();
+ return true;
+ }
+ this.db = new db_context();
+ this.records = new records_context();
+ this.log_enabled = false;
+ var self = this,
+ data_repo = new data_repo_model(),
+ helpers = new helpers_model(),
+ utils = new vulcan(),
+ rnd_gen = new pythia();
+ init();
+}
+function fx()
+{
+ function element_validator(name, mode)
+ {
+ var __element = null;
+ if (utils.validation.alpha.is_symbol(name) || !utils.validation.numerics.is_number(mode) || mode < 1 || mode > 4)
+ return false;
+ if (mode === 1)
+ __element = utils.objects.by_id(name);
+ else if (mode === 2)
+ __element = utils.objects.by_class(name)[0];
+ else if (mode === 3)
+ __element = utils.objects.selectors.parent(name);
+ else
+ {
+ if (utils.validation.misc.is_object(name))
+ __element = name;
+ }
+ if (__element === null)
+ return false;
+ return __element;
+ }
+ function fade()
+ {
+ var __id = null,
+ __step = 0.0,
+ __speed = 0,
+ __delay = 0;
+ this.into = function(id, step, speed, delay, callback)
+ {
+ var __inc = 0,
+ __interval_id = 0,
+ __time_out = 0;
+ if (utils.validation.misc.is_undefined(id) ||
+ utils.validation.misc.is_undefined(step) ||
+ utils.validation.misc.is_undefined(speed) ||
+ utils.validation.misc.is_undefined(delay))
+ return false;
+ if (utils.validation.alpha.is_symbol(id) ||
+ (!utils.validation.numerics.is_float(step) || step < 0.0 || step > 1.0) ||
+ (!utils.validation.numerics.is_integer(speed) || speed < 0) ||
+ (!utils.validation.numerics.is_integer(delay) || delay < 0))
+ return false;
+ __id = id;
+ __step = step;
+ __speed = speed;
+ __delay = delay;
+ function do_fade()
+ {
+ var __element = element_validator(id, 1);
+ if (__inc === 0)
+ {
+ if (__element !== false)
+ __element.style.display = 'block';
+ self.opacity.apply(id, 0.0);
+ }
+ if (__inc <= 1)
+ {
+ __inc += step;
+ self.opacity.apply(id, __inc);
+ }
+ else
+ {
+ clearInterval(__interval_id);
+ clearTimeout(__time_out);
+ self.opacity.reset(id);
+ if (utils.validation.misc.is_function(callback))
+ callback.call();
+ }
+ return true;
+ }
+ function start_interval()
+ {
+ __interval_id = setInterval(function() { do_fade(); }, speed);
+ return true;
+ }
+ function fire_timeout()
+ {
+ return setTimeout(function() { start_interval(); }, delay);
+ }
+ __time_out = fire_timeout();
+ return true;
+ };
+ this.out = function(id, step, speed, delay, callback)
+ {
+ var __dec = 1,
+ __interval_id = 0,
+ __time_out = 0;
+ if (utils.validation.misc.is_undefined(id) ||
+ utils.validation.misc.is_undefined(step) ||
+ utils.validation.misc.is_undefined(speed) ||
+ utils.validation.misc.is_undefined(delay))
+ return false;
+ if (utils.validation.alpha.is_symbol(id) ||
+ (!utils.validation.numerics.is_float(step) || step < 0.0 || step > 1.0) ||
+ (!utils.validation.numerics.is_integer(speed) || speed < 0) ||
+ (!utils.validation.numerics.is_integer(delay) || delay < 0))
+ return false;
+ __id = id;
+ __step = step;
+ __speed = speed;
+ __delay = delay;
+ function do_fade()
+ {
+ var __element = element_validator(id, 1);
+ if (__dec === 1)
+ self.opacity.reset(id);
+ if (__dec >= 0)
+ {
+ __dec -= step;
+ if (__element !== false)
+ self.opacity.apply(id, __dec);
+ }
+ else
+ {
+ clearInterval(__interval_id);
+ clearTimeout(__time_out);
+ if (__element !== false)
+ {
+ __element.style.display = 'none';
+ self.opacity.apply(id, 0.0);
+ }
+ if (utils.validation.misc.is_function(callback))
+ callback.call();
+ }
+ return true;
+ }
+ function start_interval()
+ {
+ __interval_id = setInterval(function() { do_fade(); }, speed);
+ return true;
+ }
+ function fire_timeout()
+ {
+ return setTimeout(function() { start_interval(); }, delay);
+ }
+ __time_out = fire_timeout();
+ return true;
+ };
+ this.reset = function()
+ {
+ __id = null;
+ __step = 0.0;
+ __speed = 0;
+ __delay = 0;
+ return true;
+ };
+ this.get = function(type)
+ {
+ if (type === 'id')
+ return __id;
+ else if (type === 'step')
+ return __step;
+ else if (type === 'speed')
+ return __speed;
+ else if (type === 'delay')
+ return __delay;
+ else
+ return false;
+ };
+ }
+ function opacity()
+ {
+ var __element = null,
+ __opacity = 1.0;
+ this.apply = function(id, val)
+ {
+ if (utils.validation.alpha.is_symbol(id) || !utils.validation.numerics.is_float(val) || val < 0.0 || val > 1.0)
+ return false;
+ __element = element_validator(id, 1);
+ if (__element === false)
+ return false;
+ __element.style.opacity = val;
+ __opacity = val;
+ return true;
+ };
+ this.reset = function(id)
+ {
+ if (utils.validation.alpha.is_symbol(id))
+ return false;
+ __element = element_validator(id, 1);
+ if (__element === false)
+ return false;
+ __element.style.opacity = 1.0;
+ __opacity = 1.0;
+ return true;
+ };
+ this.get = function()
+ {
+ return __opacity;
+ };
+ }
+ function animation()
+ {
+ this.swipe = function(id, mode, direction, distance, offset, speed, step, callback)
+ {
+ var __element = element_validator(id, mode),
+ __distance = 0,
+ __last_step = 0,
+ __interval_id = null,
+ __interval_utility = new interval_model();
+ if (__element === false)
+ return false;
+ if (!utils.validation.alpha.is_string(direction) ||
+ !utils.validation.numerics.is_integer(distance) ||
+ !utils.validation.numerics.is_integer(offset) ||
+ !utils.validation.numerics.is_integer(speed) ||
+ !utils.validation.numerics.is_integer(step))
+ return false;
+ if (!utils.validation.misc.is_undefined(callback) && !utils.validation.misc.is_function(callback))
+ return false;
+ if (step >= distance)
+ return false;
+ function interval_model()
+ {
+ this.run = function(func, speed)
+ {
+ __interval_id = setInterval(function() { func.call(); }, speed);
+ return true;
+ };
+ this.stop = function(interval_handler)
+ {
+ clearInterval(interval_handler);
+ return true;
+ };
+ }
+ function reverse_parameters()
+ {
+ distance = -distance;
+ step = -step;
+ offset = -offset;
+ return true;
+ }
+ function dynamic_logic(distance, direction, mode)
+ {
+ if (direction === 'up' || direction === 'left')
+ {
+ if (mode === 1)
+ {
+ if (__distance <= (distance + offset))
+ return true;
+ return false;
+ }
+ else if (mode === 2)
+ {
+ if (__distance < (distance + offset))
+ return true;
+ return false;
+ }
+ else
+ return null;
+ }
+ else if (direction === 'down' || direction === 'right')
+ {
+ if (mode === 1)
+ {
+ if (__distance >= (distance + offset))
+ return true;
+ return false;
+ }
+ else if (mode === 2)
+ {
+ if (__distance > (distance + offset))
+ return true;
+ return false;
+ }
+ else
+ return null;
+ }
+ return null;
+ }
+ function do_swipe(direction)
+ {
+ if (direction === 'up' || direction === 'down' || direction === 'left' || direction === 'right')
+ {
+ var __pos = null,
+ __pos_val = 0;
+ if (direction === 'up' || direction === 'down')
+ {
+ __pos = 'top';
+ __pos_val = utils.graphics.pixels_value(__element.style.top);
+ }
+ else
+ {
+ __pos = 'left';
+ __pos_val = utils.graphics.pixels_value(__element.style.left);
+ }
+ if (direction === 'up' || direction === 'left')
+ reverse_parameters();
+ __interval_utility.run(function()
+ {
+ __distance = __distance + step;
+ if (dynamic_logic(distance, direction, 1))
+ {
+ if (dynamic_logic(distance, direction, 2))
+ {
+ __last_step = distance - (__distance - step);
+ __element.style[__pos] = __pos_val + offset + (__distance - step) + __last_step + 'px';
+ }
+ else
+ __element.style[__pos] = __pos_val + __distance + offset + 'px';
+ __interval_utility.stop(__interval_id);
+ if (!utils.validation.misc.is_undefined(callback))
+ callback.call();
+ }
+ else
+ __element.style[__pos] = __pos_val + __distance + 'px';
+ }, speed);
+ return true;
+ }
+ else
+ return false;
+ }
+ return do_swipe(direction);
+ };
+ this.roll = function(id, mode, direction, distance, offset, speed, step, callback)
+ {
+ var __element = element_validator(id, mode),
+ __distance = 0,
+ __last_step = 0,
+ __interval_id = null,
+ __interval_utility = new interval_model();
+ if (__element === false)
+ return false;
+ if (!utils.validation.alpha.is_string(direction) ||
+ !utils.validation.numerics.is_integer(distance) ||
+ !utils.validation.numerics.is_integer(offset) ||
+ !utils.validation.numerics.is_integer(speed) ||
+ !utils.validation.numerics.is_integer(step))
+ return false;
+ if (!utils.validation.misc.is_undefined(callback) && !utils.validation.misc.is_function(callback))
+ return false;
+ if (step >= distance)
+ return false;
+ function interval_model()
+ {
+ this.run = function(func, speed)
+ {
+ __interval_id = setInterval(function() { func.call(); }, speed);
+ return true;
+ };
+ this.stop = function(interval_handler)
+ {
+ clearInterval(interval_handler);
+ return true;
+ };
+ }
+ function reverse_parameters()
+ {
+ distance = -distance;
+ step = -step;
+ return true;
+ }
+ function dynamic_logic(distance, direction, mode)
+ {
+ if (direction === 'up' || direction === 'left')
+ {
+ if (mode === 1)
+ {
+ if (__distance <= distance)
+ return true;
+ return false;
+ }
+ else if (mode === 2)
+ {
+ if (__distance < distance)
+ return true;
+ return false;
+ }
+ else
+ return null;
+ }
+ else if (direction === 'down' || direction === 'right')
+ {
+ if (mode === 1)
+ {
+ if (__distance >= distance)
+ return true;
+ return false;
+ }
+ else if (mode === 2)
+ {
+ if (__distance > distance)
+ return true;
+ return false;
+ }
+ else
+ return null;
+ }
+ return null;
+ }
+ function execute_callback()
+ {
+ __interval_utility.stop(__interval_id);
+ if (!utils.validation.misc.is_undefined(callback))
+ callback.call();
+ return null;
+ }
+ function do_roll(direction)
+ {
+ if (direction === 'up' || direction === 'down' || direction === 'left' || direction === 'right')
+ {
+ var __dimension = null,
+ __pos = null,
+ __dimension_val = 0,
+ __pos_val = 0;
+ if (direction === 'up' || direction === 'down')
+ {
+ __dimension = 'height';
+ __pos = 'top';
+ __dimension_val = utils.graphics.pixels_value(__element.style.height);
+ __pos_val = utils.graphics.pixels_value(__element.style.top);
+ if (direction === 'down')
+ {
+ __element.style[__pos] = __pos_val + __dimension_val + offset + 'px';
+ __element.style[__dimension] = '0px';
+ }
+ }
+ else
+ {
+ __dimension = 'width';
+ __pos = 'left';
+ __dimension_val = utils.graphics.pixels_value(__element.style.width);
+ __pos_val = utils.graphics.pixels_value(__element.style.left);
+ if (direction === 'right')
+ {
+ __element.style[__pos] = __pos_val + __dimension_val + offset + 2 + 'px';
+ __element.style[__dimension] = '0px';
+ }
+ }
+ if (direction === 'up' || direction === 'left')
+ {
+ __distance = distance;
+ reverse_parameters();
+ }
+ __interval_utility.run(function()
+ {
+ __distance = __distance + step;
+ if (__distance <= 0)
+ {
+ __element.style[__pos] = __pos_val + 'px';
+ __element.style[__dimension] = __dimension_val + 'px';
+ execute_callback();
+ }
+ else
+ {
+ if (dynamic_logic(distance, direction, 1))
+ {
+ if (dynamic_logic(distance, direction, 2))
+ {
+ __last_step = distance - (__distance - step);
+ __element.style[__dimension] = Math.abs((__distance - step) + __last_step) + 'px';
+ }
+ else
+ __element.style[__dimension] = Math.abs(__distance) + 'px';
+ execute_callback();
+ }
+ else
+ __element.style[__dimension] = Math.abs(__distance) + 'px';
+ }
+ }, speed);
+ return true;
+ }
+ else
+ return false;
+ }
+ return do_roll(direction);
+ };
+ this.slider = function(options)
+ {
+ if (!utils.validation.alpha.is_string(options.name) ||
+ !utils.validation.numerics.is_integer(options.mode) ||
+ !utils.validation.numerics.is_integer(options.step) ||
+ !utils.validation.numerics.is_integer(options.speed) ||
+ !utils.validation.misc.is_object(options.previous) ||
+ !utils.validation.alpha.is_string(options.previous.name) ||
+ !utils.validation.numerics.is_integer(options.previous.mode) ||
+ !utils.validation.misc.is_object(options.next) ||
+ !utils.validation.alpha.is_string(options.next.name) ||
+ !utils.validation.numerics.is_integer(options.next.mode))
+ return false;
+ var __slider = element_validator(options.name, options.mode),
+ __next = element_validator(options.next.name, options.next.mode),
+ __previous = element_validator(options.previous.name, options.previous.mode),
+ __first_child = __slider.firstChild,
+ __last_child = __slider.lastChild,
+ __slider_elements_count = __slider.childElementCount,
+ __slider_wrapper = document.createElement('div'),
+ __pos = null,
+ __width = null,
+ __height = null;
+ if (!utils.validation.misc.is_undefined(options.circular) && !utils.validation.misc.is_bool(options.circular))
+ return false;
+ else
+ options.circular = false;
+ if (!utils.validation.misc.is_undefined(options.width))
+ {
+ if (!utils.validation.numerics.is_integer(options.width))
+ return false;
+ __width = options.width;
+ }
+ else
+ __width = __slider.offsetWidth;
+ if (!utils.validation.misc.is_undefined(options.height))
+ {
+ if (!utils.validation.numerics.is_integer(options.height))
+ return false;
+ __height = options.height;
+ }
+ else
+ __height = __slider.offsetHeight;
+ if (!utils.validation.misc.is_undefined(options.previous.callback) &&
+ !utils.validation.misc.is_function(options.previous.callback))
+ return false;
+ if (!utils.validation.misc.is_undefined(options.next.callback) &&
+ !utils.validation.misc.is_function(options.next.callback))
+ return false;
+ __slider_wrapper.className = 'slider_wrapper';
+ __slider_wrapper.style.left = 'auto';
+ __slider_wrapper.style.right = 'auto';
+ __slider_wrapper.style.top = 'auto';
+ __slider_wrapper.style.bottom = 'auto';
+ __slider_wrapper.style.width = __width + 'px';
+ __slider_wrapper.style.height = __height + 'px';
+ __slider_wrapper.style.cssFloat = 'left';
+ __slider_wrapper.style.overflow = 'hidden';
+ __slider_wrapper.style.position = 'relative';
+ __slider_wrapper.style.textAlign = 'start';
+ __slider.style.top = '0px';
+ __slider.style.left = '0px';
+ __slider.style.right = 'auto';
+ __slider.style.bottom = 'auto';
+ __slider.style.width = (__width * __slider_elements_count) + 'px';
+ __slider.style.height = __height + 'px';
+ __slider.style.textAlign = 'left';
+ __slider.style.cssFloat = 'left';
+ __slider.style.margin = '0px';
+ __slider.style.position = 'absolute';
+ __slider.parentNode.insertBefore(__slider_wrapper, __slider);
+ __slider_wrapper.appendChild(__slider);
+ for (var i = 0; i < __slider_elements_count; i++)
+ __slider.children[i].style.cssFloat = 'left';
+ utils.events.attach(options.name, __previous, 'click',
+ function()
+ {
+ var __last_element = __slider.children[__slider_elements_count - 1],
+ __first_element = __slider.children[0];
+ if (!options.circular && (__first_element === __first_child))
+ return true;
+ __slider.removeChild(__slider.children[__slider_elements_count - 1]);
+ __slider.insertBefore(__last_element, __slider.children[0]);
+ __slider.style.left = '-' + __width + 'px';
+ var __interval_id = setInterval(function()
+ {
+ __pos = utils.graphics.pixels_value(__slider.style.left);
+ if (__pos < -options.step)
+ __slider.style.left = __pos + options.step + 'px';
+ else
+ {
+ if (__pos === 0)
+ {
+ clearInterval(__interval_id);
+ if (!utils.validation.misc.is_undefined(options.previous.callback))
+ options.previous.callback.call();
+ }
+ else
+ __slider.style.left = '0px';
+ }
+ }, options.speed);
+ });
+ utils.events.attach(options.name, __next, 'click',
+ function()
+ {
+ var __first_element = __slider.children[0],
+ __negative_width = -__width;
+ if (!options.circular && (__first_element === __last_child))
+ return true;
+ __slider.style.left = '0px';
+ var __interval_id = setInterval(function()
+ {
+ var __pos = utils.graphics.pixels_value(__slider.style.left);
+ if (__negative_width + options.step < __pos)
+ __slider.style.left = __pos - options.step + 'px';
+ else
+ {
+ if (__pos === __negative_width)
+ {
+ __slider.removeChild(__slider.children[0]);
+ __slider.insertBefore(__first_element,
+ __slider.children[__slider_elements_count - 2].nextSibling);
+ __slider.style.left = '0px';
+ clearInterval(__interval_id);
+ if (!utils.validation.misc.is_undefined(options.next.callback))
+ options.next.callback.call();
+ }
+ else
+ __slider.style.left = __negative_width + 'px';
+ }
+ }, options.speed);
+ });
+ };
+ }
+ function visibility()
+ {
+ this.is_visible = function(id, mode)
+ {
+ var __element = element_validator(id, mode);
+ if (__element === false)
+ return false;
+ if (__element.style.display === 'none' || __element.style.display === '')
+ return false;
+ return true;
+ };
+ this.show = function(id, mode)
+ {
+ var __element = element_validator(id, mode);
+ if (__element === false)
+ return false;
+ __element.style.display = 'block';
+ return true;
+ };
+ this.hide = function(id, mode)
+ {
+ var __element = element_validator(id, mode);
+ if (__element === false)
+ return false;
+ __element.style.display = 'none';
+ return true;
+ };
+ this.toggle = function(id, mode)
+ {
+ var __element = element_validator(id, mode);
+ if (__element === false)
+ return false;
+ if (__element.style.display === 'none' || __element.style.display === '')
+ __element.style.display = 'block';
+ else
+ __element.style.display = 'none';
+ return true;
+ };
+ }
+ var self = this,
+ utils = new vulcan();
+ this.fade = new fade();
+ this.opacity = new opacity();
+ this.animation = new animation();
+ this.visibility = new visibility();
+}
+function lava()
+{
+ function has_unknown_keywords(definition_model)
+ {
+ var __index = null,
+ __attribute = null,
+ __option = null;
+ for (__index in definition_model)
+ {
+ __attribute = definition_model[__index];
+ if (!utils.validation.misc.is_object(__attribute))
+ {
+ if (!utils.misc.contains(__index, def_keywords))
+ return true;
+ continue;
+ }
+ if ((utils.validation.misc.is_object(__attribute) && Object.getOwnPropertyNames(__attribute).length === 0) ||
+ (utils.validation.misc.is_array(__attribute) && __attribute.length === 0))
+ return true;
+ for (__option in __attribute)
+ {
+ if (utils.validation.numerics.is_number(__option))
+ continue;
+ if (!utils.misc.contains(__option, def_keywords))
+ return true;
+ if (has_unknown_keywords(__attribute[__option]))
+ return true;
+ }
+ }
+ return false;
+ }
+ this.define = function(definition_model)
+ {
+ if (!utils.validation.misc.is_array(definition_model))
+ {
+ sensei('L.A.Va', 'Invalid definition model!');
+ return false;
+ }
+ if (definition_model.length === 0)
+ {
+ sensei('L.A.Va', 'The definition model is null!');
+ return false;
+ }
+ if (has_unknown_keywords(definition_model))
+ {
+ sensei('L.A.Va', 'The definition model contains unknown keywords\nor invalid values!');
+ return false;
+ }
+ var __this_key = null,
+ __this_value = null;
+ is_model_defined = false;
+ for (counter = 0; counter < definition_model.length; counter++)
+ {
+ if (!utils.validation.misc.is_object(definition_model[counter]))
+ {
+ sensei('L.A.Va', 'Invalid JSON object in the model!');
+ return false;
+ }
+ if (!definition_model[counter].hasOwnProperty('key') || !definition_model[counter].hasOwnProperty('value'))
+ {
+ sensei('L.A.Va', 'Missing "key" or "value" mandatory attributes!');
+ return false;
+ }
+ __this_key = definition_model[counter].key;
+ __this_value = definition_model[counter].value;
+ if (!utils.validation.misc.is_object(__this_key) || !utils.validation.misc.is_object(__this_value))
+ {
+ sensei('L.A.Va', 'A "key" or "value" attribute does not point to a JSON object!');
+ return false;
+ }
+ if (!__this_key.hasOwnProperty('id') || !__this_key.hasOwnProperty('optional'))
+ {
+ sensei('L.A.Va', 'Missing "id" or "optional" mandatory properties!');
+ return false;
+ }
+ if (!utils.validation.alpha.is_string(__this_key.id) || !utils.validation.misc.is_bool(__this_key.optional))
+ {
+ sensei('L.A.Va', 'Invalid specification for "id" or "optional" property!');
+ return false;
+ }
+ if (utils.validation.misc.is_invalid(__this_key.id) || utils.objects.by_id(__this_key.id) === null)
+ {
+ sensei('L.A.Va', 'The "id" points to no HTML element!');
+ return false;
+ }
+ if (!__this_value.hasOwnProperty('type'))
+ {
+ sensei('L.A.Va', 'Missing "type" mandatory property!');
+ return false;
+ }
+ if (!utils.validation.alpha.is_string(__this_value.type) || !utils.misc.contains(__this_value.type, all_value_types))
+ {
+ sensei('L.A.Va', 'Invalid specification for "type" property!');
+ return false;
+ }
+ if (__this_value.hasOwnProperty('choices'))
+ {
+ if (!utils.misc.contains(__this_value.type, types_with_choices))
+ {
+ sensei('L.A.Va', 'This type does not support the "choices" option!');
+ return false;
+ }
+ if (!utils.validation.misc.is_array(__this_value.choices))
+ {
+ sensei('L.A.Va', 'The "choices" option has to be an array with at least\none element!');
+ return false;
+ }
+ }
+ if (__this_value.hasOwnProperty('length'))
+ {
+ if (utils.misc.contains(__this_value.type, uncountable_value_types))
+ {
+ sensei('L.A.Va', 'This type does not support the "length" option!');
+ return false;
+ }
+ if (!utils.validation.numerics.is_integer(__this_value.length) || __this_value.length < 1)
+ {
+ sensei('L.A.Va', 'The "length" option has to be a positive integer!');
+ return false;
+ }
+ }
+ if (__this_value.hasOwnProperty('regex'))
+ {
+ if (utils.misc.contains(__this_value.type, uncountable_value_types) || __this_value.type === 'array')
+ {
+ sensei('L.A.Va', 'This type does not support the "regex" option!');
+ return false;
+ }
+ if (utils.validation.misc.is_invalid(__this_value.regex))
+ {
+ sensei('L.A.Va', 'Invalid "regex" option!');
+ return false;
+ }
+ }
+ }
+ is_model_defined = true;
+ json_def_model = definition_model;
+ return true;
+ };
+ this.validate = function()
+ {
+ if (!is_model_defined)
+ {
+ sensei('L.A.Va', 'No definition model was specified!');
+ return false;
+ }
+ var __this_key = null,
+ __this_value = null,
+ __this_field = null,
+ __keys_found = 0,
+ __keys_optional = false;
+ for (counter = 0; counter < json_def_model.length; counter++)
+ {
+ __this_key = json_def_model[counter].key;
+ __this_field = utils.objects.by_id(__this_key.id);
+ if (__this_field === null)
+ {
+ sensei('L.A.Va', 'Element: "' + __this_key.id + '" does not exist!');
+ return false;
+ }
+ if (__this_key.optional === true)
+ __keys_optional = true;
+ __keys_found++;
+ }
+ if (__keys_found < json_def_model.length && __keys_optional === false)
+ {
+ sensei('L.A.Va', 'Defined non-optional elements differ from that on the page!');
+ return false;
+ }
+ for (counter = 0; counter < json_def_model.length; counter++)
+ {
+ __this_key = json_def_model[counter].key;
+ __this_value = json_def_model[counter].value;
+ __this_field = utils.objects.by_id(__this_key.id);
+ if (__this_field === null && __keys_optional === true)
+ continue;
+ if (__this_value.type !== '*')
+ {
+ if (__this_value.type === 'null')
+ {
+ if (__this_field.value !== null)
+ {
+ sensei('L.A.Va', 'Field: "' + __this_field.id + '" accepts only "null" values!');
+ return false;
+ }
+ }
+ else if (__this_value.type === 'number')
+ {
+ if (utils.validation.misc.is_nothing(__this_field.value.trim()) ||
+ !utils.validation.numerics.is_number(Number(__this_field.value)))
+ {
+ sensei('L.A.Va', 'Field: "' + __this_field.id + '" accepts only numbers!');
+ return false;
+ }
+ }
+ else if (__this_value.type === 'array')
+ {
+ if (!utils.validation.misc.is_array(__this_field.value))
+ {
+ sensei('L.A.Va', 'Field: "' + __this_field.id + '" accepts only "array" values!');
+ return false;
+ }
+ }
+ else
+ {
+ if (typeof __this_field.value !== __this_value.type)
+ {
+ sensei('L.A.Va', 'Field: "' + __this_field.id + '" has a type mismatch!');
+ return false;
+ }
+ }
+ }
+ if (__this_value.hasOwnProperty('choices'))
+ {
+ if (!utils.misc.contains(__this_field.value, __this_value.choices))
+ {
+ sensei('L.A.Va', 'Field: "' + __this_field.id + '" does not contain any defined choices!');
+ return false;
+ }
+ }
+ if (__this_value.hasOwnProperty('length'))
+ {
+ if ((__this_value.type === 'array' && __this_field.value.length > __this_value.length) ||
+ (__this_value.type !== 'array' && __this_field.value.toString().length > __this_value.length))
+ {
+ sensei('L.A.Va', 'Field: "' + __this_field.id + '" exceeds the defined length!');
+ return false;
+ }
+ }
+ if (__this_value.hasOwnProperty('regex'))
+ {
+ if (!utils.validation.utilities.reg_exp(__this_value.regex, __this_field.value))
+ {
+ sensei('L.A.Va', 'Field: "' + __this_field.id + '" has not matched the specified regex!');
+ return false;
+ }
+ }
+ }
+ return true;
+ };
+ this.verify = function(definition_model)
+ {
+ if (self.define(definition_model))
+ return self.validate();
+ return false;
+ };
+ var self = this,
+ is_model_defined = false,
+ counter = 0,
+ json_def_model = null,
+ def_keywords = ['key', 'value', 'id', 'optional', 'type', 'choices', 'length', 'regex'],
+ all_value_types = ['number', 'string', 'boolean', 'array', 'object', 'function', 'null', '*'],
+ uncountable_value_types = ['boolean', 'object', 'function', 'null', '*'],
+ types_with_choices = ['number', 'string', 'array'],
+ utils = new vulcan();
+}
+function task()
+{
+ var self = this;
+ function task_model()
+ {
+ this.id = null;
+ this.file = null;
+ this.worker = null;
+ }
+ function task_manager_model()
+ {
+ this.create = function(worker_file)
+ {
+ var __new_worker = new Worker(worker_file);
+ task.id = rnd_gen.generate(),
+ task.file = worker_file;
+ task.worker = __new_worker;
+ is_task_created = true;
+ return task.id;
+ };
+ this.destroy = function()
+ {
+ task.worker.terminate();
+ is_task_created = false;
+ return true;
+ };
+ this.message = function(any)
+ {
+ if (utils.validation.misc.is_function(any))
+ task.worker.onmessage = function(e) { any.call(this, e); };
+ else
+ task.worker.postMessage(any);
+ return true;
+ };
+ }
+ function message()
+ {
+ this.receive = function(callback)
+ {
+ if (!utils.validation.misc.is_function(callback))
+ return false;
+ if (is_task_created === false)
+ return false;
+ return task_manager.message(callback);
+ };
+ this.send = function(data)
+ {
+ if (utils.validation.misc.is_invalid(data))
+ return false;
+ if (is_task_created === false)
+ return false;
+ return task_manager.message(data);
+ };
+ }
+ this.id = function()
+ {
+ if (is_task_created === false)
+ return false;
+ return task.id;
+ };
+ this.create = function(worker_file)
+ {
+ if (utils.validation.misc.is_invalid(worker_file) || !utils.validation.alpha.is_string(worker_file))
+ return false;
+ if (is_task_created === true)
+ return false;
+ return task_manager.create(worker_file);
+ };
+ this.destroy = function()
+ {
+ if (is_task_created === false)
+ return false;
+ return task_manager.destroy();
+ };
+ function init()
+ {
+ if (utils.validation.misc.is_undefined(Worker))
+ return false;
+ return this;
+ }
+ var is_task_created = false,
+ task = new task_model(),
+ task_manager = new task_manager_model(),
+ rnd_gen = new pythia(),
+ utils = new vulcan();
+ this.message = new message();
+ init();
+}
+function parallel()
+{
+ var self = this;
+ function tasks_manager_model()
+ {
+ function tasks_list_model()
+ {
+ this.num = 0;
+ this.tasks = [];
+ }
+ function tasks_info()
+ {
+ this.num = function()
+ {
+ return tasks_list.num;
+ };
+ this.list = function(index)
+ {
+ if (utils.validation.misc.is_undefined(index))
+ return tasks_list.tasks;
+ else
+ return tasks_list.tasks[index];
+ };
+ }
+ this.create = function(worker_file)
+ {
+ var __new_task = new task(),
+ __new_task_id = __new_task.create(worker_file);
+ if (__new_task_id === false)
+ return false;
+ tasks_list.tasks.push(__new_task);
+ tasks_list.num++;
+ is_task_created = true;
+ return __new_task_id;
+ };
+ this.destroy = function(task_id)
+ {
+ var __task = null;
+ for (__index = 0; __index < tasks_list.num; __index++)
+ {
+ __task = tasks_list.tasks[__index];
+ if (__task.id() === task_id)
+ {
+ tasks_list.tasks.splice(__index, 1);
+ if (tasks_list.num === 0)
+ is_task_created = false;
+ return __task.destroy();
+ }
+ }
+ return false;
+ };
+ this.run = function(task_id, data, callback)
+ {
+ var __task = null;
+ for (__index = 0; __index < tasks_list.num; __index++)
+ {
+ __task = tasks_list.tasks[__index];
+ if (__task.id() === task_id)
+ {
+ __task.message.send(data);
+ __task.message.receive(callback);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.run_all = function(tasks_config)
+ {
+ if (utils.validation.misc.is_undefined(tasks_config))
+ return false;
+ if (!config_parser.verify(tasks_config_model, tasks_config))
+ return false;
+ var __task = null;
+ for (__this_task_config of tasks_config)
+ {
+ if (!utils.validation.misc.is_undefined(__this_task_config.callback) &&
+ !utils.validation.misc.is_function(__this_task_config.callback))
+ return false;
+ for (__index = 0; __index < tasks_list.num; __index++)
+ {
+ __task = tasks_list.tasks[__index];
+ if (__task.id() === __this_task_config.id)
+ {
+ if (!utils.validation.misc.is_undefined(__this_task_config.data))
+ __task.message.send(__this_task_config.data);
+ if (!utils.validation.misc.is_undefined(__this_task_config.callback))
+ __task.message.receive(__this_task_config.callback);
+ }
+ }
+ }
+ return true;
+ };
+ this.kill = function()
+ {
+ for (__index = 0; __index < tasks_list.num; __index++)
+ tasks_list.tasks[__index].destroy();
+ tasks_list = new tasks_list_model();
+ is_task_created = false;
+ return null;
+ };
+ this.tasks = new tasks_info();
+ var __index = 0,
+ tasks_list = new tasks_list_model();
+ }
+ this.num = function()
+ {
+ if (is_task_created === false)
+ return false;
+ return tasks_manager.tasks.num();
+ };
+ this.list = function(index)
+ {
+ if (is_task_created === false)
+ return false;
+ if (utils.validation.misc.is_undefined(index))
+ return tasks_manager.tasks.list();
+ if (!utils.validation.numerics.is_integer(index)
+ || index < 0 || index > (tasks_manager.tasks.num() - 1))
+ return false;
+ return tasks_manager.tasks.list(index);
+ };
+ this.create = function(worker_file)
+ {
+ return tasks_manager.create(worker_file);
+ };
+ this.destroy = function(task_id)
+ {
+ if (!utils.validation.numerics.is_integer(task_id))
+ return false;
+ if (is_task_created === false)
+ return false;
+ return tasks_manager.destroy(task_id);
+ };
+ this.run = function(task_id, data = null, callback = null)
+ {
+ if (!utils.validation.numerics.is_integer(task_id))
+ return false;
+ if (is_task_created === false)
+ return false;
+ return tasks_manager.run(task_id, data, callback);
+ };
+ this.run_all = function(tasks_config)
+ {
+ if (is_task_created === false)
+ return false;
+ return tasks_manager.run_all(tasks_config);
+ };
+ this.kill = function()
+ {
+ if (is_task_created === false)
+ return false;
+ tasks_manager.kill();
+ return true;
+ };
+ function init()
+ {
+ if (utils.validation.misc.is_undefined(Worker))
+ return false;
+ return this;
+ }
+ var is_task_created = false,
+ tasks_config_model =
+ { "arguments" : [
+ {
+ "key" : { "name" : "id", "optional" : false },
+ "value" : { "type" : "number" }
+ },
+ {
+ "key" : { "name" : "data", "optional" : false },
+ "value" : { "type" : "*" }
+ },
+ {
+ "key" : { "name" : "callback", "optional" : true },
+ "value" : { "type" : "*" }
+ }
+ ]
+ };
+ tasks_manager = new tasks_manager_model(),
+ config_parser = new jap(),
+ utils = new vulcan();
+ init();
+}
+function snail()
+{
+ this.test = function(loops)
+ {
+ if (!utils.validation.misc.is_undefined(loops) && (!utils.validation.numerics.is_integer(loops) || loops < 1))
+ return false;
+ if (utils.validation.misc.is_undefined(loops))
+ loops = 100000000;
+ performance.benchmark.start();
+ while (loops >= 0)
+ loops--;
+ performance.benchmark.end();
+ benchmark_index = performance.benchmark.latency();
+ return true;
+ };
+ this.index = function()
+ {
+ if (benchmark_index === -1)
+ return false;
+ return benchmark_index;
+ };
+ var benchmark_index = -1,
+ performance = new centurion(),
+ utils = new vulcan();
+}
+function workbox()
+{
+ function general_helpers()
+ {
+ var self = this;
+ this.draw_screen = function(container_id, title, button_label)
+ {
+ var __title_object = null,
+ __button_object = null,
+ __container = utils.objects.by_id(container_id),
+ __html = null;
+ if (__container === false || utils.validation.misc.is_invalid(__container))
+ return false;
+ workbox_object = utils.objects.by_id('workbox');
+ if (workbox_object !== null)
+ __container.removeChild(workbox_object);
+ workbox_object = document.createElement('div');
+ workbox_object.id = 'workbox';
+ workbox_object.className = 'wb_screen';
+ var __win_title_id = workbox_object.id + '_title',
+ __button_title_id = workbox_object.id + '_button';
+ __html = '<div class="work_window">' +
+ ' <div id="' + __win_title_id + '"></div>' +
+ ' <div id="' + workbox_object.id + '_content"></div>' +
+ ' <div id="' + __button_title_id + '"></div>' +
+ '</div>';
+ workbox_object.innerHTML = __html;
+ __container.appendChild(workbox_object);
+ __title_object = utils.objects.by_id(__win_title_id);
+ __button_object = utils.objects.by_id(__button_title_id);
+ content_fetcher(__win_title_id, null,
+ function()
+ {
+ __title_object.innerHTML = title;
+ __button_object.innerHTML = button_label;
+ },
+ function()
+ {
+ __title_object.innerHTML = 'Alert';
+ __button_object.innerHTML = 'Close';
+ },
+ function()
+ {
+ utils.events.attach(__button_title_id, __button_object, 'click', self.hide_win);
+ });
+ return true;
+ };
+ this.show_win = function(message)
+ {
+ if (timer !== null)
+ clearTimeout(timer);
+ workbox_object.childNodes[0].childNodes[3].innerHTML = message;
+ workbox_object.style.visibility = 'visible';
+ workbox_object.classList.remove('wb_fade_out');
+ workbox_object.classList.add('wb_fade_in');
+ is_open = true;
+ if (global_show_callback !== null)
+ {
+ global_show_callback.call(this);
+ global_show_callback = null;
+ }
+ };
+ this.hide_win = function()
+ {
+ if (timer !== null)
+ clearTimeout(timer);
+ workbox_object.style.visibility = 'visible';
+ workbox_object.classList.remove('wb_fade_in');
+ workbox_object.classList.add('wb_fade_out');
+ timer = setTimeout(function() { workbox_object.style.visibility = 'hidden'; }, 250);
+ is_open = false;
+ if (global_hide_callback !== null)
+ {
+ global_hide_callback.call(this);
+ global_hide_callback = null;
+ }
+ };
+ }
+ this.show = function(message, show_callback, hide_callback)
+ {
+ if (!is_init || is_open || !utils.validation.alpha.is_string(message) ||
+ (!utils.validation.misc.is_invalid(show_callback) &&
+ !utils.validation.misc.is_function(show_callback)) ||
+ (!utils.validation.misc.is_invalid(hide_callback) &&
+ !utils.validation.misc.is_function(hide_callback)))
+ return false;
+ if (utils.validation.misc.is_function(show_callback))
+ global_show_callback = show_callback;
+ if (utils.validation.misc.is_function(hide_callback))
+ global_hide_callback = hide_callback;
+ helpers.show_win(message);
+ return true;
+ };
+ this.hide = function(hide_callback)
+ {
+ if (!is_init || !is_open ||
+ (!utils.validation.misc.is_invalid(hide_callback) &&
+ !utils.validation.misc.is_function(hide_callback)))
+ return false;
+ if (utils.validation.misc.is_function(hide_callback))
+ global_hide_callback = hide_callback;
+ helpers.hide_win();
+ return true;
+ };
+ this.is_open = function()
+ {
+ if (!is_init)
+ return false;
+ return is_open;
+ };
+ this.init = function(container_id, title, button_label)
+ {
+ if (is_init)
+ return false;
+ if (utils.validation.misc.is_invalid(container_id) || !utils.validation.alpha.is_string(container_id) ||
+ !utils.validation.alpha.is_string(title) || !utils.validation.alpha.is_string(button_label))
+ return false;
+ utils.graphics.apply_theme('/framework/extensions/js/user/workbox', 'workbox');
+ if (!helpers.draw_screen(container_id, title, button_label))
+ return false;
+ is_init = true;
+ return true;
+ };
+ var is_init = false,
+ is_open = false,
+ workbox_object = null,
+ global_show_callback = null,
+ global_hide_callback = null,
+ timer = null,
+ helpers = new general_helpers(),
+ utils = new vulcan();
+}
+function ultron(anonymous_function)
+{
+ var utils = new vulcan();
+ if (!utils.validation.misc.is_function(anonymous_function))
+ return false;
+ document.addEventListener("DOMContentLoaded", function(event) { (anonymous_function)(event); });
+ return true;
+}
+function teal_fs()
+{
+ var self = this;
+ this.read = function()
+ {
+ };
+ this.write = function()
+ {
+ };
+ this.move = function()
+ {
+ };
+ this.delete = function()
+ {
+ };
+ this.close = function()
+ {
+ };
+ this.link = function()
+ {
+ };
+ this.permissions = function()
+ {
+ };
+ this.metadata = function()
+ {
+ };
+ this.list = function()
+ {
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ colony = cosmos.hub.access('colony');
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ colony = null,
+ utils_sys = new vulcan();
+}
+function boot_screen()
+{
+ function utilities()
+ {
+ this.draw_boot_screen = function()
+ {
+ var __dynamic_object = null;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', 'boot_screen');
+ __dynamic_object.innerHTML = '<div id="boot_screen_content">\
+ <img src="/site/pix/greyos_logo.png" alt="GreyOS Logo">\
+ <br>\
+ <div id="boot_screen_message"></div>\
+ </div>';
+ utils_sys.objects.by_id('greyos').appendChild(__dynamic_object);
+ };
+ }
+ this.init = function()
+ {
+ if (navigator.userAgent.indexOf('Chrome') === -1)
+ {
+ utils_int.draw_boot_screen();
+ var __boot_message = utils_sys.objects.by_id('boot_screen_message');
+ __boot_message.innerHTML = 'Your browser is incompatible!' +
+ '<br>' +
+ 'Use a Chrome-based browser to access the Meta-OS.';
+ return false;
+ }
+ else if (navigator.onLine === false)
+ {
+ utils_int.draw_boot_screen();
+ var __boot_message = utils_sys.objects.by_id('boot_screen_message');
+ __boot_message.innerHTML = 'Your are offline!' +
+ '<br>' +
+ 'Check your Internet connection and reload.';
+ return false;
+ }
+ else if (window.innerWidth < 1366 || window.innerHeight < 700)
+ {
+ utils_int.draw_boot_screen();
+ var __boot_message = utils_sys.objects.by_id('boot_screen_message');
+ __boot_message.innerHTML = 'Your screen is too small to run GreyOS!' +
+ '<br>' +
+ 'Only screens from "1366 x 700" pixels and up are supported.';
+ return false;
+ }
+ return true;
+ };
+ var utils_sys = new vulcan(),
+ utils_int = new utilities();
+}
+function loading_screen()
+{
+ var self = this;
+ function utilities()
+ {
+ this.draw = function()
+ {
+ var __loading_screen = null;
+ __loading_screen = document.createElement('div');
+ __loading_screen.id = 'loading_screen';
+ __loading_screen.innerHTML = '<div id="loading_screen_content">\
+ <img src="/site/pix/greyos_logo.png" alt="GreyOS Logo">\
+ <div id="loading_indicator">LOADING...</div>\
+ </div>';
+ __loading_screen.style.display = 'block';
+ document.body.appendChild(__loading_screen);
+ return true;
+ };
+ this.clear = function()
+ {
+ var __loading_screen = utils_sys.objects.by_id('loading_screen');
+ document.body.removeChild(__loading_screen);
+ return true;
+ };
+ }
+ function status()
+ {
+ var __loading = false;
+ this.loading = function(val)
+ {
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __loading;
+ __loading = val;
+ return true;
+ };
+ }
+ this.show = function()
+ {
+ if (self.status.loading())
+ return false;
+ if (!utils_int.draw())
+ return false;
+ self.status.loading(true);
+ return true;
+ };
+ this.hide = function()
+ {
+ if (!self.status.loading())
+ return false;
+ utils_int.clear();
+ self.status.loading(false);
+ return true;
+ };
+ var utils_sys = new vulcan(),
+ utils_int = new utilities();
+ this.status = new status();
+}
+function f5()
+{
+ function reboot(message)
+ {
+ var __dynamic_object = null,
+ __message = 'Unloading...';
+ if (!utils_sys.validation.misc.is_undefined(message))
+ {
+ if (utils_sys.validation.alpha.is_symbol(message))
+ return false;
+ __message = message;
+ }
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', 'f5_screen');
+ __dynamic_object.innerHTML = '<div id="f5_screen_content">\
+ <img src="/site/pix/greyos_logo.png" alt="GreyOS Logo">\
+ <div id="f5_screen_message">' + __message + '</div>\
+ </div>';
+ utils_sys.objects.by_id('greyos').appendChild(__dynamic_object);
+ location.reload();
+ }
+ this.init = function(message)
+ {
+ if (is_rebooting === true)
+ return;
+ is_rebooting = true;
+ reboot(message);
+ };
+ var is_rebooting = false,
+ utils_sys = new vulcan();
+}
+function linux_mode()
+{
+ function utilities()
+ {
+ this.apply_css_fix = function()
+ {
+ utils_sys.graphics.apply_theme('/framework/extensions/js/user/linux_mode', 'linux');
+ return true;
+ };
+ }
+ this.init = function()
+ {
+ if (navigator.platform.indexOf('Linux') > -1)
+ {
+ utils_int.apply_css_fix();
+ return true;
+ }
+ return false;
+ };
+ var utils_sys = new vulcan(),
+ utils_int = new utilities();
+}
+function frog(caller, title, object, extra = null)
+{
+ var __index = 0,
+ __top_padding = '',
+ __bottom_padding = '',
+ __extra_padding = '',
+ utils = new vulcan();
+ if ((!utils.validation.misc.is_invalid(caller) && !utils.validation.alpha.is_string(caller)) ||
+ (!utils.validation.misc.is_invalid(title) && !utils.validation.alpha.is_string(title)) ||
+ (extra !== null && !utils.validation.alpha.is_string(extra)))
+ return false;
+ for (__index = 0; __index < Math.abs(title.length - caller.length); __index++)
+ {
+ if (__index % 2 === 1)
+ __top_padding += '*';
+ }
+ for (__index = 0; __index < title.length; __index++)
+ __bottom_padding += '-';
+ if (title.length % 2 === 1)
+ __extra_padding = '*';
+ console.log('**************************' +
+ __top_padding +
+ ' [' + caller + '] ' +
+ __top_padding +
+ '**************************' + __extra_padding);
+ console.log('--------------------------- ' + title + ' ---------------------------');
+ console.log(object);
+ console.log('----------------------------' + __bottom_padding + '----------------------------');
+ if (extra !== null)
+ console.log(extra);
+ __top_padding = '';
+ for (__index = 0; __index < title.length; __index++)
+ __top_padding += '*';
+ console.log('****************************' + __top_padding + '****************************');
+ console.log('\n\n');
+ return true;
+}
+function teletraan()
+{
+ var self = this;
+ function settings_model()
+ {
+ this.boot_mode = 0;
+ this.name = 'GreyOS';
+ this.version = '0.0';
+ this.theme = null;
+ this.max_apps = 1;
+ this.apps_per_view = 8;
+ this.stack_bars = 4;
+ }
+ this.get = function(option)
+ {
+ if (utils_sys.validation.alpha.is_symbol(option))
+ return false;
+ if (!settings.hasOwnProperty(option))
+ return false;
+ return settings[option];
+ };
+ this.set = function(option, val)
+ {
+ if (utils_sys.validation.alpha.is_symbol(option) || utils_sys.validation.misc.is_undefined(val))
+ return false;
+ if (!settings.hasOwnProperty(option))
+ return false;
+ settings[option] = val;
+ return true;
+ };
+ this.reset = function()
+ {
+ settings = new settings_model();
+ return true;
+ };
+ var settings = new settings_model(),
+ utils_sys = new vulcan();
+}
+function scenario()
+{
+ var self = this;
+ function scripts_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function utilities()
+ {
+ this.is_indices_array = function(indices_array)
+ {
+ if (!utils_sys.validation.misc.is_array(indices_array))
+ return false;
+ var __indices_num = indices_array.length;
+ if (__indices_num === 0 || indices_array.length > scripts.num)
+ return false;
+ for (var i = 0; i < indices_array.length; i++)
+ {
+ if (!utils_sys.validation.numerics.is_integer(indices_array[i]))
+ return false;
+ }
+ return true;
+ };
+ this.script_exists = function(script)
+ {
+ for (var i = 0; i < scripts.num; i++)
+ {
+ if (scripts.list[i] === script)
+ return true;
+ }
+ return false;
+ };
+ }
+ this.num = function()
+ {
+ return scripts.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_undefined(index))
+ return scripts.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (scripts.num - 1))
+ return false;
+ return scripts.list[index];
+ };
+ this.use = function(scripts_array)
+ {
+ if (!utils_sys.validation.misc.is_array(scripts_array))
+ return false;
+ var __scripts_num = scripts_array.length;
+ if (__scripts_num === 0)
+ return false;
+ for (var i = 0; i < __scripts_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(scripts_array[i]))
+ {
+ if (backtrace === true)
+ frog('SCENARIO', 'Scripts :: Invalid', scripts_array[i]);
+ self.clear();
+ return false;
+ }
+ if (utils_int.script_exists(scripts_array[i]))
+ {
+ if (backtrace === true)
+ frog('SCENARIO', 'Scripts :: Duplication', scripts_array[i]);
+ self.clear();
+ return false;
+ }
+ scripts.list.push(scripts_array[i]);
+ scripts.num++;
+ if (backtrace === true)
+ frog('SCENARIO', 'Scripts :: Addition', scripts_array[i]);
+ }
+ if (backtrace === true)
+ frog('SCENARIO', 'All scripts', scripts.list, 'Script count: ' + scripts.num);
+ return true;
+ };
+ this.clear = function()
+ {
+ if (scripts.num === 0)
+ return false;
+ scripts.num = 0;
+ scripts.list = [];
+ if (backtrace === true)
+ frog('SCENARIO', 'Scripts :: Clear', scripts.list);
+ return true;
+ };
+ this.execute = function(indices_array)
+ {
+ if (scripts.num === 0)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(indices_array))
+ {
+ for (var i = 0; i < scripts.num; i++)
+ scripts.list[i].call();
+ return true;
+ }
+ if (!utils_int.is_indices_array(indices_array))
+ return false;
+ for (var i = 0; i < indices_array.length; i++)
+ scripts.list[indices_array[i]].call();
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ var backtrace = false,
+ utils_sys = new vulcan(),
+ scripts = new scripts_model(),
+ utils_int = new utilities();
+}
+function multiverse()
+{
+ var self = this;
+ function universe_bubbles()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function utilities()
+ {
+ this.is_cosmos = function(object)
+ {
+ if (!utils_sys.validation.misc.is_object(object))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(object.id) || utils_sys.validation.misc.is_undefined(object.backtrace) ||
+ utils_sys.validation.misc.is_undefined(object.hub) || utils_sys.validation.misc.is_undefined(object.status))
+ return false;
+ return true;
+ };
+ }
+ this.num = function()
+ {
+ return bubbles.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_undefined(index))
+ return bubbles.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (bubbles.num - 1))
+ return false;
+ return bubbles.list[index];
+ };
+ this.add = function(cosmos_array)
+ {
+ if (!utils_sys.validation.misc.is_array(cosmos_array))
+ return false;
+ var __cosmos_num = cosmos_array.length;
+ if (__cosmos_num === 0)
+ return false;
+ for (var i = 0; i < __cosmos_num; i++)
+ {
+ if (!utils_int.is_cosmos(cosmos_array[i]))
+ {
+ if (backtrace === true)
+ frog('MULTIVERSE', 'Models :: Invalid', cosmos_array[i]);
+ self.clear();
+ return false;
+ }
+ bubbles.list.push(cosmos_array[i]);
+ bubbles.num++;
+ if (backtrace === true)
+ frog('MULTIVERSE', 'Models :: Addition', cosmos_array[i].id());
+ }
+ if (backtrace === true)
+ frog('MULTIVERSE', 'All models', bubbles.list, 'Model count: ' + bubbles.num);
+ return true;
+ };
+ this.remove = function(cosmos_id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(cosmos_id))
+ return false;
+ for (var i = 0; i < bubbles.num; i++)
+ {
+ var temp_obj = new bubbles.list[i];
+ if (temp_obj.id() === cosmos_id)
+ {
+ bubbles.list.splice(i, 1);
+ bubbles.num--;
+ if (backtrace === true)
+ {
+ frog('MULTIVERSE', 'Models :: Removal', cosmos_id);
+ frog('MULTIVERSE', 'All models', bubbles.list, 'Model count: ' + bubbles.num);
+ }
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (bubbles.num === 0)
+ return false;
+ bubbles.num = 0;
+ bubbles.list = [];
+ if (backtrace === true)
+ frog('MULTIVERSE', 'Models :: Clear', bubbles.list);
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ var backtrace = false,
+ utils_sys = new vulcan(),
+ bubbles = new universe_bubbles(),
+ utils_int = new utilities();
+}
+function cosmos()
+{
+ var self = this;
+ function system_model()
+ {
+ this.id = 'cosmos_' + random.generate();
+ this.backtrace = false;
+ this.models_num = 0;
+ this.models = [];
+ }
+ function cosmos_ref_model()
+ {
+ this.id = function()
+ {
+ return self.id();
+ };
+ this.hub = self.hub;
+ this.status = self.status;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.model_exists = function(model)
+ {
+ if (!utils_sys.validation.misc.is_object(model))
+ return false;
+ for (var i = 0; i < system.models_num; i++)
+ {
+ if (system.models[i].constructor.name === model.constructor.name)
+ return true;
+ }
+ return false;
+ };
+ this.model_name = function(model)
+ {
+ if (!utils_sys.validation.misc.is_object(model))
+ return false;
+ return model.constructor.name;
+ };
+ this.fetch_model = function(model_name)
+ {
+ if (!utils_sys.validation.alpha.is_string(model_name))
+ return false;
+ for (var i = 0; i < system.models_num; i++)
+ {
+ if (me.model_name(system.models[i]) === model_name)
+ {
+ if (system.backtrace === true)
+ frog('COSMOS', 'Models :: Fetch', model_name);
+ return system.models[i];
+ }
+ }
+ return false;
+ };
+ }
+ function status()
+ {
+ this.backtrace = function()
+ {
+ return system.backtrace;
+ };
+ this.models_num = function()
+ {
+ return system.models_num;
+ };
+ }
+ function hub()
+ {
+ this.attach = function(models_array)
+ {
+ if (!utils_sys.validation.misc.is_array(models_array) || models_array.length === 0)
+ return false;
+ var __models_num = models_array.length;
+ if (__models_num === 0)
+ return false;
+ for (var i = 0; i < __models_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(models_array[i]))
+ {
+ if (backtrace === true)
+ frog('COSMOS', 'Models :: Invalid', models_array[i]);
+ self.hub.clear();
+ return false;
+ }
+ var __object_model = new models_array[i]();
+ if (utils_int.model_exists(__object_model))
+ {
+ if (system.backtrace === true)
+ frog('COSMOS', 'Models :: Duplication', __object_model.constructor.name);
+ self.hub.clear();
+ return false;
+ }
+ system.models.push(__object_model);
+ system.models_num++;
+ if (system.backtrace === true)
+ frog('COSMOS', 'Models :: Attachment', __object_model.constructor.name);
+ }
+ var __cosmos_ref = new cosmos_ref_model();
+ for (var i = 0; i < system.models_num; i++)
+ system.models[i].cosmos(__cosmos_ref);
+ if (system.backtrace === true)
+ frog('COSMOS', 'All models', system.models, 'Model count: ' + system.models_num);
+ return true;
+ };
+ this.access = function(model_name)
+ {
+ if (!utils_sys.validation.alpha.is_string(model_name))
+ return false;
+ return utils_int.fetch_model(model_name);
+ };
+ this.containers = function()
+ {
+ return system.models;
+ };
+ this.clear = function()
+ {
+ if (system.models_num === 0)
+ return false;
+ system.models_num = 0;
+ system.models = [];
+ if (system.backtrace === true)
+ frog('COSMOS', 'Models :: Clear', system.models);
+ return true;
+ };
+ }
+ this.id = function()
+ {
+ return system.id;
+ };
+ this.backtrace = function(val)
+ {
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ system.backtrace = val;
+ return true;
+ };
+ var utils_sys = new vulcan(),
+ random = new pythia(),
+ system = new system_model(),
+ utils_int = new utilities();
+ this.hub = new hub();
+ this.status = new status();
+}
+function sand_box()
+{
+ var self = this;
+ function dev_vms_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ this.num = function()
+ {
+ return test_vms.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_undefined(index))
+ return test_vms.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (test_vms.num - 1))
+ return false;
+ return test_vms.list[index];
+ };
+ this.put = function(cosmos_array)
+ {
+ if (!utils_sys.validation.misc.is_array(cosmos_array))
+ return false;
+ var __cosmos_num = cosmos_array.length;
+ if (__cosmos_num === 0)
+ return false;
+ for (var i = 0; i < __cosmos_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_object(cosmos_array[i]))
+ {
+ if (backtrace === true)
+ frog('SAND BOX', 'Objects :: Invalid', cosmos_array[i]);
+ self.clear();
+ return false;
+ }
+ test_vms.list.push(cosmos_array[i]);
+ test_vms.num++;
+ if (backtrace === true)
+ frog('SAND BOX', 'Objects :: Put', cosmos_array[i].id());
+ }
+ return true;
+ };
+ this.clear = function()
+ {
+ if (test_vms.num === 0)
+ return false;
+ test_vms.num = 0;
+ test_vms.list = [];
+ if (backtrace === true)
+ frog('SAND BOX', 'Models :: Clear', test_vms.list);
+ return true;
+ };
+ this.execute = function()
+ {
+ if (test_vms.num === 0)
+ return false;
+ for (var i = 0; i < test_vms.num; i++)
+ test_vms.list[i].run();
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ return true;
+ };
+ var backtrace = false,
+ utils_sys = new vulcan(),
+ test_vms = new dev_vms_model();
+}
+function matrix()
+{
+ var self = this;
+ function services_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function utilities()
+ {
+ var me = this;
+ this.model_exists = function(model)
+ {
+ if (!utils_sys.validation.misc.is_object(model))
+ return false;
+ for (var i = 0; i < services.num; i++)
+ {
+ if (services.list[i].constructor.name === model.constructor.name)
+ return true;
+ }
+ return false;
+ };
+ }
+ this.num = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return services.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(index))
+ return services.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (services.num - 1))
+ return false;
+ return services.list[index];
+ };
+ this.get = function(service_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (services.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(service_id))
+ return false;
+ for (var i = 0; i < services.num; i++)
+ {
+ if (services.list[i].constructor.name === service_id)
+ {
+ if (backtrace === true)
+ frog('MATRIX', 'Models :: Get', service_id);
+ services.list[i].cosmos(cosmos);
+ return services.list[i];
+ }
+ }
+ return false;
+ };
+ this.register = function(models_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(models_array))
+ return false;
+ var __models_num = models_array.length;
+ if (__models_num === 0)
+ return false;
+ for (var i = 0; i < __models_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(models_array[i]))
+ {
+ if (backtrace === true)
+ frog('MATRIX', 'Models :: Invalid', models_array[i]);
+ self.clear();
+ return false;
+ }
+ var __object_model = new models_array[i]();
+ if (utils_int.model_exists(__object_model))
+ {
+ if (backtrace === true)
+ frog('MATRIX', 'Models :: Duplication', __object_model.constructor.name);
+ self.clear();
+ return false;
+ }
+ services.list.push(__object_model);
+ services.num++;
+ if (backtrace === true)
+ frog('MATRIX', 'Models :: Register', __object_model.constructor.name);
+ }
+ if (backtrace === true)
+ frog('MATRIX', 'All models', services.list, 'Model count: ' + services.num);
+ return true;
+ };
+ this.unregister = function(service_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(service_id))
+ return false;
+ for (var i = 0; i < services.num; i++)
+ {
+ if (services.list[i].constructor.name === service_id)
+ {
+ services.list.splice(i, 1);
+ services.num--;
+ if (backtrace === true)
+ {
+ frog('MATRIX', 'Models :: Unregister', service_id);
+ frog('MATRIX', 'All models', services.list, 'Model count: ' + services.num);
+ }
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (services.num === 0)
+ return false;
+ services.num = 0;
+ services.list = [];
+ if (backtrace === true)
+ frog('MATRIX', 'Models :: Clear', services.list);
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ utils_sys = new vulcan(),
+ services = new services_model(),
+ utils_int = new utilities();
+}
+function dev_box()
+{
+ var self = this;
+ function tool_box_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function utilities()
+ {
+ this.model_exists = function(model)
+ {
+ if (!utils_sys.validation.misc.is_object(model))
+ return false;
+ for (var i = 0; i < tools.num; i++)
+ {
+ if (tools.list[i].constructor.name === model.constructor.name)
+ return true;
+ }
+ return false;
+ };
+ }
+ this.num = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return tools.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(index))
+ return tools.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (tools.num - 1))
+ return false;
+ return tools.list[index];
+ };
+ this.get = function(tool_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (tools.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(tool_id))
+ return false;
+ for (var i = 0; i < tools.num; i++)
+ {
+ if (tools.list[i].constructor.name === tool_id)
+ {
+ var __new_tool = new tools.list[i].constructor();
+ __new_tool.cosmos(cosmos);
+ if (backtrace === true)
+ frog('DEV BOX', 'Models :: Get', tool_id);
+ return __new_tool;
+ }
+ }
+ return false;
+ };
+ this.add = function(models_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(models_array))
+ return false;
+ var __models_num = models_array.length;
+ if (__models_num === 0)
+ return false;
+ for (var i = 0; i < __models_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(models_array[i]))
+ {
+ if (backtrace === true)
+ frog('DEV BOX', 'Models :: Invalid', models_array[i]);
+ self.clear();
+ return false;
+ }
+ var __object_model = new models_array[i]();
+ if (utils_int.model_exists(__object_model))
+ {
+ if (backtrace === true)
+ frog('DEV BOX', 'Models :: Duplication', __object_model.constructor.name);
+ self.clear();
+ return false;
+ }
+ tools.list.push(__object_model);
+ tools.num++;
+ if (backtrace === true)
+ frog('DEV BOX', 'Models :: Addition', __object_model.constructor.name);
+ }
+ if (backtrace === true)
+ frog('DEV BOX', 'All models', tools.list, 'Model count: ' + tools.num);
+ return true;
+ };
+ this.remove = function(tool_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(tool_id))
+ return false;
+ for (var i = 0; i < tools.num; i++)
+ {
+ if (tools.list[i].constructor.name === tool_id)
+ {
+ tools.list.splice(i, 1);
+ tools.num--;
+ if (backtrace === true)
+ {
+ frog('DEV BOX', 'Models :: Removal', tool_id);
+ frog('DEV BOX', 'All models', tools.list, 'Model count: ' + tools.num);
+ }
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (tools.num === 0)
+ return false;
+ tools.num = 0;
+ tools.list = [];
+ if (backtrace === true)
+ frog('DEV BOX', 'Models :: Clear', tools.list);
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ utils_sys = new vulcan(),
+ tools = new tool_box_model(),
+ utils_int = new utilities();
+}
+function app_box()
+{
+ var self = this;
+ function app_box_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function utilities()
+ {
+ this.model_exists = function(model)
+ {
+ if (!utils_sys.validation.misc.is_object(model))
+ return false;
+ for (var i = 0; i < apps.num; i++)
+ {
+ if (apps.list[i].constructor.name === model.constructor.name)
+ return true;
+ }
+ return false;
+ };
+ }
+ this.num = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return apps.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(index))
+ return apps.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (apps.num - 1))
+ return false;
+ return apps.list[index];
+ };
+ this.get = function(app_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (apps.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(app_id))
+ return false;
+ for (var i = 0; i < apps.num; i++)
+ {
+ if (apps.list[i].constructor.name === app_id)
+ {
+ var __new_app = new apps.list[i].constructor();
+ __new_app.cosmos(cosmos);
+ if (backtrace === true)
+ frog('APP BOX', 'Models :: Get', app_id);
+ return __new_app;
+ }
+ }
+ return false;
+ };
+ this.add = function(models_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(models_array))
+ return false;
+ var __models_num = models_array.length;
+ if (__models_num === 0)
+ return false;
+ for (var i = 0; i < __models_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(models_array[i]))
+ {
+ if (backtrace === true)
+ frog('APP BOX', 'Models :: Invalid', models_array[i]);
+ self.clear();
+ return false;
+ }
+ var __object_model = new models_array[i]();
+ if (utils_int.model_exists(__object_model))
+ {
+ if (backtrace === true)
+ frog('APP BOX', 'Models :: Duplication', __object_model.constructor.name);
+ self.clear();
+ return false;
+ }
+ apps.list.push(__object_model);
+ apps.num++;
+ if (backtrace === true)
+ frog('APP BOX', 'Models :: Addition', __object_model.constructor.name);
+ }
+ if (backtrace === true)
+ frog('APP BOX', 'All models', apps.list, 'Model count: ' + apps.num);
+ return true;
+ };
+ this.remove = function(app_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(app_id))
+ return false;
+ for (var i = 0; i < apps.num; i++)
+ {
+ if (apps.list[i].constructor.name === app_id)
+ {
+ apps.list.splice(i, 1);
+ apps.num--;
+ if (backtrace === true)
+ {
+ frog('APP BOX', 'Models :: Removal', app_id);
+ frog('APP BOX', 'All models', apps.list, 'Model count: ' + apps.num);
+ }
+ return true;
+ }
+ }
+ return false;
+ };
+ this.replace = function(models_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(models_array))
+ return false;
+ var __models_num = models_array.length;
+ if (__models_num === 0)
+ return false;
+ for (var i = 0; i < __models_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(models_array[i]))
+ {
+ if (backtrace === true)
+ frog('APP BOX', 'Models :: Invalid', models_array[i]);
+ self.clear();
+ return false;
+ }
+ self.remove(models_array[i].name);
+ }
+ return self.add(models_array);
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (apps.num === 0)
+ return false;
+ apps.num = 0;
+ apps.list = [];
+ if (backtrace === true)
+ frog('APP BOX', 'Models :: Clear', apps.list);
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ utils_sys = new vulcan(),
+ apps = new app_box_model(),
+ utils_int = new utilities();
+}
+function colony()
+{
+ var self = this;
+ function bees_model()
+ {
+ this.max = 10;
+ this.num = 0;
+ this.list = [];
+ }
+ this.max = function(num)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(num))
+ return bees.max;
+ if (!utils_sys.validation.numerics.is_integer(num) || num < 1)
+ return false;
+ bees.max = num;
+ if (backtrace === true)
+ frog('COLONY', 'Objects :: Max', num);
+ return true;
+ };
+ this.num = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return bees.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(index))
+ return bees.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (bees.num - 1))
+ return false;
+ return bees.list[index];
+ };
+ this.get = function(bee_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (bees.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(bee_id))
+ return false;
+ for (var i = 0; i < bees.num; i++)
+ {
+ if (bees.list[i].settings.general.id() === bee_id)
+ {
+ if (backtrace === true)
+ frog('COLONY', 'Objects :: Get', bee_id);
+ return bees.list[i];
+ }
+ }
+ return false;
+ };
+ this.add = function(objects_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(objects_array))
+ return false;
+ var __objects_num = objects_array.length;
+ if (__objects_num === 0 || (__objects_num > (bees.max - bees.num)))
+ {
+ if (backtrace === true)
+ {
+ if (__objects_num === 0)
+ frog('COLONY', 'Objects :: List contains: ', null);
+ else
+ frog('COLONY', 'Objects :: Max limit reached: ', bees.max);
+ }
+ return false;
+ }
+ for (var i = 0; i < __objects_num; i++)
+ {
+ if (!self.is_bee(objects_array[i]))
+ {
+ if (backtrace === true)
+ frog('COLONY', 'Objects :: Invalid', objects_array[i]);
+ self.clear();
+ return false;
+ }
+ var __app_id = objects_array[i].settings.general.app_id();
+ if (self.is_single_instance(__app_id))
+ {
+ if (backtrace === true)
+ frog('COLONY', 'Objects :: Duplication', __app_id);
+ return false;
+ }
+ bees.list.push(objects_array[i]);
+ bees.num++;
+ if (backtrace === true)
+ frog('COLONY', 'Objects :: Addition', objects_array[i].constructor.name);
+ }
+ if (backtrace === true)
+ frog('COLONY', 'All objects', bees.list, 'Object count: ' + bees.num);
+ return true;
+ };
+ this.remove = function(bee_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (bees.num === 0)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(bee_id))
+ return false;
+ for (var i = 0; i < bees.num; i++)
+ {
+ if (bees.list[i].settings.general.id() === bee_id)
+ {
+ bees.list.splice(i, 1);
+ bees.num--;
+ if (backtrace === true)
+ {
+ frog('COLONY', 'Objects :: Removal', bee_id);
+ frog('COLONY', 'All objects', bees.list, 'Object count: ' + bees.num);
+ }
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (bees.num === 0)
+ return false;
+ bees.num = 0;
+ bees.list = [];
+ if (backtrace === true)
+ frog('COLONY', 'Objects :: Clear', bees.list);
+ return true;
+ };
+ this.is_bee = function(object)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_object(object))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(object.init) || utils_sys.validation.misc.is_undefined(object.run) ||
+ utils_sys.validation.misc.is_undefined(object.on) || utils_sys.validation.misc.is_undefined(object.settings) ||
+ utils_sys.validation.misc.is_undefined(object.gui) || utils_sys.validation.misc.is_undefined(object.status) ||
+ utils_sys.validation.misc.is_undefined(object.drone))
+ return false;
+ var bee_length = Object.keys(object).length;
+ if (bee_length < 9 || bee_length > 9)
+ return false;
+ return true;
+ };
+ this.is_single_instance = function(app_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (bees.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(app_id))
+ return false;
+ for (var i = 0; i < bees.num; i++)
+ {
+ if (bees.list[i].settings.general.app_id() === app_id && bees.list[i].settings.general.single_instance())
+ return true;
+ }
+ return false;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ bees = new bees_model(),
+ utils_sys = new vulcan();
+}
+function roost()
+{
+ var self = this;
+ function bats_model()
+ {
+ this.max = 10;
+ this.num = 0;
+ this.list = [];
+ }
+ this.max = function(num)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(num))
+ return bats.max;
+ if (!utils_sys.validation.numerics.is_integer(num) || num < 1)
+ return false;
+ bats.max = num;
+ if (backtrace === true)
+ frog('ROOST', 'Objects :: Max', num);
+ return true;
+ };
+ this.num = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return bats.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(index))
+ return bats.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (bats.num - 1))
+ return false;
+ return bats.list[index];
+ };
+ this.get = function(bat_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (bats.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(bat_id))
+ return false;
+ for (var i = 0; i < bats.num; i++)
+ {
+ if (bats.list[i].get_config().sys_name === bat_id)
+ {
+ if (backtrace === true)
+ frog('ROOST', 'Objects :: Get', bat_id);
+ return bats.list[i];
+ }
+ }
+ return false;
+ };
+ this.add = function(objects_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(objects_array))
+ return false;
+ var __objects_num = objects_array.length;
+ if (__objects_num === 0 || (__objects_num > (bats.max - bats.num)))
+ {
+ if (backtrace === true)
+ {
+ if (__objects_num === 0)
+ frog('ROOST', 'Objects :: List contains: ', null);
+ else
+ frog('ROOST', 'Objects :: Max limit reached: ', bats.max);
+ }
+ return false;
+ }
+ for (var i = 0; i < __objects_num; i++)
+ {
+ if (!self.is_bat(objects_array[i]))
+ {
+ if (backtrace === true)
+ frog('ROOST', 'Objects :: Invalid', objects_array[i]);
+ self.clear();
+ return false;
+ }
+ bats.list.push(objects_array[i]);
+ bats.num++;
+ if (backtrace === true)
+ frog('ROOST', 'Objects :: Addition', objects_array[i].constructor.name);
+ }
+ if (backtrace === true)
+ frog('ROOST', 'All objects', bats.list, 'Object count: ' + bats.num);
+ return true;
+ };
+ this.remove = function(bat_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (bats.num === 0)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(bat_id))
+ return false;
+ for (var i = 0; i < bats.num; i++)
+ {
+ if (bats.list[i].get_config().sys_name === bat_id)
+ {
+ bats.list.splice(i, 1);
+ bats.num--;
+ if (backtrace === true)
+ {
+ frog('ROOST', 'Objects :: Removal', bat_id);
+ frog('ROOST', 'All objects', bats.list, 'Object count: ' + bats.num);
+ }
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (bats.num === 0)
+ return false;
+ bats.num = 0;
+ bats.list = [];
+ if (backtrace === true)
+ frog('ROOST', 'Objects :: Clear', bats.list);
+ return true;
+ };
+ this.is_bat = function(object)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_object(object))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(object.init) ||
+ utils_sys.validation.misc.is_undefined(object.register) || utils_sys.validation.misc.is_undefined(object.unregister) ||
+ utils_sys.validation.misc.is_undefined(object.exec_function) || utils_sys.validation.misc.is_undefined(object.on) ||
+ utils_sys.validation.misc.is_undefined(object.get_config) || utils_sys.validation.misc.is_undefined(object.set_function))
+ return false;
+ var bat_length = Object.keys(object).length;
+ if (bat_length < 9 || bat_length > 9)
+ return false;
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ bats = new bats_model(),
+ utils_sys = new vulcan();
+}
+function xenon()
+{
+ var self = this;
+ function sys_info_model()
+ {
+ this.os_name = null;
+ this.os_version = null;
+ this.cpu_cores = navigator.hardwareConcurrency;
+ this.ram = navigator.deviceMemory;
+ }
+ this.store = function(user_settings)
+ {
+ var __this_user_setting = null;
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_object(user_settings))
+ return false;
+ if (user_settings.hasOwnProperty('cpu_cores') || user_settings.hasOwnProperty('ram'))
+ return false;
+ for (__this_user_setting in user_settings)
+ {
+ if (!sys_info.hasOwnProperty(__this_user_setting))
+ return;
+ }
+ for (__this_user_setting in user_settings)
+ sys_info[__this_user_setting] = user_settings[__this_user_setting];
+ return true;
+ };
+ this.load = function(setting)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_nothing(setting))
+ return false;
+ if (!sys_info.hasOwnProperty(setting))
+ return false;
+ return sys_info[setting];
+ };
+ this.list = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return sys_info;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var cosmos = null,
+ utils_sys = new vulcan(),
+ sys_info = new sys_info_model();
+}
+function owl()
+{
+ var self = this;
+ var process_status = ['RUN', 'END', 'FAIL'];
+ function bee_collection_module()
+ {
+ function list()
+ {
+ function bee_ids()
+ {
+ this.sys_id = [];
+ this.proc_id = [];
+ }
+ this.process = new bee_ids();
+ this.status = [];
+ this.epoch = [];
+ }
+ this.num = 0;
+ this.list = new list();
+ }
+ function bat_collection_module()
+ {
+ function list()
+ {
+ function bat_ids()
+ {
+ this.sys_id = [];
+ this.proc_id = [];
+ }
+ this.process = new bat_ids();
+ this.status = [];
+ this.epoch = [];
+ }
+ this.num = 0;
+ this.list = new list();
+ }
+ function utilities()
+ {
+ var me = this;
+ function factory_process()
+ {
+ this.type_matching_status = function(collection, status, process_type)
+ {
+ var __status_process_list = [];
+ for (var i = 0; i < collection.num; i++)
+ {
+ if (collection.list.status[i] === status)
+ {
+ var __process_data = {
+ "sys_id" : collection.list.process.sys_id[i],
+ "proc_id" : collection.list.process.proc_id[i],
+ "type" : process_type
+ };
+ __status_process_list.push(__process_data);
+ }
+ }
+ return __status_process_list;
+ };
+ this.id_matching_status = function(collection, status, process_id)
+ {
+ var __status_list = [],
+ __status_num = 0;
+ for (var i = 0; i < collection.num; i++)
+ {
+ if (collection.list.process.proc_id[i] === process_id)
+ __status_list.push(collection.list.status[i]);
+ }
+ __status_num = __status_list.length;
+ for (var i = 0; i < __status_num; i++)
+ {
+ if (__status_list[i] === status)
+ return true;
+ }
+ return false;
+ };
+ this.get_proc_by_sys_id = function(collection, sys_id)
+ {
+ if (collection.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(sys_id))
+ return false;
+ for (var i = 0; i < collection.num; i++)
+ {
+ if (collection.list.process.sys_id[i] === sys_id)
+ return collection.list.status[i];
+ }
+ return false;
+ };
+ this.get_proc_by_proc_id = function(collection, proc_id, match_status)
+ {
+ if (collection.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(proc_id) || utils_sys.validation.alpha.is_symbol(match_status))
+ return false;
+ if (!me.is_valid_status(match_status))
+ return false;
+ return me.match_status(match_status, null, proc_id);
+ };
+ this.set_proc_status = function(collection, sys_id, proc_id, status)
+ {
+ if (utils_sys.validation.alpha.is_symbol(sys_id) || utils_sys.validation.alpha.is_symbol(proc_id) || utils_sys.validation.alpha.is_symbol(status))
+ return false;
+ if (!utils_int.is_valid_status(status))
+ return false;
+ for (var i = 0; i < collection.num; i++)
+ {
+ if (sys_id === collection.list.process.sys_id[i] && status === collection.list.status[i])
+ {
+ if (backtrace === true)
+ frog('OWL', 'List :: Set', collection);
+ return true;
+ }
+ if (sys_id === collection.list.process.sys_id[i] && status !== collection.list.status[i])
+ {
+ collection.list.status[i] = status;
+ collection.list.epoch[i] = new Date().getTime();
+ if (backtrace === true)
+ frog('OWL', 'List :: Set', collection);
+ return true;
+ }
+ }
+ var __current_epoch = new Date().getTime();
+ collection.list.process.sys_id.push(sys_id);
+ collection.list.process.proc_id.push(proc_id);
+ collection.list.status.push(status);
+ collection.list.epoch.push(__current_epoch);
+ collection.num++;
+ if (backtrace === true)
+ frog('OWL', 'List :: Set', collection);
+ return true;
+ };
+ this.remove_proc_status = function(collection, sys_id)
+ {
+ if (collection.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(sys_id))
+ return false;
+ for (var i = 0; i < collection.num; i++)
+ {
+ if (collection.list.process.sys_id[i] === sys_id)
+ {
+ collection.list.process.sys_id.splice(i, 1);
+ collection.list.process.proc_id.splice(i, 1);
+ collection.list.status.splice(i, 1);
+ collection.list.epoch.splice(i, 1);
+ collection.num--;
+ if (backtrace === true)
+ frog('OWL', 'List :: Remove', collection);
+ return true;
+ }
+ }
+ return false;
+ };
+ }
+ this.is_valid_status = function(status)
+ {
+ var __status_num = process_status.length;
+ for (var i = 0; i < __status_num; i++)
+ {
+ if (status === process_status[i])
+ return true;
+ }
+ return false;
+ };
+ this.match_status = function(status, process_type = null, process_id = null)
+ {
+ if (process_id === null)
+ {
+ var __matching_status_process_list = [];
+ if (process_type === null)
+ {
+ __matching_status_process_list.push(me.factory.type_matching_status(bee_collection, status, 'app'));
+ __matching_status_process_list.push(me.factory.type_matching_status(bat_collection, status, 'svc'));
+ }
+ else if (process_type === 'app')
+ __matching_status_process_list = me.factory.type_matching_status(bee_collection, status, process_type);
+ else
+ __matching_status_process_list = me.factory.type_matching_status(bat_collection, status, process_type);
+ return __matching_status_process_list;
+ }
+ else
+ {
+ if (me.factory.id_matching_status(bee_collection, status, process_id) === false)
+ return me.factory.id_matching_status(bat_collection, status, process_id);
+ else
+ return true;
+ }
+ };
+ this.factory = new factory_process();
+ }
+ function status()
+ {
+ function apps()
+ {
+ function get()
+ {
+ this.by_sys_id = function(bee_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return utils_int.factory.get_proc_by_sys_id(bee_collection, bee_id);
+ };
+ this.by_proc_id = function(app_id, match_status)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return utils_int.factory.get_proc_by_proc_id(bee_collection, app_id, match_status);
+ };
+ }
+ this.set = function(bee_id, app_id, status)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!colony.get(bee_id))
+ return false;
+ return utils_int.factory.set_proc_status(bee_collection, bee_id, app_id, status);
+ };
+ this.remove = function(bee_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return utils_int.factory.remove_proc_status(bee_collection, bee_id);
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ bee_collection = new bee_collection_module();
+ return true;
+ };
+ this.get = new get();
+ }
+ function svcs()
+ {
+ function get()
+ {
+ this.by_sys_id = function(bat_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return utils_int.factory.get_proc_by_sys_id(bat_collection, bat_id);
+ };
+ this.by_proc_id = function(svc_id, match_status)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return utils_int.factory.get_proc_by_proc_id(bat_collection, svc_id, match_status);
+ };
+ }
+ this.set = function(bat_id, svc_id, status)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!roost.get(bat_id))
+ return false;
+ return utils_int.factory.set_proc_status(bat_collection, bat_id, svc_id, status);
+ };
+ this.remove = function(bat_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return utils_int.factory.remove_proc_status(bat_collection, bat_id);
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ bat_collection = new bat_collection_module();
+ return true;
+ };
+ this.get = new get();
+ }
+ this.clear_all = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ bee_collection = new bee_collection_module();
+ bat_collection = new bat_collection_module();
+ return true;
+ };
+ this.applications = new apps();
+ this.services = new svcs();
+ }
+ this.num = function(process_type)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(process_type))
+ return (bee_collection.num + bat_collection.num);
+ if (process_type === 'app')
+ return bee_collection.num;
+ else if (process_type === 'svc')
+ return bat_collection.num;
+ return false;
+ };
+ this.list = function(match_status, process_type = null)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(match_status))
+ return false;
+ if (!utils_int.is_valid_status(match_status))
+ return false;
+ if (process_type === null)
+ return utils_int.match_status(match_status);
+ else
+ {
+ if (process_type !== 'app' && process_type !== 'svc')
+ return false;
+ return utils_int.match_status(match_status, process_type);
+ }
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ colony = cosmos.hub.access('colony');
+ roost = cosmos.hub.access('roost');
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ colony = null,
+ roost = null,
+ utils_sys = new vulcan(),
+ bee_collection = new bee_collection_module(),
+ bat_collection = new bat_collection_module(),
+ utils_int = new utilities();
+ this.status = new status();
+}
+function forest()
+{
+ var self = this;
+ function trace_keys_model()
+ {
+ this.trigger = 113;
+ this.trigger_set = false;
+ }
+ function mouse_coords_model()
+ {
+ this.mouse_x = 0;
+ this.mouse_y = 0;
+ }
+ function desktops_trace_model()
+ {
+ this.bee_drag = false;
+ this.internal_bee_drag = false;
+ this.bee_close = false;
+ }
+ function desktops_status_model()
+ {
+ var __desktops_num = 0,
+ __desktops_list = [];
+ function desktop_model()
+ {
+ function bee_model()
+ {
+ var __bees_num = 0,
+ __bees_list = [];
+ this.num = function()
+ {
+ return __bees_num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_undefined(index))
+ return __bees_list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0)
+ return false;
+ return __bees_list[index];
+ };
+ this.add = function(bee_id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(bee_id))
+ return false;
+ __bees_list.push(bee_id);
+ __bees_num++;
+ return true;
+ };
+ this.remove = function(bee_id)
+ {
+ if (__bees_num === 0)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(bee_id))
+ return false;
+ for (var i = 0; i < __bees_num; i++)
+ {
+ if (__bees_list[i] === bee_id)
+ {
+ __bees_list.splice(i, 1);
+ __bees_num--;
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (__bees_num === 0)
+ return false;
+ __bees_num = 0;
+ __bees_list = [];
+ return true;
+ };
+ }
+ this.id = null;
+ this.bees = new bee_model();
+ }
+ this.num = function()
+ {
+ return __desktops_num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_undefined(index))
+ return __desktops_list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0)
+ return false;
+ return __desktops_list[index];
+ };
+ this.add = function(desktop_id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(desktop_id))
+ return false;
+ var __new_desktop = new desktop_model();
+ __new_desktop.id = desktop_id;
+ __desktops_list.push(__new_desktop);
+ __desktops_num++;
+ utils_int.draw_desktop(desktop_id);
+ return true;
+ };
+ this.remove = function(desktop_id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(desktop_id))
+ return false;
+ for (var i = 0; i < __desktops_num; i++)
+ {
+ if (__desktops_list[i].id === desktop_id)
+ {
+ __desktops_list.splice(i, 1);
+ __desktops_num--;
+ utils_int.remove_desktop(desktop_id);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (__desktops_num === 0)
+ return false;
+ __desktops_num = 0;
+ __desktops_list = [];
+ utils_int.remove_all_desktops();
+ return true;
+ };
+ }
+ function utilities()
+ {
+ var me = this;
+ function events_model()
+ {
+ this.attach = function(action)
+ {
+ var __forest_tb_object = utils_sys.objects.by_id(forest_id + '_trigger_bar'),
+ __handler = null;
+ if (utils_sys.validation.misc.is_undefined(action))
+ return false;
+ if (action === 'swipe')
+ {
+ __handler = function() { me.toggle_forest(); };
+ morpheus.run(forest_id, 'mouse', 'click', __handler, __forest_tb_object);
+ }
+ return true;
+ };
+ }
+ function key_down_tracer(event_object)
+ {
+ key_control.scan(event_object);
+ var __key_code = key_control.get();
+ if (trace_keys.trigger === __key_code)
+ {
+ if (trace_keys.trigger_set === true)
+ return false;
+ trace_keys.trigger_set = true;
+ me.toggle_forest();
+ }
+ return true;
+ }
+ function key_up_tracer(event_object)
+ {
+ key_control.scan(event_object);
+ var __key_code = key_control.get();
+ if (trace_keys.trigger !== __key_code)
+ return false;
+ trace_keys.trigger_set = false;
+ return true;
+ }
+ this.coords = function(event_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ coords.mouse_x = event_object.clientX + document.documentElement.scrollLeft +
+ document.body.scrollLeft - document.body.clientLeft;
+ coords.mouse_y = event_object.clientY + document.documentElement.scrollTop +
+ document.body.scrollTop - document.body.clientTop;
+ return true;
+ };
+ this.reset_desktops_trace = function()
+ {
+ desktops_trace.bee_drag = false;
+ desktops_trace.internal_bee_drag = false;
+ desktops_trace.bee_close = false;
+ return true;
+ };
+ this.toggle_forest = function()
+ {
+ if (self.settings.is_open())
+ {
+ if (is_swiping === true)
+ return false;
+ is_swiping = true;
+ gfx.animation.swipe(forest_id, 1, 'left', 298, 0, 15, 15,
+ function() { self.settings.is_open(false); is_swiping = false; });
+ }
+ else
+ {
+ if (is_swiping === true)
+ return false;
+ is_swiping = true;
+ gfx.animation.swipe(forest_id, 1, 'right', 298, 0, 15, 15,
+ function() { self.settings.is_open(true); is_swiping = false; });
+ }
+ };
+ this.toggle_hive = function()
+ {
+ var __hive = matrix.get('hive');
+ if (!__hive.status.bee_drag())
+ __hive.stack.toggle('off');
+ return true;
+ };
+ this.draw_forest = function()
+ {
+ var __dynamic_object = null,
+ __forest_object = utils_sys.objects.by_id(forest_id),
+ __swarm_id = matrix.get('swarm').settings.id(),
+ __handler = null;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', 'forest_ghost_bee');
+ __dynamic_object.setAttribute('class', 'ghost_bee');
+ utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', forest_id);
+ __dynamic_object.setAttribute('class', 'forest');
+ __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 87) + 'px;');
+ __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' +
+ '<div id="forest_top_list" class="top_list">' +
+ ' <a href="#" class="create_cat">' +
+ 'Create new desktop</a>' +
+ '</div>' +
+ '<div id="forest_cat_list" class="cat_list" style="height: ' +
+ (window.innerHeight - 260) + 'px;">' +
+ ' <div class="cat social">' +
+ ' <a href="#" style="background-color: #5C5C5C;" title="Sample desktop!">' +
+ 'My desktop' +
+ ' <span style="background: #FFF; color: #5C5C5C;">7</span>' +
+ ' </a>' +
+ ' <ul class="expanded">' +
+ ' <li>' +
+ ' <a href="#">Social media<span>2</span></a>' +
+ ' <ul>' +
+ ' <li><a href="#">Digg</a></li>' +
+ ' <li><a href="#">Foursquare</a></li>' +
+ ' </ul>' +
+ ' </li>' +
+ ' <li>' +
+ ' <a href="#">Youtube' +
+ ' <span>1</span>' +
+ ' </a>' +
+ ' </li>' +
+ ' <li class="create_new">' +
+ ' <a href="#">New desktop</a>' +
+ ' </li>' +
+ ' </ul>' +
+ ' </div>' +
+ ' <div class="cat apps">' +
+ ' <a href="#" title="Sample desktop!">Misc Apps' +
+ ' <span>16</span>' +
+ ' </a>' +
+ ' </div>' +
+ ' <div class="cat apps">' +
+ ' <a href="#" title="Sample desktop!">Educational Apps' +
+ ' <span>4</span>' +
+ ' </a>' +
+ ' </div>' +
+ ' <div class="cat apps">' +
+ ' <a href="#" title="Sample desktop!">e-Banking' +
+ ' <span>3</span>' +
+ ' </a>' +
+ ' </div>' +
+ ' <div class="cat apps">' +
+ ' <a href="#" title="Sample desktop!">Healthcare' +
+ ' <span>1</span>' +
+ ' </a>' +
+ ' </div>' +
+ ' <div class="cat apps">' +
+ ' <a href="#" title="Sample desktop!">3D Modelling Tools' +
+ ' <span>5</span>' +
+ ' </a>' +
+ ' </div>' +
+ ' <div class="cat games">' +
+ ' <a href="#" title="Sample desktop!">Games' +
+ ' <span>12</span>' +
+ ' </a>' +
+ ' </div>' +
+ ' <div class="cat apps">' +
+ ' <a href="#" title="Sample desktop!">Sound Engineering' +
+ ' <span>6</span>' +
+ ' </a>' +
+ ' </div>' +
+ ' <div class="cat apps">' +
+ ' <a href="#" title="Sample desktop!">Travel & Holidays' +
+ ' <span>0</span>' +
+ ' </a>' +
+ ' </div>' +
+ '</div>' +
+ '<div class="drawer" title="Sorry, drawer is not available yet...">' +
+ ' <input class="search_box" value="" placeholder="Search your drawer for apps...">' +
+ ' <a href="#">Drawer' +
+ ' <span>0</span>' +
+ ' </a>' +
+ '</div>';
+ utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
+ __handler = function(event) { me.coords(event); me.toggle_hive(); };
+ morpheus.run(forest_id, 'mouse', 'mousemove', __handler, __forest_object);
+ me.events.attach('swipe');
+ return true;
+ };
+ this.init_trace_keys = function()
+ {
+ var __handler = null;
+ __handler = function(event) { key_down_tracer(event); };
+ morpheus.run(forest_id, 'key', 'keydown', __handler, document);
+ __handler = function(event) { key_up_tracer(event); };
+ morpheus.run(forest_id, 'key', 'keyup', __handler, document);
+ return true;
+ };
+ this.events = new events_model();
+ }
+ function interaction()
+ {
+ function mouse()
+ {
+ this.x = function()
+ {
+ if (is_init === false)
+ return false;
+ return coords.mouse_x;
+ };
+ this.y = function()
+ {
+ if (is_init === false)
+ return false;
+ return coords.mouse_y;
+ };
+ }
+ function key()
+ {
+ var __key = 0;
+ this.get = function()
+ {
+ if (is_init === false)
+ return false;
+ return __key;
+ };
+ this.set = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return false;
+ __key = val;
+ return true;
+ };
+ }
+ this.mouse = new mouse();
+ this.key = new key();
+ }
+ this.trees = new function()
+ {
+ if (is_init === false)
+ return false;
+ };
+ function settings()
+ {
+ var __id = null,
+ __container = null,
+ __left = 0,
+ __top = 0,
+ __is_open = false;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ this.left = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __left;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ __left = val;
+ return true;
+ };
+ this.top = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __top;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ __top = val;
+ return true;
+ };
+ this.is_open = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __is_open;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __is_open = val;
+ return true;
+ };
+ this.set_stack_view = function(event, symbol, check_left_click)
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.manage_stack_view(event, symbol, check_left_click);
+ };
+ }
+ function status()
+ {
+ function desktops()
+ {
+ function num()
+ {
+ this.all = function()
+ {
+ if (is_init === false)
+ return false;
+ return desktops_status.all_num();
+ };
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ return desktops_status.num_for_id(val);
+ };
+ }
+ this.names = function()
+ {
+ if (is_init === false)
+ return false;
+ return desktops_status.name();
+ };
+ this.num = new num();
+ }
+ this.bees = function()
+ {
+ if (is_init === false)
+ return false;
+ var __all_bees = 0;
+ for (var i = 0; i < desktops_status.num(); i++)
+ __all_bees += desktops_status.list(i).bees.num();
+ return __all_bees;
+ };
+ this.bee_drag = function()
+ {
+ if (is_init === false)
+ return false;
+ return desktops_trace.bee_drag;
+ };
+ this.bee_close = function()
+ {
+ if (is_init === false)
+ return false;
+ return desktops_trace.bee_close;
+ };
+ this.desktops = new desktops();
+ }
+ this.show = function(objects_array)
+ {
+ return true;
+ };
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.alpha.is_symbol(container_id) ||
+ utils_sys.objects.by_id(container_id) === null)
+ return false;
+ else
+ {
+ is_init = true;
+ self.settings.id('forest_' + random.generate());
+ self.settings.container(container_id);
+ forest_id = self.settings.id();
+ nature.theme(['forest']);
+ nature.apply('new');
+ utils_int.draw_forest();
+ utils_int.init_trace_keys();
+ }
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = matrix.get('colony');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_swiping = false,
+ forest_id = null,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ colony = null,
+ morpheus = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ gfx = new fx(),
+ random = new pythia(),
+ key_control = new key_manager(),
+ trace_keys = new trace_keys_model(),
+ coords = new mouse_coords_model(),
+ desktops_trace = new desktops_trace_model(),
+ desktops_status = new desktops_status_model(),
+ utils_int = new utilities();
+ this.settings = new settings();
+ this.interaction = new interaction();
+ this.status = new status();
+}
+function swarm()
+{
+ var self = this;
+ function mouse_coords_model()
+ {
+ this.mouse_x = 0;
+ this.mouse_y = 0;
+ }
+ function bees_info_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function bee_status_model()
+ {
+ this.active_bee_id = null;
+ this.boxified = false;
+ this.stacked = false;
+ this.z_index = 0;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.coords = function(event_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ coords.mouse_x = event_object.clientX + document.documentElement.scrollLeft + document.body.scrollLeft -
+ document.body.clientLeft - self.settings.left();
+ coords.mouse_y = event_object.clientY + document.documentElement.scrollTop + document.body.scrollTop -
+ document.body.clientTop - self.settings.top();
+ return true;
+ };
+ this.show_bee = function(bees_colony, index)
+ {
+ if (!bees_colony.list(index).status.system.in_hive())
+ new bees_colony.list(index).run();
+ return true;
+ };
+ this.toggle_hive = function()
+ {
+ var __hive = matrix.get('hive');
+ if (timer !== null)
+ clearTimeout(timer);
+ if ((coords.mouse_y + self.settings.top()) >= (window.innerHeight -
+ (document.documentElement.scrollTop +
+ document.body.scrollTop - document.body.clientTop) - 75))
+ {
+ if (self.status.active_bee() !== null)
+ {
+ if (!colony.get(self.status.active_bee()).status.gui.resizing())
+ __hive.stack.toggle('on');
+ }
+ else
+ timer = setTimeout(function() { __hive.stack.toggle('on'); }, 1000);
+ }
+ else
+ __hive.stack.toggle('off');
+ return true;
+ };
+ this.draw = function(left, top, right, bottom)
+ {
+ var __swarm_object = null,
+ __dynamic_object = null,
+ __handler = null;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', swarm_id);
+ __dynamic_object.setAttribute('class', 'swarm');
+ __dynamic_object.setAttribute('style', 'left: ' + left + 'px; ' +
+ 'top: ' + top + 'px; ' +
+ 'width: ' + right + 'px; ' +
+ 'height: ' + bottom + 'px;');
+ __dynamic_object.innerHTML = '<div id="' + swarm_id + '_bee_resize_tooltip" class="bee_resize_tooltip"></di>';
+ utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
+ resize_tooltip = utils_sys.objects.by_id(swarm_id + '_bee_resize_tooltip');
+ __swarm_object = utils_sys.objects.by_id(swarm_id);
+ __handler = function(event) { me.coords(event); me.toggle_hive(); };
+ morpheus.run(swarm_id, 'mouse', 'mousemove', __handler, __swarm_object);
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null,
+ __left = 0,
+ __top = 0,
+ __right = window.innerWidth,
+ __bottom = window.innerHeight;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ this.left = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __left;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ __left = val;
+ return true;
+ };
+ this.top = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __top;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ __top = val;
+ return true;
+ };
+ this.right = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __right;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0 || val < __left)
+ return false;
+ __right = val;
+ return true;
+ };
+ this.bottom = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __bottom;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0 || val < __top)
+ return false;
+ __bottom = val;
+ return true;
+ };
+ this.active_bee = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_object(val) && val !== null)
+ return false;
+ bees_status.active_bee_id = val;
+ return true;
+ };
+ this.boxified = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ bees_status.boxified = val;
+ return true;
+ };
+ this.stacked = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ bees_status.stacked = val;
+ return true;
+ };
+ this.z_index = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ bees_status.z_index = val;
+ return true;
+ };
+ }
+ function area()
+ {
+ function mouse()
+ {
+ this.x = function()
+ {
+ if (is_init === false)
+ return false;
+ return coords.mouse_x;
+ };
+ this.y = function()
+ {
+ if (is_init === false)
+ return false;
+ return coords.mouse_y;
+ };
+ }
+ function key()
+ {
+ var __key = 0;
+ this.get = function()
+ {
+ if (is_init === false)
+ return false;
+ return __key;
+ };
+ this.set = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return false;
+ __key = val;
+ return true;
+ };
+ }
+ this.mouse = new mouse();
+ this.key = new key();
+ }
+ function bees()
+ {
+ this.num = function()
+ {
+ if (is_init === false)
+ return false;
+ return bees_info.num;
+ };
+ this.list = function()
+ {
+ if (is_init === false)
+ return false;
+ return bees_info.list;
+ };
+ this.insert = function(object)
+ {
+ if (is_init === false)
+ return false;
+ if (!colony.is_bee(object) || object.status.system.in_hive())
+ return false;
+ var __bee_id = object.settings.general.id();
+ if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+ return false;
+ if (!colony.add([object]))
+ return false;
+ bees_info.list.push(object.settings.general.id());
+ bees_info.num++;
+ return true;
+ };
+ this.remove = function(object)
+ {
+ if (is_init === false)
+ return false;
+ if (bees_info.num === 0)
+ return false;
+ if (!colony.is_bee(object))
+ return false;
+ var __bee_id = object.settings.general.id();
+ if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+ return false;
+ for (var i = 0; i < bees_info.num; i++)
+ {
+ if (bees_info.list[i] === __bee_id)
+ {
+ colony.remove(__bee_id);
+ bees_info.list.splice(i, 1);
+ bees_info.num--;
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (is_init === false)
+ return false;
+ if (bees_info.num === 0)
+ return false;
+ bees_info.num = 0;
+ bees_info.list = [];
+ return true;
+ };
+ this.show = function(objects_array)
+ {
+ if (is_init === false)
+ return false;
+ if (colony.num() === 0)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(objects_array))
+ {
+ for (var i = 0; i < colony.num(); i++)
+ utils_int.show_bee(colony, i);
+ }
+ else
+ {
+ if (!utils_sys.validation.misc.is_array(objects_array))
+ return false;
+ var __objects_num = objects_array.length;
+ if (__objects_num === 0 || colony.num() < __objects_num)
+ return false;
+ for (var i = 0; i < __objects_num; i++)
+ {
+ for (var j = 0; j < colony.num(); j++)
+ {
+ if (colony.list(j).settings.general.id() === objects_array[i].settings.general.id())
+ utils_int.show_bee(colony, j);
+ }
+ }
+ }
+ return true;
+ };
+ }
+ function status()
+ {
+ this.active_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return bees_status.active_bee_id;
+ };
+ this.boxified = function()
+ {
+ if (is_init === false)
+ return false;
+ return bees_status.boxified;
+ };
+ this.stacked = function()
+ {
+ if (is_init === false)
+ return false;
+ return bees_status.stacked;
+ };
+ this.z_index = function()
+ {
+ if (is_init === false)
+ return false;
+ return bees_status.z_index;
+ };
+ }
+ this.resize_tooltip = function(bee, active = false)
+ {
+ if (is_init === false)
+ return false;
+ if (!colony.is_bee(bee))
+ return false;
+ if (active === false)
+ resize_tooltip.style.visibility = 'hidden';
+ else
+ {
+ resize_tooltip.style.visibility = 'visible';
+ resize_tooltip.style.zIndex = bees_status.z_index + 1;
+ if ((bee.gui.position.left() + bee.status.gui.size.width()) > (self.settings.right() - 80) ||
+ (bee.gui.position.top() + bee.status.gui.size.height()) > (self.settings.bottom() - 20))
+ {
+ resize_tooltip.style.left = bee.gui.position.left() + bee.status.gui.size.width() - 92 + 'px';
+ resize_tooltip.style.top = bee.gui.position.top() + bee.status.gui.size.height() - 50 + 'px';
+ }
+ else
+ {
+ resize_tooltip.style.left = bee.gui.position.left() + bee.status.gui.size.width() + 10 + 'px';
+ resize_tooltip.style.top = bee.gui.position.top() + bee.status.gui.size.height() + 10 + 'px';
+ }
+ resize_tooltip.innerHTML = bee.status.gui.size.width() + ' x ' + bee.status.gui.size.height();
+ }
+ return true;
+ };
+ this.reset = function(container_id, left, top, right, bottom)
+ {
+ if (is_init === false)
+ return false;
+ is_init = false;
+ return self.init(container_id, left, top, right, bottom);
+ };
+ this.init = function(container_id, left, top, right, bottom)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.misc.is_undefined(left) || utils_sys.validation.misc.is_undefined(top) ||
+ utils_sys.validation.misc.is_undefined(right) || utils_sys.validation.misc.is_undefined(bottom))
+ return false;
+ else
+ {
+ if (utils_sys.validation.alpha.is_symbol(container_id) || utils_sys.objects.by_id(container_id) === null ||
+ !utils_sys.validation.numerics.is_integer(left) || left < 0 ||
+ !utils_sys.validation.numerics.is_integer(top) || top < 0 ||
+ !utils_sys.validation.numerics.is_integer(right) || right < left ||
+ !utils_sys.validation.numerics.is_integer(bottom) || bottom < top)
+ return false;
+ is_init = true;
+ self.settings.id('swarm_' + random.generate());
+ self.settings.container(container_id);
+ self.settings.left(left);
+ self.settings.top(top);
+ self.settings.right(right);
+ self.settings.bottom(bottom);
+ swarm_id = self.settings.id();
+ nature.theme(['swarm']);
+ nature.apply('new');
+ utils_int.draw(left, top, right, bottom);
+ }
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ colony = cosmos.hub.access('colony');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ swarm_id = null,
+ resize_tooltip = null,
+ cosmos = null,
+ matrix = null,
+ colony = null,
+ morpheus = null,
+ nature = null,
+ timer = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ coords = new mouse_coords_model(),
+ bees_info = new bees_info_model(),
+ bees_status = new bee_status_model(),
+ utils_int = new utilities();
+ this.settings = new settings();
+ this.area = new area();
+ this.bees = new bees();
+ this.status = new status();
+}
+function hive()
+{
+ var self = this;
+ function mouse_coords_model()
+ {
+ this.mouse_x = 0;
+ this.mouse_y = 0;
+ }
+ function stack_trace_model()
+ {
+ this.bee_drag = false;
+ this.internal_bee_drag = false;
+ this.bee_closing = false;
+ this.bee_closed = false;
+ }
+ function honeycomb_view_model()
+ {
+ var __honeycombs_num = 0,
+ __honeycombs_list = [],
+ __visible_honeycomb = 1,
+ __hc_dynamic_width = 0,
+ __is_changing_stack = false;
+ function honeycomb_model()
+ {
+ function bee_model()
+ {
+ var __bees_num = 0,
+ __bees_list = [];
+ this.num = function()
+ {
+ return __bees_num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_undefined(index))
+ return __bees_list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0)
+ return false;
+ return __bees_list[index];
+ };
+ this.add = function(bee_id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(bee_id))
+ return false;
+ if (__bees_num === self.settings.bees_per_honeycomb())
+ return false;
+ __bees_list.push(bee_id);
+ __bees_num++;
+ return true;
+ };
+ this.remove = function(bee_id)
+ {
+ if (__bees_num === 0)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(bee_id))
+ return false;
+ for (var i = 0; i < __bees_num; i++)
+ {
+ if (__bees_list[i] === bee_id)
+ {
+ __bees_list.splice(i, 1);
+ __bees_num--;
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (__bees_num === 0)
+ return false;
+ __bees_num = 0;
+ __bees_list = [];
+ return true;
+ };
+ }
+ this.id = null;
+ this.bees = new bee_model();
+ }
+ this.num = function()
+ {
+ return __honeycombs_num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_undefined(index))
+ return __honeycombs_list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0)
+ return false;
+ return __honeycombs_list[index];
+ };
+ this.add = function(honeycomb_id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(honeycomb_id))
+ return false;
+ var __new_honeycomb = new honeycomb_model();
+ __new_honeycomb.id = honeycomb_id;
+ __honeycombs_list.push(__new_honeycomb);
+ __honeycombs_num++;
+ utils_int.draw_honeycomb(honeycomb_id);
+ return true;
+ };
+ this.remove = function(honeycomb_id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(honeycomb_id))
+ return false;
+ for (var i = 0; i < __honeycombs_num; i++)
+ {
+ if (__honeycombs_list[i].id === honeycomb_id)
+ {
+ __honeycombs_list.splice(i, 1);
+ __honeycombs_num--;
+ utils_int.remove_honeycomb(honeycomb_id);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (__honeycombs_num === 0)
+ return false;
+ __honeycombs_num = 0;
+ __honeycombs_list = [];
+ utils_int.remove_all_honeycombs();
+ return true;
+ };
+ this.visible = function(val)
+ {
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __visible_honeycomb;
+ if (!utils_int.validate_honeycomb_range(val))
+ return false;
+ __visible_honeycomb = val;
+ return true;
+ };
+ this.swiping = function(val)
+ {
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __is_changing_stack;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return null;
+ __is_changing_stack = val;
+ return true;
+ };
+ this.dynamic_width = function(val)
+ {
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __hc_dynamic_width;
+ __hc_dynamic_width = val;
+ return true;
+ };
+ }
+ function utilities()
+ {
+ var me = this;
+ this.coords = function(event_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ coords.mouse_x = event_object.clientX +
+ document.documentElement.scrollLeft + document.body.scrollLeft -
+ document.body.clientLeft;
+ coords.mouse_y = event_object.clientY +
+ document.documentElement.scrollTop + document.body.scrollTop -
+ document.body.clientTop;
+ return true;
+ };
+ this.reset_stack_trace = function(event_object)
+ {
+ if (event_object.buttons === 0 && last_mouse_button_clicked === 1)
+ {
+ stack_trace.bee_drag = false;
+ stack_trace.internal_bee_drag = false;
+ stack_trace.bee_closed = false;
+ return true;
+ }
+ return false;
+ };
+ this.release_bee = function(event_object)
+ {
+ if (event_object.buttons === 0 && last_mouse_button_clicked === 1)
+ {
+ if (stack_trace.bee_drag)
+ {
+ me.reset_stack_trace(event_object);
+ self.stack.bees.put(event_object);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.setup_honeycomb_size = function(bees_per_honeycomb)
+ {
+ var __proposed_stack_width = Math.floor((bees_per_honeycomb / 2) * 230),
+ __min_screen_width = 1296,
+ __proportion = __proposed_stack_width / __min_screen_width,
+ __fixed_bees_per_honeycomb = bees_per_honeycomb;
+ if (__proportion > 1 & __proposed_stack_width >= __min_screen_width)
+ {
+ var __width_diff = __proposed_stack_width - __min_screen_width,
+ __margin_fix = 0;
+ __fixed_bees_per_honeycomb -= (Math.ceil(__width_diff / 230) + 1);
+ if (__fixed_bees_per_honeycomb % 2 !== 0)
+ __fixed_bees_per_honeycomb -= 3;
+ __margin_fix = ((__fixed_bees_per_honeycomb / 2) * 2) + 1;
+ __proposed_stack_width -= (__width_diff - __margin_fix);
+ }
+ max_stack_width = __proposed_stack_width;
+ return __fixed_bees_per_honeycomb;
+ };
+ this.validate_honeycomb_range = function(val)
+ {
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 1 || val > honeycomb_views.num())
+ return false;
+ return true;
+ };
+ this.free_space_hc_view_swipe = function(event_object)
+ {
+ if (self.status.bees.num() === self.status.bees.max())
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(xenon.load('os_name'), 'All stack views are full!');
+ return false;
+ }
+ else
+ {
+ for (var i = 1; i <= honeycomb_views.num() ; i++)
+ {
+ if (honeycomb_views.list(i - 1).bees.num() < self.settings.bees_per_honeycomb())
+ {
+ self.stack.set_view(event_object, i);
+ return true;
+ }
+ }
+ }
+ };
+ this.show_hive_bee = function(honeycomb_view, bees_colony, index)
+ {
+ var __new_bee = bees_colony.list(index);
+ new __new_bee.show();
+ utils_int.draw_hive_bee(honeycomb_view, __new_bee.settings.general.id(), 0);
+ return true;
+ };
+ this.show_ghost_bee = function(event_object, mode)
+ {
+ if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1 || mode < 0 || mode > 1)
+ return false;
+ if (honeycomb_views.swiping())
+ return false;
+ if (swarm.status.active_bee())
+ {
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ {
+ if (honeycomb_views.list(i).id === honeycomb_views.visible())
+ {
+ if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb() &&
+ stack_trace.internal_bee_drag === false)
+ {
+ me.free_space_hc_view_swipe(event_object);
+ return true;
+ }
+ else
+ {
+ stack_trace.bee_drag = true;
+ var __this_bee = swarm.status.active_bee(),
+ __hive_bee = utils_sys.objects.by_id('hive_bee_' + __this_bee),
+ __hive_object = utils_sys.objects.by_id(hive_id),
+ __ghost_bee_width = 230,
+ __ghost_bee_height = 30,
+ __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_views.visible()),
+ __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
+ __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
+ __stack_offset_x_space = self.settings.left() +
+ utils_sys.graphics.pixels_value(__hive_object.style.width) + 190,
+ __stack_offset_y_space = self.settings.top() +
+ utils_sys.graphics.pixels_value(__hive_object.style.height);
+ if (mode === 1)
+ {
+ self.stack.bees.expel(event_object);
+ __honeycomb.removeChild(__hive_bee);
+ }
+ me.draw_hive_bee(honeycomb_views.visible(), __this_bee, 1);
+ if (__bee_x <= __stack_offset_x_space)
+ {
+ utils_sys.objects.by_id('hive_ghost_bee').style.left = coords.mouse_x + 10 + 'px';
+ utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y + __ghost_bee_height - 10 + 'px';
+ }
+ else
+ {
+ if (!utils_sys.objects.by_id('hive_ghost_bee').style.top)
+ utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
+ }
+ }
+ return true;
+ }
+ }
+ }
+ return false;
+ };
+ this.hide_ghost_bee = function(event_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+ return false;
+ var __this_bee = swarm.status.active_bee();
+ if (__this_bee)
+ {
+ var __this_hive_bee = colony.get(__this_bee);
+ if (utils_sys.objects.by_id(__this_bee) === null)
+ {console.error('{ *** [ ! ( ^ ) ! ] *** }');
+ }
+ utils_sys.objects.by_id(__this_bee).style.display = 'block';
+ utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
+ if (__this_hive_bee.status.gui.casement_deployed())
+ utils_sys.objects.by_id(__this_bee + '_casement').style.display = 'block';
+ stack_trace.bee_drag = false;
+ return true;
+ }
+ return false;
+ };
+ this.remove_bee = function(honeycomb_id, bee_id)
+ {
+ var __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_id),
+ __bee = utils_sys.objects.by_id('hive_bee_' + bee_id);
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ {
+ if (honeycomb_views.list(i).id === honeycomb_id)
+ {
+ __honeycomb.removeChild(__bee);
+ honeycomb_views.list(i).bees.remove(bee_id);
+ if (colony.get(bee_id))
+ colony.get(bee_id).settings.general.in_hive(false);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.remove_all_bees = function(honeycomb_id)
+ {
+ var __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_id);
+ while (__honeycomb.hasChildNodes())
+ {
+ __honeycomb.removeChild(__honeycomb.lastChild);
+ honeycomb_views.list(honeycomb_id).bees.remove(__honeycomb.lastChild.id());
+ }
+ return true;
+ };
+ this.prepare_draw = function(left, top, honeycombs_num, mode)
+ {
+ me.draw_hive(left, top);
+ for (var i = 0; i < honeycombs_num; i++)
+ {
+ if (mode === 1)
+ honeycomb_views.add(i + 1);
+ else
+ me.draw_honeycomb(i + 1);
+ }
+ me.fixate_sliding_area();
+ };
+ this.draw_honeycomb = function(honeycomb_id)
+ {
+ var __new_honeycomb = null,
+ __honeycomb_id = 'honeycomb_' + honeycomb_id,
+ __dynamic_width = 0,
+ __handler = null;
+ __new_honeycomb = document.createElement('div');
+ __dynamic_width = (utils_sys.graphics.pixels_value(utils_sys.objects.by_id(hive_id + '_stack').style.width) - 20);
+ __new_honeycomb.setAttribute('id', __honeycomb_id);
+ __new_honeycomb.setAttribute('class', 'honeycomb');
+ __new_honeycomb.setAttribute('style', 'width: ' + __dynamic_width + 'px;');
+ utils_sys.objects.by_id(hive_id + '_sliding_box').appendChild(__new_honeycomb);
+ __handler = function(event) { self.stack.bees.put(event); };
+ morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(__honeycomb_id));
+ honeycomb_views.dynamic_width(__dynamic_width);
+ return true;
+ };
+ this.remove_honeycomb = function(honeycomb_id)
+ {
+ var __hive = utils_sys.objects.by_id(hive_id),
+ __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_id);
+ __hive.removeChild(__honeycomb);
+ return true;
+ };
+ this.remove_all_honeycombs = function()
+ {
+ var __hive = utils_sys.objects.by_id(hive_id);
+ while (__hive.hasChildNodes())
+ __hive.removeChild(__hive.lastChild);
+ return true;
+ };
+ this.draw_hive = function(left, top)
+ {
+ var __dynamic_object = null,
+ __swarm_id = swarm.settings.id(),
+ __forest_id = forest.settings.id(),
+ __swarm_object = utils_sys.objects.by_id(__swarm_id),
+ __forest_object = utils_sys.objects.by_id(__forest_id),
+ __handler = null;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', 'hive_ghost_bee');
+ __dynamic_object.setAttribute('class', 'ghost_bee');
+ utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', hive_id);
+ __dynamic_object.setAttribute('class', 'hive');
+ __dynamic_object.setAttribute('style', 'top: ' + top + 'px; ' +
+ 'left: ' + left + 'px; ' +
+ 'right: ' + left + 'px; ' +
+ 'width: ' + max_stack_width + 'px; ' +
+ 'height: 85px;');
+ __dynamic_object.innerHTML = '<div id="' + hive_id + '_previous_arrow" class="stack_arrow left_arrow"></div>' +
+ '<div id="' + hive_id + '_stack" class="stack_bar">' +
+ ' <div id="' + hive_id + '_sliding_box" class="sliding_box"></div>' +
+ '</div>' +
+ '<div id="' + hive_id + '_next_arrow" class="stack_arrow right_arrow"></div>';
+ utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
+ __current_stack_width = utils_sys.graphics.pixels_value(__dynamic_object.style.width);
+ utils_sys.objects.by_id(hive_id + '_stack').style.width =
+ (utils_sys.graphics.pixels_value(__dynamic_object.style.width) - 84) + 'px';
+ utils_sys.objects.by_id(hive_id + '_stack').style.height = '85px';
+ __handler = function(event)
+ {
+ me.coords(event);
+ me.show_ghost_bee(event, 0);
+ last_mouse_button_clicked = event.buttons;
+ };
+ morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
+ __handler = function(event) { me.reset_stack_trace(event); };
+ morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
+ __handler = function(event) { me.hide_ghost_bee(event); };
+ morpheus.run(hive_id, 'mouse', 'mousemove', __handler, __swarm_object);
+ __handler = function(event) { me.reset_stack_trace(event); };
+ morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __swarm_object);
+ __handler = function(event) { me.release_bee(event); };
+ morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __forest_object);
+ __handler = function(event) { me.manage_stack_view(event, '-'); };
+ morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_previous_arrow'));
+ __handler = function(event) { me.manage_stack_view(event, '+'); };
+ morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_next_arrow'));
+ return true;
+ };
+ this.draw_hive_bee = function(honeycomb_id, bee_id, mode)
+ {
+ var __dynamic_object = null,
+ __bee_object = colony.get(bee_id),
+ __ghost_object = null,
+ __ctrl_bar_class = null,
+ __ctrl_bar_icon_class = null,
+ __ctrl_bar_title_class = null,
+ __ctrl_bar_close_class = null,
+ __handler = null;
+ if (__bee_object.settings.general.type() === 1)
+ {
+ __ctrl_bar_class = 'ctrl_bar box_ctrl_bar ' + bee_id + '_ctrl_bar box_ctrl_border';
+ __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';
+ __ctrl_bar_title_class = 'title box_title ' + bee_id + '_box_title';
+ __ctrl_bar_close_class = 'close box_close ' + bee_id + '_box_close';
+ }
+ else
+ {
+ __ctrl_bar_class = 'ctrl_bar widget_ctrl_bar ' + bee_id + '_ctrl_bar';
+ __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';
+ __ctrl_bar_title_class = 'title widget_title ' + bee_id + '_widget_title';
+ __ctrl_bar_close_class = 'close widget_close ' + bee_id + '_widget_close';
+ }
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', 'hive_bee_' + bee_id);
+ __dynamic_object.setAttribute('class', __ctrl_bar_class + ' hive_bee');
+ __dynamic_object.innerHTML = '<div id="hive_bee_' + bee_id + '_icon" class="' + __ctrl_bar_icon_class + '"></div>' +
+ '<div id="hive_bee_' + bee_id + '_title" class="' + __ctrl_bar_title_class + '">' +
+ __bee_object.settings.data.window.labels.title() +
+ '</div>';
+ if (__bee_object.settings.actions.can_close())
+ __dynamic_object.innerHTML += '<div id="hive_bee_' + bee_id + '_close" class="' + __ctrl_bar_close_class + '"></div>';
+ if (mode === 0)
+ {
+ utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
+ utils_sys.objects.by_id('hive_ghost_bee').innerHTML = '';
+ utils_sys.objects.by_id('honeycomb_' + honeycomb_id).appendChild(__dynamic_object);
+ if (utils_sys.objects.by_id(bee_id) !== null)
+ {
+ utils_sys.objects.by_id(bee_id).style.display = 'none';
+ utils_sys.objects.by_id(bee_id + '_casement').style.display = 'none';
+ }
+ __handler = function() { return false; };
+ morpheus.run(hive_id, 'mouse', 'selectstart', __handler, __dynamic_object);
+ __handler = function(event)
+ {
+ if (event.buttons !== 1)
+ return false;
+ if (stack_trace.bee_drag === true || stack_trace.bee_closing === true)
+ return false;
+ last_mouse_button_clicked = 1;
+ stack_trace.internal_bee_drag = true;
+ swarm.settings.active_bee(bee_id);
+ me.show_ghost_bee(event, 1);
+ };
+ morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[0]);
+ morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[1]);
+ __handler = function(event)
+ {
+ if (event.buttons !== 1)
+ return false;
+ if (stack_trace.bee_drag === true || stack_trace.bee_closing === true)
+ return false;
+ last_mouse_button_clicked = 1;
+ stack_trace.bee_closing = true;
+ __bee_object.on('closed', function()
+ {
+ stack_trace.bee_closed = true;
+ stack_trace.bee_closing = false;
+ me.remove_bee(honeycomb_id, bee_id);
+ });
+ __bee_object.gui.actions.close(event);
+ };
+ morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[2]);
+ }
+ else
+ {
+ __ghost_object = utils_sys.objects.by_id('hive_ghost_bee');
+ __ghost_object.innerHTML = '';
+ __ghost_object.appendChild(__dynamic_object);
+ __ghost_object.style.display = 'block';
+ if (utils_sys.objects.by_id(bee_id) !== null)
+ {
+ utils_sys.objects.by_id(bee_id).style.display = 'none';
+ utils_sys.objects.by_id(bee_id + '_casement').style.display = 'none';
+ }
+ __handler = function(event) { me.release_bee(event); };
+ morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __ghost_object);
+ }
+ return true;
+ };
+ this.manage_stack_view = function(event_object, symbol, callback = null)
+ {
+ function factory_swipe(direction)
+ {
+ var __sliding_box = hive_id + '_sliding_box',
+ __sign = 1;
+ if (direction === 'right')
+ __sign = -1;
+ honeycomb_views.swiping(true);
+ gfx.animation.swipe(__sliding_box, 1, direction, honeycomb_views.dynamic_width(), 20, 5, 25,
+ function()
+ {
+ honeycomb_views.visible(honeycomb_views.visible() + __sign);
+ honeycomb_views.swiping(false);
+ if (callback !== null)
+ callback.call();
+ });
+ }
+ if (!utils_sys.validation.alpha.is_symbol(symbol))
+ return false;
+ if (!utils_sys.validation.misc.is_undefined(event_object.buttons) && event_object.buttons !== 1)
+ return false;
+ if (honeycomb_views.swiping())
+ return false;
+ if (symbol === '-')
+ {
+ if (honeycomb_views.visible() === 1)
+ return false;
+ factory_swipe('right')
+ }
+ else if (symbol === '+')
+ {
+ if (honeycomb_views.visible() === honeycomb_views.num())
+ return false;
+ factory_swipe('left')
+ }
+ else
+ return false;
+ return true;
+ };
+ this.fixate_sliding_area = function()
+ {
+ utils_sys.objects.by_id(hive_id + '_sliding_box').style.width =
+ (honeycomb_views.num() * honeycomb_views.dynamic_width() + 80) + 'px';
+ utils_sys.objects.by_id(hive_id + '_stack').style.width = honeycomb_views.dynamic_width() + 'px';
+ return true;
+ };
+ this.set_z_index = function(bee_id)
+ {
+ if (utils_sys.validation.misc.is_undefined(bee_id) || utils_sys.validation.alpha.is_symbol(bee_id))
+ return false;
+ var __bee_object = colony.get(bee_id),
+ __z_index = swarm.status.z_index();
+ swarm.settings.z_index(__z_index + 1);
+ __bee_object.gui.actions.set_top();
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null,
+ __bees_per_honeycomb = 10,
+ __left = 0,
+ __top = 0;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ this.bees_per_honeycomb = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __bees_per_honeycomb;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 8)
+ return false;
+ __bees_per_honeycomb = val;
+ return true;
+ };
+ this.left = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __left;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ __left = val;
+ return true;
+ };
+ this.top = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __top;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ __top = val;
+ return true;
+ };
+ }
+ function stack()
+ {
+ function bees()
+ {
+ this.insert = function(object, honeycomb_view)
+ {
+ if (is_init === false)
+ return false;
+ if (!colony.is_bee(object) ||
+ (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view)))
+ return false;
+ if (honeycomb_views.swiping())
+ return false;
+ var __bee_id = object.settings.general.id();
+ if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+ return false;
+ if (honeycomb_view === null)
+ {
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ {
+ if (honeycomb_views.list(i).id === honeycomb_views.visible() &&
+ honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+ {
+ honeycomb_views.list(i).bees.add(__bee_id);
+ colony.get(__bee_id).settings.general.in_hive(true);
+ swarm.bees.remove(__bee_id);
+ utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+ break;
+ }
+ }
+ }
+ else
+ {
+ honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id);
+ swarm.bees.remove(__bee_id);
+ utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
+ }
+ swarm.settings.active_bee(null);
+ return true;
+ };
+ this.remove = function(object, honeycomb_view)
+ {
+ if (is_init === false)
+ return false;
+ if (!colony.is_bee(object) || !utils_int.validate_honeycomb_range(honeycomb_view))
+ return false;
+ var __bee_id = object.settings.general.id();
+ if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+ return false;
+ if (!utils_int.remove_bee(honeycomb_view, __bee_id))
+ return false;
+ if (!colony.remove(__bee_id))
+ return false;
+ object.settings.general.in_hive(false);
+ return true;
+ };
+ this.put = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) ||
+ (event_object.buttons !== 0 && last_mouse_button_clicked !== 1))
+ return false;
+ if (honeycomb_views.swiping())
+ return false;
+ if (swarm.status.active_bee())
+ {
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ {
+ if (honeycomb_views.list(i).id === honeycomb_views.visible() &&
+ honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+ {
+ var __this_bee = swarm.status.active_bee();
+ honeycomb_views.list(i).bees.add(__this_bee);
+ colony.get(__this_bee).settings.general.in_hive(true);
+ swarm.bees.remove(__this_bee);
+ utils_int.draw_hive_bee(honeycomb_views.visible(), __this_bee, 0);
+ swarm.settings.active_bee(null);
+ return true;
+ }
+ }
+ return false;
+ }
+ return true;
+ };
+ this.expel = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+ return false;
+ if (swarm.status.active_bee())
+ {
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ {
+ if (honeycomb_views.list(i).id === honeycomb_views.visible())
+ {
+ var __this_bee = swarm.status.active_bee();
+ honeycomb_views.list(i).bees.remove(__this_bee);
+ swarm.bees.insert(__this_bee);
+ colony.get(__this_bee).settings.general.in_hive(false);
+ swarm.settings.active_bee(__this_bee);
+ utils_int.set_z_index(__this_bee);
+ return true;
+ }
+ }
+ return false;
+ }
+ return true;
+ };
+ this.show = function(honeycomb_view)
+ {
+ if (is_init === false)
+ return false;
+ var j = 0;
+ if (colony.num() === 0 || !utils_int.validate_honeycomb_range(honeycomb_view))
+ return false;
+ var __bees_num = honeycomb_views.list(honeycomb_view).bees.num(),
+ __bees = honeycomb_views.list(honeycomb_view).bees.list();
+ for (var i = 0; i < __bees_num; i++)
+ {
+ for (j = 0; j < colony.num(); j++)
+ {
+ if (colony.list(j).settings.general.id() === __bees[i])
+ utils_int.show_hive_bee(honeycomb_view, colony, j);
+ }
+ }
+ return true;
+ };
+ }
+ function mouse()
+ {
+ this.x = function()
+ {
+ if (is_init === false)
+ return false;
+ return coords.mouse_x;
+ };
+ this.y = function()
+ {
+ if (is_init === false)
+ return false;
+ return coords.mouse_y;
+ };
+ }
+ function key()
+ {
+ var __key = 0;
+ this.get = function()
+ {
+ if (is_init === false)
+ return false;
+ return __key;
+ };
+ this.set = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return false;
+ __key = val;
+ return true;
+ };
+ }
+ this.set_view = function(event_object, next_honeycomb_num)
+ {
+ function recursive_swipe(hc_view_delta)
+ {
+ var __sign = '+';
+ if (hc_view_delta === 0)
+ return;
+ if (hc_view_delta < 0 )
+ {
+ hc_view_delta = -hc_view_delta;
+ __sign = '-';
+ }
+ utils_int.manage_stack_view(event_object, __sign,
+ function()
+ {
+ hc_view_delta--;
+ if (__sign === '-')
+ hc_view_delta = -hc_view_delta;
+ recursive_swipe(hc_view_delta);
+ });
+ }
+ if (is_init === false)
+ return false;
+ if (!utils_sys.validation.numerics.is_integer(next_honeycomb_num) ||
+ next_honeycomb_num < 1 || next_honeycomb_num > honeycomb_views.num())
+ return false;
+ var __honeycomb_view_delta = next_honeycomb_num - honeycomb_views.visible();
+ recursive_swipe(__honeycomb_view_delta);
+ return true;
+ };
+ this.toggle = function(status)
+ {
+ if (is_init === false)
+ return false;
+ if (status !== 'on' && status !== 'off')
+ return false;
+ var __hive_object = utils_sys.objects.by_id(hive_id);
+ if (status === 'on')
+ __hive_object.style.visibility = 'visible';
+ else
+ __hive_object.style.visibility = 'hidden';
+ return true;
+ };
+ this.bees = new bees();
+ this.mouse = new mouse();
+ this.key = new key();
+ }
+ function status()
+ {
+ function honeycombs()
+ {
+ this.num = function()
+ {
+ if (is_init === false)
+ return false;
+ return honeycomb_views.num();
+ };
+ this.visible = function()
+ {
+ if (is_init === false)
+ return false;
+ return honeycomb_views.visible();
+ };
+ }
+ function bees()
+ {
+ this.max = function()
+ {
+ if (is_init === false)
+ return false;
+ return (honeycomb_views.num() * self.settings.bees_per_honeycomb());
+ };
+ this.num = function()
+ {
+ if (is_init === false)
+ return false;
+ var __bees_num = 0;
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ __bees_num += honeycomb_views.list(i).bees.num();
+ return __bees_num;
+ };
+ this.list = function()
+ {
+ if (is_init === false)
+ return false;
+ var __bees_list = [];
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ __bees_list.push(honeycomb_views.list(i).bees.list());
+ return __bees_list;
+ };
+ this.honeycomb_id = function(bee_id)
+ {
+ if (is_init === false)
+ return false;
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ {
+ var __this_honeycomb = honeycomb_views.list(i);
+ var __bees_list = __this_honeycomb.bees.list();
+ var __bees_list_length = __bees_list.length;
+ for (var j = 0; j < __bees_list_length; j++)
+ {
+ if (__bees_list[j] === bee_id)
+ return __this_honeycomb.id;
+ }
+ }
+ return false;
+ };
+ }
+ this.bee_drag = function()
+ {
+ if (is_init === false)
+ return false;
+ return stack_trace.bee_drag;
+ };
+ this.bee_close = function()
+ {
+ if (is_init === false)
+ return false;
+ return stack_trace.bee_closed;
+ };
+ this.honeycombs = new honeycombs();
+ this.bees = new bees();
+ }
+ this.init = function(container_id, left, top, bees_per_honeycomb, honeycombs_num)
+ {
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.misc.is_undefined(left) || utils_sys.validation.misc.is_undefined(top) ||
+ utils_sys.validation.misc.is_undefined(bees_per_honeycomb) || utils_sys.validation.misc.is_undefined(honeycombs_num))
+ return false;
+ else
+ {
+ if (utils_sys.validation.alpha.is_symbol(container_id) || utils_sys.objects.by_id(container_id) === null ||
+ !utils_sys.validation.numerics.is_integer(left) || left < 0 ||
+ !utils_sys.validation.numerics.is_integer(top) || top < 0 ||
+ !utils_sys.validation.numerics.is_integer(bees_per_honeycomb) ||
+ bees_per_honeycomb < 10 || bees_per_honeycomb % 2 !== 0 ||
+ !utils_sys.validation.numerics.is_integer(honeycombs_num) || honeycombs_num < 1)
+ return false;
+ var dynamic_bees_per_honeycomb = utils_int.setup_honeycomb_size(bees_per_honeycomb);
+ is_init = true;
+ self.settings.id('hive_' + random.generate());
+ self.settings.container(container_id);
+ self.settings.bees_per_honeycomb(dynamic_bees_per_honeycomb);
+ self.settings.left(left);
+ self.settings.top(top);
+ hive_id = self.settings.id();
+ nature.theme(['hive']);
+ nature.apply('new');
+ utils_int.prepare_draw(left, top, honeycombs_num, 1);
+ }
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ colony = cosmos.hub.access('colony');
+ xenon = matrix.get('xenon');
+ swarm = matrix.get('swarm');
+ forest = matrix.get('forest');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ hive_id = null,
+ cosmos = null,
+ matrix = null,
+ colony = null,
+ xenon = null,
+ swarm = null,
+ forest = null,
+ morpheus = null,
+ nature = null,
+ msg_win = null,
+ max_stack_width = 0,
+ last_mouse_button_clicked = 0,
+ utils_sys = new vulcan(),
+ gfx = new fx(),
+ random = new pythia(),
+ coords = new mouse_coords_model(),
+ stack_trace = new stack_trace_model(),
+ honeycomb_views = new honeycomb_view_model(),
+ utils_int = new utilities();
+ this.settings = new settings();
+ this.stack = new stack();
+ this.status = new status();
+}
+function trinity()
+{
+ var self = this;
+ function processes_model()
+ {
+ this.apps = [];
+ this.services = [];
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = trinity_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ utils_int.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ trinity_bee.settings.data.window.content('<div class="trinity_data">' +
+ '</div>');
+ return true;
+ };
+ this.attach_events = function()
+ {
+ var __data = utils_sys.objects.by_id(trinity_bee.settings.general.id() + '_data');
+ }
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return trinity_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ config.id = 'trinity';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ trinity_bee = dev_box.get('bee');
+ trinity_bee.init(config.id, 2);
+ trinity_bee.settings.data.window.labels.title('Trinity :: Tasks Management');
+ trinity_bee.settings.data.window.labels.status_bar('Ready');
+ trinity_bee.settings.general.single_instance(true);
+ trinity_bee.gui.position.static(true);
+ trinity_bee.gui.position.left(930);
+ trinity_bee.gui.position.top(520);
+ trinity_bee.gui.size.width(340);
+ trinity_bee.gui.size.height(700);
+ trinity_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ trinity_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ trinity_bee.on('open', function() { trinity_bee.gui.fx.fade.into(); });
+ trinity_bee.on('opened', function() { utils_int.gui_init(); });
+ trinity_bee.on('dragging', function()
+ {
+ trinity_bee.gui.fx.opacity.settings.set(0.7);
+ trinity_bee.gui.fx.opacity.apply();
+ });
+ trinity_bee.on('dragged', function() { trinity_bee.gui.fx.opacity.reset(); });
+ trinity_bee.on('close', function() { trinity_bee.gui.fx.fade.out(); });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = cosmos.hub.access('colony');
+ roost = cosmos.hub.access('roost');
+ swarm = matrix.get('swarm');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ colony = null,
+ roost = null,
+ swarm = null,
+ nature = null,
+ infinity = null,
+ trinity_bee = null,
+ utils_sys = new vulcan(),
+ processes = new processes_model(),
+ utils_int = new utilities();
+}
+function krator()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ function close_krator()
+ {
+ krator_bee.settings.actions.can_close(true);
+ krator_bee.gui.actions.close(null);
+ return true;
+ }
+ this.gui_init = function()
+ {
+ me.draw();
+ me.attach_events();
+ return true;
+ };
+ this.draw = function()
+ {
+ me.load_forms();
+ return true;
+ };
+ this.load_forms = function()
+ {
+ var __content = '<div id="login_control" class="krator_controls">\
+ <div class="controls">\
+ <center>User Login</center>\
+ <div class="controls">\
+ <br>\
+ <div class="control_item">\
+ <input id="login_username_text" class="text" placeholder="Please enter your e-mail...">\
+ </div>\
+ <div class="control_item">\
+ <input id="login_password_text" class="text" type="password" placeholder="Please enter your password...">\
+ </div>\
+ <br>\
+ <div class="control_item">\
+ <button id="login_button" class="button" type="button">\
+ Login\
+ </button>\
+ </div>\
+ <div class="control_item">\
+ <a id="register_link" href="#">No account? Register!</a>\
+ </div>\
+ </div>\
+ </div>\
+ </div>';
+ krator_bee.settings.data.window.content(__content);
+ __content = '<div id="registration_control" class="krator_controls">\
+ <div class="content">\
+ <center>Register Account</center>\
+ <div class="controls">\
+ <br>\
+ <div class="control_item">\
+ <input id="register_username_text" class="text" placeholder="Please enter an e-mail...">\
+ </div>\
+ <div class="control_item">\
+ <input id="register_password_text" class="text" type="password" placeholder="Please enter a password...">\
+ </div>\
+ <div class="control_item">\
+ <input id="register_password_confirm_text" class="text" type="password" placeholder="Please confirm password...">\
+ </div>\
+ <br>\
+ <div class="control_item">\
+ <button id="register_button" class="button" type="button">\
+ Register\
+ </button>\
+ </div>\
+ </div>\
+ </div>\
+ </div>';
+ krator_bee.settings.data.casement.content(__content);
+ };
+ this.attach_events = function()
+ {
+ var __login_username = utils_sys.objects.by_id('login_username_text'),
+ __login_password = utils_sys.objects.by_id('login_password_text'),
+ __login_button = utils_sys.objects.by_id('login_button'),
+ __register_link = utils_sys.objects.by_id('register_link'),
+ __register_username = utils_sys.objects.by_id('register_username_text'),
+ __register_password = utils_sys.objects.by_id('register_password_text'),
+ __register_password_confirm = utils_sys.objects.by_id('register_password_confirm_text'),
+ __register_button = utils_sys.objects.by_id('register_button');
+ utils_sys.events.attach(config.id, __login_username, 'keydown',
+ function(event)
+ {
+ var __args_array = [__login_username, __login_password, __login_button];
+ me.scan_enter(event, 'login', __args_array);
+ });
+ utils_sys.events.attach(config.id, __login_password, 'keydown',
+ function(event)
+ {
+ var __args_array = [__login_username, __login_password, __login_button];
+ me.scan_enter(event, 'login', __args_array);
+ });
+ utils_sys.events.attach(config.id, __login_button, 'click',
+ function()
+ {
+ me.check_login_credentials(__login_username, __login_password, __login_button);
+ });
+ utils_sys.events.attach(config.id, __register_link, 'mousedown',
+ function(event)
+ {
+ if (krator_bee.status.gui.casement_deployed())
+ krator_bee.gui.actions.casement.hide(event);
+ else
+ krator_bee.gui.actions.casement.deploy(event);
+ });
+ utils_sys.events.attach(config.id, __register_username, 'keydown',
+ function(event)
+ {
+ var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+ me.scan_enter(event, 'registration', __args_array);
+ });
+ utils_sys.events.attach(config.id, __register_password, 'keydown',
+ function(event)
+ {
+ var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+ me.scan_enter(event, 'registration', __args_array);
+ });
+ utils_sys.events.attach(config.id, __register_password_confirm, 'keydown',
+ function(event)
+ {
+ var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+ me.scan_enter(event, 'registration', __args_array);
+ });
+ utils_sys.events.attach(config.id, __register_button, 'click',
+ function()
+ {
+ me.check_registration_credentials(__register_username, __register_password,
+ __register_password_confirm, __register_button);
+ });
+ return true;
+ };
+ this.scan_enter = function(event, form_id, args_array)
+ {
+ key_control.scan(event);
+ if (key_control.get() === key_control.keys.ENTER)
+ {
+ if (form_id === 'login')
+ me.check_login_credentials(args_array[0], args_array[1], args_array[2]);
+ else if (form_id === 'registration')
+ me.check_registration_credentials(args_array[0], args_array[1], args_array[2], args_array[3]);
+ else
+ return false;
+ }
+ return true;
+ };
+ this.check_login_credentials = function(username_object, password_object, login_button_object)
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ if (!utils_sys.validation.utilities.is_email(username_object.value))
+ {
+ msg_win.show(os_name, 'The email format is invalid!');
+ return;
+ }
+ if (username_object.value.length < 3 || password_object.value.length < 8)
+ {
+ msg_win.show(os_name, 'Credentials are invalid!');
+ return;
+ }
+ username_object.disabled = true;
+ password_object.disabled = true;
+ login_button_object.disabled = true;
+ var data = 'gate=auth&mode=login&username=' + username_object.value + '&password=' + password_object.value;
+ ajax_factory(data, function()
+ {
+ is_login_ok = true;
+ close_krator();
+ },
+ function()
+ {
+ msg_win.show(os_name, 'Your credentials are wrong!');
+ },
+ function()
+ {
+ username_object.disabled = false;
+ password_object.disabled = false;
+ login_button_object.disabled = false;
+ });
+ };
+ this.check_registration_credentials = function(username_object, password_object, password_comfirm_object, register_button_object)
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ if (!utils_sys.validation.utilities.is_email(username_object.value))
+ {
+ msg_win.show(os_name, 'The email format is invalid!');
+ return;
+ }
+ if (username_object.value.length < 3 || password_object.value.length < 8)
+ {
+ msg_win.show(os_name, 'Please choose more complex credentials!');
+ return;
+ }
+ if (password_object.value !== password_comfirm_object.value)
+ {
+ msg_win.show(os_name, 'Password confirmation failed!');
+ return;
+ }
+ username_object.disabled = true;
+ password_object.disabled = true;
+ password_comfirm_object.disabled = true;
+ register_button_object.disabled = true;
+ var data = 'gate=register&mode=reg&username=' + username_object.value +
+ '&password=' + password_object.value +
+ '&confirm=' + password_comfirm_object.value;
+ ajax_factory(data, function()
+ {
+ msg_win.show(os_name, 'Registration succeeded!',
+ function() { });
+ },
+ function()
+ {
+ msg_win.show(os_name, 'Registration failed!');
+ },
+ function()
+ {
+ username_object.disabled = false;
+ password_object.disabled = false;
+ password_comfirm_object.disabled = false;
+ register_button_object.disabled = false;
+ });
+ };
+ this.load_desktop_ui = function(script)
+ {
+ if (!is_login_ok)
+ return false;
+ script.call();
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return krator_bee;
+ };
+ this.init = function(script)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (!utils_sys.validation.misc.is_function(script))
+ return false;
+ is_init = true;
+ os_name = xenon.load('os_name');
+ krator_bee = dev_box.get('bee');
+ config.id = 'krator';
+ nature.theme([config.id]);
+ nature.apply('new');
+ krator_bee.init(config.id, 2);
+ krator_bee.settings.data.window.labels.title('Krator :: Login & Registration');
+ krator_bee.settings.data.window.labels.status_bar(os_name + ' - Login/Registration');
+ krator_bee.settings.actions.can_edit_title(false);
+ krator_bee.settings.actions.can_use_menu(false);
+ krator_bee.settings.actions.can_close(false);
+ krator_bee.gui.size.width(420);
+ krator_bee.gui.size.height(400);
+ krator_bee.gui.position.static(true);
+ krator_bee.gui.position.left(swarm.settings.right() / 2 - 210);
+ krator_bee.gui.position.top(100);
+ krator_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ krator_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ krator_bee.on('open', function() { krator_bee.gui.fx.fade.into(); });
+ krator_bee.on('opened', function() { utils_int.gui_init(); });
+ krator_bee.on('dragging', function()
+ {
+ krator_bee.gui.fx.opacity.settings.set(0.7);
+ krator_bee.gui.fx.opacity.apply();
+ });
+ krator_bee.on('dragged', function() { krator_bee.gui.fx.opacity.reset(); });
+ krator_bee.on('close', function() { krator_bee.gui.fx.fade.out(); });
+ krator_bee.on('closed', function() { utils_int.load_desktop_ui(script); });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ xenon = matrix.get('xenon');
+ swarm = matrix.get('swarm');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_login_ok = false,
+ os_name = null,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ xenon = null,
+ swarm = null,
+ nature = null,
+ msg_win = null,
+ krator_bee = null,
+ utils_sys = new vulcan(),
+ key_control = new key_manager(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function ui_controls()
+{
+ var self = this;
+ function config_model()
+ {
+ this.active_control = ['all_windows', 'view'];
+ this.is_boxified = false;
+ this.is_stack = false;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.draw_ui_controls = function()
+ {
+ me.draw_controls();
+ me.attach_events();
+ return true;
+ };
+ this.draw_controls = function()
+ {
+ var __controls_div = utils_sys.objects.selectors.first('#top_panel #bottom_area #action_icons');
+ if (__controls_div === null)
+ return false;
+ __controls_div.innerHTML = '<div id="placement" class="actions">' +
+ ' <div id="boxify_all" class="placement_icons" title="Boxify/unboxify all windows"></div>' +
+ ' <div id="stack_all" class="placement_icons" title="Stack/unstack all windows"></div>' +
+ '</div>';
+ return true;
+ };
+ this.make_active = function(id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(id))
+ return false;
+ var __selector = '#top_panel #bottom_area #action_icons #placement ' + '#' + id,
+ __control = utils_sys.objects.selectors.first(__selector);
+ if (id === 'boxify_all')
+ __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify_hover.png')";
+ else if (id === 'stack_all')
+ __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack_hover.png')";
+ else
+ return false;
+ return true;
+ };
+ this.make_inactive = function(id)
+ {
+ if (utils_sys.validation.alpha.is_symbol(id))
+ return false;
+ var __selector = '#top_panel #bottom_area #action_icons #placement' + ' #' + id,
+ __control = utils_sys.objects.selectors.first(__selector);
+ if (id === 'boxify_all')
+ __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify.png')";
+ else if (id === 'stack_all')
+ __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack.png')";
+ else
+ return false;
+ return true;
+ };
+ this.attach_events = function()
+ {
+ var __handler = null;
+ __handler = function() { self.placement.boxify(); };
+ morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('boxify_all'));
+ __handler = function() { self.placement.stack(); };
+ morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('stack_all'));
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ function placement()
+ {
+ this.boxify = function()
+ {
+ if (is_init === false)
+ return false;
+ if (!colony.list())
+ return false;
+ if (config.is_boxified === false)
+ {
+ utils_int.make_active('boxify_all', 'placement');
+ config.is_boxified = true;
+ }
+ else
+ {
+ utils_int.make_inactive('boxify_all', 'placement');
+ config.is_boxified = false;
+ }
+ return true;
+ };
+ this.stack = function()
+ {
+ if (is_init === false)
+ return false;
+ if (!colony.list())
+ return false;
+ if (config.is_stack === false)
+ {
+ utils_int.make_active('stack_all', 'placement');
+ var __bees = colony.list(),
+ __bees_length = __bees.length;
+ if (__bees_length === 0)
+ return false;
+ for (var i = 0; i < __bees_length; i++)
+ hive.stack.bees.insert(__bees[i], null);
+ config.is_stack = true;
+ }
+ else
+ {
+ utils_int.make_inactive('stack_all', 'placement');
+ config.is_stack = false;
+ }
+ return true;
+ };
+ this.cascade = function()
+ {
+ if (is_init === false)
+ return false;
+ return true;
+ };
+ }
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.alpha.is_symbol(container_id) ||
+ utils_sys.objects.by_id(container_id) === null)
+ return false;
+ is_init = true;
+ self.settings.id('ui_controls_' + random.generate());
+ self.settings.container(container_id);
+ ui_controls_id = self.settings.id();
+ nature.theme('ui_controls');
+ nature.apply('new');
+ utils_int.draw_ui_controls();
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ colony = cosmos.hub.access('colony');
+ swarm = matrix.get('swarm');
+ hive = matrix.get('hive');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ ui_controls_id = null,
+ cosmos = null,
+ matrix = null,
+ colony = null,
+ swarm = null,
+ hive = null,
+ morpheus = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ config = new config_model(),
+ utils_int = new utilities();
+ this.settings = new settings();
+ this.placement = new placement();
+}
+function dock()
+{
+ var self = this;
+ function config_model()
+ {
+ this.dock_array = [];
+ }
+ function utilities()
+ {
+ var me = this;
+ function ajax_load(element_id, success_callback, time_out_callback = null, fail_callback = null)
+ {
+ if (utils_sys.validation.misc.is_undefined(element_id))
+ return false;
+ var __bull_config = {
+ "type" : "data",
+ "url" : "/",
+ "data" : "gate=dock&action=load",
+ "element_id" : element_id,
+ "content_fill_mode" : "replace",
+ "on_success" : function()
+ {
+ success_callback.call();
+ },
+ "on_timeout" : function()
+ {
+ if (time_out_callback !== null)
+ time_out_callback.call();
+ },
+ "on_fail" : function()
+ {
+ if (fail_callback !== null)
+ fail_callback.call();
+ }
+ };
+ ajax.run(__bull_config);
+ return true;
+ }
+ function ajax_save(apps_array)
+ {
+ var __bull_config = {
+ "type" : "request",
+ "url" : "/",
+ "data" : "gate=dock&action=save&apps=" + apps_array,
+ "ajax_mode" : "synchronous",
+ };
+ return ajax.run(__bull_config);
+ }
+ function create_dock_array()
+ {
+ var __app_id = null,
+ __position = null,
+ __title = null
+ __dock = utils_sys.objects.by_class('favorites');
+ for (var __dock_app of __dock)
+ {
+ __app_id = __dock_app.getAttribute('id').split('app_')[1],
+ __position = __dock_app.getAttribute('data-position'),
+ __title = __dock_app.getAttribute('title');
+ config.dock_array.push({ "app_id" : __app_id, "position" : __position, "title" : __title });
+ }
+ return true;
+ }
+ function attach_events()
+ {
+ var __dock_div = utils_sys.objects.by_id(self.settings.container()),
+ __handler = null;
+ __handler = function() { last_button_clicked = 0; };
+ morpheus.run(dock_id, 'mouse', 'mouseenter', __handler, __dock_div);
+ for (var __dock_app of config.dock_array)
+ open_app(__dock_app);
+ enable_drag();
+ return true;
+ }
+ function update_dock_array(position_one, position_two)
+ {
+ var tmp = config.dock_array[position_one];
+ config.dock_array[position_one] = config.dock_array[position_two];
+ config.dock_array[position_two] = tmp;
+ config.dock_array[position_one]['position'] = position_one;
+ config.dock_array[position_two]['position'] = position_two;
+ return true;
+ }
+ function open_app(dock_app)
+ {
+ var __handler = function(event)
+ {
+ if (event.buttons === 0 && last_button_clicked !== 1)
+ return false;
+ if (is_dragging)
+ return false;
+ var __app_id = dock_app['app_id'],
+ __sys_theme = chameleon.get();
+ parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
+ if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+ return false;
+ var __app = app_box.get(__app_id);
+ __app.init();
+ __bee = __app.get_bee();
+ swarm.bees.insert(__bee);
+ if (__bee.run())
+ {
+ utils_sys.objects.by_id('app_' + __app_id).classList.remove('app_' + __app_id + '_off');
+ utils_sys.objects.by_id('app_' + __app_id).classList.add('app_' + __app_id + '_on');
+ close_app(__bee, __app_id);
+ }
+ else
+ {
+ if (__bee.error.last() === __bee.error.codes.POSITION ||
+ __bee.error.last() === __bee.error.codes.SIZE)
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
+ You need a larger screen or higher resolution to run it!');
+ }
+ }
+ };
+ morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['app_id']));
+ }
+ function close_app(bee, app_id)
+ {
+ bee.on('closed', function()
+ {
+ if (owl.status.applications.get.by_proc_id(app_id, 'RUN'))
+ return false;
+ utils_sys.objects.by_id('app_' + app_id).classList.remove('app_' + app_id + '_on');
+ utils_sys.objects.by_id('app_' + app_id).classList.add('app_' + app_id + '_off');
+ return true;
+ });
+ }
+ function enable_drag()
+ {
+ var __dock_div = utils_sys.objects.by_id(self.settings.container()),
+ __dock_apps = utils_sys.objects.selectors.all('#top_panel #bottom_area #dynamic_container #favorite_apps .favorites'),
+ __dock_apps_length = __dock_apps.length,
+ __handler = null;
+ for (var i = 0; i < __dock_apps_length; i++)
+ {
+ __handler = function(event) { last_button_clicked = event.buttons; };
+ morpheus.run(dock_id, 'mouse', 'mousedown', __handler, __dock_apps[i]);
+ __handler = function(event)
+ {
+ is_dragging = true;
+ event.dataTransfer.setDragImage(this, -5, -5);
+ event.dataTransfer.effectAllowed = 'move';
+ event.dataTransfer.setData('text/plain', event.target.id);
+ for (var j = 0; j < __dock_apps_length; j++)
+ __dock_apps[j].classList.add('dock_replace');
+ };
+ morpheus.run(dock_id, 'mouse', 'dragstart', __handler, __dock_apps[i]);
+ __handler = function(event)
+ {
+ event.preventDefault();
+ event.dataTransfer.dropEffect = 'move';
+ };
+ morpheus.run(dock_id, 'mouse', 'dragover', __handler, __dock_apps[i]);
+ __handler = function(event)
+ {
+ event.preventDefault();
+ event.target.classList.add('dock_replace_outer');
+ };
+ morpheus.run(dock_id, 'mouse', 'dragenter', __handler, __dock_apps[i]);
+ __handler = function() { this.classList.remove('dock_replace_outer'); };
+ morpheus.run(dock_id, 'mouse', 'dragleave', __handler, __dock_apps[i]);
+ __handler = function()
+ {
+ is_dragging = false;
+ for (var j = 0; j < __dock_apps_length; j++)
+ {
+ __dock_apps[j].classList.remove('dock_replace_outer');
+ __dock_apps[j].classList.remove('dock_replace');
+ }
+ };
+ morpheus.run(dock_id, 'mouse', 'dragend', __handler, __dock_apps[i]);
+ __handler = function(event)
+ {
+ if (event.target.id !== event.dataTransfer.getData('text/plain'))
+ {
+ var __id = event.dataTransfer.getData('text/plain'),
+ __app_to_move = utils_sys.objects.by_id(__id),
+ __app_to_move_next = __app_to_move.nextSibling,
+ __app_to_replace = utils_sys.objects.by_id(this.id),
+ __position_one = __app_to_move.getAttribute('data-position'),
+ __position_two = event.target.getAttribute('data-position');
+ __app_to_move.setAttribute('data-position', __position_two);
+ event.target.setAttribute('data-position', __position_one);
+ __dock_div.insertBefore(__app_to_move, __app_to_replace.nextSibling);
+ __dock_div.insertBefore(__app_to_replace, __app_to_move_next);
+ update_dock_array(__position_one, __position_two);
+ me.save_dock();
+ }
+ };
+ morpheus.run(dock_id, 'mouse', 'drop', __handler, __dock_apps[i]);
+ }
+ }
+ this.draw = function()
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ ajax_load(self.settings.container(), function()
+ {
+ create_dock_array();
+ attach_events();
+ });
+ return true;
+ };
+ this.save_dock = function()
+ {
+ var __dock_array = encodeURIComponent(JSON.stringify(config.dock_array));
+ return ajax_save(__dock_array);
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ this.add = function()
+ {
+ if (is_init === false)
+ return false;
+ return true;
+ };
+ this.remove = function()
+ {
+ if (is_init === false)
+ return false;
+ return true;
+ };
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.alpha.is_symbol(container_id) ||
+ utils_sys.objects.by_id(container_id) === null)
+ return false;
+ is_init = true;
+ self.settings.id('dock_' + random.generate());
+ self.settings.container(container_id);
+ dock_id = self.settings.id();
+ nature.theme('dock');
+ nature.apply('new');
+ utils_int.draw();
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ app_box = cosmos.hub.access('app_box');
+ colony = cosmos.hub.access('colony');
+ xenon = matrix.get('xenon');
+ swarm = matrix.get('swarm');
+ hive = matrix.get('hive');
+ morpheus = matrix.get('morpheus');
+ owl = matrix.get('owl');
+ parrot = matrix.get('parrot');
+ chameleon = matrix.get('chameleon');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_dragging = false,
+ dock_id = null,
+ cosmos = null,
+ matrix = null,
+ xenon = null,
+ swarm = null,
+ hive = null,
+ app_box = null,
+ colony = null,
+ morpheus = null,
+ owl = null,
+ parrot = null,
+ chameleon = null,
+ nature = null,
+ msg_win = null,
+ last_button_clicked = 0,
+ utils_sys = new vulcan(),
+ ajax = new bull(),
+ random = new pythia(),
+ config = new config_model(),
+ utils_int = new utilities();
+ this.settings = new settings();
+}
+function user_profile()
+{
+ var self = this;
+ function user_profile_model()
+ {
+ this.full_name = null;
+ this.email = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.session_watchdog = function()
+ {
+ function abnormal_logout()
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(os_name, 'Your session has been terminated!',
+ function() { setTimeout(function(){ location.reload(); }, 1000); });
+ }
+ function run_heartbeat()
+ {
+ var heartbeat_config = {
+ "interval" : 90000,
+ "response_timeout" : 60000,
+ "on_success" : function()
+ {
+ },
+ "on_fail" : function()
+ {
+ abnormal_logout();
+ },
+ "on_timeout" : function()
+ {
+ }
+ };
+ heartbeat_config.url = 'beat/';
+ heartbeat_config.service_name = 'Session Watchdog';
+ heartbeat(heartbeat_config);
+ }
+ setTimeout(function(){ run_heartbeat(); }, 1000);
+ };
+ this.details = function(print)
+ {
+ var __data = 'gate=auth&mode=details';
+ ajax_factory(__data, function(result)
+ {
+ var __user_details = JSON.parse(result);
+ user_profile_data.full_name = __user_details.user.profile;
+ user_profile_data.email = __user_details.user.email;
+ if (print === true)
+ {
+ utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
+ utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
+ }
+ else
+ return user_profile_data;
+ },
+ function()
+ {
+ },
+ function()
+ {
+ });
+ };
+ this.logout = function()
+ {
+ var __data = 'gate=auth&mode=logout';
+ ajax_factory(__data, function()
+ {
+ cc_reload.init('Logging out...');
+ },
+ function()
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(os_name, 'Logout error!',
+ function() { cc_reload.init(); });
+ },
+ function()
+ {
+ });
+ me.hide_profile_area();
+ };
+ this.draw_user_profile = function()
+ {
+ me.draw();
+ me.attach_events();
+ me.details(true);
+ me.session_watchdog();
+ return true;
+ };
+ this.draw = function()
+ {
+ var __user_profile_div = utils_sys.objects.by_id('user_profile');
+ if (__user_profile_div === null)
+ return false;
+ __user_profile_div.innerHTML = '<div id="' + user_profile_id + '" title="Manage profile">\
+ <div id="notifications_num">00</div>\
+ <div id="profile_access">\
+ <div id="small_avatar"></div>\
+ <div id="my">My profile</div>\
+ </div>\
+ </div>\
+ <div id="' + user_profile_id + '_area" class="user_profile_area">\
+ <div id="profile_left_side">\
+ <div id="profile_info">\
+ <div id="big_avatar"></div>\
+ <div id="user_data">\
+ <div id="user_profile_name"></div>\
+ <div id="user_email"></div>\
+ <div id="user_account">Account</div>\
+ <div id="separator">|</div>\
+ <div id="user_settings">Settings</div>\
+ <div id="user_reboot">Reload Interface</div>\
+ </div>\
+ </div>\
+ </div>\
+ <div id="profile_right_side">\
+ <div id="notifications">\
+ <div id="total_notifications"></div>\
+ <div id="notifications_list">\
+ <div id="messages" class="notification_list_item">\
+ <div class="item_details">\
+ <div id="messages_icon" class="list_item_icon"></div>\
+ <div id="messages_text" class="list_item_text">Messages</div>\
+ </div>\
+ <div class="list_item_notifications">00</div>\
+ </div>\
+ <div id="alerts" class="notification_list_item">\
+ <div class="item_details">\
+ <div id="alerts_icon" class="list_item_icon"></div>\
+ <div id="alerts_text" class="list_item_text">Alerts</div>\
+ </div>\
+ <div class="list_item_notifications">00</div>\
+ </div>\
+ <div id="calendar" class="notification_list_item">\
+ <div class="item_details">\
+ <div id="calendar_icon" class="list_item_icon"></div>\
+ <div id="calendar_text" class="list_item_text">Calendar</div>\
+ </div>\
+ <div class="list_item_notifications">00</div>\
+ </div>\
+ </div>\
+ </div>\
+ <div id="logout">\
+ <div id="logout_icon"></div>\
+ <button id="logout_button" class="button" type="button">Logout</button>\
+ </div>\
+ </div>\
+ </div>';
+ return true;
+ };
+ this.attach_events = function()
+ {
+ var __handler = null;
+ __handler = function() { me.toggle_profile_area(); };
+ morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id));
+ __handler = function() { me.reboot_os(); };
+ morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('user_reboot'));
+ __handler = function() { me.logout(); };
+ morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('logout'));
+ __handler = function() { me.hide_profile_area(); };
+ morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+ __handler = function(event) { me.hide_profile_area_handler(event); };
+ morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
+ return true;
+ };
+ this.toggle_profile_area = function()
+ {
+ var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
+ __my_profile_label = utils_sys.objects.by_id('my');
+ if (is_profile_area_visible === true)
+ {
+ is_profile_area_visible = false;
+ __user_profile_area.style.display = 'none';
+ __my_profile_label.style.color = '#55b8ff';
+ }
+ else
+ {
+ is_profile_area_visible = true;
+ __user_profile_area.style.display = 'block';
+ __my_profile_label.style.color = '#55ffe7';
+ }
+ return true;
+ };
+ this.hide_profile_area_handler = function(event)
+ {
+ if (utils_sys.validation.misc.is_undefined(event))
+ return false;
+ key_control.scan(event);
+ if (key_control.get() !== key_control.keys.ESCAPE)
+ return false;
+ me.hide_profile_area();
+ return true;
+ };
+ this.hide_profile_area = function()
+ {
+ var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
+ __my_profile_label = utils_sys.objects.by_id('my');
+ __user_profile_area.style.display = 'none';
+ __my_profile_label.style.color = '#55b8ff';
+ is_profile_area_visible = false;
+ return true;
+ };
+ this.reboot_os = function()
+ {
+ cc_reload.init();
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ this.details = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.details(false);
+ };
+ this.logout = function()
+ {
+ utils_int.logout();
+ return true;
+ };
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.alpha.is_symbol(container_id) ||
+ utils_sys.objects.by_id(container_id) === null)
+ return false;
+ is_init = true;
+ os_name = xenon.load('os_name');
+ self.settings.id('user_profile_' + random.generate());
+ self.settings.container(container_id);
+ user_profile_id = self.settings.id();
+ nature.theme('user_profile');
+ nature.apply('new');
+ utils_int.draw_user_profile();
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ colony = cosmos.hub.access('colony');
+ xenon = matrix.get('xenon');
+ swarm = matrix.get('swarm');
+ hive = matrix.get('hive');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_profile_area_visible = false,
+ user_profile_id = null,
+ user_details = null,
+ os_name = null,
+ cosmos = null,
+ matrix = null,
+ colony = null,
+ xenon = null,
+ swarm = null,
+ hive = null,
+ morpheus = null,
+ nature = null,
+ msg_win = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ key_control = new key_manager(),
+ cc_reload = new f5(),
+ user_profile_data = new user_profile_model(),
+ utils_int = new utilities();
+ this.settings = new settings();
+}
+function chameleon()
+{
+ var self = this;
+ function theme_in_use()
+ {
+ function theme_data()
+ {
+ this.pictures = [];
+ this.sounds = [];
+ }
+ this.name = null;
+ this.list = new theme_data();
+ }
+ this.get = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (sys_theme.name === null)
+ return false;
+ return sys_theme.name;
+ };
+ this.set = function(theme)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(theme))
+ return false;
+ sys_theme.name = theme;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var cosmos = null,
+ utils_sys = new vulcan(),
+ sys_theme = new theme_in_use();
+}
+function nature()
+{
+ var self = this;
+ this.theme = function(themes)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_object(themes) && !utils_sys.validation.misc.is_array(themes))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(themes))
+ return themes_in_use;
+ if (themes === '')
+ return false;
+ themes_in_use = themes;
+ return true;
+ };
+ this.apply = function(mode)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.alpha.is_string(mode))
+ return false;
+ if (mode !== 'new' && mode !== 'replace')
+ return false;
+ var __themes_array = [];
+ if (utils_sys.validation.alpha.is_string(themes_in_use))
+ __themes_array[0] = themes_in_use;
+ else
+ {
+ if (!utils_sys.validation.misc.is_array(themes_in_use))
+ return false;
+ __themes_array = themes_in_use;
+ }
+ var __themes_num = __themes_array.length;
+ if (__themes_num === 0)
+ return false;
+ for (var i = 0; i < __themes_num; i++)
+ {
+ if (mode === 'new')
+ {
+ if (self.exists(__themes_array[i]))
+ return true;
+ var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/user/nature/themes/' +
+ __themes_array[i], __themes_array[i]);
+ return __result;
+ }
+ else if (mode === 'replace')
+ {
+ self.remove(__themes_array[i]);
+ var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/user/nature/themes/' +
+ __themes_array[i], __themes_array[i]);
+ return __result;
+ }
+ }
+ };
+ this.exists = function(theme)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.alpha.is_string(theme))
+ return false;
+ var __theme_links = document.head.getElementsByTagName('link');
+ for (var i = 0; i < __theme_links.length; i++)
+ {
+ if (__theme_links[i].attributes.rel.value === "stylesheet")
+ {
+ if (__theme_links[i].attributes.href.value.indexOf(theme) > -1)
+ return __theme_links[i];
+ }
+ }
+ return false;
+ };
+ this.remove = function(theme)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ var __theme_link = self.exists(theme);
+ if (__theme_link === false)
+ return false;
+ document.head.removeChild(__theme_link);
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var cosmos = null,
+ themes_in_use = null,
+ utils_sys = new vulcan();
+}
+function eagle()
+{
+ var self = this;
+ function trace_keys_model()
+ {
+ this.modifier = key_control.keys.SHIFT;
+ this.trigger = key_control.keys.TAB;
+ this.modifier_set = false;
+ this.trigger_set = false;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.key_down_tracer = function(event_object)
+ {
+ key_control.scan(event_object);
+ var __key_code = key_control.get();
+ if (trace_keys.modifier === __key_code)
+ trace_keys.modifier_set = true;
+ if (trace_keys.trigger === __key_code && trace_keys.modifier_set === true)
+ {
+ trace_keys.trigger_set = true;
+ if (is_visible === false)
+ {
+ me.show_eagle();
+ me.draw_windows();
+ }
+ me.switch_windows();
+ event_object.preventDefault();
+ }
+ return true;
+ };
+ this.key_up_tracer = function(event_object)
+ {
+ key_control.scan(event_object);
+ var __key_code = key_control.get();
+ if (trace_keys.modifier === __key_code)
+ {
+ var __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+ __eagle_apps.scrollTo(0, 1);
+ me.hide_eagle();
+ trace_keys.modifier_set = false;
+ picked_window = 0;
+ scroll_multiplier = 1;
+ }
+ return true;
+ };
+ this.draw_eagle = function()
+ {
+ var __eagle_interface = document.createElement('div'),
+ __container_object = utils_sys.objects.by_id(self.settings.container());
+ __eagle_interface.id = eagle_id;
+ __eagle_interface.className = 'eagle';
+ __eagle_interface.innerHTML = '<div id="eagle_apps"><br><br>No running apps...</div></div>';
+ __container_object.appendChild(__eagle_interface);
+ return true;
+ };
+ this.show_eagle = function()
+ {
+ var __eagle = utils_sys.objects.by_id(eagle_id);
+ __eagle.style.display = 'block';
+ is_visible = true;
+ return true;
+ };
+ this.hide_eagle = function()
+ {
+ var __eagle = utils_sys.objects.by_id(eagle_id);
+ __eagle.style.display = 'none';
+ is_visible = false;
+ return true;
+ };
+ this.draw_windows = function()
+ {
+ var __running_apps = owl.list('RUN', 'app'),
+ __running_apps_num = 0,
+ __eagle_apps = null,
+ __this_picked_app = null,
+ __this_app_title = null;
+ __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+ __running_apps_num = __running_apps.length;
+ if (__running_apps_num == 0)
+ {
+ __eagle_apps.innerHTML = '<br><br>No running apps...';
+ return false;
+ }
+ __eagle_apps.innerHTML = '';
+ for (var i = 1; i <= __running_apps_num; i++)
+ {
+ __this_picked_app = colony.get(__running_apps[i - 1].sys_id);
+ if (__this_picked_app === null || __this_picked_app === false)
+ continue;
+ if (i === 1)
+ picked_app = __this_picked_app;
+ __this_app_title = __this_picked_app.settings.data.window.labels.title();
+ var __this_eagle_window = document.createElement('div'),
+ __no_right_margin = '';
+ if (i % 3 === 0)
+ __no_right_margin = ' no_right_margin';
+ if (__this_app_title.length > 13)
+ __this_app_title = __this_app_title.substring(0, 12) + '...';
+ __this_eagle_window.id = 'eagle_' + __running_apps[i - 1].id;
+ __this_eagle_window.className = 'eagle_window' + __no_right_margin;
+ __this_eagle_window.innerHTML = '<div class="eagle_window_title">' + __this_app_title + '</div>\
+ <div class="eagle_window_body"></div>';
+ if (i === 1)
+ __this_eagle_window.classList.add('eagle_window_selected');
+ __eagle_apps.appendChild(__this_eagle_window);
+ }
+ return true;
+ };
+ this.switch_windows = function()
+ {
+ var __running_apps = owl.list('RUN', 'app'),
+ __running_apps_num = 0,
+ __eagle_apps = null,
+ __this_picked_app = null,
+ __previous_picked_win = null,
+ __this_picked_win = null;
+ __running_apps_num = __running_apps.length;
+ if (__running_apps_num == 0)
+ return false;
+ __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+ if (picked_window > 0)
+ {
+ __previous_picked_win = __eagle_apps.childNodes[picked_window - 1];
+ __previous_picked_win.classList.remove('eagle_window_selected');
+ }
+ if (picked_window >= __running_apps_num)
+ {
+ picked_window = 0;
+ scroll_multiplier = 1;
+ __eagle_apps.scrollTo(0, 1);
+ }
+ __this_picked_win = __eagle_apps.childNodes[picked_window];
+ __this_picked_win.classList.add('eagle_window_selected');
+ if (picked_window % 6 === 0 && picked_window > 0)
+ {
+ var __scroll_distance = 224;
+ __eagle_apps.scrollTo(0, scroll_multiplier * __scroll_distance);
+ scroll_multiplier++;
+ }
+ __this_picked_app = colony.get(__running_apps[picked_window].sys_id);
+ __this_picked_app.gui.actions.set_top();
+ picked_window++;
+ return true;
+ };
+ this.init_trace_keys = function()
+ {
+ var __handler = null;
+ __handler = function(event) { me.key_down_tracer(event); };
+ morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
+ __handler = function(event) { me.key_up_tracer(event); };
+ morpheus.run(eagle_id, 'key', 'keyup', __handler, document);
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ function status()
+ {
+ function modifier()
+ {
+ this.key = function()
+ {
+ if (is_init === false)
+ return false;
+ return trace_keys.modifier;
+ };
+ this.status = function()
+ {
+ if (is_init === false)
+ return false;
+ return trace_keys.modifier_set;
+ };
+ }
+ function trigger()
+ {
+ this.key = function()
+ {
+ if (is_init === false)
+ return false;
+ return trace_keys.trigger;
+ };
+ this.status = function()
+ {
+ if (is_init === false)
+ return false;
+ return trace_keys.trigger_set;
+ };
+ }
+ this.picked_app = function()
+ {
+ return picked_app;
+ };
+ this.modifier = new modifier();
+ this.trigger = new trigger();
+ }
+ this.init = function(container_id, modifier, trigger)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.alpha.is_symbol(container_id) ||
+ utils_sys.objects.by_id(container_id) === null)
+ return false;
+ if (!utils_sys.validation.misc.is_undefined(modifier) && !utils_sys.validation.misc.is_undefined(trigger))
+ {
+ if (!utils_sys.validation.numerics.is_integer(modifier) || modifier < 8 || modifier > 222 ||
+ !utils_sys.validation.numerics.is_integer(trigger) || trigger < 8 || trigger > 222)
+ return false;
+ trace_keys.modifier = modifier;
+ trace_keys.trigger = trigger;
+ }
+ else
+ {
+ if ((!utils_sys.validation.misc.is_undefined(modifier) && utils_sys.validation.misc.is_undefined(trigger)) ||
+ (utils_sys.validation.misc.is_undefined(modifier) && !utils_sys.validation.misc.is_undefined(trigger)))
+ return false;
+ }
+ is_init = true;
+ self.settings.id('eagle_' + random.generate());
+ self.settings.container(container_id);
+ eagle_id = self.settings.id();
+ nature.theme('eagle');
+ nature.apply('new');
+ utils_int.draw_eagle();
+ utils_int.init_trace_keys();
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ colony = cosmos.hub.access('colony');
+ swarm = matrix.get('swarm');
+ owl = matrix.get('owl');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_visible = false,
+ eagle_id = null,
+ picked_app = null,
+ picked_window = 0,
+ scroll_multiplier = 1,
+ cosmos = null,
+ matrix = null,
+ swarm = null,
+ colony = null,
+ morpheus = null,
+ owl = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ key_control = new key_manager(),
+ random = new pythia(),
+ trace_keys = new trace_keys_model(),
+ utils_int = new utilities();
+ this.status = new status();
+ this.settings = new settings();
+}
+function tik_tok()
+{
+ var self = this;
+ function time_date_model()
+ {
+ var me = this;
+ var __today = null,
+ __hour = null,
+ __min = null,
+ __sec = null,
+ __day = null,
+ __month = null,
+ __year = null,
+ __time_container_id = null,
+ __date_container_id = null;
+ function count_time()
+ {
+ __today = new Date();
+ setTimeout(function()
+ {
+ count_time();
+ me.get_time(__time_container_id);
+ me.get_date(__date_container_id);
+ me.get_time_date(__time_container_id, __date_container_id);
+ }, 1000);
+ return true;
+ }
+ function fix_time(n)
+ {
+ if (!utils_sys.validation.numerics.is_integer(n))
+ return false;
+ if (n < 10)
+ n = '0' + n;
+ return n;
+ }
+ function fix_date(n)
+ {
+ if (!utils_sys.validation.numerics.is_integer(n))
+ return false;
+ if (n < 10)
+ n = '0' + n;
+ return n;
+ }
+ this.get_time = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_object(container_id) || utils_sys.validation.alpha.is_symbol(container_id))
+ return false;
+ __hour = __today.getHours();
+ __min = __today.getMinutes();
+ __sec = __today.getSeconds();
+ __hour = fix_time(__hour);
+ __min = fix_time(__min);
+ __sec = fix_time(__sec);
+ if (utils_sys.validation.misc.is_undefined(container_id))
+ return __hour + ':' + __min + ':' + __sec;
+ __time_container_id = container_id;
+ utils_sys.objects.by_id(container_id).innerHTML = __hour + ':' + __min + ':' + __sec;
+ return true;
+ };
+ this.get_date = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_object(container_id) || utils_sys.validation.alpha.is_symbol(container_id))
+ return false;
+ __day = fix_date(__today.getDate());
+ __month = fix_date(__today.getMonth() + 1);
+ __year = __today.getFullYear();
+ if (utils_sys.validation.misc.is_undefined(container_id))
+ return __day + '/' + __month + '/' + __year;
+ __date_container_id = container_id;
+ utils_sys.objects.by_id(container_id).innerHTML = __day + '/' + __month + '/' + __year;
+ return true;
+ };
+ this.get_time_date = function(time_container_id, date_container_id)
+ {
+ if (utils_sys.validation.misc.is_object(time_container_id) || utils_sys.validation.alpha.is_symbol(time_container_id) ||
+ utils_sys.validation.misc.is_object(date_container_id) || utils_sys.validation.alpha.is_symbol(date_container_id))
+ return false;
+ __hour = __today.getHours();
+ __min = __today.getMinutes();
+ __sec = __today.getSeconds();
+ __hour = fix_time(__hour);
+ __min = fix_time(__min);
+ __sec = fix_time(__sec);
+ __day = fix_date(__today.getDate());
+ __month = fix_date(__today.getMonth() + 1);
+ __year = __today.getFullYear();
+ if (utils_sys.validation.misc.is_undefined(time_container_id) && utils_sys.validation.misc.is_undefined(date_container_id))
+ return __hour + ':' + __min + ':' + __sec + ' ' + __day + '/' + __month + '/' + __year;
+ var __dynamic_time_content = utils_sys.objects.by_id(time_container_id),
+ __dynamic_date_content = utils_sys.objects.by_id(date_container_id);
+ __time_container_id = time_container_id;
+ __date_container_id = date_container_id;
+ __dynamic_time_content.innerHTML = __hour + ':' + __min + ':' + __sec;
+ __dynamic_date_content.innerHTML = __day + '/' + __month + '/' + __year;
+ return true;
+ };
+ count_time();
+ }
+ function utilities()
+ {
+ this.draw = function()
+ {
+ var __dynamic_object = null,
+ __tik_tok_id = self.settings.id(),
+ __container = utils_sys.objects.by_id(self.settings.container());
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', __tik_tok_id);
+ __dynamic_object.setAttribute('class', 'tik_tok');
+ __dynamic_object.setAttribute('title', 'Time and calendar');
+ __dynamic_object.innerHTML = '<div id="' + __tik_tok_id + '_date" class="clock_date"></div>' +
+ '<div id="' + __tik_tok_id + '_time" class="clock_time"></div>';
+ __dynamic_object.style.display = 'block';
+ __container.appendChild(__dynamic_object);
+ clock.get_time_date(__tik_tok_id + '_time', __tik_tok_id + '_date');
+ return true;
+ };
+ }
+ function status()
+ {
+ this.time = function()
+ {
+ if (is_init === false)
+ return false;
+ return clock.get_time();
+ };
+ this.date = function()
+ {
+ if (is_init === false)
+ return false;
+ return clock.get_date();
+ };
+ this.time_date = function()
+ {
+ if (is_init === false)
+ return false;
+ return clock.get_time_date();
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) ||
+ utils_sys.validation.alpha.is_symbol(container_id) ||
+ utils_sys.objects.by_id(container_id) === null)
+ return false;
+ is_init = true;
+ self.settings.id('tik_tok_' + random.generate());
+ self.settings.container(container_id);
+ nature.theme('tik_tok');
+ nature.apply('new');
+ clock = new time_date_model();
+ utils_int.draw();
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ clock = null,
+ matrix = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ utils_int = new utilities();
+ this.status = new status();
+ this.settings = new settings();
+}
+function sketch_pad()
+{
+ var self = this;
+ function gui()
+ {
+ }
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var cosmos = null,
+ utils_sys = new vulcan();
+ this.gui = new gui();
+}
+function meta_program_config()
+{
+ var self = this;
+ function utilities()
+ {
+ this.parse = function(program_config)
+ {
+ var meta_script = program_config.script;
+ if (meta_script.indexOf('navigator') >= 0 || meta_script.indexOf('window') >= 0 ||
+ meta_script.indexOf('document') >= 0 || meta_script.indexOf('location') >= 0 ||
+ meta_script.indexOf('eval') >= 0)
+ return false;
+ if (program_config.type === 'app')
+ {
+ console.log(meta_script);
+ }
+ else
+ {
+ console.log(meta_script);
+ }
+ return true;
+ };
+ }
+ this.execute = function(program_config)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(program_config))
+ return false;
+ if (!config_parser.verify(program_config_model, program_config))
+ return false;
+ return utils_int.parse(program_config);
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ app_box = cosmos.hub.access('app_box');
+ program_config_model = { "arguments" : [
+ {
+ "key" : { "name" : "type", "optional" : false },
+ "value" : { "type" : "string" },
+ "choices" : [ "app", "service" ]
+ },
+ {
+ "key" : { "name" : "mode", "optional" : false },
+ "value" : { "type" : "string" },
+ "choices" : [ "release", "debug" ]
+ },
+ {
+ "key" : { "name" : "script", "optional" : false },
+ "value" : { "type" : "*" }
+ },
+ ]
+ };
+ return true;
+ };
+ var cosmos = null,
+ matrix = null,
+ app_box = null,
+ program_config_model = null,
+ utils_sys = new vulcan(),
+ config_parser = new jap(),
+ utils_int = new utilities();
+}
+function meta_script()
+{
+ var self = this;
+ function config_models()
+ {
+ this.app = {};
+ this.service = {};
+ this.notification = {};
+ }
+ function program_config_model()
+ {
+ this.model = null;
+ this.meta_caller = null;
+ this.apps = [];
+ this.svcs = [];
+ }
+ function interface()
+ {
+ this.desktops = function()
+ {
+ return forest;
+ };
+ this.dock = function()
+ {
+ return dock;
+ };
+ this.stack = function()
+ {
+ return hive;
+ };
+ this.tray = function()
+ {
+ return super_tray;
+ };
+ }
+ function system()
+ {
+ function profile()
+ {
+ this.messages = function()
+ {
+ return true;
+ };
+ this.alerts = function()
+ {
+ return true;
+ };
+ this.calendar = function()
+ {
+ return true;
+ };
+ }
+ function os()
+ {
+ this.info = function()
+ {
+ return xenon;
+ };
+ this.date_time = function()
+ {
+ return tik_tok;
+ };
+ this.tasks = function()
+ {
+ return owl;
+ };
+ this.fs = function()
+ {
+ return teal_fs;
+ };
+ this.reboot = function()
+ {
+ cc_reload.init();
+ return true;
+ };
+ this.logout = function()
+ {
+ user_profile.logout();
+ return true;
+ };
+ }
+ this.apps = function()
+ {
+ return app_box;
+ };
+ this.services = function()
+ {
+ return matrix;
+ };
+ this.notifications = function(notification_config)
+ {
+ return true;
+ };
+ this.profile = new profile();
+ this.os = new os();
+ }
+ this.app = function()
+ {
+ if (is_program_loaded === false)
+ return false;
+ function app_api_model()
+ {
+ var me = this,
+ __new_app = null,
+ __is_init = false,
+ __is_run = false;
+ function menu()
+ {
+ this.open = function(event)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.actions.menu.open(event);
+ };
+ this.close = function(event)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.actions.menu.close(event);
+ };
+ }
+ function main()
+ {
+ this.set_title = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.data.window.labels.title(val);
+ };
+ this.set_content = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.data.window.content(val);
+ };
+ this.set_status = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.data.window.labels.status_bar(val);
+ };
+ }
+ function casement()
+ {
+ this.deploy = function(event, callback)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.actions.casement.deploy(event, callback);
+ };
+ this.hide = function(event, callback)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.actions.casement.hide(event, callback);
+ };
+ this.set_title = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.data.casement.labels.title(val);
+ };
+ this.set_content = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.data.casement.content(val);
+ };
+ this.set_status = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.data.casement.labels.status(val);
+ };
+ }
+ function position()
+ {
+ this.set_top = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.actions.set_top();
+ };
+ this.left = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.position.left(val);
+ };
+ this.top = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.position.top(val);
+ };
+ }
+ function size()
+ {
+ function min()
+ {
+ this.width = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.size.min.width(val);
+ };
+ this.height = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.size.min.height(val);
+ };
+ }
+ function max()
+ {
+ this.width = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.size.max.width(val);
+ };
+ this.height = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.size.max.height(val);
+ };
+ }
+ this.width = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.size.width(val);
+ };
+ this.height = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.size.height(val);
+ };
+ this.min = new min();
+ this.max = new max();
+ }
+ function can()
+ {
+ this.open = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.actions.can_open(val);
+ };
+ this.close = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.actions.can_close(val);
+ };
+ this.edit_title = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.actions.can_edit_title(val);
+ };
+ this.use_menu = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.actions.can_use_menu(val);
+ };
+ this.use_casement = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.actions.can_use_casement(val);
+ };
+ this.drag = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.actions.can_drag.enabled(val);
+ };
+ this.resize = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.actions.can_resize.enabled(val);
+ };
+ }
+ function status()
+ {
+ function mouse()
+ {
+ this.event = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mouse_clicked();
+ };
+ this.click = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mouseclick();
+ };
+ this.dblclick = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mousedblclick();
+ };
+ this.down = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mousedown();
+ };
+ this.up = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mouseup();
+ };
+ this.move = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mousemove();
+ };
+ this.over = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mouseover();
+ };
+ this.out = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.mouseout();
+ };
+ }
+ function keyboard()
+ {
+ this.event = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.key_pressed();
+ };
+ this.press = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.keypress();
+ };
+ this.down = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.keydown();
+ };
+ this.up = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.keyup();
+ };
+ }
+ this.running = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.system.running();
+ };
+ this.opened = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.opened();
+ };
+ this.closed = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.closed();
+ };
+ this.dragged = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.dragged();
+ };
+ this.resized = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.resized();
+ };
+ this.menu_activated = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.menu_activated();
+ };
+ this.casement_deployed = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.casement_deployed();
+ };
+ this.focused = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.system.active();
+ };
+ this.in_stack_bar = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.system.in_hive();
+ };
+ this.desktop_changed = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.system.desktop_changed();
+ };
+ this.content_updated = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.data.content_changed();
+ };
+ this.title_updated = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.data.labels.title_changed();
+ };
+ this.status_updated = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.data.labels.status_bar_label_changed();
+ };
+ this.mouse = new mouse();
+ this.keyboard = new keyboard();
+ }
+ function settings()
+ {
+ this.topmost = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.topmost(val);
+ };
+ this.status_bar_marquee = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.status_bar_marquee(val);
+ };
+ this.use_resize_tooltip = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.resize_tooltip(val);
+ };
+ this.casement_width = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.casement_width(val);
+ };
+ this.single_instance = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.single_instance(val);
+ };
+ }
+ this.get_app_id = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.app_id();
+ };
+ this.get_system_id = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.id();
+ };
+ this.get_desktop_id = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.desktop_id();
+ };
+ this.get_last_error = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.error.last();
+ };
+ this.get_error_codes = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.error.codes;
+ };
+ this.get_keys = function(event)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.actions.keys.get(event);
+ };
+ this.close = function(event)
+ {
+ if (__new_app === null)
+ return false;
+ __is_run = false;
+ return __new_app.gui.actions.close(event);
+ };
+ this.on = function(event_name, callback)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.on(event_name, callback);
+ };
+ this.object = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app;
+ };
+ this.reflection = function()
+ {
+ if (__new_app === null)
+ return false;
+ return null;
+ };
+ this.run = function(parent_app_id = null, headless = false)
+ {
+ if (__new_app === null || __is_run === true)
+ return false;
+ program_config.meta_caller.telemetry(me.get_system_id());
+ me.on('close', function()
+ {
+ app_box.remove(program_config.model.name);
+ });
+ app_box.replace([program_config.model]);
+ if (!swarm.bees.insert(__new_app))
+ return false;
+ var __result = __new_app.run(parent_app_id, headless);
+ if (__result === true)
+ __is_run = true;
+ return __result;
+ };
+ this.init = function(app_id, resizable = true)
+ {
+ if (__is_init === true)
+ return false;
+ if (!utils_sys.validation.misc.is_bool(resizable))
+ return false;
+ var __type = 1,
+ __result = null;
+ if (resizable === false)
+ __type = 2;
+ __new_app = dev_box.get('bee');
+ __result = __new_app.init(app_id, __type);
+ if (__result === true)
+ __is_init = true;
+ return __result;
+ };
+ this.menu = new menu();
+ this.main = new main();
+ this.casement = new casement();
+ this.position = new position();
+ this.size = new size();
+ this.can = new can();
+ this.status = new status();
+ this.settings = new settings();
+ }
+ global_app_index++;
+ program_config.apps.push(new app_api_model());
+ return program_config.apps[global_app_index];
+ }
+ this.service = function()
+ {
+ if (is_program_loaded === false)
+ return false;
+ function svc_api_model()
+ {
+ var me = this,
+ __new_svc = null,
+ __is_init = false,
+ __is_run = false;
+ this.get_config = function()
+ {
+ if (__new_svc === null)
+ return false;
+ return __new_svc.get_config();
+ };
+ this.set = function(name, body)
+ {
+ if (__new_svc === null)
+ return false;
+ return __new_svc.set_function(name, body);
+ };
+ this.execute = function(func_name, func_args = [])
+ {
+ if (__new_svc === null)
+ return false;
+ return __new_svc.exec_function(func_name, func_args);
+ };
+ this.on = function(event_name, callback)
+ {
+ if (__new_svc === null)
+ return false;
+ return __new_svc.on(event_name, callback);
+ };
+ this.terminate = function()
+ {
+ if (__new_svc === null)
+ return false;
+ super_tray.remove(__new_svc.get_config().sys_name);
+ __is_run = false;
+ return __new_svc.unregister(program_config.model.name);
+ };
+ this.run = function()
+ {
+ if (__new_svc === null || __is_run === true)
+ return false;
+ me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
+ me.on('unregister', function() { });
+ matrix.unregister(program_config.model.name);
+ var __result = __new_svc.register(program_config.model);
+ if (__result === true)
+ {
+ super_tray.add(__new_svc);
+ __is_run = true;
+ }
+ return __result;
+ };
+ this.init = function(svc_id, icon = 'default')
+ {
+ if (__is_init === true)
+ return false;
+ __new_svc = dev_box.get('bat');
+ var __result = __new_svc.init(svc_id, icon);
+ if (__result === true)
+ __is_init = true;
+ return __result;
+ };
+ }
+ global_svc_index++
+ program_config.svcs.push(new svc_api_model());
+ return program_config.svcs[global_svc_index];
+ };
+ function program()
+ {
+ this.start = function(program_model, meta_caller)
+ {
+ if (!utils_sys.validation.misc.is_function(program_model) ||
+ !utils_sys.validation.misc.is_object(meta_caller))
+ return false;
+ program_config.model = program_model;
+ program_config.meta_caller = meta_caller;
+ is_program_loaded = true;
+ return true;
+ };
+ this.end = function()
+ {
+ if (is_program_loaded === false)
+ return false;
+ for (var i = 0; i < program_config.apps.length; i++)
+ program_config.apps[i].close(null);
+ for (var i = 0; i < program_config.svcs.length; i++)
+ program_config.svcs[i].terminate();
+ is_program_loaded = false;
+ return true;
+ };
+ }
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ app_box = cosmos.hub.access('app_box');
+ dev_box = cosmos.hub.access('dev_box');
+ xenon = matrix.get('xenon');
+ swarm = matrix.get('swarm');
+ hive = matrix.get('hive');
+ forest = matrix.get('forest');
+ dock = matrix.get('dock');
+ user_profile = matrix.get('user_profile');
+ tik_tok = matrix.get('tik_tok');
+ parrot = matrix.get('parrot');
+ octopus = matrix.get('octopus');
+ super_tray = matrix.get('super_tray');
+ owl = matrix.get('owl');
+ teal_fs = matrix.get('teal_fs');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_program_loaded = false,
+ global_app_index = -1,
+ global_svc_index = -1,
+ cosmos = null,
+ matrix = null,
+ app_box = null,
+ dev_box = null,
+ xenon = null,
+ swarm = null,
+ hive = null,
+ forest = null,
+ dock = null,
+ user_profile = null,
+ tik_tok = null,
+ parrot = null,
+ octopus = null,
+ super_tray = null,
+ owl = null,
+ teal_fs = null,
+ infinity = null,
+ utils_sys = new vulcan(),
+ config_parser = new jap(),
+ cc_reload = new f5(),
+ config_models = new config_models(),
+ program_config = new program_config_model();
+ this.interface = new interface();
+ this.system = new system();
+ this.program = new program();
+}
+function executor()
+{
+ var self = this;
+ function error_details_model()
+ {
+ this.code = 0;
+ this.message = null;
+ }
+ function error()
+ {
+ function codes()
+ {
+ this.INVALID = 0xC1;
+ this.MISMATCH = 0xC2;
+ this.OTHER = 0xC3;
+ }
+ function last()
+ {
+ this.code = function()
+ {
+ return error_details.code;
+ };
+ this.message = function()
+ {
+ return error_details.message;
+ };
+ }
+ this.codes = new codes();
+ this.last = new last();
+ }
+ this.load = function(new_program)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_nothing(new_program) || !utils_sys.validation.alpha.is_string(new_program))
+ return false;
+ if (is_program_loaded === true)
+ return false;
+ program = new_program;
+ is_program_loaded = true;
+ return true;
+ };
+ this.process = function(meta_caller)
+ {
+ if (is_program_loaded === false)
+ return false;
+ if (program.indexOf('navigator') >= 0 || program.indexOf('window') >= 0 ||
+ program.indexOf('document') >= 0 || program.indexOf('location') >= 0 ||
+ program.indexOf('eval') >= 0)
+ {
+ error_details.code = self.error.codes.INVALID;
+ error_details.message = 'Invalid commands detected!';
+ return error_details.code;
+ }
+ var __dynamic_program_model = null,
+ __random_program_id = null,
+ __this_program = null;
+ __random_program_id = 'user_program_' + random.generate();
+ __dynamic_program_model = new Function('return function ' + __random_program_id + '()\
+ {\
+ this.cosmos = function(cosmos_object) { return true; };\
+ this.main = function(meta_script) { return eval(program); };\
+ }')();
+ try
+ {
+ __this_program = eval('new ' + __dynamic_program_model);
+ if (!meta_script.program.start(__dynamic_program_model, meta_caller))
+ return false;
+ if (!__this_program.main(meta_script))
+ {
+ error_details.code = self.error.codes.MISMATCH;
+ error_details.message = 'Program is incomplete!';
+ return error_details.code;
+ }
+ }
+ catch(e)
+ {
+ self.terminate();
+ error_details.code = self.error.codes.OTHER;
+ error_details.message = e;
+ return error_details.code;
+ }
+ return true;
+ };
+ this.terminate = function()
+ {
+ if (is_program_loaded === false)
+ return false;
+ program = null;
+ is_program_loaded = false;
+ return meta_script.program.end();
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ dev_box = cosmos.hub.access('dev_box');
+ meta_script = dev_box.get('meta_script');
+ return true;
+ };
+ var is_program_loaded = false,
+ cosmos = null,
+ dev_box = null,
+ meta_script = null,
+ program = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ error_details = new error_details_model();
+ this.error = new error();
+}
+function morpheus()
+{
+ var self = this;
+ function events_scheduler()
+ {
+ function event_model()
+ {
+ this.id = null;
+ this.cmd = null;
+ this.dom_object = null;
+ }
+ function context_model()
+ {
+ this.id = null;
+ this.events = [];
+ }
+ function context_manager_model()
+ {
+ this.uid = null;
+ this.context_list = [];
+ }
+ function uid_exists(uid)
+ {
+ __loops = __scheduled_events_list.length;
+ for (var i = 0; i < __loops; i++)
+ {
+ if (__scheduled_events_list[i].uid === uid)
+ return true;
+ }
+ return false;
+ };
+ function context_exists(uid, context_id)
+ {
+ __loops = __scheduled_events_list.length;
+ for (var i = 0; i < __loops; i++)
+ {
+ if (__scheduled_events_list[i].uid === uid)
+ {
+ var __inner_loops = __scheduled_events_list[i].context_list.length;
+ for (var j = 0; j < __inner_loops; j++)
+ {
+ if (__scheduled_events_list[i].context_list[j].id === context_id)
+ return true;
+ }
+ }
+ }
+ return false;
+ };
+ function append(uid, context_id, event_object, context_exists = false)
+ {
+ __loops = __scheduled_events_list.length;
+ for (var i = 0; i < __loops; i++)
+ {
+ if (__scheduled_events_list[i].uid === uid)
+ {
+ if (context_exists === true)
+ {
+ var __inner_loops = __scheduled_events_list[i].context_list.length;
+ for (var j = 0; j < __inner_loops; j++)
+ {
+ if (__scheduled_events_list[i].context_list[j].id === context_id)
+ {
+ __scheduled_events_list[i].context_list[j].events.push(event_object);
+ return true;
+ }
+ }
+ }
+ else
+ {
+ var __new_context = new context_model();
+ __new_context.id = context_id;
+ __new_context.events.push(event_object);
+ __scheduled_events_list[i].context_list.push(__new_context);
+ return true;
+ }
+ }
+ }
+ return false;
+ }
+ function insert(uid, context_object)
+ {
+ var __new_context_manager = new context_manager_model();
+ __new_context_manager.uid = uid;
+ __new_context_manager.context_list.push(context_object);
+ __scheduled_events_list.push(__new_context_manager);
+ return true;
+ }
+ this.include = function(uid, this_context, this_event, cmd, this_object)
+ {
+ var __new_event = new event_model();
+ __new_event.id = this_event;
+ __new_event.cmd = cmd;
+ __new_event.dom_object = this_object;
+ if (uid_exists(uid))
+ {
+ var __context_exists = false;
+ if (context_exists(uid, this_context))
+ __context_exists = true;
+ append(uid, this_context, __new_event, __context_exists);
+ }
+ else
+ {
+ var __new_context = new context_model();
+ __new_context.id = this_context;
+ __new_context.events.push(__new_event);
+ insert(uid, __new_context);
+ }
+ return true;
+ };
+ this.remove = function(uid, this_event, this_object)
+ {
+ __loops = __scheduled_events_list.length;
+ for (var i = 0; i < __loops; i++)
+ {
+ if (__scheduled_events_list[i].uid === uid)
+ {
+ var __inner_loops = __scheduled_events_list[i].context_list.length;
+ for (var j = 0; j < __inner_loops; j++)
+ {
+ var __events_num = __scheduled_events_list[i].context_list[j].events.length;
+ for (var k = 0; k < __events_num; k++)
+ {
+ if (__scheduled_events_list[i].context_list[j].events[k].id === this_event)
+ {
+ __scheduled_events_list[i].context_list[j].events.splice(k, 1);
+ if (this_object === null)
+ return true;
+ return utils_sys.events.detach(uid, this_object, this_event);
+ }
+ }
+ }
+ }
+ }
+ };
+ this.destroy = function(uid)
+ {
+ __loops = __scheduled_events_list.length;
+ for (var i = 0; i < __loops; i++)
+ {
+ if (__scheduled_events_list[i].uid === uid)
+ {
+ var __inner_loops = __scheduled_events_list[i].context_list.length;
+ for (var j = 0; j < __inner_loops; j++)
+ {
+ var __events_num = __scheduled_events_list[i].context_list[j].events.length;
+ for (var k = 0; k < __events_num; k++)
+ {
+ var __this_object = __scheduled_events_list[i].context_list[j].events[k].dom_object,
+ __this_event = __scheduled_events_list[i].context_list[j].events[k].id;
+ if (__this_object !== null)
+ utils_sys.events.detach(uid, __this_object, __this_event);
+ }
+ }
+ __scheduled_events_list.splice(i, 1);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.call = function(uid, context_id, event_id)
+ {
+ __loops = __scheduled_events_list.length;
+ for (var i = 0; i < __loops; i++)
+ {
+ if (__scheduled_events_list[i].uid === uid)
+ {
+ var __inner_loops = __scheduled_events_list[i].context_list.length;
+ for (var j = 0; j < __inner_loops; j++)
+ {
+ if (__scheduled_events_list[i].context_list[j].id === context_id)
+ {
+ var __events_num = __scheduled_events_list[i].context_list[j].events.length;
+ for (var k = 0; k < __events_num; k++)
+ {
+ if (__scheduled_events_list[i].context_list[j].events[k].id === event_id)
+ {
+ if (context_id === 'key' || context_id === 'mouse')
+ {
+ var __receiver_object = __scheduled_events_list[i].context_list[j].events[k].dom_object;
+ utils_sys.events.attach(uid, __receiver_object, event_id,
+ __scheduled_events_list[i].context_list[j].events[k].cmd);
+ }
+ else
+ __scheduled_events_list[i].context_list[j].events[k].cmd.call();
+ }
+ }
+ return true;
+ }
+ }
+ }
+ }
+ return false;
+ };
+ var __loops = 0,
+ __scheduled_events_list = [];
+ }
+ this.store = function(uid, this_context, this_event, cmd, this_object = null)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(uid) ||
+ utils_sys.validation.alpha.is_symbol(this_context) ||
+ utils_sys.validation.alpha.is_symbol(this_event) ||
+ !utils_sys.validation.misc.is_function(cmd) ||
+ (this_object !== null && !utils_sys.validation.misc.is_object(this_object)))
+ return false;
+ if (backtrace === true)
+ frog('MORPHEUS', 'Event :: Store', this_event);
+ return global_events_scheduler.include(uid, this_context, this_event, cmd, this_object);
+ };
+ this.delete = function(uid, this_event, this_object = null)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(uid) ||
+ utils_sys.validation.alpha.is_symbol(this_event) ||
+ (this_object !== null && !utils_sys.validation.misc.is_object(this_object)))
+ return false;
+ if (backtrace === true)
+ frog('MORPHEUS', 'Event :: Delete', this_event);
+ return global_events_scheduler.remove(uid, this_event, this_object);
+ };
+ this.clear = function(uid)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(uid))
+ return false;
+ if (backtrace === true)
+ frog('MORPHEUS', 'Event :: Clear', 'All for: ' + uid);
+ return global_events_scheduler.destroy(uid);
+ };
+ this.execute = function(uid, this_context, this_event)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(uid) ||
+ utils_sys.validation.alpha.is_symbol(this_context) ||
+ utils_sys.validation.alpha.is_symbol(this_event))
+ return false;
+ if (backtrace === true)
+ frog('MORPHEUS', 'Event :: Execute', this_event);
+ return global_events_scheduler.call(uid, this_context, this_event);
+ };
+ this.run = function(uid, this_context, this_event, cmd, this_object = null)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ self.store(uid, this_context, this_event, cmd, this_object)
+ return self.execute(uid, this_context, this_event);
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ utils_sys = new vulcan(),
+ global_events_scheduler = new events_scheduler();
+}
+function panda()
+{
+ var self = this;
+ function utilities()
+ {
+ this.is_existing_app_or_svc = function(object)
+ {
+ var i = 0,
+ __svcs_num = matrix.num(),
+ __apps_num = app_box.num();
+ for (i = 0; i < __svcs_num; i++)
+ {
+ if (matrix.list(i) === object)
+ return true;
+ }
+ for (i = 0; i < __apps_num; i++)
+ {
+ if (app_box.list(i) === object)
+ return true;
+ }
+ return false;
+ };
+ }
+ this.action = function(object, action_config)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_object(object) ||
+ utils_sys.validation.misc.is_undefined(action_config))
+ return false;
+ if (!utils_int.is_existing_app_or_svc(object))
+ return false;
+ if (!config_parser.verify(action_config_model, action_config))
+ return false;
+ return action_config.config.call();
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ app_box = cosmos.hub.access('app_box');
+ action_config_model = { "arguments" : [
+ {
+ "key" : { "name" : "config", "optional" : false },
+ "value" : { "type" : "*" }
+ }
+ ]
+ };
+ return true;
+ };
+ var cosmos = null,
+ action_config_model = null,
+ matrix = null,
+ app_box = null,
+ utils_sys = new vulcan(),
+ config_parser = new jap(),
+ utils_int = new utilities();
+}
+function octopus()
+{
+ var self = this;
+ function devices_model()
+ {
+ function input_model()
+ {
+ this.audio = [];
+ this.video = [];
+ }
+ function output_model()
+ {
+ this.audio = [];
+ this.video = [];
+ }
+ this.num = 0;
+ this.all = [];
+ this.input = new input_model();
+ this.output = new output_model();
+ }
+ function utilities()
+ {
+ var me = this;
+ function show_notification(status)
+ {
+ var __notification_object = utils_sys.objects.by_id(octopus_id + '_notification'),
+ __notification_msg_object = utils_sys.objects.by_id(octopus_id + '_message'),
+ __sys_theme = chameleon.get();
+ __notification_msg_object.innerHTML = 'New device ' + status + '!';
+ __notification_object.style.display = 'block';
+ parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/pong.wav');
+ setTimeout(function()
+ {
+ __notification_object.style.display = 'none';
+ }, 5000);
+ return true;
+ }
+ function scan_new_devices(devices)
+ {
+ var __device_exists = false,
+ __status = null;
+ devices.forEach(function(device)
+ {
+ for (var i = 0; i < usb_devices.num; i++)
+ {
+ if (device.label === usb_devices.all[i])
+ __device_exists = true;
+ }
+ if (__device_exists === false)
+ {
+ var [kind, type, direction] = device.kind.match(/(\w+)(input|output)/i);
+ usb_devices.all.push(device.label);
+ usb_devices[direction][type].push(device.label);
+ usb_devices.num++;
+ if (usb_devices.num === devices.length)
+ __status = 'connected';
+ else
+ __status = 'disconnected';
+ show_notification(__status);
+ return true;
+ }
+ });
+ return false;
+ }
+ function device_manager()
+ {
+ navigator.mediaDevices.enumerateDevices()
+ .then(function(devices)
+ {
+ scan_new_devices(devices)
+ })
+ .catch(function(error)
+ {
+ });
+ return true;
+ }
+ this.load_ui = function()
+ {
+ nature.theme('octopus');
+ nature.apply('new');
+ me.start_service();
+ me.draw();
+ };
+ this.start_service = function()
+ {
+ if (is_service_active === true)
+ return false;
+ navigator.mediaDevices.ondevicechange = function() { device_manager(); };
+ is_service_active = true;
+ return true;
+ };
+ this.draw = function()
+ {
+ if (is_service_active === false)
+ return false;
+ var __dynamic_object = null,
+ __container = utils_sys.objects.by_id(self.settings.container());
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', octopus_id);
+ __dynamic_object.setAttribute('class', 'octopus');
+ __dynamic_object.setAttribute('title', 'Manage devices');
+ __dynamic_object.innerHTML += '<div id="' + octopus_id + '_manager" class="device"></div>\
+ <div id="' + octopus_id + '_notification" class="notification">\
+ <div id="' + octopus_id + '_icon" class="icon"></div>\
+ <div id="' + octopus_id + '_message" class="message"></div>\
+ </div>';
+ __container.appendChild(__dynamic_object);
+ return true;
+ };
+ }
+ function devices()
+ {
+ function io_model()
+ {
+ this.inputs = function(device_id)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(device_id))
+ return false;
+ return usb_devices.inputs;
+ };
+ this.outputs = function(device_id)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(device_id))
+ return false;
+ return usb_devices.outputs;
+ };
+ }
+ this.list = function(device_id)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(device_id))
+ return false;
+ return usb_devices.all;
+ };
+ this.io = new io_model();
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ self.settings.id('octopus_' + random.generate());
+ octopus_id = self.settings.id();
+ if (utils_sys.validation.misc.is_undefined(container_id))
+ return utils_int.start_service();
+ else
+ {
+ if (utils_sys.validation.alpha.is_symbol(container_id))
+ return false;
+ self.settings.container(container_id);
+ utils_int.load_ui();
+ }
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ parrot = matrix.get('parrot');
+ chameleon = matrix.get('chameleon');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_service_active = false,
+ octopus_id = null,
+ cosmos = null,
+ matrix = null,
+ parrot = null,
+ chameleon = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ usb_devices = new devices_model(),
+ utils_int = new utilities();
+ this.devices = new devices();
+ this.settings = new settings();
+}
+function super_tray()
+{
+ var self = this;
+ function tray_service_model()
+ {
+ this.sys_id = null;
+ this.id = null;
+ this.name = null;
+ this.icon = 'default';
+ this.action = null;
+ }
+ function tray_services_collection()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function utilities()
+ {
+ var me = this;
+ this.service_exists = function(sys_service_id)
+ {
+ for (var i = 0; i < tray_services.num; i++)
+ {
+ if (tray_services.list[i].sys_id === sys_service_id)
+ return true;
+ }
+ return false;
+ };
+ this.fix_service_icon_names = function(service_id)
+ {
+ var __unique_entry = 0,
+ __count = 1,
+ __svc_name = null,
+ __icon_object = null;
+ for (var i = 0; i < tray_services.num; i++)
+ {
+ if (tray_services.list[i].id === service_id)
+ __unique_entry++;
+ }
+ for (var i = 0; i < tray_services.num; i++)
+ {
+ if (tray_services.list[i].id === service_id)
+ {
+ __svc_name = service_id + ' (' + __count + ')';
+ if (tray_services.num === 1 || __unique_entry === 1)
+ __svc_name = service_id;
+ tray_services.list[i].name = __svc_name;
+ __icon_object = utils_sys.objects.by_id(super_tray_id + '_service_' + tray_services.list[i].sys_id);
+ __icon_object.setAttribute('title', __svc_name);
+ __count++;
+ }
+ }
+ return true;
+ };
+ this.load_ui = function()
+ {
+ nature.theme('super_tray');
+ nature.apply('new');
+ me.draw();
+ me.attach_events();
+ };
+ this.draw = function()
+ {
+ var __container = utils_sys.objects.by_id(self.settings.container()),
+ __dynamic_object = null;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', super_tray_id);
+ __dynamic_object.setAttribute('class', 'super_tray');
+ __dynamic_object.innerHTML = '<div id="' + super_tray_id + '_arrow" class="access" title="Access running services"></div>\
+ <div id="' + super_tray_id + '_service_icons_tray" class="service_icons_area"></div>';
+ __container.appendChild(__dynamic_object);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ var __handler = null;
+ __handler = function() { me.toggle_service_icons_area(); };
+ morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
+ __handler = function() { me.hide_service_icons_area(); };
+ morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+ __handler = function(event) { me.hide_service_icons_area_handler(event); };
+ morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
+ return true;
+ };
+ this.toggle_service_icons_area = function()
+ {
+ var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+ if (is_service_icons_tray_visible === true)
+ {
+ is_service_icons_tray_visible = false;
+ __service_icons_tray.style.display = 'none';
+ }
+ else
+ {
+ is_service_icons_tray_visible = true;
+ __service_icons_tray.style.display = 'block';
+ }
+ return true;
+ };
+ this.hide_service_icons_area_handler = function(event)
+ {
+ if (utils_sys.validation.misc.is_undefined(event))
+ return false;
+ key_control.scan(event);
+ if (key_control.get() !== key_control.keys.ESCAPE)
+ return false;
+ me.hide_service_icons_area();
+ return true;
+ };
+ this.hide_service_icons_area = function()
+ {
+ var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+ __service_icons_tray.style.display = 'none';
+ is_service_icons_tray_visible = false;
+ return true;
+ };
+ this.add_service_icon = function(index)
+ {
+ var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
+ __new_service = tray_services.list[index - 1],
+ __new_service_id = super_tray_id + '_service_' + __new_service.sys_id,
+ __dynamic_object = null;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', __new_service_id);
+ __dynamic_object.setAttribute('class', 'super_tray_service');
+ __dynamic_object.setAttribute('data-id', __new_service.sys_id);
+ __dynamic_object.setAttribute('title', __new_service.name);
+ __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/user/nature/themes/super_tray/pix/' +
+ __new_service.icon + '.png")';
+ __service_icons_tray.appendChild(__dynamic_object);
+ if (__new_service.action !== null)
+ {
+ var __handler = function() { __new_service.action.call(); };
+ morpheus.run(super_tray_id + '_service', 'mouse', 'click', __handler, utils_sys.objects.by_id(__new_service_id));
+ }
+ return true;
+ };
+ this.remove_service_icon = function(index)
+ {
+ var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray'),
+ __existing_service = tray_services.list[index],
+ __dynamic_object = utils_sys.objects.by_id(super_tray_id + '_service_' + __existing_service.sys_id);
+ morpheus.delete(super_tray_id + '_service', 'click', __dynamic_object);
+ __service_icons_tray.removeChild(__dynamic_object);
+ return true;
+ };
+ this.clear_service_icons = function()
+ {
+ var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
+ morpheus.clear(super_tray_id + '_service');
+ __service_icons_tray.innerHTML = '';
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ function status()
+ {
+ this.num = function()
+ {
+ if (is_init === false)
+ return false;
+ return tray_services.num;
+ };
+ this.list = function()
+ {
+ if (is_init === false)
+ return false;
+ return tray_services.list;
+ };
+ }
+ this.add = function(bat_object, action = null)
+ {
+ if (is_init === false)
+ return false;
+ if (!utils_sys.validation.misc.is_object(bat_object))
+ return false;
+ if (action !== null && !utils_sys.validation.misc.is_function(action))
+ return false;
+ if (!roost.add([bat_object]))
+ return false;
+ var __service_config = bat_object.get_config();
+ if (utils_int.service_exists(__service_config.sys_name))
+ return false;
+ var __new_tray_service = new tray_service_model();
+ __new_tray_service.sys_id = __service_config.sys_name;
+ __new_tray_service.id = __service_config.name;
+ __new_tray_service.name = __service_config.name;
+ if (__service_config.icon !== 'default')
+ __new_tray_service.icon = __service_config.icon;
+ if (action !== null)
+ __new_tray_service.action = action;
+ tray_services.list.push(__new_tray_service);
+ tray_services.num++;
+ utils_int.add_service_icon(tray_services.num);
+ utils_int.fix_service_icon_names(__service_config.name);
+ return true;
+ };
+ this.remove = function(sys_service_id)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(sys_service_id))
+ return false;
+ for (var i = 0; i < tray_services.num; i++)
+ {
+ if (tray_services.list[i].sys_id === sys_service_id)
+ {
+ var __common_svc_id = tray_services.list[i].id;
+ utils_int.remove_service_icon(i);
+ tray_services.list.splice(i, 1);
+ tray_services.num--;
+ for (var j = 0; j < tray_services.num; j++)
+ {
+ if (tray_services.list[j].id === __common_svc_id)
+ utils_int.fix_service_icon_names(tray_services.list[j].id);
+ }
+ roost.remove(sys_service_id);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.clear = function()
+ {
+ if (is_init === false)
+ return false;
+ tray_services.num = 0;
+ tray_services.list = [];
+ utils_int.clear_service_icons();
+ roost.clear();
+ return true;
+ };
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(container_id))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ self.settings.id('super_tray_' + random.generate());
+ self.settings.container(container_id);
+ super_tray_id = self.settings.id();
+ return utils_int.load_ui(container_id);
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ roost = cosmos.hub.access('roost');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_service_icons_tray_visible = false,
+ super_tray_id = null,
+ cosmos = null,
+ matrix = null,
+ roost = null,
+ morpheus = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ key_control = new key_manager(),
+ tray_services = new tray_services_collection(),
+ utils_int = new utilities();
+ this.status = new status();
+ this.settings = new settings();
+}
+function parrot()
+{
+ var self = this;
+ function audio_service_model()
+ {
+ var __audio_service_init = false,
+ __stream_contexts = ['sys', 'action', 'misc'],
+ __sound_files = [],
+ __stream_context_in_use = null,
+ __play_file = null,
+ __audio_stream = null,
+ __audio_player = utils_sys.objects.by_id(parrot_id);
+ function set_sounds()
+ {
+ function os_sounds_model()
+ {
+ this.login = function(sound_file)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (!utils_sys.validation.alpha.is_string(sound_file))
+ return false;
+ return true;
+ };
+ this.logout = function(sound_file)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (!utils_sys.validation.alpha.is_string(sound_file))
+ return false;
+ return true;
+ };
+ this.click = function(sound_file)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (!utils_sys.validation.alpha.is_string(sound_file))
+ return false;
+ return true;
+ };
+ }
+ function app_sounds_model()
+ {
+ this.open = function(sound_file)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (!utils_sys.validation.alpha.is_string(sound_file))
+ return false;
+ return true;
+ };
+ this.close = function(sound_file)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (!utils_sys.validation.alpha.is_string(sound_file))
+ return false;
+ return true;
+ };
+ }
+ this.os = new os_sounds_model();
+ this.app = new app_sounds_model();
+ }
+ this.volume = function(app_id)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(app_id))
+ return false;
+ return ;
+ };
+ this.options = function(app_id)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(app_id))
+ return false;
+ return ;
+ };
+ this.play = function(context, sound_file, list = false, replay = false)
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(context) || utils_sys.validation.alpha.is_symbol(context))
+ return false;
+ if (__stream_contexts.indexOf(context) === -1)
+ return false;
+ __stream_context_in_use = context;
+ if (context === 'sys')
+ __audio_stream = __audio_player.childNodes[0];
+ else if (context === 'action')
+ __audio_stream = __audio_player.childNodes[2];
+ else
+ __audio_stream = __audio_player.childNodes[4];
+ if (utils_sys.validation.misc.is_undefined(sound_file))
+ {
+ if (__play_file === null)
+ return false;
+ if (replay === true)
+ __audio_stream.loop = true;
+ __audio_stream.src = __play_file;
+ }
+ else
+ {
+ if (!utils_sys.validation.alpha.is_string(sound_file))
+ return false;
+ __play_file = sound_file;
+ if (replay === true)
+ __audio_stream.loop = true;
+ __audio_stream.src = __play_file;
+ }
+ return true;
+ };
+ this.pause = function()
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (__stream_context_in_use === null)
+ return false;
+ __audio_stream.pause();
+ return true;
+ };
+ this.stop = function()
+ {
+ if (__audio_service_init === false)
+ return false;
+ if (__stream_context_in_use === null)
+ return false;
+ audio.pause();
+ __audio_stream.src = '';
+ return true;
+ };
+ this.clear = function()
+ {
+ if (__audio_service_init === false)
+ return false;
+ audio.stop();
+ __sound_files = [];
+ __play_file = null;
+ __audio_stream = null;
+ __stream_context_in_use = null;
+ return true;
+ };
+ this.files = function()
+ {
+ if (__audio_service_init === false)
+ return false;
+ return __sound_files;
+ };
+ this.init = function()
+ {
+ if (__audio_service_init === true)
+ return false;
+ __audio_service_init = true;
+ return true;
+ };
+ this.set = new set_sounds();
+ }
+ function utilities()
+ {
+ var me = this;
+ this.load_ui = function()
+ {
+ nature.theme('parrot');
+ nature.apply('new');
+ me.start_service();
+ me.draw();
+ };
+ this.start_service = function()
+ {
+ if (is_service_active === true)
+ return false;
+ var __dynamic_object = null,
+ __container = utils_sys.objects.by_id(self.settings.container());
+ __container.innerHTML = '';
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', parrot_id);
+ __dynamic_object.setAttribute('class', 'parrot');
+ __dynamic_object.setAttribute('title', 'Manage system & apps sound');
+ __dynamic_object.innerHTML = '<audio id="' + parrot_id + '_audio_service_sys" autoplay></audio>\
+ <audio id="' + parrot_id + '_audio_service_actions" autoplay></audio>\
+ <audio id="' + parrot_id + '_audio_service_misc" autoplay></audio>';
+ __container.appendChild(__dynamic_object);
+ audio = new audio_service_model();
+ audio.init();
+ is_service_active = true;
+ return true;
+ };
+ this.draw = function()
+ {
+ if (is_service_active === false)
+ return false;
+ audio.clear();
+ var __parrot_div = utils_sys.objects.by_id(parrot_id);
+ __parrot_div.innerHTML += '<div id="' + parrot_id + '_speaker" class="speaker"></div>' +
+ '<div id="' + parrot_id + '_volume" class="volume">100%</div>';
+ __parrot_div.style.display = 'block';
+ return true;
+ };
+ }
+ function status()
+ {
+ this.volume = function(app_id)
+ {
+ if (is_init === false)
+ return false;
+ return audio.volume(app_id);
+ };
+ this.options = function(app_id)
+ {
+ if (is_init === false)
+ return false;
+ return audio.options(app_id);
+ };
+ }
+ function settings()
+ {
+ var __id = null,
+ __container = 'audio';
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
+ this.files = function()
+ {
+ if (is_init === false)
+ return false;
+ return audio.files();
+ };
+ this.options = function()
+ {
+ if (is_init === false)
+ return false;
+ return audio.options();
+ };
+ this.volume = function()
+ {
+ if (is_init === false)
+ return false;
+ return audio.volume();
+ };
+ this.set = function()
+ {
+ if (is_init === false)
+ return false;
+ return audio.set();
+ };
+ this.play = function(sound_file, list = false, replay = false)
+ {
+ if (is_init === false)
+ return false;
+ return audio.play(sound_file, list, replay);
+ };
+ this.pause = function()
+ {
+ if (is_init === false)
+ return false;
+ return audio.pause();
+ };
+ this.stop = function()
+ {
+ if (is_init === false)
+ return false;
+ return audio.stop();
+ };
+ this.clear = function()
+ {
+ if (is_init === false)
+ return false;
+ return audio.clear();
+ };
+ this.load = function(container_id)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(container_id))
+ return false;
+ self.settings.container(container_id);
+ utils_int.load_ui();
+ return true;
+ };
+ this.init = function(container_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ self.settings.id('parrot_' + random.generate());
+ parrot_id = self.settings.id();
+ if (utils_sys.validation.misc.is_undefined(container_id))
+ return utils_int.start_service();
+ else
+ return self.load(container_id);
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ is_service_active = false,
+ parrot_id = null,
+ cosmos = null,
+ matrix = null,
+ nature = null,
+ audio = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ utils_int = new utilities();
+ this.status = new status();
+ this.settings = new settings();
+}
+function infinity()
+{
+ var self = this;
+ function status_model()
+ {
+ this.in_progress = function()
+ {
+ if (is_init === false)
+ return false;
+ return self.settings.in_progress();
+ };
+ }
+ function settings_model()
+ {
+ var __id = null,
+ __container = null,
+ __in_progress = false;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (!utils_sys.validation.alpha.is_string(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (!utils_sys.validation.alpha.is_string(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ this.in_progress = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __in_progress;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __in_progress = val;
+ return true;
+ };
+ }
+ function utilities()
+ {
+ var me = this;
+ this.draw = function()
+ {
+ var __dynamic_object = null,
+ __infinity_id = self.settings.id(),
+ __infinity_object = null,
+ __container = utils_sys.objects.by_id(self.settings.container()),
+ __top_pos = 0;
+ if (utils_sys.validation.misc.is_undefined(__container) || __container === false)
+ return false;
+ __top_pos = (utils_sys.graphics.pixels_value(__container.style.height) / 2) - 25;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', __infinity_id);
+ __dynamic_object.setAttribute('class', 'infinity');
+ __dynamic_object.innerHTML = '<div class="progress_indicator" ' +
+ 'style="margin-top: ' + __top_pos + 'px;"></div>';
+ __container.appendChild(__dynamic_object);
+ __infinity_object = utils_sys.objects.by_id(__infinity_id);
+ __infinity_object.style.display = 'block';
+ return true;
+ };
+ this.clear = function()
+ {
+ var __infinity_id = self.settings.id(),
+ __infinity_object = utils_sys.objects.by_id(__infinity_id);
+ if (__infinity_object !== null)
+ {
+ var __container = utils_sys.objects.by_id(self.settings.container());
+ __container.removeChild(__infinity_object);
+ }
+ return false;
+ };
+ }
+ this.setup = function(container_id)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(container_id) || self.status.in_progress())
+ return false;
+ return self.settings.container(container_id);
+ };
+ this.begin = function()
+ {
+ if (is_init === false)
+ return false;
+ if (self.status.in_progress())
+ return false;
+ if (!utils_int.draw())
+ return false;
+ self.settings.in_progress(true);
+ return true;
+ };
+ this.end = function()
+ {
+ if (is_init === false)
+ return false;
+ if (!self.status.in_progress())
+ return false;
+ utils_int.clear();
+ self.settings.in_progress(false);
+ return true;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ nature.theme(['infinity']);
+ nature.apply('new');
+ self.settings.id('infinity_' + random.generate());
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ utils_int = new utilities();
+ this.status = new status_model();
+ this.settings = new settings_model();
+}
+function scrollbar()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.container_id = null;
+ this.scroll_ratio = 0.0;
+ this.handle_pos = 0;
+ this.offset_pos = 0;
+ this.is_scrolling = false;
+ this.is_wheel = false;
+ this.side = null; // 1 is for right side, 2 is for left side
+ this.handle_width = null;
+ }
+ function utilities()
+ {
+ this.draw = function(id)
+ {
+ var __content = vulcan.objects.by_id(id);
+ __content.innerHTML = '<div id="' + config.id + '_content" class="scrollbar-content">' + __content.innerHTML + '</div>';
+ var __container = vulcan.objects.by_id(id);
+ __content = vulcan.objects.by_id(config.id + '_content');
+ var __track_div = document.createElement('div');
+ __track_div.id = config.id + '_track';
+ __track_div.className = 'scrollbar-track';
+ __track_div.innerHTML = '<div id="' + config.id + '_handle" class="scrollbar-handle"></div>';
+ __container.appendChild(__track_div);
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __content_height = __content.clientHeight,
+ __container_height = __content.parentNode.clientHeight,
+ __scroll_ratio = (__content_height - __container_height) / (__container_height - __handle.clientHeight - 8);
+ if (__scroll_ratio <= 1.0)
+ return false;
+ __content.style.height = '100%';
+ if (config.side === 1)
+ {
+ __track.style.right = '5px';
+ __track.style.cssFloat = 'right';
+ __content.style.cssFloat = 'left';
+ }
+ else // Apply Scroll Bar on the left side
+ __content.style.marginLeft = __handle.offsetWidth + 'px';
+ config.scroll_ratio = __scroll_ratio;
+ config.handle_width = __handle.offsetWidth;
+ return true;
+ };
+ this.bind_events = function()
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle');
+ vulcan.events.attach(config.id, __handle, 'mousedown', events.mouse.down);
+ vulcan.events.attach(config.id, document, 'mouseup', events.mouse.up);
+ vulcan.events.attach(config.id, document, 'mousemove', events.mouse.move);
+ vulcan.events.attach(config.id, __content, 'mousewheel', events.mouse.wheel);
+ return true;
+ };
+ }
+ function events_manager()
+ {
+ function mouse()
+ {
+ this.up = function()
+ {
+ config.is_scrolling = false;
+ return true;
+ };
+ this.down = function(this_event)
+ {
+ if (config.handle_pos === 0)
+ config.handle_pos = this_event.clientY;
+ config.is_scrolling = true;
+ config.is_wheel = false;
+ return true;
+ };
+ this.move = function(this_event)
+ {
+ if (!config.is_scrolling)
+ return false;
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __track_height = __track.clientHeight,
+ __handle_height = __handle.clientHeight,
+ __moved = config.offset_pos + this_event.clientY - config.handle_pos,
+ __top = __moved;
+ if (__moved < 0)
+ __top = 0;
+ else if (__moved > __track_height - __handle_height)
+ __top = __track_height - __handle_height;
+ __handle.style.top = __top + 'px';
+ __content.scrollTop = __top * config.scroll_ratio;
+ return true;
+ };
+ this.wheel = function(this_event)
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __track_height = __track.clientHeight,
+ __handle_height = __handle.clientHeight,
+ __mouse_direction = this_event.detail ? this_event.detail * -1 : this_event.wheelDelta / 120,
+ __moved = config.offset_pos - config.handle_pos,
+ __top = __moved;
+ if (__mouse_direction < 0)
+ {
+ if (__moved > __track_height - __handle_height)
+ __top = __track_height - __handle_height;
+ __handle.style.top = __top + 'px';
+ __content.scrollTop += config.scroll_ratio;
+ }
+ else
+ {
+ if (__moved < 0)
+ __top = 0;
+ __handle.style.top = __top + 'px';
+ __content.scrollTop -= config.scroll_ratio;
+ }
+ config.handle_pos = __top;
+ config.is_wheel = true;
+ return true;
+ };
+ }
+ this.mouse = new mouse();
+ }
+ function status()
+ {
+ }
+ function side()
+ {
+ this.change = function()
+ {
+ if (is_init === false)
+ return false;
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track');
+ if (config.side === 1)
+ {
+ __track.style.right = '';
+ __content.style.marginLeft = config.handle_width + 'px';
+ config.side = 2;
+ }
+ else
+ {
+ __content.style.marginLeft = '';
+ __track.style.right = '5px';
+ config.side = 1;
+ }
+ return true;
+ };
+ }
+ function scroll()
+ {
+ this.top = function()
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __handle = vulcan.objects.by_id(config.id + '_handle');
+ config.offset_pos = 0;
+ __content.scrollTop = 0;
+ };
+ this.bottom = function()
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __track_height = __track.clientHeight,
+ __handle_height = __handle.clientHeight,
+ __top = __track_height - __handle_height;
+ config.offset_pos = __top;
+ __content.scrollTop = __content.scrollHeight - __handle.clientHeight;
+ };
+ }
+ this.apply = function(container_id, side)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.alpha.is_symbol(container_id))
+ return false;
+ if (!vulcan.validation.numerics.is_integer(side) || side < 1 || side > 2)
+ return false;
+ var __scrollbar_exists = vulcan.objects.by_id(container_id).getElementsByClassName('scrollbar-content')[0];
+ if (__scrollbar_exists)
+ return false;
+ config.container_id = container_id;
+ config.side = side;
+ utils.draw(container_id);
+ utils.bind_events();
+ return true;
+ };
+ this.destroy = function(container_id)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.alpha.is_symbol(container_id))
+ return false;
+ return true;
+ };
+ this.init = function()
+ {
+ if (is_init === true)
+ return false;
+ is_init = true;
+ vulcan = cosmos.hub.access('vulcan');
+ var __pythia = cosmos.hub.access('matrix').get('pythia');
+ config.id = 'scrollbar_' + __pythia.generate();
+ vulcan.graphics.apply_theme('/framework/extensions/js/scrollbar/themes', 'scrollbar');
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ events = new events_manager(),
+ utils = new utilities();
+ this.status = new status();
+ this.side = new side();
+ this.scroll = new scroll();
+}
+function max_screen()
+{
+ var self = this;
+ function utilities()
+ {
+ var me = this;
+ this.go_full_screen = function()
+ {
+ var __element = vulcan.objects.by_id(self.settings.container());
+ vulcan.objects.by_id('max_screen_splash').style.display = 'none';
+ if (__element.requestFullscreen)
+ __element.requestFullscreen();
+ else if (__element.mozRequestFullScreen)
+ __element.mozRequestFullScreen();
+ else if (__element.webkitRequestFullscreen)
+ __element.webkitRequestFullscreen();
+ else
+ return false;
+ self.settings.callback_function().call();
+ return true;
+ };
+ this.setup = function(theme)
+ {
+ var __handler = null,
+ __dynamic_object = null;
+ if (!vulcan.graphics.apply_theme('/framework/extensions/js/max_screen/theme', theme))
+ return false;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', 'max_screen_splash');
+ __dynamic_object.setAttribute('class', 'max_screen');
+ document.body.appendChild(__dynamic_object);
+ __handler = function() { me.go_full_screen(); };
+ vulcan.objects.by_id('max_screen_splash').onmousedown = __handler;
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __container = null,
+ __callback_function = null;
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.misc.is_undefined(val))
+ return __container;
+ if (vulcan.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ this.callback_function = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.misc.is_undefined(val))
+ return __callback_function;
+ __callback_function = val;
+ return true;
+ };
+ }
+ function status()
+ {
+ this.full_screen = function()
+ {
+ if (is_init === false)
+ return false;
+ if ((screen.height - window.innerHeight) < 5)
+ return true;
+ return false;
+ };
+ }
+ this.init = function(container_id, func, theme)
+ {
+ if (is_init === true)
+ return false;
+ if (vulcan.validation.misc.is_undefined(container_id) ||
+ vulcan.validation.alpha.is_symbol(container_id) || vulcan.objects.by_id(container_id) === null ||
+ !vulcan.validation.misc.is_function(func))
+ return false;
+ if (!self.settings.container(container_id))
+ return false;
+ self.settings.callback_function(func);
+ if (!utils.setup(theme))
+ return false;
+ is_init = true;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ vulcan = cosmos.hub.access('vulcan');
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ is_init = false,
+ cosmos = null,
+ vulcan = null,
+ utils = new utilities();
+ this.settings = new settings();
+ this.status = new status();
+}
+function bee()
+{
+ var self = this;
+ function ui_objects_model()
+ {
+ function window()
+ {
+ function control_bar()
+ {
+ this.ui = null;
+ this.icon = null;
+ this.title = null;
+ this.pencil = null;
+ this.separator = null;
+ this.close = null;
+ }
+ function menu()
+ {
+ this.ui = null;
+ this.put_to_stack = null;
+ this.mini_mode = null;
+ this.max_mode = null;
+ this.manage_casement = null;
+ this.send_to_desktop = null;
+ this.close = null;
+ }
+ function content()
+ {
+ this.ui = null;
+ this.data = null;
+ }
+ function status_bar()
+ {
+ this.ui = null;
+ this.message = null;
+ this.resize = null;
+ }
+ this.control_bar = new control_bar();
+ this.menu = new menu();
+ this.content = new content();
+ this.status_bar = new status_bar();
+ }
+ function casement()
+ {
+ this.ui = null;
+ this.title = null;
+ this.data = null;
+ this.status = null;
+ }
+ this.ui = null;
+ this.swarm = null;
+ this.window = new window();
+ this.casement = new casement();
+ }
+ function ui_config_model()
+ {
+ function window()
+ {
+ function control_bar()
+ {
+ function ids()
+ {
+ this.icon = null;
+ this.title = null;
+ this.pencil = null;
+ this.separator = null;
+ this.close = null;
+ }
+ function classes()
+ {
+ this.container = null;
+ this.icon = null;
+ this.title = null;
+ this.pencil = null;
+ this.separator = null;
+ this.close = null;
+ }
+ this.id = null;
+ this.ids = new ids();
+ this.classes = new classes();
+ }
+ function menu()
+ {
+ function ids()
+ {
+ this.put_to_stack = null;
+ this.mini_mode = null;
+ this.max_mode = null;
+ this.manage_casement = null;
+ this.send_to_desktop = null;
+ this.close = null;
+ }
+ this.id = null;
+ this.class = null;
+ this.ids = new ids();
+ }
+ function content()
+ {
+ function ids()
+ {
+ this.data = null;
+ }
+ function classes()
+ {
+ this.container = null;
+ this.data = null;
+ }
+ this.id = null;
+ this.ids = new ids();
+ this.classes = new classes();
+ }
+ function status_bar()
+ {
+ function ids()
+ {
+ this.message = null;
+ this.resize = null;
+ }
+ function classes()
+ {
+ this.container = null;
+ this.message = null;
+ this.resize = null;
+ }
+ this.id = null;
+ this.ids = new ids();
+ this.classes = new classes();
+ }
+ this.id = null;
+ this.class = null;
+ this.control_bar = new control_bar();
+ this.menu = new menu();
+ this.content = new content();
+ this.status_bar = new status_bar();
+ }
+ function casement()
+ {
+ function ids()
+ {
+ this.title = null;
+ this.data = null;
+ this.status = null;
+ }
+ function classes()
+ {
+ this.title = null;
+ this.container = null;
+ this.data = null;
+ this.status = null;
+ }
+ this.id = null;
+ this.ids = new ids();
+ this.classes = new classes();
+ }
+ this.window = new window();
+ this.casement = new casement();
+ }
+ function events_status_settings_model()
+ {
+ function system()
+ {
+ this.initialized = false;
+ this.running = false;
+ this.active = false;
+ this.in_hive = false;
+ this.id_changed = false;
+ this.type_changed = false;
+ this.desktop_changed = false;
+ }
+ function gui()
+ {
+ this.open = false;
+ this.opened = false;
+ this.close = false;
+ this.closed = false;
+ this.minimize = false;
+ this.minimized = false;
+ this.restore = false;
+ this.restored = false;
+ this.maximize = false;
+ this.maximized = false;
+ this.drag = false;
+ this.dragging = false;
+ this.dragged = false;
+ this.resize = false;
+ this.resizing = false;
+ this.resized = false;
+ this.touch = false;
+ this.touched = false;
+ this.menu_activated = false;
+ this.casement_deployed = false;
+ this.resize_enabled = false;
+ this.key_pressed = false;
+ this.mouse_clicked = false;
+ this.title_on_edit = false;
+ this.title_changed = false;
+ this.status_bar_label_changed = false;
+ this.content_changed = false;
+ this.fading_in = false;
+ this.fading_in_finished = false;
+ this.fading_out = false;
+ this.fading_out_finished = false;
+ this.opacity_changed = false;
+ }
+ function key()
+ {
+ this.keydown = false;
+ this.keyup = false;
+ this.keypress = false;
+ }
+ function mouse()
+ {
+ this.click = false;
+ this.dblclick = false;
+ this.mousedown = false;
+ this.mouseup = false;
+ this.mouseover = false;
+ this.mouseout = false;
+ this.mousemove = false;
+ }
+ this.on_event = false;
+ this.system = new system();
+ this.gui = new gui();
+ this.key = new key();
+ this.mouse = new mouse();
+ }
+ function error()
+ {
+ function codes()
+ {
+ this.POSITION = 0xF1;
+ this.SIZE = 0xF2;
+ this.FX = 0xF3;
+ }
+ this.last = function()
+ {
+ return error_code;
+ }
+ this.codes = new codes();
+ }
+ function utilities()
+ {
+ var me = this,
+ __last_mouse_button_clicked = 0;
+ function populate_ui_config()
+ {
+ ui_config.window.id = my_bee_id;
+ ui_config.window.class = 'gui ' + ui_config.window.id + '_gui';
+ ui_config.window.control_bar.id = ui_config.window.id + '_ctrl_bar';
+ ui_config.window.control_bar.ids.icon = ui_config.window.id + '_icon';
+ ui_config.window.control_bar.ids.title = ui_config.window.id + '_title';
+ ui_config.window.control_bar.ids.pencil = ui_config.window.id + '_pencil';
+ ui_config.window.control_bar.ids.separator = ui_config.window.id + '_separator';
+ ui_config.window.control_bar.ids.close = ui_config.window.id + '_close';
+ ui_config.window.control_bar.classes.icon = 'icon ' + ui_config.window.control_bar.ids.icon;
+ ui_config.window.control_bar.classes.pencil = 'pencil ' + ui_config.window.control_bar.ids.pencil;
+ ui_config.window.menu.id = ui_config.window.id + '_menu';
+ ui_config.window.menu.ids.put_to_stack = ui_config.window.menu.id + '_put_to_stack';
+ ui_config.window.menu.ids.mini_mode = ui_config.window.menu.id + '_mini_mode';
+ ui_config.window.menu.ids.max_mode = ui_config.window.menu.id + '_max_mode';
+ ui_config.window.menu.ids.manage_casement = ui_config.window.menu.id + '_manage_casement';
+ ui_config.window.menu.ids.send_to_desktop = ui_config.window.menu.id + '_send_to_desktop';
+ ui_config.window.menu.ids.close = ui_config.window.menu.id + '_close';
+ ui_config.window.menu.class = 'menu ' + ui_config.window.menu.id;
+ ui_config.window.content.id = ui_config.window.id + '_content';
+ ui_config.window.content.ids.data = ui_config.window.id + '_data';
+ ui_config.window.content.classes.container = 'content ' + ui_config.window.content.id;
+ ui_config.window.content.classes.data = 'data ' + ui_config.window.content.ids.data;
+ ui_config.window.status_bar.id = ui_config.window.id + '_status_bar';
+ ui_config.window.status_bar.ids.message = ui_config.window.status_bar.id + '_msg';
+ ui_config.window.status_bar.classes.container = 'status_bar ' + ui_config.window.status_bar.id;
+ ui_config.window.status_bar.classes.message = 'status_msg ' + ui_config.window.status_bar.ids.message;
+ ui_config.casement.id = ui_config.window.id + '_casement';
+ ui_config.casement.ids.title = ui_config.casement.id + '_title';
+ ui_config.casement.ids.data = ui_config.casement.id + '_data';
+ ui_config.casement.ids.status = ui_config.casement.id + '_status';
+ ui_config.casement.classes.container = 'casement ' + ui_config.casement.id;
+ ui_config.casement.classes.title = 'casement_title ' + ui_config.casement.ids.title;
+ ui_config.casement.classes.data = 'casement_data ' + ui_config.casement.ids.data;
+ ui_config.casement.classes.status = 'casement_status ' + ui_config.casement.ids.status;
+ }
+ function populate_ui_objects()
+ {
+ ui_objects.window.ui = utils_sys.objects.by_id(ui_config.window.id);
+ ui_objects.window.control_bar.ui = utils_sys.objects.by_id(ui_config.window.control_bar.id);
+ ui_objects.window.control_bar.icon = utils_sys.objects.by_id(ui_config.window.control_bar.ids.icon);
+ ui_objects.window.control_bar.title = utils_sys.objects.by_id(ui_config.window.control_bar.ids.title);
+ ui_objects.window.control_bar.pencil = utils_sys.objects.by_id(ui_config.window.control_bar.ids.pencil);
+ ui_objects.window.control_bar.separator = utils_sys.objects.by_id(ui_config.window.control_bar.ids.separator);
+ ui_objects.window.control_bar.close = utils_sys.objects.by_id(ui_config.window.control_bar.ids.close);
+ ui_objects.window.menu.ui = utils_sys.objects.by_id(ui_config.window.menu.id);
+ ui_objects.window.menu.put_to_stack = utils_sys.objects.by_id(ui_config.window.menu.ids.put_to_stack);
+ ui_objects.window.menu.mini_mode = utils_sys.objects.by_id(ui_config.window.menu.ids.mini_mode);
+ ui_objects.window.menu.max_mode = utils_sys.objects.by_id(ui_config.window.menu.ids.max_mode);
+ ui_objects.window.menu.manage_casement = utils_sys.objects.by_id(ui_config.window.menu.ids.manage_casement);
+ ui_objects.window.menu.send_to_desktop = utils_sys.objects.by_id(ui_config.window.menu.ids.send_to_desktop);
+ ui_objects.window.menu.close = utils_sys.objects.by_id(ui_config.window.menu.ids.close);
+ ui_objects.window.content.ui = utils_sys.objects.by_id(ui_config.window.content.id);
+ ui_objects.window.content.data = utils_sys.objects.by_id(ui_config.window.content.ids.data);
+ ui_objects.window.status_bar.ui = utils_sys.objects.by_id(ui_config.window.status_bar.id);
+ ui_objects.window.status_bar.message = utils_sys.objects.by_id(ui_config.window.status_bar.ids.message);
+ ui_objects.window.status_bar.resize = utils_sys.objects.by_id(ui_config.window.status_bar.ids.resize);
+ ui_objects.casement.ui = utils_sys.objects.by_id(ui_config.casement.id);
+ ui_objects.casement.title = utils_sys.objects.by_id(ui_config.casement.ids.title);
+ ui_objects.casement.data = utils_sys.objects.by_id(ui_config.casement.ids.data);
+ ui_objects.casement.status = utils_sys.objects.by_id(ui_config.casement.ids.status);
+ }
+ function draw()
+ {
+ var __dynamic_object = null,
+ __bee_settings = self.settings,
+ __bee_gui = self.gui,
+ __marquee_class = '',
+ __html = null;
+ if (__bee_gui.size.width() >= swarm.settings.right() || __bee_gui.size.height() >= swarm.settings.bottom())
+ return false;
+ populate_ui_config();
+ if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ {
+ ui_config.window.status_bar.ids.resize = ui_config.window.id + '_resize';
+ ui_config.window.status_bar.classes.resize = 'resize ' + ui_config.window.status_bar.ids.resize;
+ }
+ if (__bee_settings.general.type() === 1)
+ {
+ ui_config.window.control_bar.classes.container = 'ctrl_bar box_ctrl_bar ' + ui_config.window.control_bar.id;
+ ui_config.window.control_bar.classes.title = 'title box_title ' + ui_config.window.control_bar.ids.title;
+ ui_config.window.control_bar.classes.separator = 'separator box_separator '+ ui_config.window.control_bar.ids.separator;
+ ui_config.window.control_bar.classes.close = 'close box_close ' + ui_config.window.control_bar.ids.close;
+ }
+ else
+ {
+ ui_config.window.control_bar.classes.container = 'ctrl_bar widget_ctrl_bar ' + ui_config.window.control_bar.id;
+ ui_config.window.control_bar.classes.title = 'title widget_title ' + ui_config.window.control_bar.ids.title;
+ ui_config.window.control_bar.classes.separator = 'separator widget_separator '+ ui_config.window.control_bar.ids.separator;
+ ui_config.window.control_bar.classes.close = 'close widget_close ' + ui_config.window.control_bar.ids.close;
+ }
+ if (self.settings.general.status_bar_marquee())
+ {
+ if (__bee_settings.data.window.labels.status_bar().length * 9.0 > __bee_gui.size.width())
+ __marquee_class = 'marquee';
+ }
+ __html = '<div id="' + ui_config.window.control_bar.id + '" class="' + ui_config.window.control_bar.classes.container + '">' +
+ ' <div id="' + ui_config.window.control_bar.ids.icon + '" class="' + ui_config.window.control_bar.classes.icon + '"' +
+ ' title="' + __bee_settings.data.hints.icon() + '"></div>' +
+ ' <div id="' + ui_config.window.control_bar.ids.title + '" class="' + ui_config.window.control_bar.classes.title + '"' +
+ ' title="' + __bee_settings.data.hints.title() + '">' +
+ __bee_settings.data.window.labels.title() +
+ ' </div>';
+ if (__bee_settings.actions.can_edit_title())
+ {
+ __html += ' <div id="' + ui_config.window.control_bar.ids.pencil + '" class="' + ui_config.window.control_bar.classes.pencil + '"' +
+ ' title="' + __bee_settings.data.hints.pencil() + '"></div>';
+ }
+ if (__bee_settings.actions.can_close())
+ {
+ __html += ' <div id="' + ui_config.window.control_bar.ids.close + '" class="' + ui_config.window.control_bar.classes.close + '"' +
+ ' title="' + __bee_settings.data.hints.close() + '"></div>';
+ }
+ if (__bee_settings.actions.can_edit_title() && __bee_settings.actions.can_close())
+ __html += ' <div id="' + ui_config.window.control_bar.ids.separator + '" class="' + ui_config.window.control_bar.classes.separator + '"></div>';
+ __html += '</div>';
+ if (__bee_settings.actions.can_use_menu())
+ {
+ __html += '<div id="' + ui_config.window.menu.id + '" class="' + ui_config.window.menu.class + '">' +
+ ' <div id="' + ui_config.window.menu.ids.put_to_stack + '" ' +
+ ' class="menu_option put_to_stack">Put to stack</div>' +
+ ' <div id="' + ui_config.window.menu.ids.mini_mode + '" ' +
+ ' class="menu_option mini_mode">Mini mode</div>' +
+ ' <div id="' + ui_config.window.menu.ids.max_mode + '" ' +
+ ' class="menu_option max_mode">Max mode</div>' +
+ ' <div id="' + ui_config.window.menu.ids.manage_casement + '" ' +
+ ' class="menu_option manage_casement">Deploy casement</div>' +
+ ' <div id="' + ui_config.window.menu.ids.send_to_desktop + '" ' +
+ ' class="menu_option send_to_desktop">Send to desktop...</div>' +
+ ' <div id="' + ui_config.window.menu.ids.close + '" ' +
+ ' class="menu_option menu_close">Close</div>' +
+ '</div>';
+ }
+ __html += '<div id="' + ui_config.window.content.id + '" class="' + ui_config.window.content.classes.container + '">' +
+ ' <div id="' + ui_config.window.content.ids.data + '" class="' + ui_config.window.content.classes.data + '"' +
+ ' title="' + __bee_settings.data.hints.content() + '">' +
+ __bee_settings.data.window.content() + '</div>' +
+ '</div>' +
+ '<div id="' + ui_config.window.status_bar.id + '" class="' + ui_config.window.status_bar.classes.container + '">' +
+ ' <div id="' + ui_config.window.status_bar.ids.message + '" class="' +
+ ui_config.window.status_bar.classes.message + '">' +
+ ' <div class="dynamic_msg ' + __marquee_class + '"' +
+ ' title="' + __bee_settings.data.hints.status_bar() + '">' +
+ __bee_settings.data.window.labels.status_bar() + '</div>' +
+ ' </div>';
+ if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ {
+ __html += ' <div id="' + ui_config.window.status_bar.ids.resize + '" class="' + ui_config.window.status_bar.classes.resize + '"' +
+ ' title="' + __bee_settings.data.hints.resize() + '"></div>';
+ }
+ __html += '</div>';
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', ui_config.window.id);
+ __dynamic_object.setAttribute('class', ui_config.window.class);
+ __dynamic_object.style.opacity = '1.0';
+ __dynamic_object.style.display = 'block';
+ if (__bee_gui.fx.enabled.fade.into())
+ __dynamic_object.style.display = 'none';
+ if (bee_statuses.in_hive())
+ {
+ __dynamic_object.style.display = 'none';
+ morpheus.execute(my_bee_id, 'system', 'in_hive');
+ }
+ __dynamic_object.style.left = __bee_gui.position.left() + 'px';
+ __dynamic_object.style.top = __bee_gui.position.top() + 'px';
+ __dynamic_object.style.width = __bee_gui.size.width() + 'px';
+ __dynamic_object.style.height = __bee_gui.size.height() + 'px';
+ __dynamic_object.innerHTML = __html;
+ ui_objects.swarm.appendChild(__dynamic_object);
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', ui_config.casement.id);
+ __dynamic_object.setAttribute('class', ui_config.casement.classes.container);
+ __dynamic_object.style.left = __bee_gui.position.left() + __bee_gui.size.width() + 'px';
+ __dynamic_object.style.top = __bee_gui.position.top() + 'px';
+ __dynamic_object.style.width = __bee_gui.size.width() + 'px';
+ __dynamic_object.style.height = __bee_gui.size.height() + 'px';
+ __dynamic_object.innerHTML = '<div id="' + ui_config.casement.ids.title + '" class="casement_title ' +
+ ui_config.casement.classes.title + '">' +
+ __bee_settings.data.casement.labels.title() +
+ '</div>' +
+ '<div id="' + ui_config.casement.ids.data + '" class="casement_data ' +
+ ui_config.casement.classes.data + '">' +
+ __bee_settings.data.casement.content() +
+ '</div>' +
+ '<div id="' + ui_config.casement.ids.status + '" class="casement_status ' +
+ ui_config.casement.classes.status + '">' +
+ __bee_settings.data.casement.labels.status() +
+ '</div>';
+ ui_objects.swarm.appendChild(__dynamic_object);
+ populate_ui_objects();
+ ui_objects.window.control_bar.title.style.width = __bee_gui.size.width() - 100 + 'px';
+ ui_objects.window.content.data.style.height = __bee_gui.size.height() - 88 + 'px';
+ if (__bee_settings.general.type() === 2 && !__bee_settings.actions.can_resize.widget())
+ ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 22 + 'px';
+ else
+ ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 50 + 'px';
+ if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ {
+ ui_objects.window.status_bar.resize.style.width = 19 + 'px';
+ ui_objects.window.status_bar.resize.style.height = 19 + 'px';
+ }
+ ui_objects.casement.ui.style.width = __bee_gui.size.width() * (__bee_settings.general.casement_width() / 100) + 'px';
+ __bee_gui.actions.set_top();
+ attach_events();
+ bee_statuses.open(true);
+ morpheus.execute(my_bee_id, 'gui', 'open');
+ bee_statuses.open(false);
+ bee_statuses.opened(true);
+ morpheus.execute(my_bee_id, 'gui', 'opened');
+ morpheus.execute(my_bee_id, 'key', 'keydown');
+ morpheus.execute(my_bee_id, 'key', 'keyup');
+ morpheus.execute(my_bee_id, 'key', 'keypress');
+ morpheus.execute(my_bee_id, 'mouse', 'click');
+ morpheus.execute(my_bee_id, 'mouse', 'dblclick');
+ morpheus.execute(my_bee_id, 'mouse', 'mousedown');
+ morpheus.execute(my_bee_id, 'mouse', 'mouseup');
+ morpheus.execute(my_bee_id, 'mouse', 'mouseover');
+ morpheus.execute(my_bee_id, 'mouse', 'mouseout');
+ morpheus.execute(my_bee_id, 'mouse', 'mousemove');
+ return true;
+ }
+ function attach_events()
+ {
+ var __bee_settings = self.settings,
+ __bee_gui = self.gui,
+ __handler = null;
+ __handler = function(event) { __bee_gui.actions.menu.close(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, document);
+ __handler = function(event) { __bee_gui.actions.release(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
+ __handler = function(event) { __bee_gui.actions.dresize(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.swarm);
+ __handler = function(event) { __bee_gui.actions.hover.into(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mouseover', __handler, ui_objects.window.ui);
+ __handler = function(event) { __bee_gui.actions.hover.out(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mouseout', __handler, ui_objects.window.ui);
+ __handler = function(event) { coords(event, 1); };
+ morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.window.ui);
+ __handler = function() { __bee_gui.actions.touch(); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.ui);
+ __handler = function(event) { coords(event, 2); manage_drag_status(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.ui);
+ __handler = function(event)
+ {
+ __bee_settings.actions.can_drag.enabled(false);
+ __last_mouse_button_clicked = event.buttons;
+ bee_statuses.active(true);
+ morpheus.execute(my_bee_id, 'system', 'active');
+ };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.icon);
+ __handler = function(event) { __bee_gui.actions.menu.open(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, ui_objects.window.control_bar.icon);
+ if (__bee_settings.actions.can_edit_title())
+ {
+ __handler = function(event) { __bee_gui.actions.edit_title(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.pencil);
+ }
+ if (__bee_settings.actions.can_close())
+ {
+ __handler = function(event) { __bee_gui.actions.close(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.close);
+ }
+ if (__bee_settings.actions.can_use_menu())
+ {
+ if (__bee_settings.actions.can_use_casement())
+ {
+ __handler = function(event) { manage_casement(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.manage_casement);
+ }
+ if (__bee_settings.actions.can_close())
+ {
+ __handler = function(event) { __bee_gui.actions.close(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.close);
+ }
+ }
+ if (!__bee_settings.actions.can_select_text())
+ {
+ __handler = function() { return false; };
+ morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.content.data);
+ __handler = function(event) { event.preventDefault(); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.content.data);
+ }
+ if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ {
+ __handler = function(event)
+ {
+ coords(event, 2);
+ swarm.settings.active_bee(my_bee_id);
+ bee_statuses.resize(true);
+ bee_statuses.active(true);
+ morpheus.execute(my_bee_id, 'gui', 'resize');
+ morpheus.execute(my_bee_id, 'system', 'active');
+ };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.status_bar.resize);
+ __handler = function()
+ {
+ bee_statuses.mouse_clicked(false);
+ bee_statuses.resizing(false);
+ bee_statuses.resize(false);
+ morpheus.execute(my_bee_id, 'gui', 'resized');
+ };
+ morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
+ }
+ __handler = function() { return false; };
+ morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.control_bar.ui);
+ morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.status_bar.ui);
+ __handler = function(event) { event.preventDefault(); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.status_bar.ui);
+ __handler = function(event) { __bee_gui.actions.hover.into(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mouseover', __handler, ui_objects.casement.ui);
+ __handler = function(event) { __bee_gui.actions.hover.out(event); };
+ morpheus.store(my_bee_id, 'mouse', 'mouseout', __handler, ui_objects.casement.ui);
+ __handler = function(event) { coords(event, 1); };
+ morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.casement.ui);
+ __handler = function() { __bee_gui.actions.touch(); };
+ morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.casement.ui);
+ return true;
+ }
+ function coords(event_object, type)
+ {
+ if (utils_sys.validation.misc.is_undefined(event_object) ||
+ !utils_sys.validation.numerics.is_integer(type) ||
+ type < 1 || type > 2)
+ return false;
+ var __pos_x = 0,
+ __pos_y = 0;
+ __pos_x = event_object.clientX + document.documentElement.scrollLeft +
+ document.body.scrollLeft - document.body.clientLeft -
+ swarm.settings.left() - self.gui.position.left();
+ __pos_y = event_object.clientY + document.documentElement.scrollTop +
+ document.body.scrollTop - document.body.clientTop -
+ swarm.settings.top() - self.gui.position.top();
+ if (type === 1)
+ {
+ me.mouse_coords.actual.pos_x = __pos_x;
+ me.mouse_coords.actual.pos_y = __pos_y;
+ }
+ else
+ {
+ me.mouse_coords.relative.pos_x = __pos_x + self.gui.position.left();
+ me.mouse_coords.relative.pos_y = __pos_y + self.gui.position.top();
+ }
+ return true;
+ }
+ function update_win_title()
+ {
+ var __ctrl_bar = ui_objects.window.control_bar.ui,
+ __title_edit_box = utils_sys.objects.by_id(my_bee_id + '_title_edit_box'),
+ __new_title = __title_edit_box.value,
+ __win_type_class_title = null,
+ __title_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width) - 100,
+ __title_div = document.createElement('div'),
+ __pencil_div = document.createElement('div'),
+ __handler = null;
+ morpheus.delete(my_bee_id, 'keydown', __title_edit_box);
+ __ctrl_bar.removeChild(__title_edit_box);
+ if (self.settings.general.type() === 2)
+ __win_type_class_title = 'widget_title';
+ else
+ __win_type_class_title = 'box_title';
+ __title_div.setAttribute('id', ui_config.window.control_bar.ids.title);
+ __title_div.setAttribute('class', 'title ' + __win_type_class_title);
+ __title_div.setAttribute('style', 'width: ' + __title_width + 'px');
+ __title_div.setAttribute('title', self.settings.data.hints.title());
+ __title_div.innerHTML = __new_title;
+ __pencil_div.setAttribute('id', ui_config.window.control_bar.ids.pencil);
+ __pencil_div.setAttribute('class', 'pencil');
+ __pencil_div.setAttribute('title', self.settings.data.hints.pencil());
+ __ctrl_bar.appendChild(__title_div);
+ __ctrl_bar.appendChild(__pencil_div);
+ ui_objects.window.control_bar.title = __title_div;
+ ui_objects.window.control_bar.pencil = __pencil_div;
+ __handler = function(event)
+ {
+ self.gui.actions.edit_title(event);
+ bee_statuses.active(true);
+ morpheus.execute(my_bee_id, 'system', 'active');
+ };
+ morpheus.run(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.pencil);
+ self.settings.data.window.labels.title(__new_title);
+ bee_statuses.title_on_edit(false);
+ return true;
+ }
+ function manage_drag_status(event_object)
+ {
+ if (event_object.buttons !== 1)
+ return false;
+ if (!self.settings.actions.can_drag.enabled() || bee_statuses.title_on_edit() || bee_statuses.close())
+ return false;
+ swarm.settings.active_bee(my_bee_id);
+ bee_statuses.drag(true);
+ bee_statuses.active(true);
+ morpheus.execute(my_bee_id, 'gui', 'drag');
+ morpheus.execute(my_bee_id, 'system', 'active');
+ return true;
+ }
+ function manage_casement(event_object)
+ {
+ if (bee_statuses.close())
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+ return false;
+ if (bee_statuses.casement_deployed())
+ self.gui.actions.casement.hide(event_object);
+ else
+ self.gui.actions.casement.deploy(event_object);
+ return true;
+ }
+ this.gui_init = function()
+ {
+ ui_objects.swarm = utils_sys.objects.by_id(swarm.settings.id());
+ if (ui_objects.swarm === false)
+ return false;
+ if (!draw())
+ return false;
+ return true;
+ };
+ this.edit_win_title = function()
+ {
+ var __ctrl_bar = ui_objects.window.control_bar.ui,
+ __old_title = ui_objects.window.control_bar.title,
+ __pencil = ui_objects.window.control_bar.pencil,
+ __win_type_class_title = null,
+ __title_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width) - 100,
+ __title_edit_box = document.createElement('input'),
+ __handler = null;
+ __ctrl_bar.removeChild(__old_title);
+ __ctrl_bar.removeChild(__pencil);
+ if (self.settings.general.type() === 2)
+ __win_type_class_title = 'widget_title';
+ else
+ __win_type_class_title = 'box_title';
+ __title_edit_box.setAttribute('id', my_bee_id + '_title_edit_box');
+ __title_edit_box.setAttribute('class', 'title ' + __win_type_class_title + ' edit_win_title');
+ __title_edit_box.setAttribute('style', 'width: ' + __title_width + 'px');
+ __title_edit_box.setAttribute('value', self.settings.data.window.labels.title());
+ __ctrl_bar.appendChild(__title_edit_box);
+ __handler = function(event)
+ {
+ if (!bee_statuses.active())
+ return false;
+ if (self.gui.keys.get(event) === key_control.keys.ENTER)
+ update_win_title();
+ };
+ morpheus.run(my_bee_id, 'key', 'keydown', __handler, __title_edit_box);
+ bee_statuses.title_on_edit(true);
+ morpheus.execute(my_bee_id, 'gui', 'title_on_edit');
+ return true;
+ };
+ this.remove_bee = function()
+ {
+ ui_objects.swarm.removeChild(ui_objects.window.ui);
+ ui_objects.swarm.removeChild(ui_objects.casement.ui);
+ return true;
+ };
+ this.is_lonely_bee = function(bee_id)
+ {
+ var __swarm_bees = swarm.bees.list(),
+ __hive_bees = matrix.get('hive').status.bees.list();
+ for (var i = 0; i < __swarm_bees.length; i++)
+ {
+ if (__swarm_bees[i] === bee_id)
+ return false;
+ }
+ for (var bees_list in __hive_bees)
+ {
+ for (var i = 0; i < bees_list.length; i++)
+ {
+ if (bees_list[i] === bee_id)
+ return false;
+ }
+ }
+ return true;
+ };
+ this.set_z_index = function(z_index)
+ {
+ ui_objects.window.ui.style.zIndex = z_index + 2;
+ ui_objects.casement.ui.style.zIndex = z_index + 1;
+ return true;
+ };
+ this.last_mouse_button = function()
+ {
+ return __last_mouse_button_clicked;
+ };
+ this.log = function(func, result)
+ {
+ if (self.settings.general.backtrace())
+ frog('BEE', 'Function', func, 'Result: ' + result);
+ return false;
+ };
+ function mouse_coords_model()
+ {
+ function actual()
+ {
+ this.pos_x = 0;
+ this.pos_y = 0;
+ }
+ function relative()
+ {
+ this.pos_x = 0;
+ this.pos_y = 0;
+ }
+ this.actual = new actual();
+ this.relative = new relative();
+ }
+ function fade_settings_model()
+ {
+ this.type = null;
+ this.step = 0.00;
+ this.speed = 0;
+ this.delay = 0;
+ }
+ function animating_events()
+ {
+ var me = this;
+ this.in_progress = function()
+ {
+ if (bee_statuses.fading_in())
+ {
+ __animating_event = 'into';
+ return true;
+ }
+ if (bee_statuses.fading_out())
+ {
+ __animating_event = 'out';
+ return true;
+ }
+ return false;
+ };
+ this.duration = function()
+ {
+ if (!me.in_progress())
+ return false;
+ var __msec = 0.0;
+ __msec = (self.gui.fx.fade.settings[__animating_event].get.last(2) /
+ self.gui.fx.fade.settings[__animating_event].get.last(1)) +
+ self.gui.fx.fade.settings[__animating_event].get.last(3);
+ __animating_event = null;
+ return __msec;
+ };
+ var __animating_event = null;
+ }
+ this.mouse_coords = new mouse_coords_model();
+ this.fade_settings = new fade_settings_model();
+ this.animating_events = new animating_events();
+ }
+ function supported_events()
+ {
+ var __events_settings = new events_status_settings_model();
+ this.contains = function(event_var, context)
+ {
+ if (context === 'main')
+ return false;
+ for (var key in __events_settings[context])
+ {
+ if (__events_settings[context].hasOwnProperty(key))
+ {
+ if (key === event_var)
+ return true;
+ }
+ }
+ return false;
+ };
+ }
+ function supported_statuses()
+ {
+ function validate(status_var, context, val)
+ {
+ if (utils_sys.validation.misc.is_undefined(val))
+ {
+ if (context === 'main')
+ return __status_settings[status_var];
+ else
+ return __status_settings[context][status_var];
+ }
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ if (context === 'main')
+ {
+ __status_settings.on_event = val;
+ return true;
+ }
+ __status_settings[context][status_var] = val;
+ for (var key in __status_settings[context])
+ {
+ if (__status_settings[context].hasOwnProperty(key))
+ {
+ if (__status_settings[context][key] === true)
+ {
+ __status_settings.on_event = true;
+ return true;
+ }
+ }
+ }
+ __status_settings.on_event = false;
+ return true;
+ }
+ this.on_event = function(val)
+ {
+ return validate('on_event', 'main', val);
+ };
+ this.initialized = function(val)
+ {
+ return validate('initialized', 'system', val);
+ };
+ this.running = function(val)
+ {
+ return validate('running', 'system', val);
+ };
+ this.active = function(val)
+ {
+ return validate('active', 'system', val);
+ };
+ this.id_changed = function(val)
+ {
+ return validate('id_changed', 'system', val);
+ };
+ this.type_changed = function(val)
+ {
+ return validate('type_changed', 'system', val);
+ };
+ this.desktop_changed = function(val)
+ {
+ return validate('desktop_changed', 'system', val);
+ };
+ this.in_hive = function(val)
+ {
+ return validate('in_hive', 'system', val);
+ };
+ this.open = function(val)
+ {
+ return validate('open', 'gui', val);
+ };
+ this.opened = function(val)
+ {
+ return validate('opened', 'gui', val);
+ };
+ this.close = function(val)
+ {
+ return validate('close', 'gui', val);
+ };
+ this.closed = function(val)
+ {
+ return validate('closed', 'gui', val);
+ };
+ this.minimize = function(val)
+ {
+ return validate('minimize', 'gui', val);
+ };
+ this.minimized = function(val)
+ {
+ return validate('minimized', 'gui', val);
+ };
+ this.restore = function(val)
+ {
+ return validate('restore', 'gui', val);
+ };
+ this.restored = function(val)
+ {
+ return validate('restored', 'gui', val);
+ };
+ this.maximize = function(val)
+ {
+ return validate('maximize', 'gui', val);
+ };
+ this.maximized = function(val)
+ {
+ return validate('maximized', 'gui', val);
+ };
+ this.drag = function(val)
+ {
+ return validate('drag', 'gui', val);
+ };
+ this.dragging = function(val)
+ {
+ return validate('dragging', 'gui', val);
+ };
+ this.dragged = function(val)
+ {
+ return validate('dragged', 'gui', val);
+ };
+ this.resize = function(val)
+ {
+ return validate('resize', 'gui', val);
+ };
+ this.resizing = function(val)
+ {
+ return validate('resizing', 'gui', val);
+ };
+ this.resized = function(val)
+ {
+ return validate('resized', 'gui', val);
+ };
+ this.touch = function(val)
+ {
+ return validate('touch', 'gui', val);
+ };
+ this.touched = function(val)
+ {
+ return validate('touched', 'gui', val);
+ };
+ this.menu_activated = function(val)
+ {
+ return validate('menu_activated', 'gui', val);
+ };
+ this.casement_deployed = function(val)
+ {
+ return validate('casement_deployed', 'gui', val);
+ };
+ this.resize_enabled = function(val)
+ {
+ return validate('resize_enabled', 'gui', val);
+ };
+ this.title_on_edit = function(val)
+ {
+ return validate('title_on_edit', 'gui', val);
+ };
+ this.title_changed = function(val)
+ {
+ return validate('title_changed', 'gui', val);
+ };
+ this.status_bar_label_changed = function(val)
+ {
+ return validate('status_bar_label_changed', 'gui', val);
+ };
+ this.content_changed = function(val)
+ {
+ return validate('content_changed', 'gui', val);
+ };
+ this.fading_in = function(val)
+ {
+ return validate('fading_in', 'gui', val);
+ };
+ this.fading_in_finished = function(val)
+ {
+ return validate('fading_in_finished', 'gui', val);
+ };
+ this.fading_out = function(val)
+ {
+ return validate('fading_out', 'gui', val);
+ };
+ this.fading_out_finished = function(val)
+ {
+ return validate('fading_out_finished', 'gui', val);
+ };
+ this.opacity_changed = function(val)
+ {
+ return validate('opacity_changed', 'gui', val);
+ };
+ this.mouse_clicked = function(val)
+ {
+ return validate('mouse_clicked', 'gui', val);
+ };
+ this.key_pressed = function(val)
+ {
+ return validate('key_pressed', 'gui', val);
+ };
+ this.keydown = function(val)
+ {
+ return validate('keydown', 'key', val);
+ };
+ this.keyup = function(val)
+ {
+ return validate('keyup', 'key', val);
+ };
+ this.keypress = function(val)
+ {
+ return validate('keypress', 'key', val);
+ };
+ this.click = function(val)
+ {
+ return validate('click', 'mouse', val);
+ };
+ this.dblclick = function(val)
+ {
+ return validate('dblclick', 'mouse', val);
+ };
+ this.mousedown = function(val)
+ {
+ return validate('mousedown', 'mouse', val);
+ };
+ this.mouseup = function(val)
+ {
+ return validate('mouseup', 'mouse', val);
+ };
+ this.mouseover = function(val)
+ {
+ return validate('mouseover', 'mouse', val);
+ };
+ this.mouseout = function(val)
+ {
+ return validate('mouseout', 'mouse', val);
+ };
+ this.mousemove = function(val)
+ {
+ return validate('mousemove', 'mouse', val);
+ };
+ var __status_settings = new events_status_settings_model();
+ }
+ function settings()
+ {
+ function general()
+ {
+ var __app_id = null,
+ __system_app_id = null,
+ __app_type = 0,
+ __desktop_id = 0,
+ __single_instance = false,
+ __topmost = false,
+ __status_bar_marquee = false,
+ __resize_tooltip = false,
+ __backtrace = false,
+ __casement_width = 100;
+ this.app_id = function()
+ {
+ if (is_init === false)
+ return false;
+ return __app_id;
+ };
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __system_app_id;
+ if (bee_statuses.running())
+ return false;
+ if (utils_sys.validation.alpha.is_blank(val) || utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __app_id = val.trim();
+ __system_app_id = val.toLowerCase().replace(/\s/g,'_') + '_app_' + random.generate();
+ bee_statuses.id_changed(true);
+ morpheus.execute(my_bee_id, 'system', 'id_changed');
+ bee_statuses.id_changed(false);
+ return true;
+ };
+ this.type = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __app_type;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 1 || val > 2)
+ return false;
+ __app_type = val;
+ bee_statuses.type_changed(true);
+ morpheus.execute(my_bee_id, 'system', 'type_changed');
+ bee_statuses.type_changed(false);
+ return true;
+ };
+ this.desktop_id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __desktop_id;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ return false;
+ __desktop_id = val;
+ bee_statuses.desktop_changed(true);
+ morpheus.execute(my_bee_id, 'system', 'desktop_changed');
+ bee_statuses.desktop_changed(false);
+ return true;
+ };
+ this.single_instance = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __single_instance;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __single_instance = val;
+ return true;
+ };
+ this.topmost = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __topmost;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __topmost = val;
+ return true;
+ };
+ this.in_hive = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ bee_statuses.in_hive(val);
+ if (val === true)
+ {
+ bee_statuses.active(false);
+ morpheus.execute(my_bee_id, 'system', 'in_hive');
+ }
+ return true;
+ };
+ this.status_bar_marquee = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __status_bar_marquee;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __status_bar_marquee = val;
+ return true;
+ };
+ this.resize_tooltip = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __resize_tooltip;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __resize_tooltip = val;
+ return true;
+ };
+ this.casement_width = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __casement_width;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 20 || val > 100)
+ return false;
+ __casement_width = val;
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __backtrace;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __backtrace = val;
+ return true;
+ };
+ }
+ function actions()
+ {
+ function action_settings_object()
+ {
+ function drag()
+ {
+ this.on_x = true;
+ this.on_y = true;
+ }
+ function resize()
+ {
+ this.on_x = true;
+ this.on_y = true;
+ }
+ this.can_open = true;
+ this.can_close = true;
+ this.can_minimize = true;
+ this.can_restore = true;
+ this.can_maximize = true;
+ this.can_touch = true;
+ this.can_edit_title = true;
+ this.can_select_text = true;
+ this.can_use_menu = true;
+ this.can_use_casement = true;
+ this.can_drag = true;
+ this.can_resize = true;
+ this.can_resize_widget = false;
+ this.drag = new drag();
+ this.resize = new resize();
+ }
+ function validate(mode, action, modifier, val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ {
+ if (mode === 1)
+ return __action_settings[action];
+ else
+ return __action_settings[modifier][action];
+ }
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ if (mode === 1)
+ __action_settings[action] = val;
+ else
+ __action_settings[modifier][action] = val;
+ return true;
+ }
+ this.can_open = function(val)
+ {
+ return validate(1, 'can_open', null, val);
+ };
+ this.can_close = function(val)
+ {
+ return validate(1, 'can_close', null, val);
+ };
+ this.can_minimize = function(val)
+ {
+ return validate(1, 'can_minimize', null, val);
+ };
+ this.can_restore = function(val)
+ {
+ return validate(1, 'can_restore', null, val);
+ };
+ this.can_maximize = function(val)
+ {
+ return validate(1, 'can_maximize', null, val);
+ };
+ this.can_touch = function(val)
+ {
+ return validate(1, 'can_touch', null, val);
+ };
+ this.can_edit_title = function(val)
+ {
+ return validate(1, 'can_edit_title', null, val);
+ };
+ this.can_select_text = function(val)
+ {
+ return validate(1, 'can_select_text', null, val);
+ };
+ this.can_use_menu = function(val)
+ {
+ return validate(1, 'can_use_menu', null, val);
+ };
+ this.can_use_casement = function(val)
+ {
+ return validate(1, 'can_use_casement', null, val);
+ };
+ function can_drag()
+ {
+ this.enabled = function(val)
+ {
+ return validate(1, 'can_drag', null, val);
+ };
+ function drag_on()
+ {
+ this.x = function(val)
+ {
+ return validate(2, 'on_x', 'drag', val);
+ };
+ this.y = function(val)
+ {
+ return validate(2, 'on_y', 'drag', val);
+ };
+ }
+ this.on = new drag_on();
+ }
+ function can_resize()
+ {
+ this.enabled = function(val)
+ {
+ return validate(1, 'can_resize', null, val);
+ };
+ this.widget = function(val)
+ {
+ return validate(1, 'can_resize_widget', null, val);
+ };
+ function resize_on()
+ {
+ this.x = function(val)
+ {
+ return validate(2, 'on_x', 'resize', val);
+ };
+ this.y = function(val)
+ {
+ return validate(2, 'on_y', 'resize', val);
+ };
+ }
+ this.on = new resize_on();
+ }
+ var __action_settings = new action_settings_object();
+ this.can_drag = new can_drag();
+ this.can_resize = new can_resize();
+ }
+ function data()
+ {
+ function window()
+ {
+ var __content = '';
+ this.content = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __content;
+ __content = val;
+ if (!ui_objects.window.content.data)
+ return false;
+ ui_objects.window.content.data.innerHTML = val;
+ bee_statuses.content_changed(true);
+ morpheus.execute(my_bee_id, 'gui', 'content_changed');
+ bee_statuses.content_changed(false);
+ return true;
+ };
+ function labels()
+ {
+ var __title = '',
+ __status_bar = '';
+ this.title = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __title;
+ __title = val;
+ if (!ui_objects.window.control_bar.title)
+ return false;
+ ui_objects.window.control_bar.title.innerHTML = val;
+ bee_statuses.title_changed(true);
+ morpheus.execute(my_bee_id, 'gui', 'title_changed');
+ bee_statuses.title_changed(false);
+ return true;
+ };
+ this.status_bar = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __status_bar;
+ __status_bar = val;
+ if (!ui_objects.window.status_bar.message)
+ return false;
+ ui_objects.window.status_bar.message.childNodes[1].innerHTML = val;
+ if (self.settings.general.status_bar_marquee())
+ {
+ if (val.length * 9.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+ ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+ }
+ bee_statuses.status_bar_label_changed(true);
+ morpheus.execute(my_bee_id, 'gui', 'status_bar_label_changed');
+ bee_statuses.status_bar_label_changed(false);
+ return true;
+ };
+ }
+ this.labels = new labels();
+ }
+ function casement()
+ {
+ var __data = '';
+ this.content = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __data;
+ __data = val;
+ if (!ui_objects.casement.data)
+ return false;
+ ui_objects.casement.data.innerHTML = val;
+ return true;
+ };
+ function labels()
+ {
+ var __title = '',
+ __status = '';
+ this.title = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __title;
+ __title = val;
+ if (!ui_objects.casement.title)
+ return false;
+ ui_objects.casement.title.innerHTML = val;
+ return true;
+ };
+ this.status = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __status;
+ __status = val;
+ if (!ui_objects.casement.status)
+ return false;
+ ui_objects.casement.status.innerHTML = val;
+ return true;
+ };
+ }
+ this.labels = new labels();
+ }
+ function hints()
+ {
+ var __title = '',
+ __content = '',
+ __status_bar = '',
+ __icon = '',
+ __pencil = '',
+ __close = '',
+ __resize = '';
+ this.title = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __title;
+ __title = val;
+ if (!ui_objects.window.control_bar.title)
+ return false;
+ ui_objects.window.control_bar.title.setAttribute('title', __title);
+ return true;
+ };
+ this.content = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __content;
+ __content = val;
+ if (!ui_objects.window.content.data)
+ return false;
+ ui_objects.window.content.data.setAttribute('title', __content);
+ return true;
+ };
+ this.status_bar = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __status_bar;
+ __status_bar = val;
+ if (!ui_objects.window.status_bar.message)
+ return false;
+ ui_objects.window.status_bar.message.setAttribute('title', __status_bar);
+ return true;
+ };
+ this.icon = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __icon;
+ __icon = val;
+ if (!ui_objects.window.control_bar.icon)
+ return false;
+ ui_objects.window.control_bar.icon.setAttribute('title', __icon);
+ return true;
+ };
+ this.pencil = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __pencil;
+ __pencil = val;
+ if (!ui_objects.window.control_bar.pencil)
+ return false;
+ ui_objects.window.control_bar.pencil.setAttribute('title', __pencil);
+ return true;
+ };
+ this.close = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __close;
+ __close = val;
+ if (!ui_objects.window.control_bar.close)
+ return false;
+ ui_objects.window.control_bar.close.setAttribute('title', __close);
+ return true;
+ };
+ this.resize = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __resize;
+ __resize = val;
+ if (!ui_objects.window.status_bar.resize)
+ return false;
+ ui_objects.window.status_bar.resize.setAttribute('title', __resize);
+ return true;
+ };
+ }
+ this.window = new window();
+ this.casement = new casement();
+ this.hints = new hints();
+ }
+ this.general = new general();
+ this.actions = new actions();
+ this.data = new data();
+ }
+ function status()
+ {
+ this.on_event = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.on_event();
+ };
+ function system_status()
+ {
+ this.initialized = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.initialized();
+ };
+ this.running = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.running();
+ };
+ this.active = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.active();
+ };
+ this.in_hive = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.in_hive();
+ };
+ this.id_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.id_changed();
+ };
+ this.type_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.type_changed();
+ };
+ this.desktop_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.desktop_changed();
+ };
+ }
+ function gui_status()
+ {
+ function position_status()
+ {
+ this.left = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.left);
+ };
+ this.top = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.top);
+ };
+ }
+ function size_status()
+ {
+ this.width = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
+ };
+ this.height = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height);
+ };
+ }
+ function fx_status()
+ {
+ function fading()
+ {
+ function into()
+ {
+ this.in_progress = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.fading_in();
+ };
+ this.finished = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.fading_in_finished();
+ };
+ }
+ function out()
+ {
+ this.in_progress = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.fading_out();
+ };
+ this.finished = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.fading_out_finished();
+ };
+ }
+ this.into = new into();
+ this.out = new out();
+ }
+ function opacity()
+ {
+ this.changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.opacity_changed();
+ };
+ }
+ this.fading = new fading();
+ this.opacity = new opacity();
+ }
+ this.open = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.open();
+ };
+ this.opened = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.opened();
+ };
+ this.close = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.close();
+ };
+ this.closed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.closed();
+ };
+ this.minimize = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.minimize();
+ };
+ this.minimized = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.minimized();
+ };
+ this.restore = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.restore();
+ };
+ this.restored = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.restored();
+ };
+ this.maximize = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.maximize();
+ };
+ this.maximized = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.maximized();
+ };
+ this.drag = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.drag();
+ };
+ this.dragging = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.dragging();
+ };
+ this.dragged = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.dragged();
+ };
+ this.resize = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.resize();
+ };
+ this.resizing = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.resizing();
+ };
+ this.resized = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.resized();
+ };
+ this.menu_activated = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.menu_activated();
+ };
+ this.casement_deployed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.casement_deployed();
+ };
+ this.resize_enabled = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.resize_enabled();
+ };
+ this.title_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.title_changed();
+ };
+ this.status_bar_label_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.status_bar_label_changed();
+ };
+ this.content_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.content_changed();
+ };
+ this.mouse_clicked = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.mouse_clicked();
+ };
+ this.key_pressed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.key_pressed();
+ };
+ this.touch = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.touch();
+ };
+ this.touched = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.touched();
+ };
+ this.mouseclick = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.click();
+ };
+ this.mousedblclick = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.dblclick();
+ };
+ this.mousedown = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.mousedown();
+ };
+ this.mouseup = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.mouseup();
+ };
+ this.mouseover = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.mouseover();
+ };
+ this.mouseout = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.mouseout();
+ };
+ this.mousemove = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.mousemove();
+ };
+ this.keydown = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.keydown();
+ };
+ this.keyup = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.keyup();
+ };
+ this.keypress = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.keypress();
+ };
+ this.position = new position_status();
+ this.size = new size_status();
+ this.fx = new fx_status();
+ }
+ function data_status()
+ {
+ function labels_status()
+ {
+ this.title_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.title_changed();
+ };
+ this.status_bar_label_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.status_bar_label_changed();
+ };
+ }
+ this.content_changed = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.content_changed();
+ };
+ this.labels = new labels_status();
+ }
+ this.system = new system_status();
+ this.gui = new gui_status();
+ this.data = new data_status();
+ }
+ function gui()
+ {
+ var me = this;
+ function keys()
+ {
+ this.get = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ key_control.scan(event_object);
+ bee_statuses.key_pressed(true);
+ morpheus.execute(my_bee_id, 'gui', 'key_pressed');
+ return key_control.get();
+ };
+ }
+ function mouse()
+ {
+ function actual()
+ {
+ this.x = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.mouse_coords.actual.pos_x;
+ };
+ this.y = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.mouse_coords.actual.pos_y;
+ };
+ }
+ function relative()
+ {
+ this.x = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.mouse_coords.relative.pos_x;
+ };
+ this.y = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.mouse_coords.relative.pos_y;
+ };
+ }
+ this.actual = new actual();
+ this.relative = new relative();
+ }
+ function position()
+ {
+ function pos_settings_object()
+ {
+ function limits()
+ {
+ this.left = 0;
+ this.top = 0;
+ this.right = window.innerWidth;
+ this.bottom = window.innerHeight;
+ this.z_index = 2147483641;
+ }
+ this.left = 0;
+ this.top = 0;
+ this.z_index = 0;
+ this.topmost_z_index = 2147400000;
+ this.limits = new limits();
+ }
+ function limits()
+ {
+ this.left = function(val)
+ {
+ return validate(2, 'left', 'right', val);
+ };
+ this.top = function(val)
+ {
+ return validate(2, 'top', 'bottom', val);
+ };
+ this.right = function(val)
+ {
+ return validate(2, 'right', 'left', val);
+ };
+ this.bottom = function(val)
+ {
+ return validate(2, 'bottom', 'top', val);
+ };
+ }
+ function randomize_pos(position)
+ {
+ var __new_pos = Math.floor(position + (position * Math.random()));
+ return __new_pos;
+ }
+ function validate(mode, position, limit, val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ {
+ if (mode === 1)
+ return __position_settings[position];
+ else
+ return __position_settings.limits[position];
+ }
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ {
+ error_code = self.error.codes.POSITION;
+ return false;
+ }
+ if (limit === 'right' || limit === 'bottom')
+ {
+ if (!bee_statuses.running() && __is_static === false)
+ {
+ if (val >= (__position_settings.limits[limit] - val))
+ val = val / 2;
+ }
+ else
+ {
+ if (val >= __position_settings.limits[limit])
+ {
+ error_code = self.error.codes.POSITION;
+ return false;
+ }
+ }
+ }
+ else if (limit === 'left' || limit === 'top')
+ {
+ if (val <= __position_settings.limits[limit])
+ {
+ error_code = self.error.codes.POSITION;
+ return false;
+ }
+ }
+ else
+ {
+ if (limit === 'z_index')
+ {
+ if (val > __position_settings.limits[limit])
+ {
+ error_code = self.error.codes.POSITION;
+ return false;
+ }
+ }
+ }
+ if (mode === 1)
+ __position_settings[position] = val;
+ else
+ __position_settings.limits[position] = val;
+ return true;
+ }
+ this.left = function(val)
+ {
+ var __alt_val = val;
+ if (!bee_statuses.running() && __is_static === false)
+ __alt_val = randomize_pos(val);
+ return validate(1, 'left', 'right', __alt_val);
+ };
+ this.top = function(val)
+ {
+ var __alt_val = val;
+ if (!bee_statuses.running() && __is_static === false)
+ __alt_val = randomize_pos(val);
+ return validate(1, 'top', 'bottom', __alt_val);
+ };
+ this.z_index = function(val)
+ {
+ return validate(1, 'z_index', 'z_index', val);
+ };
+ this.topmost_z_index = function(val)
+ {
+ return validate(1, 'topmost_z_index', 'z_index', val);
+ };
+ this.static = function(val)
+ {
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __is_static;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __is_static = val;
+ return true;
+ };
+ var __is_static = false,
+ __position_settings = new pos_settings_object();
+ this.limits = new limits();
+ }
+ function size()
+ {
+ function size_settings_object()
+ {
+ function min()
+ {
+ this.width = 260;
+ this.height = 120;
+ }
+ function max()
+ {
+ this.width = window.innerWidth;
+ this.height = window.innerHeight;
+ }
+ this.width = 300;
+ this.height = 220;
+ this.min = new min();
+ this.max = new max();
+ }
+ function validate(mode, type, size, limit, val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ {
+ if (mode === 1)
+ return __size_settings[size];
+ else
+ return __size_settings[limit][size];
+ }
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
+ {
+ error_code = self.error.codes.SIZE;
+ return false;
+ }
+ if (mode === 1)
+ {
+ if (type === 1)
+ {
+ if (val < me.size.min.width() || val > me.size.max.width())
+ {
+ error_code = self.error.codes.SIZE;
+ return false;
+ }
+ }
+ else if (type === 2)
+ {
+ if (val < me.size.min.height() || val > me.size.max.height())
+ {
+ error_code = self.error.codes.SIZE;
+ return false;
+ }
+ }
+ }
+ else if (mode === 2)
+ {
+ if (type === 1)
+ {
+ if (val < me.size.min.width() || val > me.size.width())
+ {
+ error_code = self.error.codes.SIZE;
+ return false;
+ }
+ }
+ else if (type === 2)
+ {
+ if (val < me.size.min.height() || val > me.size.height())
+ {
+ error_code = self.error.codes.SIZE;
+ return false;
+ }
+ }
+ }
+ else if (mode === 3)
+ {
+ if (type === 1)
+ {
+ if (val < me.size.width())
+ {
+ error_code = self.error.codes.SIZE;
+ return false;
+ }
+ }
+ else if (type === 2)
+ {
+ if (val < me.size.height())
+ {
+ error_code = self.error.codes.SIZE;
+ return false;
+ }
+ }
+ }
+ if (mode === 1)
+ __size_settings[size] = val;
+ else
+ __size_settings[limit][size] = val;
+ return true;
+ }
+ this.width = function(val)
+ {
+ return validate(1, 1, 'width', null, val);
+ };
+ this.height = function(val)
+ {
+ return validate(1, 2, 'height', null, val);
+ };
+ function min()
+ {
+ this.width = function(val)
+ {
+ return validate(2, 1, 'width', 'min', val);
+ };
+ this.height = function(val)
+ {
+ return validate(2, 2, 'height', 'min', val);
+ };
+ }
+ function max()
+ {
+ this.width = function(val)
+ {
+ return validate(3, 1, 'width', 'max', val);
+ };
+ this.height = function(val)
+ {
+ return validate(3, 2, 'height', 'max', val);
+ };
+ }
+ var __size_settings = new size_settings_object();
+ this.min = new min();
+ this.max = new max();
+ }
+ function fx()
+ {
+ function fx_settings()
+ {
+ this.opacity = 1.0;
+ function fade()
+ {
+ function into()
+ {
+ this.step = 0.00;
+ this.speed = 0;
+ this.delay = 0;
+ }
+ function out()
+ {
+ this.step = 0.00;
+ this.speed = 0;
+ this.delay = 0;
+ }
+ this.into = new into();
+ this.out = new out();
+ }
+ this.fade = new fade();
+ }
+ function fx_enabled()
+ {
+ var __opacity_enabled = true;
+ function fade_settings_object()
+ {
+ this.fade_in_enabled = false;
+ this.fade_out_enabled = false;
+ }
+ this.all = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ {
+ if (__opacity_enabled === true &&
+ __fade_settings.fade_in_enabled === true && __fade_settings.fade_out_enabled === true)
+ return true;
+ else
+ return false;
+ }
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __opacity_enabled = val;
+ __fade_settings.fade_in_enabled = val;
+ __fade_settings.fade_out_enabled = val;
+ return true;
+ };
+ this.opacity = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __opacity_enabled;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __opacity_enabled = val;
+ return true;
+ };
+ function fade()
+ {
+ function validate(fx, val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __fade_settings[fx];
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __fade_settings[fx] = val;
+ return true;
+ }
+ this.into = function(val)
+ {
+ return validate('fade_in_enabled', val);
+ };
+ this.out = function(val)
+ {
+ return validate('fade_out_enabled', val);
+ };
+ }
+ var __fade_settings = new fade_settings_object();
+ this.fade = new fade();
+ }
+ function opacity()
+ {
+ function opacity_settings()
+ {
+ this.get = function()
+ {
+ if (is_init === false)
+ return false;
+ if (!me.fx.enabled.opacity())
+ return false;
+ return __fx_settings.opacity;
+ };
+ this.set = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (!utils_sys.validation.numerics.is_float(val) || val < 0.0 || val > 1.0)
+ return false;
+ me.fx.enabled.opacity(true);
+ __fx_settings.opacity = val;
+ bee_statuses.opacity_changed(true);
+ morpheus.execute(my_bee_id, 'gui', 'opacity_changed');
+ bee_statuses.opacity_changed(false);
+ return true;
+ };
+ }
+ this.apply = function()
+ {
+ if (is_init === false)
+ return false;
+ if (!me.fx.enabled.opacity())
+ return false;
+ gfx.opacity.apply(my_bee_id, __fx_settings.opacity);
+ gfx.opacity.apply(ui_config.casement.id, __fx_settings.opacity);
+ return true;
+ };
+ this.reset = function()
+ {
+ if (is_init === false)
+ return false;
+ if (!me.fx.enabled.opacity())
+ return false;
+ me.fx.enabled.opacity(false);
+ gfx.opacity.reset(my_bee_id);
+ gfx.opacity.reset(ui_config.casement.id);
+ return true;
+ };
+ this.settings = new opacity_settings();
+ }
+ function fade()
+ {
+ var __fade_batch_array = [];
+ function validate(mode, type, option, index, ssd_array)
+ {
+ if (is_init === false)
+ return false;
+ if (mode === 1)
+ {
+ me.fx.fade.settings[type].set(__fade_batch_array[index].step,
+ __fade_batch_array[index].speed,
+ __fade_batch_array[index].delay);
+ me.fx.fade[type]();
+ }
+ else if (mode === 2)
+ {
+ if (!me.fx.enabled.fade[type]())
+ return false;
+ var __fading_type = null;
+ if (type === 'into')
+ __fading_type = 'fading_in';
+ else
+ __fading_type = 'fading_out';
+ bee_statuses[__fading_type + '_finished'](false);
+ bee_statuses[__fading_type](true);
+ morpheus.execute(my_bee_id, 'gui', __fading_type);
+ gfx.fade[type](my_bee_id, me.fx.fade.settings[type].get.last(1),
+ me.fx.fade.settings[type].get.last(2), me.fx.fade.settings[type].get.last(3),
+ function()
+ {
+ bee_statuses[__fading_type](false);
+ bee_statuses[__fading_type + '_finished'](true);
+ morpheus.execute(my_bee_id, 'gui', __fading_type + '_finished');
+ });
+ return true;
+ }
+ else if (mode === 3)
+ {
+ me.fx.enabled.fade[type](true);
+ __fx_settings.fade[type].step = ssd_array[0];
+ __fx_settings.fade[type].speed = ssd_array[1];
+ __fx_settings.fade[type].delay = ssd_array[2];
+ }
+ else if (mode === 4)
+ {
+ var i = 0,
+ __loops = 0;
+ if (!me.fx.enabled.fade[type]())
+ return false;
+ if (__fade_batch_array.length === 0)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(option) && utils_sys.validation.misc.is_undefined(index))
+ {
+ var __this_fade_batch_array = [];
+ __loops = __fade_batch_array.length;
+ for (i = 0; i < __loops; i++)
+ {
+ if (__fade_batch_array[i].type === type)
+ __this_fade_batch_array.push(__fade_batch_array[i]);
+ }
+ return __this_fade_batch_array;
+ }
+ if (!utils_sys.validation.numerics.is_integer(option) || option < 1 || option > 3 ||
+ !utils_sys.validation.misc.is_undefined(index) && (!utils_sys.validation.numerics.is_integer(index) || index < 0))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(index))
+ index = 0;
+ __loops = __fade_batch_array.length;
+ for (i = index; i < __loops; i++)
+ {
+ if (__fade_batch_array[i].type === type)
+ {
+ if (option === 1)
+ return __fade_batch_array[i].step;
+ else if (option === 2)
+ return __fade_batch_array[i].speed;
+ else
+ return __fade_batch_array[i].delay;
+ }
+ }
+ return false;
+ }
+ else if (mode === 5)
+ {
+ if (!me.fx.enabled.fade[type]())
+ return false;
+ if (__fade_batch_array.length === 0)
+ return false;
+ if (!utils_sys.validation.numerics.is_integer(option) || option < 1 || option > 3)
+ return false;
+ if (option === 1)
+ return __fx_settings.fade[type].step;
+ else if (option === 2)
+ return __fx_settings.fade[type].speed;
+ else
+ return __fx_settings.fade[type].delay;
+ }
+ else
+ {
+ var __fade_settings = utils_int.fade_settings;
+ if (utils_sys.validation.misc.is_undefined(ssd_array[0]) ||
+ utils_sys.validation.misc.is_undefined(ssd_array[1]) ||
+ utils_sys.validation.misc.is_undefined(ssd_array[2]))
+ return false;
+ if ((!utils_sys.validation.numerics.is_float(ssd_array[0]) || ssd_array[0] < 0.0 || ssd_array[0] > 1.0) ||
+ (!utils_sys.validation.numerics.is_integer(ssd_array[1]) || ssd_array[1] < 0) ||
+ (!utils_sys.validation.numerics.is_integer(ssd_array[2]) || ssd_array[2] < 0))
+ return false;
+ __fx_settings.fade[type].step = ssd_array[0];
+ __fx_settings.fade[type].speed = ssd_array[1];
+ __fx_settings.fade[type].delay = ssd_array[2];
+ __fade_settings.type = type;
+ __fade_settings.step = ssd_array[0];
+ __fade_settings.speed = ssd_array[1];
+ __fade_settings.delay = ssd_array[2];
+ __fade_batch_array.push(__fade_settings);
+ me.fx.enabled.fade[type](true);
+ return true;
+ }
+ return false;
+ }
+ function fade_settings()
+ {
+ this.batch = function(type, step, speed, delay)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(type) || !utils_sys.validation.alpha.is_string(type) ||
+ (!utils_sys.validation.numerics.is_float(step) || step < 0.0 || step > 1.0) ||
+ (!utils_sys.validation.numerics.is_integer(speed) || speed < 0) ||
+ (!utils_sys.validation.numerics.is_integer(delay) || delay < 0))
+ return false;
+ var __fade_settings = utils_int.fade_settings,
+ __ssd_aray = [step, speed, delay];
+ if (type === 'into')
+ validate(3, type, null, null, __ssd_aray);
+ else if (type === 'out')
+ validate(3, type, null, null, __ssd_aray);
+ else
+ return false;
+ __fade_settings.type = type;
+ __fade_settings.step = step;
+ __fade_settings.speed = speed;
+ __fade_settings.delay = delay;
+ __fade_batch_array.push(__fade_settings);
+ return true;
+ };
+ function into()
+ {
+ function get()
+ {
+ this.from = function(option, index)
+ {
+ return validate(4, 'into', option, index);
+ };
+ this.last = function(option)
+ {
+ return validate(5, 'into', option);
+ };
+ }
+ this.set = function(step, speed, delay)
+ {
+ var __ssd_aray = [step, speed, delay];
+ return validate(6, 'into', null, null, __ssd_aray);
+ };
+ this.get = new get();
+ }
+ function out()
+ {
+ function get()
+ {
+ this.from = function(option, index)
+ {
+ return validate(4, 'out', option, index);
+ };
+ this.last = function(option)
+ {
+ return validate(5, 'out', option);
+ };
+ }
+ this.set = function(step, speed, delay)
+ {
+ var __ssd_aray = [step, speed, delay];
+ return validate(6, 'out', null, null, __ssd_aray);
+ };
+ this.get = new get();
+ }
+ this.into = new into();
+ this.out = new out();
+ }
+ this.batch = function()
+ {
+ if (is_init === false)
+ return false;
+ var __batch_num = __fade_batch_array.length;
+ if (__batch_num === 0)
+ return false;
+ for (var i = 0; i < __batch_num; i++)
+ {
+ if (__fade_batch_array[i].type === 'into')
+ validate(1, 'into', null, i);
+ else if (__fade_batch_array[i].type === 'out')
+ validate(1, 'out', null, i);
+ else
+ return false;
+ }
+ return true;
+ };
+ this.into = function()
+ {
+ return validate(2, 'into');
+ };
+ this.out = function()
+ {
+ return validate(2, 'out');
+ };
+ this.settings = new fade_settings();
+ }
+ var __fx_settings = new fx_settings();
+ this.enabled = new fx_enabled();
+ this.opacity = new opacity();
+ this.fade = new fade();
+ }
+ function css()
+ {
+ function validate(type, context, sub_context, option, val)
+ {
+ function sub_context_css_object(mode)
+ {
+ if (context === 'window' || context === 'casement')
+ return false;
+ if (sub_context === null || utils_sys.validation.misc.is_undefined(sub_context))
+ return true;
+ if (!ui_config[context][mode].hasOwnProperty(sub_context))
+ __css_object = null;
+ else
+ {
+ if (type === 2)
+ mode = 'ids';
+ __css_object = utils_sys.objects.by_id(ui_config[context][mode][sub_context]);
+ }
+ return true;
+ }
+ if (!ui_config.hasOwnProperty(context))
+ return false;
+ if ((context === 'window' || context === 'casement') &&
+ (!utils_sys.validation.misc.is_undefined(sub_context) && sub_context !== null))
+ return false;
+ var __css_object = utils_sys.objects.by_id(ui_config[context].id);
+ if (type === 1)
+ sub_context_css_object('ids');
+ else
+ sub_context_css_object('classes');
+ if (__css_object === null)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ {
+ if (type === 1)
+ {
+ if (utils_sys.validation.misc.is_undefined(option))
+ return __css_object.style;
+ return __css_object.style[option];
+ }
+ else
+ return __css_object.className;
+ }
+ if (type === 1)
+ __css_object.style[option] = val;
+ else
+ __css_object.className = val;
+ return true;
+ }
+ function style()
+ {
+ this.get = function(context, sub_context, option)
+ {
+ if (!bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.alpha.is_string(context) ||
+ (!utils_sys.validation.misc.is_undefined(sub_context) && !utils_sys.validation.alpha.is_string(sub_context)) ||
+ (!utils_sys.validation.misc.is_undefined(option) && !utils_sys.validation.alpha.is_string(option)))
+ return false;
+ return validate(1, context, sub_context, option);
+ };
+ this.set = function(context, sub_context, option, val)
+ {
+ if (!bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.alpha.is_string(context)||
+ (sub_context !== null && !utils_sys.validation.alpha.is_string(sub_context)) ||
+ (option !== null && !utils_sys.validation.alpha.is_string(option)) ||
+ !utils_sys.validation.alpha.is_string(val))
+ return false;
+ return validate(1, context, sub_context, option, val);
+ };
+ }
+ function class_name()
+ {
+ this.get = function(context, sub_context)
+ {
+ if (!bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.alpha.is_string(context) ||
+ (!utils_sys.validation.misc.is_undefined(sub_context) && !utils_sys.validation.alpha.is_string(sub_context)))
+ return false;
+ return validate(2, context, sub_context);
+ };
+ this.set = function(context, sub_context, val)
+ {
+ if (!bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.alpha.is_string(context)||
+ (sub_context !== null && !utils_sys.validation.alpha.is_string(sub_context)) ||
+ !utils_sys.validation.alpha.is_string(val))
+ return false;
+ return validate(2, context, sub_context, null, val);
+ };
+ }
+ this.style = new style();
+ this.class_name = new class_name();
+ }
+ function actions()
+ {
+ function menu()
+ {
+ this.open = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (bee_statuses.menu_activated())
+ return false;
+ if (event_object.buttons === 0 && utils_int.last_mouse_button() === 1)
+ {
+ gfx.visibility.toggle(ui_config.window.menu.id, 1);
+ bee_statuses.menu_activated(true);
+ self.settings.actions.can_drag.enabled(true);
+ morpheus.execute(my_bee_id, 'gui', 'menu_activated');
+ return true;
+ }
+ return false;
+ };
+ this.close = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (!bee_statuses.menu_activated())
+ return false;
+ if (event_object === null || event_object.buttons === 1)
+ {
+ gfx.visibility.toggle(ui_config.window.menu.id, 1);
+ bee_statuses.menu_activated(false);
+ return true;
+ }
+ return false;
+ };
+ }
+ function casement()
+ {
+ var __is_animating = false;
+ function execute_commands(callback)
+ {
+ if (!utils_sys.validation.misc.is_undefined(callback))
+ callback.call();
+ return true;
+ }
+ this.deploy = function(event_object, callback)
+ {
+ function animate_casement()
+ {
+ __is_animating = true;
+ gfx.visibility.toggle(ui_config.casement.id, 1);
+ gfx.animation.roll(ui_config.casement.id, 1, 'right', __casement_width, __casement_offset, __speed, __step,
+ function()
+ {
+ bee_statuses.casement_deployed(true);
+ __is_animating = false;
+ execute_commands(callback);
+ });
+ return true;
+ }
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) ||
+ !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
+ return false;
+ if (__is_animating === true || !self.settings.actions.can_use_casement())
+ return false;
+ var __window_pos_x = me.position.left(),
+ __window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
+ __casement = ui_objects.casement.ui,
+ __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
+ __casement_offset = __window_width - __casement_width,
+ __step = Math.ceil(__casement_width / 23),
+ __speed = Math.ceil(__step / 3);
+ if ((__window_pos_x + (__window_width + __casement_width )) >= swarm.settings.right())
+ {
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(xenon.load('os_name'), 'The casement can not be deployed here as it overflows your screen!');
+ return false;
+ }
+ ui_objects.window.ui.style.borderTopRightRadius = '0px';
+ ui_objects.window.ui.style.borderBottomRightRadius = '0px';
+ __casement.style.left = __window_pos_x + 'px';
+ if (self.status.gui.fx.fading.into.finished())
+ animate_casement();
+ else
+ setTimeout(function() { animate_casement(); }, utils_int.animating_events.duration());
+ if (self.settings.actions.can_use_menu())
+ ui_objects.window.menu.manage_casement.innerHTML = 'Hide casement';
+ return true;
+ };
+ this.hide = function(event_object, callback)
+ {
+ function animate_casement()
+ {
+ __is_animating = true;
+ gfx.animation.roll(ui_config.casement.id, 1, 'left', __casement_width, 0, __speed, __step,
+ function()
+ {
+ gfx.visibility.toggle(ui_config.casement.id, 1);
+ ui_objects.window.ui.style.borderTopRightRadius = '6px';
+ ui_objects.window.ui.style.borderBottomRightRadius = '6px';
+ __is_animating = false;
+ bee_statuses.casement_deployed(false);
+ execute_commands(callback);
+ });
+ }
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) ||
+ !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
+ return false;
+ if (__is_animating === true)
+ return false;
+ var __casement = ui_objects.casement.ui,
+ __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),
+ __step = Math.ceil(__casement_width / 23),
+ __speed = Math.ceil(__step / 3);
+ if (!bee_statuses.casement_deployed())
+ execute_commands(callback);
+ else
+ animate_casement();
+ if (self.settings.actions.can_use_menu())
+ ui_objects.window.menu.manage_casement.innerHTML = 'Deploy casement';
+ return true;
+ };
+ }
+ function hover()
+ {
+ this.into = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ return true;
+ };
+ this.out = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (!bee_statuses.dragging())
+ bee_statuses.active(false);
+ return true;
+ };
+ }
+ this.edit_title = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) || bee_statuses.close())
+ return false;
+ if (event_object.buttons === 1)
+ {
+ utils_int.edit_win_title();
+ return true;
+ }
+ return false;
+ };
+ this.show = function(parent_app_id = null, headless = false)
+ {
+ if (is_init === false)
+ return false;
+ if (error_code !== null)
+ return false;
+ if (!utils_sys.validation.misc.is_bool(headless))
+ return false;
+ if (bee_statuses.running())
+ return false;
+ if (utils_int.is_lonely_bee(my_bee_id))
+ return false;
+ var __app_id = self.settings.general.app_id();
+ if (parent_app_id === null)
+ {
+ if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+ return false;
+ }
+ bee_statuses.running(true);
+ if (headless === false)
+ {
+ if (!utils_int.gui_init())
+ {
+ if (parent_app_id === null)
+ owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
+ utils_int.log('Show', 'ERROR');
+ return false;
+ }
+ }
+ bee_statuses.active(true);
+ morpheus.execute(my_bee_id, 'system', 'running');
+ owl.status.applications.set(my_bee_id, __app_id, 'RUN');
+ if (headless === false)
+ utils_int.log('Show', 'OK');
+ return true;
+ };
+ this.close = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ function remove_me(this_object)
+ {
+ var __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
+ morpheus.execute(my_bee_id, 'gui', 'closed');
+ morpheus.clear(my_bee_id);
+ bee_statuses.running(false);
+ bee_statuses.closed(true);
+ swarm.settings.active_bee(null);
+ utils_int.remove_bee();
+ if (!swarm.bees.remove(this_object))
+ return false;
+ if (bee_statuses.in_hive())
+ {
+ if (!hive.stack.bees.remove(this_object, __honeycomb_id))
+ return false;
+ }
+ return true;
+ }
+ if ((event_object === null || event_object.buttons === 1) && bee_statuses.opened() && !bee_statuses.close())
+ {
+ var __app_id = self.settings.general.app_id();
+ if (!self.settings.actions.can_close())
+ return false;
+ bee_statuses.opened(false);
+ bee_statuses.close(true);
+ bee_statuses.dragging(false);
+ if (bee_statuses.in_hive())
+ ui_objects.casement.ui.style.visibility = 'hidden';
+ owl.status.applications.set(my_bee_id, __app_id, 'END');
+ me.actions.casement.hide(event_object,
+ function()
+ {
+ morpheus.execute(my_bee_id, 'gui', 'close');
+ if (utils_int.animating_events.in_progress())
+ setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());
+ else
+ remove_me(self);
+ });
+ return true;
+ }
+ return false;
+ };
+ this.minimize = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (event_object === null || event_object.buttons === 1)
+ {
+ bee_statuses.minimize(true);
+ bee_statuses.minimized(true);
+ bee_statuses.restore(false);
+ bee_statuses.restored(false);
+ bee_statuses.maximize(false);
+ bee_statuses.maximized(false);
+ bee_statuses.dragging(false);
+ bee_statuses.resizing(false);
+ morpheus.execute(my_bee_id, 'gui', 'minimize');
+ morpheus.execute(my_bee_id, 'gui', 'minimized');
+ return true;
+ }
+ return false;
+ };
+ this.restore = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (event_object === null || event_object.buttons === 1)
+ {
+ bee_statuses.restore(true);
+ bee_statuses.restored(true);
+ bee_statuses.minimize(false);
+ bee_statuses.minimized(false);
+ bee_statuses.dragging(false);
+ bee_statuses.resizing(false);
+ morpheus.execute(my_bee_id, 'gui', 'restore');
+ morpheus.execute(my_bee_id, 'gui', 'restored');
+ return true;
+ }
+ return false;
+ };
+ this.maximize = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (event_object === null || event_object.buttons === 1)
+ {
+ bee_statuses.maximize(true);
+ bee_statuses.maximized(true);
+ bee_statuses.minimize(false);
+ bee_statuses.minimized(false);
+ bee_statuses.restore(false);
+ bee_statuses.restored(false);
+ bee_statuses.dragging(false);
+ bee_statuses.resizing(false);
+ morpheus.execute(my_bee_id, 'gui', 'maximize');
+ morpheus.execute(my_bee_id, 'gui', 'maximized');
+ return true;
+ }
+ return false;
+ };
+ this.set_top = function()
+ {
+ if (is_init === false)
+ return false;
+ var __z_index = swarm.status.z_index();
+ swarm.settings.z_index(__z_index + 2);
+ if (self.settings.general.topmost())
+ {
+ var __new_topmost_z_index = me.position.topmost_z_index() + __z_index;
+ me.position.topmost_z_index(__new_topmost_z_index);
+ me.position.z_index(__new_topmost_z_index + 2);
+ utils_int.set_z_index(__new_topmost_z_index);
+ }
+ else
+ {
+ me.position.z_index(__z_index + 2);
+ utils_int.set_z_index(__z_index);
+ }
+ return true;
+ };
+ this.touch = function()
+ {
+ if (is_init === false)
+ return false;
+ if (bee_statuses.fading_in() || bee_statuses.fading_out() || bee_statuses.close())
+ return false;
+ bee_statuses.touch(true);
+ bee_statuses.touched(false);
+ bee_statuses.mouse_clicked(true);
+ bee_statuses.active(true);
+ morpheus.execute(my_bee_id, 'system', 'active');
+ morpheus.execute(my_bee_id, 'gui', 'touch');
+ morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
+ if (self.settings.general.topmost())
+ return true;
+ me.actions.set_top();
+ return true;
+ };
+ this.dresize = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) || bee_statuses.title_on_edit() || bee_statuses.close())
+ return false;
+ if (event_object.buttons !== 1)
+ return false;
+ if (bee_statuses.drag() && self.settings.actions.can_drag.enabled())
+ {
+ var __pos_x = me.position.left() + (swarm.area.mouse.x() - me.mouse.relative.x()),
+ __pos_y = me.position.top() + (swarm.area.mouse.y() - me.mouse.relative.y()),
+ __current_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
+ __current_height = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.height),
+ __casement_width = utils_sys.graphics.pixels_value(ui_objects.casement.ui.style.width),
+ __dynamic_casement_width = 0,
+ __dynamic_right_pos = 0;
+ bee_statuses.mouse_clicked(true);
+ bee_statuses.dragging(true);
+ if (bee_statuses.casement_deployed())
+ __dynamic_casement_width = __casement_width + 2;
+ if (__pos_x <= 0 && __pos_y <= 0)
+ {
+ ui_objects.window.ui.style.left = '0px';
+ ui_objects.window.ui.style.top = '0px';
+ ui_objects.casement.ui.style.left = __current_width + 'px';
+ ui_objects.casement.ui.style.top = '0px';
+ }
+ else
+ {
+ if (__pos_x <= 0)
+ {
+ ui_objects.window.ui.style.left = '0px';
+ ui_objects.window.ui.style.top = __pos_y + 'px';
+ ui_objects.casement.ui.style.left = __current_width + 'px';
+ ui_objects.casement.ui.style.top = __pos_y + 'px';
+ }
+ if (__pos_y <= 0)
+ {
+ ui_objects.window.ui.style.left = __pos_x + 'px';
+ ui_objects.window.ui.style.top = '0px';
+ ui_objects.casement.ui.style.left = __pos_x + __current_width + 'px';
+ ui_objects.casement.ui.style.top = '0px';
+ }
+ }
+ if (((__pos_x + __current_width + __dynamic_casement_width - swarm.area.mouse.x()) >=
+ (swarm.settings.right() - swarm.area.mouse.x())) &&
+ ((__pos_y + __current_height - swarm.area.mouse.y()) >=
+ (swarm.settings.bottom() - swarm.area.mouse.y())))
+ {
+ ui_objects.window.ui.style.left =
+ swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
+ ui_objects.window.ui.style.top =
+ swarm.settings.bottom() - __current_height + 'px';
+ ui_objects.casement.ui.style.left =
+ swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
+ ui_objects.casement.ui.style.top =
+ swarm.settings.bottom() - __current_height + 'px';
+ }
+ else
+ {
+ if ((__pos_x + __current_width + __dynamic_casement_width - swarm.area.mouse.x()) >=
+ (swarm.settings.right() - swarm.area.mouse.x()))
+ {
+ if (__pos_y <= 0)
+ {
+ ui_objects.window.ui.style.left =
+ swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
+ ui_objects.window.ui.style.top = '0px';
+ ui_objects.casement.ui.style.left =
+ swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
+ ui_objects.casement.ui.style.top = '0px';
+ }
+ else
+ {
+ ui_objects.window.ui.style.left =
+ swarm.settings.right() - (__current_width + __dynamic_casement_width) + 'px';
+ ui_objects.window.ui.style.top = __pos_y + 'px';
+ ui_objects.casement.ui.style.left =
+ swarm.settings.right() - __dynamic_casement_width + 2 + 'px';
+ ui_objects.casement.ui.style.top = __pos_y + 'px';
+ }
+ }
+ if ((__pos_y + __current_height - swarm.area.mouse.y()) >=
+ (swarm.settings.bottom() - swarm.area.mouse.y()))
+ {
+ if (__pos_x <= 0)
+ {
+ ui_objects.window.ui.style.left = '0px';
+ ui_objects.window.ui.style.top =
+ swarm.settings.bottom() - __current_height + 'px';
+ ui_objects.casement.ui.style.left = __current_width + 'px';
+ ui_objects.casement.ui.style.top = swarm.settings.bottom() - __current_height + 'px';
+ }
+ else
+ {
+ ui_objects.window.ui.style.left = __pos_x + 'px';
+ ui_objects.window.ui.style.top =
+ swarm.settings.bottom() - __current_height + 'px';
+ ui_objects.casement.ui.style.left = __pos_x + __current_width + 'px';
+ ui_objects.casement.ui.style.top = swarm.settings.bottom() - __current_height + 'px';
+ }
+ }
+ }
+ if (bee_statuses.casement_deployed())
+ __dynamic_right_pos = __pos_x + __current_width + __dynamic_casement_width - swarm.area.mouse.x();
+ else
+ __dynamic_right_pos = __pos_x + __current_width - swarm.area.mouse.x();
+ if (__pos_x > 0 && __pos_y > 0 &&
+ ((__dynamic_right_pos <
+ (swarm.settings.right() - swarm.area.mouse.x())) &&
+ ((__pos_y + __current_height - swarm.area.mouse.y()) <
+ (swarm.settings.bottom() - swarm.area.mouse.y()))))
+ {
+ ui_objects.window.ui.style.left = __pos_x + 'px';
+ ui_objects.window.ui.style.top = __pos_y + 'px';
+ ui_objects.casement.ui.style.left = __pos_x + __current_width + 'px';
+ ui_objects.casement.ui.style.top = __pos_y + 'px';
+ }
+ morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
+ morpheus.execute(my_bee_id, 'gui', 'dragging');
+ }
+ else if (bee_statuses.resize() && self.settings.actions.can_resize.enabled() && !bee_statuses.casement_deployed())
+ {
+ var __size_x = 0,
+ __size_y = 0,
+ __resize_x_offset = utils_sys.graphics.pixels_value(ui_objects.window.status_bar.resize.style.width),
+ __resize_y_offset = utils_sys.graphics.pixels_value(ui_objects.window.status_bar.resize.style.height),
+ __resize_title_diff = 100,
+ __resize_data_diff = 88,
+ __resize_status_msg_diff = 50,
+ __final_window_width = 0;
+ __size_x = swarm.area.mouse.x() - me.position.left() -
+ me.size.width() + __resize_x_offset;
+ __size_y = swarm.area.mouse.y() - me.position.top() -
+ me.size.height() + __resize_y_offset;
+ if (__size_x < (swarm.settings.right() -
+ me.position.left() - me.size.width()) &&
+ __size_y < (swarm.settings.bottom() -
+ me.position.top() - me.size.height()))
+ {
+ var __new_width = me.size.width() + __size_x,
+ __new_height = me.size.height() + __size_y;
+ bee_statuses.mouse_clicked(true);
+ bee_statuses.resizing(true);
+ if (__new_width >= me.size.max.width() && __new_height >= me.size.max.height())
+ {
+ if (__new_width - __size_x >= me.size.max.width() &&
+ __new_height - __size_y >= me.size.max.height())
+ {
+ ui_objects.window.ui.style.width = me.size.max.width() + 'px';
+ ui_objects.window.ui.style.height = me.size.max.height() + 'px';
+ ui_objects.window.control_bar.title.style.width =
+ me.size.max.width() - __resize_title_diff + 'px';
+ ui_objects.window.content.data.style.height =
+ me.size.max.height() - __resize_data_diff + 'px';
+ ui_objects.window.status_bar.message.style.width =
+ me.size.max.width() - __resize_status_msg_diff + 'px';
+ ui_objects.casement.data.style.height =
+ me.size.height() + 'px';
+ }
+ }
+ else
+ {
+ if (__new_width >= me.size.max.width())
+ {
+ if (__new_width - __size_x >= me.size.max.width())
+ {
+ ui_objects.window.ui.style.width = me.size.max.width() + 'px';
+ ui_objects.window.ui.style.height = __new_height + 'px';
+ ui_objects.window.control_bar.title.style.width =
+ me.size.max.width() - __resize_title_diff + 'px';
+ ui_objects.window.content.data.style.height =
+ __new_height - __resize_data_diff + 'px';
+ ui_objects.window.status_bar.message.style.width =
+ me.size.max.width() - __resize_status_msg_diff + 'px';
+ ui_objects.casement.data.style.height =
+ __new_height + 'px';
+ }
+ }
+ if (__new_height >= me.size.max.height())
+ {
+ if (__new_height - __size_y >= me.size.max.height())
+ {
+ ui_objects.window.ui.style.width = __new_width + 'px';
+ ui_objects.window.ui.style.height = me.size.max.height() + 'px';
+ ui_objects.window.control_bar.title.style.width =
+ __new_width - __resize_title_diff + 'px';
+ ui_objects.window.content.data.style.height =
+ me.size.max.height() - __resize_data_diff + 'px';
+ ui_objects.window.status_bar.message.style.width =
+ __new_width - __resize_status_msg_diff + 'px';
+ ui_objects.casement.data.style.height =
+ me.size.height() + 'px';
+ }
+ }
+ }
+ if (__new_width <= me.size.min.width() &&
+ __new_height <= me.size.min.height())
+ {
+ if (__size_x >= 0 && __size_y >= 0)
+ {
+ ui_objects.window.ui.style.width = me.size.min.width() + 'px';
+ ui_objects.window.ui.style.height = me.size.min.height() + 'px';
+ ui_objects.window.control_bar.title.style.width =
+ me.size.min.width() - __resize_title_diff + 'px';
+ ui_objects.window.content.data.style.height =
+ me.size.min.height() - __resize_data_diff + 'px';
+ ui_objects.window.status_bar.message.style.width =
+ me.size.min.width() - __resize_status_msg_diff + 'px';
+ ui_objects.casement.data.style.height =
+ me.size.height() + 'px';
+ }
+ }
+ else
+ {
+ if (__new_width <= me.size.min.width())
+ {
+ if (__size_x >= 0)
+ {
+ ui_objects.window.ui.style.width = me.size.min.width() + 'px';
+ ui_objects.window.ui.style.height = __new_height + 'px';
+ ui_objects.window.control_bar.title.style.width =
+ me.size.min.width() - __resize_title_diff + 'px';
+ ui_objects.window.content.data.style.height =
+ __new_height - __resize_data_diff + 'px';
+ ui_objects.window.status_bar.message.style.width =
+ me.size.min.width() - __resize_status_msg_diff + 'px';
+ ui_objects.casement.data.style.height =
+ __new_height + 'px';
+ }
+ }
+ if (__new_height <= me.size.min.height())
+ {
+ if (__size_y >= 0)
+ {
+ ui_objects.window.ui.style.width = __new_width + 'px';
+ ui_objects.window.ui.style.height = me.size.min.height() + 'px';
+ ui_objects.window.control_bar.title.style.width =
+ __new_width - __resize_title_diff + 'px';
+ ui_objects.window.content.data.style.height =
+ me.size.min.height() - __resize_data_diff + 'px';
+ ui_objects.window.status_bar.message.style.width =
+ __new_width - __resize_status_msg_diff + 'px';
+ ui_objects.casement.data.style.height =
+ me.size.height() + 'px';
+ }
+ }
+ }
+ if (__new_width > me.size.min.width() && __new_height > me.size.min.height() &&
+ __new_width < me.size.max.width() && __new_height < me.size.max.height())
+ {
+ ui_objects.window.ui.style.width = __new_width + 'px';
+ ui_objects.window.ui.style.height = __new_height + 'px';
+ ui_objects.window.control_bar.title.style.width =
+ __new_width - __resize_title_diff + 'px';
+ ui_objects.window.content.data.style.height =
+ __new_height - __resize_data_diff + 'px';
+ ui_objects.window.status_bar.message.style.width =
+ __new_width - __resize_status_msg_diff + 'px';
+ ui_objects.casement.data.style.height =
+ __new_height + 'px';
+ }
+ __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
+ ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
+ ui_objects.casement.ui.style.width = __final_window_width * (self.settings.general.casement_width() / 100) + 'px';
+ ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
+ }
+ if (self.settings.general.status_bar_marquee())
+ {
+ if (self.settings.data.window.labels.status_bar().length * 9.0 < __final_window_width)
+ ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
+ else
+ ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+ }
+ if (self.settings.general.resize_tooltip())
+ swarm.resize_tooltip(self, true);
+ morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
+ morpheus.execute(my_bee_id, 'gui', 'resizing');
+ hive.stack.toggle('off');
+ }
+ else
+ return false;
+ return true;
+ };
+ this.release = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (event_object.buttons !== 0)
+ return false;
+ self.settings.actions.can_drag.enabled(true);
+ if (!bee_statuses.close() && swarm.status.active_bee() === my_bee_id)
+ {
+ swarm.settings.active_bee(null);
+ if (bee_statuses.dragging())
+ bee_statuses.dragged(true);
+ if (bee_statuses.resizing())
+ bee_statuses.resized(true);
+ bee_statuses.drag(false);
+ bee_statuses.dragging(false);
+ bee_statuses.touch(false);
+ bee_statuses.touched(true);
+ bee_statuses.mouse_clicked(false);
+ morpheus.execute(my_bee_id, 'gui', 'touched');
+ morpheus.execute(my_bee_id, 'gui', 'dragged');
+ morpheus.execute(my_bee_id, 'gui', 'resized');
+ me.position.left(utils_sys.graphics.pixels_value(ui_objects.window.ui.style.left));
+ me.position.top(utils_sys.graphics.pixels_value(ui_objects.window.ui.style.top));
+ return true;
+ }
+ swarm.resize_tooltip(self, false);
+ bee_statuses.resizing(false);
+ bee_statuses.resize(false);
+ if (!self.settings.actions.can_close())
+ bee_statuses.close(false);
+ return false;
+ };
+ this.menu = new menu();
+ this.casement = new casement();
+ this.hover = new hover();
+ }
+ function config()
+ {
+ function window()
+ {
+ this.id = function()
+ {
+ return ui_config.window.id;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.class;
+ };
+ function control_bar()
+ {
+ this.id = function()
+ {
+ return ui_config.window.control_bar.id;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.control_bar.classes.container;
+ };
+ function icon()
+ {
+ this.id = function()
+ {
+ return ui_config.window.control_bar.ids.icon;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.control_bar.classes.icon;
+ };
+ }
+ function title()
+ {
+ this.id = function()
+ {
+ return ui_config.window.control_bar.ids.title;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.control_bar.classes.title;
+ };
+ }
+ function pencil()
+ {
+ this.id = function()
+ {
+ return ui_config.window.control_bar.ids.pencil;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.control_bar.classes.pencil;
+ };
+ }
+ function separator()
+ {
+ this.id = function()
+ {
+ return ui_config.window.control_bar.ids.separator;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.control_bar.classes.separator;
+ };
+ }
+ function close()
+ {
+ this.id = function()
+ {
+ return ui_config.window.control_bar.ids.close;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.control_bar.classes.close;
+ };
+ }
+ this.icon = new icon();
+ this.title = new title();
+ this.pencil = new pencil();
+ this.separator = new separator();
+ this.close = new close();
+ }
+ function content()
+ {
+ this.id = function()
+ {
+ return ui_config.window.content.id;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.content.classes.container;
+ };
+ function data()
+ {
+ this.id = function()
+ {
+ return ui_config.window.content.ids.data;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.content.classes.data;
+ };
+ }
+ this.data = new data();
+ }
+ function status_bar()
+ {
+ this.id = function()
+ {
+ return ui_config.window.status_bar.id;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.status_bar.classes.container;
+ };
+ function message()
+ {
+ this.id = function()
+ {
+ return ui_config.window.status_bar.ids.message;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.status_bar.classes.message;
+ };
+ }
+ function resize()
+ {
+ this.id = function()
+ {
+ return ui_config.window.status_bar.ids.resize;
+ };
+ this.class_name = function()
+ {
+ return ui_config.window.status_bar.classes.resize;
+ };
+ }
+ this.message = new message();
+ this.resize = new resize();
+ }
+ this.control_bar = new control_bar();
+ this.content = new content();
+ this.status_bar = new status_bar();
+ }
+ function casement()
+ {
+ this.id = function()
+ {
+ return ui_config.casement.id;
+ };
+ this.class_name = function()
+ {
+ return ui_config.casement.classes.container;
+ };
+ function title()
+ {
+ this.id = function()
+ {
+ return ui_config.casement.ids.title;
+ };
+ this.class_name = function()
+ {
+ return ui_config.casement.classes.title;
+ };
+ }
+ function content()
+ {
+ this.id = function()
+ {
+ return ui_config.casement.ids.data;
+ };
+ this.class_name = function()
+ {
+ return ui_config.casement.classes.data;
+ };
+ }
+ function status()
+ {
+ this.id = function()
+ {
+ return ui_config.casement.ids.status;
+ };
+ this.class_name = function()
+ {
+ return ui_config.casement.classes.status;
+ };
+ }
+ this.title = new title();
+ this.content = new content();
+ this.status = new status();
+ }
+ this.window = new window();
+ this.casement = new casement();
+ }
+ this.keys = new keys();
+ this.mouse = new mouse();
+ this.position = new position();
+ this.size = new size();
+ this.fx = new fx();
+ this.css = new css();
+ this.actions = new actions();
+ this.config = new config();
+ }
+ function drone()
+ {
+ var __drones = [];
+ function drone_object()
+ {
+ this.name = null;
+ this.code = null;
+ }
+ this.use = function(new_func_name, new_func_code)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(new_func_name) || utils_sys.validation.misc.is_undefined(new_func_code))
+ return false;
+ var __new_drone = new drone_object();
+ __new_drone.name = new_func_name;
+ __new_drone.code = new_func_code;
+ __drones.push(__new_drone);
+ return true;
+ };
+ this.execute = function(existing_func_name, dynamic_func_args)
+ {
+ if (is_init === false)
+ return false;
+ if (!utils_sys.validation.alpha.is_string(existing_func_name) ||
+ (!utils_sys.validation.misc.is_undefined(dynamic_func_args) && !utils_sys.validation.misc.is_array(dynamic_func_args)))
+ return false;
+ var __drones_num = __drones.length;
+ for (var i = 0; i < __drones_num; i++)
+ {
+ if (__drones[i].name === existing_func_name)
+ {
+ var __dynamic_func = null;
+ if (utils_sys.validation.alpha.is_string(__drones[i].code))
+ __dynamic_func = function() { eval(__drones[i].code); };
+ else
+ __dynamic_func = function() { __drones[i].code.call(); };
+ __dynamic_func.call(this, dynamic_func_args);
+ return true;
+ }
+ }
+ return false;
+ };
+ }
+ this.on = function(this_event, cmd)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(cmd))
+ return false;
+ var __context_list = new events_status_settings_model();
+ for (var context in __context_list)
+ {
+ if (context === 'on_event')
+ continue;
+ if (bee_events.contains(this_event, context))
+ {
+ var __event_receiver_object = document,
+ __cmd = cmd;
+ if (context === 'mouse')
+ __event_receiver_object = ui_objects.window.ui;
+ else if (context === 'key')
+ {
+ var __exended_cmd = function()
+ {
+ if (bee_statuses.active())
+ cmd.call();
+ };
+ __cmd = __exended_cmd;
+ }
+ morpheus.store(my_bee_id, context, this_event, __cmd, __event_receiver_object);
+ return true;
+ }
+ }
+ return false;
+ };
+ this.run = function(parent_app_id = null, headless = false)
+ {
+ if (is_init === false)
+ return false;
+ if (error_code !== null)
+ return false;
+ if (!self.gui.actions.show(parent_app_id, headless))
+ return false;
+ utils_int.log('Run', 'OK');
+ return true;
+ };
+ this.init = function(bee_id, type)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id) || !self.settings.general.type(type))
+ return false;
+ my_bee_id = self.settings.general.id();
+ nature.theme(['bee']);
+ nature.apply('new');
+ bee_statuses.initialized(true);
+ morpheus.execute(my_bee_id, 'system', 'initialized');
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ colony = cosmos.hub.access('colony');
+ xenon = matrix.get('xenon');
+ morpheus = matrix.get('morpheus');
+ owl = matrix.get('owl');
+ swarm = matrix.get('swarm');
+ hive = matrix.get('hive');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ error_code = null,
+ my_bee_id = null,
+ cosmos = null,
+ matrix = null,
+ nature = null,
+ morpheus = null,
+ owl = null,
+ xenon = null,
+ swarm = null,
+ hive = null,
+ colony = null,
+ msg_win = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ key_control = new key_manager(),
+ gfx = new fx(),
+ ui_objects = new ui_objects_model(),
+ ui_config = new ui_config_model(),
+ bee_events = new supported_events(),
+ bee_statuses = new supported_statuses(),
+ utils_int = new utilities();
+ this.gui = new gui();
+ this.drone = new drone();
+ this.status = new status();
+ this.settings = new settings();
+ this.error = new error();
+}
+function bat()
+{
+ var self = this;
+ function service_config_model()
+ {
+ this.sys_name = null;
+ this.name = null;
+ this.icon = 'default';
+ }
+ function dynamic_function_model()
+ {
+ this.name = null;
+ this.body = null;
+ }
+ this.get_config = function()
+ {
+ if (is_init === false)
+ return false;
+ return service_config;
+ };
+ this.set_function = function(name, body)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(name) || !utils_sys.validation.misc.is_function(body))
+ return false;
+ var __new_dynamic_function = new dynamic_function_model();
+ __new_dynamic_function.name = name;
+ __new_dynamic_function.body = function(args) { body.call(this, args); };
+ dynamic_functions_list.push(__new_dynamic_function);
+ return true;
+ };
+ this.exec_function = function(func_name, func_args = [])
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(func_name) || !utils_sys.validation.misc.is_array(func_args))
+ return false;
+ var __functions_list_length = dynamic_functions_list.length;
+ for (var i = 0; i < __functions_list_length; i++)
+ {
+ if (dynamic_functions_list[i].name === func_name)
+ {
+ var func_body = dynamic_functions_list[i].body;
+ on_run_calls_list.push({func_args, func_body});
+ }
+ }
+ return true;
+ };
+ this.on = function(this_event, cmd)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(cmd))
+ return false;
+ if (utils_sys.misc.contains(this_event, events_list))
+ return morpheus.store(service_config.sys_name, 'main', this_event, cmd, document);
+ return false;
+ };
+ this.register = function(service_model)
+ {
+ if (is_init === false)
+ return false;
+ if (!matrix.register([service_model]))
+ {
+ owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
+ return false;
+ }
+ owl.status.services.set(service_config.sys_name, service_config.name, 'RUN');
+ if (backtrace === true)
+ frog('BAT', 'Services :: Register', service_config);
+ var __result = morpheus.execute(service_config.sys_name, 'main', 'register');
+ if (__result === true)
+ {
+ var __calls_list_length = on_run_calls_list.length;
+ for (var i = 0; i < __calls_list_length; i++)
+ on_run_calls_list[i]['func_body'].call(this, on_run_calls_list[i]['func_args']);
+ }
+ return __result;
+ };
+ this.unregister = function(service_id)
+ {
+ if (is_init === false)
+ return false;
+ if (!matrix.unregister(service_id))
+ {
+ owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
+ return false;
+ }
+ owl.status.services.set(service_config.sys_name, service_config.name, 'END');
+ if (backtrace === true)
+ frog('BAT', 'Services :: Unregister', service_config);
+ return morpheus.execute(service_config.sys_name, 'main', 'unregister');
+ };
+ this.init = function(svc_name, icon = 'default')
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(svc_name) ||
+ utils_sys.validation.alpha.is_blank(svc_name) ||
+ utils_sys.validation.alpha.is_symbol(svc_name) ||
+ utils_sys.validation.alpha.is_symbol(icon))
+ return false;
+ if (is_init === true)
+ return false;
+ service_config.sys_name = svc_name.toLowerCase().replace(/\s/g,'_') + '_' + random.generate();
+ service_config.name = svc_name.trim();
+ service_config.icon = icon;
+ is_init = true;
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ morpheus = matrix.get('morpheus');
+ owl = matrix.get('owl');
+ return true;
+ };
+ var is_init = false,
+ backtrace = false,
+ cosmos = null,
+ matrix = null,
+ morpheus = null,
+ owl = null,
+ events_list = ['register', 'unregister'],
+ dynamic_functions_list = [],
+ on_run_calls_list = [],
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ service_config = new service_config_model();
+}
+function oz()
+{
+}
+function coyote()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.pages = [];
+ this.index = 0;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = coyote_bee.settings.general.id() + '_data';
+ config.pages[0] = 'https://probotek.eu/';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw_normal();
+ me.draw_full_screen();
+ me.attach_events('fullscreen');
+ infinity.end();
+ return true;
+ };
+ this.draw_normal = function()
+ {
+ coyote_bee.settings.data.window.content('<div id="' + coyote_bee.settings.general.id() + '_tabs_bar" class="coyote_tabs_bar">' +
+ ' <div id="' + coyote_bee.settings.general.id() + '_tab_greyos" class="tab tab_selected">' +
+ ' <div id="' + coyote_bee.settings.general.id() + '_tab_x" class="tab_close"></div>' +
+ ' <div class="tab_text">GreyOS</div>' +
+ ' </div>' +
+ ' <div class="tab create_new_tab" title="Sorry, new tabs are not supported yet..."></div>' +
+ '</div>' +
+ '<div class="coyote_control_bar">' +
+ ' <div id="' + coyote_bee.settings.general.id() + '_back" class="history_back browser_button"></div>' +
+ ' <div id="' + coyote_bee.settings.general.id() + '_forward" class="history_forward browser_button"></div>' +
+ ' <div id="' + coyote_bee.settings.general.id() + '_refresh" class="page_refresh browser_button"></div>' +
+ ' <div id="' + coyote_bee.settings.general.id() + '_settings" class="browser_settings browser_button" ' +
+ ' title="Sorry, settings are not available yet...">' +
+ '</div>' +
+ '<div id="' + coyote_bee.settings.general.id() + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode"></div>' +
+ ' <div class="adress_bar">' +
+ ' <div id="' + coyote_bee.settings.general.id() + '_page_info" class="page_info browser_button" ' +
+ ' title="Sorry, page information is not available yet...">' +
+ ' </div>' +
+ ' <input type="text" id="' + coyote_bee.settings.general.id() + '_address_box" class="address_box" value="https://probotek.eu/" placeholder="Enter an address...">' +
+ ' </div>' +
+ '</div>' +
+ '<div id="' + coyote_bee.settings.general.id() + '_overlay" class="max_screen_overlay"></div>' +
+ '<iframe id="' + coyote_bee.settings.general.id() + '_frame" class="coyote_frame" title="Coyote" src="https://probotek.eu/"></iframe>');
+ utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
+ return true;
+ };
+ this.draw_full_screen = function()
+ {
+ var dynamic_object = null;
+ dynamic_object = document.createElement('div');
+ dynamic_object.setAttribute('id', coyote_bee.settings.general.id() + '_full_screen_layer');
+ dynamic_object.setAttribute('class', 'coyote_full_screen_layer');
+ document.body.appendChild(dynamic_object);
+ return true;
+ };
+ this.attach_events = function(mode)
+ {
+ var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
+ __refresh = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_refresh'),
+ __back = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_back'),
+ __forward = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_forward'),
+ __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen'),
+ __tab_close = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_tab_x');
+ utils_sys.events.attach(config.id, __address_box, 'keydown', function(event) { self.browse(__address_box.value, event); });
+ utils_sys.events.attach(config.id, __refresh, 'click', function(event) { self.refresh(event); });
+ utils_sys.events.attach(config.id, __back, 'click', function(event) { self.go.back(event); });
+ utils_sys.events.attach(config.id, __forward, 'click', function(event) { self.go.forward(event); });
+ utils_sys.events.attach(config.id, __tab_close, 'click', function(event) { self.close_tab(event); });
+ if (mode === 'fullscreen')
+ utils_sys.events.attach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 1); });
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ return coyote_bee;
+ };
+ this.close_tab = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (event_object === undefined)
+ return false;
+ var __tabs_bar = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_tabs_bar'),
+ __greyos_tek_tab = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_tab_greyos'),
+ __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
+ __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
+ __tabs_bar.removeChild(__greyos_tek_tab);
+ __address_box.value = '';
+ __frame.src = '';
+ return true;
+ };
+ function go()
+ {
+ this.back = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (event_object === undefined)
+ return false;
+ if (config.index === 0)
+ return false;
+ config.index--;
+ if (config.pages[config.index] === undefined)
+ {
+ config.index++;
+ return false;
+ }
+ var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
+ __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
+ __address_box.value = config.pages[config.index];
+ __frame.src = config.pages[config.index];
+ return true;
+ };
+ this.forward = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (event_object === undefined)
+ return false;
+ if (config.index === 100)
+ return false;
+ config.index++;
+ if (config.pages[config.index] === undefined)
+ {
+ config.index--;
+ return false;
+ }
+ var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
+ __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
+ __address_box.value = config.pages[config.index];
+ __frame.src = config.pages[config.index];
+ return true;
+ };
+ }
+ this.browse = function(url, event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (url === undefined)
+ return false;
+ var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box');
+ __address_box.value = url;
+ if (event_object === undefined)
+ {
+ utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').src = url;
+ config.index++;
+ config.pages[config.index] = url;
+ }
+ else
+ {
+ if (coyote_bee.gui.keys.get(event_object) === 13)
+ {
+ utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').src = url;
+ config.index++;
+ config.pages[config.index] = url;
+ }
+ }
+ return true;
+ };
+ this.refresh = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (event_object === undefined)
+ return false;
+ var __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
+ __frame.src = __frame.src;
+ return true;
+ };
+ this.full_screen = function(event_object, mode)
+ {
+ if (is_init === false)
+ return false;
+ if (event_object === undefined && mode === undefined || mode < 1 || mode > 2)
+ return false;
+ var __coyote_fs_layer = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen_layer'),
+ __coyote_content = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_data'),
+ __page_info = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_page_info'),
+ __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
+ __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame'),
+ __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen');
+ if (mode === 1)
+ {
+ __page_info.style.left = '87px';
+ __page_info.style.top = '30px';
+ __address_box.style.width = 'Calc(100vw - 167px)';
+ __frame.style.height = '90.5%';
+ __full_screen.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/coyote/pix/full_screen_hover.png')";
+ __coyote_fs_layer.innerHTML = __coyote_content.innerHTML;
+ __coyote_content.innerHTML = null;
+ __coyote_fs_layer.style.display = 'block';
+ utils_sys.events.detach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 1); });
+ var __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen');
+ utils_sys.events.attach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 2); });
+ }
+ else
+ {
+ __page_info.style.left = '90px';
+ __page_info.style.top = '34px';
+ __address_box.style.width = (coyote_bee.status.gui.size.width() - 185) + 'px';
+ __frame.style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
+ __full_screen.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/coyote/pix/full_screen.png')";
+ __coyote_content.innerHTML = __coyote_fs_layer.innerHTML;
+ __coyote_fs_layer.innerHTML = null;
+ __coyote_fs_layer.style.display = 'none';
+ utils_sys.events.detach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 2); });
+ var __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen');
+ utils_sys.events.attach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 1); });
+ }
+ __address_box.value = __frame.src;
+ utils_int.attach_events();
+ return true;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ coyote_bee = dev_box.get('bee');
+ config.id = 'coyote';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ coyote_bee.init(config.id, 1);
+ coyote_bee.settings.data.window.labels.title('Coyote');
+ coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
+ coyote_bee.gui.position.left(70);
+ coyote_bee.gui.position.top(10);
+ coyote_bee.gui.size.width(720);
+ coyote_bee.gui.size.height(480);
+ coyote_bee.gui.size.min.width(560);
+ coyote_bee.gui.size.min.height(400);
+ coyote_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ coyote_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ coyote_bee.on('open', function() { coyote_bee.gui.fx.fade.into(); });
+ coyote_bee.on('opened', function() { utils_int.gui_init(); });
+ coyote_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ coyote_bee.on('dragging', function()
+ {
+ coyote_bee.gui.fx.opacity.settings.set(0.7);
+ coyote_bee.gui.fx.opacity.apply();
+ });
+ coyote_bee.on('dragged', function()
+ {
+ coyote_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ coyote_bee.on('resizing', function()
+ {
+ utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box').style.width =
+ (coyote_bee.status.gui.size.width() - 185) + 'px';
+ utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').style.height =
+ (coyote_bee.status.gui.size.height() - 145) + 'px';
+ });
+ coyote_bee.on('resize', function() { utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ coyote_bee.on('resized', function() { utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ coyote_bee.on('close', function() { coyote_bee.gui.fx.fade.out(); });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ coyote_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+ this.go = new go();
+}
+function teal_mail()
+{
+ var self = this;
+ function events()
+ {
+ this.general = function()
+ {
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_notifications_box'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ utils.hide_notification();
+ });
+ return true;
+ };
+ this.add_account = function()
+ {
+ var __mail_host_array = vulcan.objects.by_class('pm_host_box');
+ for (var i = 0; i < __mail_host_array.length; i++)
+ {
+ vulcan.events.attach(id, __mail_host_array[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __id = this.getAttribute('data-id');
+ add_acc.select_mail_acc(__id);
+ });
+ }
+ vulcan.events.attach(id, vulcan.objects.by_id('add_mail_account'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __name = vulcan.objects.by_id('pm_acc_name').value;
+ var __email = vulcan.objects.by_id('pm_username').value;
+ var __gmail_auth = vulcan.objects.by_id('gmail_auth').value;
+ var __pass = vulcan.objects.by_id('pm_password').value;
+ var __host = add_acc.get_selected_host();
+ if ((__name === null) || (__email === null) || (__gmail_auth === null) || (__pass === null) || (__host === null))
+ return false;
+ add_acc.new_acc(__name, __email, __gmail_auth, __pass, __host);
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_password'), 'keydown',
+ function(event_object)
+ {
+ utils.enter_to_click(event_object, this.getAttribute('data-celement'));
+ });
+ return true;
+ };
+ this.add_account_btn = function()
+ {
+ vulcan.events.attach(id, vulcan.objects.by_id('add_acc_form'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ add_acc.print.form();
+ });
+ return true;
+ };
+ this.gmail_auth = function()
+ {
+ vulcan.events.attach(id, vulcan.objects.by_id('gmail_auth_open'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ add_acc.open_gmail_auth();
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('continue_add_acc'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ add_acc.continue_add_acc();
+ });
+ return true;
+ };
+ this.mail_accounts = function()
+ {
+ var __mail_login_psw = vulcan.objects.by_class('pm_login_psw');
+ for (var i = 0; i < __mail_login_psw.length; i++)
+ {
+ vulcan.events.attach(id, __mail_login_psw[i], 'keydown',
+ function(event_object)
+ {
+ utils.enter_to_click(event_object, this.getAttribute('data-celement'));
+ }, true);
+ }
+ var __mail_login_btn = vulcan.objects.by_class('pm_login_btn');
+ for (var i = 0; i < __mail_login_btn.length; i++)
+ {
+ vulcan.events.attach(id, __mail_login_btn[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __id = this.getAttribute('data-id');
+ var __pass = vulcan.objects.by_id('identity_id_' + __id).value;
+ if (!__pass)
+ return false;
+ mail_identity.login(__id, __pass);
+ });
+ }
+ var __mail_accs = vulcan.objects.by_class('pm_account');
+ for (var i = 0; i < __mail_accs.length; i++)
+ {
+ vulcan.events.attach(id, __mail_accs[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __id = this.getAttribute('data-id');
+ if (this.id === 'inactive')
+ {
+ mail_identity.toggle(__id, false);
+ return false;
+ }
+ else if (this.id === 'current')
+ {
+ mail_identity.toggle(__id, false);
+ return false;
+ }
+ else
+ mail_identity.load_session(__id);
+ });
+ }
+ return true;
+ };
+ this.mail_account = function()
+ {
+ var __mail_folders_array = vulcan.objects.by_class('pm_folder');
+ for (var i = 0; i < __mail_folders_array.length; i++)
+ {
+ vulcan.events.attach(id, __mail_folders_array[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __folder = this.getAttribute('data-folder');
+ mail_identity.load_folder(__folder);
+ });
+ }
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_check_inbox'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ utils.check_new_mails();
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_compose_mail'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ compose.print_form('', '', '', '');
+ helper.scroll_fix('pm_right');
+ return true;
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_logout'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ mail_identity.logout();
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_delete_acc'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __id = config.identity_id;
+ mail_identity.delete(__id);
+ });
+ return true;
+ };
+ this.msg_list = function()
+ {
+ var __msg_list = vulcan.objects.by_class('pm_msg_list_item_2');
+ for (var i = 0; i < __msg_list.length; i++)
+ {
+ vulcan.events.attach(id, __msg_list[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __uid = this.id;
+ msg_list.read_msg(__uid);
+ return true;
+ });
+ }
+ var __msg_preview = vulcan.objects.by_class('pm_msg_preview');
+ for (var i = 0; i < __msg_preview.length; i++)
+ {
+ vulcan.events.attach(id, __msg_preview[i], 'mouseover',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __uid = this.getAttribute('data-uid');
+ msg_list.get_preview(__uid);
+ return true;
+ });
+ }
+ var __msg_list_checks = vulcan.objects.by_class('pm_msg_cb');
+ for (var i = 0; i < __msg_list_checks.length; i++)
+ {
+ vulcan.events.attach(id, __msg_list_checks[i], 'change',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __id = this.id;
+ if (__id === 'pm_msg_cb_master')
+ {
+ var __cb_array = vulcan.objects.by_class('pm_msg_cb');
+ for (var i = 0; i < __cb_array.length; i++)
+ vulcan.objects.by_id(__cb_array[i].id).checked = this.checked;
+ }
+ msg_list.cb_change();
+ });
+ }
+ vulcan.events.attach(id, vulcan.objects.by_id('msg_list_delete'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __uids = msg_list.get_selected();
+ if (__uids !== false)
+ msg_list.delete(__uids);
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('change_msg_flag_u'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __flag = this.getAttribute('data-flag');
+ var __uids = msg_list.get_selected();
+ if (__uids !== false)
+ msg_list.change_flag(__uids, __flag);
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('change_msg_flag_s'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __flag = this.getAttribute('data-flag');
+ var __uids = msg_list.get_selected();
+ if (__uids !== false)
+ msg_list.change_flag(__uids, __flag);
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_search_input'), 'keydown',
+ function(event_object)
+ {
+ var keycode = teal_mail_bee.gui.keys.get(event_object);
+ if (keycode === 13)
+ {
+ var __search_query = vulcan.objects.by_id('pm_search_input').value;
+ msg_list.search(__search_query);
+ }
+ });
+ };
+ this.message_view = function()
+ {
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_msg_back'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __uid = this.getAttribute('data-uid');
+ msg_list.show_list();
+ msg_list.mark_as_read(__uid);
+ vulcan.objects.by_id('pm_msg_view').innerHTML = '';
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('pm_msg_delete'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __uid = this.getAttribute('data-uid');
+ message.delete(__uid);
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('msg_reply'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __to = this.getAttribute('data-to');
+ var __subject = vulcan.objects.by_id('pm_subject_header').innerHTML;
+ if ((__subject.substring(0, 3) !== 'RE:') && ((__subject.substring(0, 3) !== 'Re:')))
+ __subject = 'Re:' + __subject;
+ compose.print_form(__to, '', __subject, '');
+ helper.scroll_fix('pm_right');
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('msg_reply_to_all'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __to = this.getAttribute('data-to');
+ var __subject = vulcan.objects.by_id('pm_subject_header').innerHTML;
+ if ((__subject.substring(0, 3) !== 'RE:') && ((__subject.substring(0, 3) !== 'Re:')))
+ __subject = 'Re:' + __subject;
+ compose.print_form(__to, '', __subject, '');
+ helper.scroll_fix('pm_right');
+ });
+ var __yt_anchors = vulcan.objects.by_class('pm_yt_video');
+ for (var i = 0; i < __yt_anchors.length; i++)
+ {
+ vulcan.events.attach(id, __yt_anchors[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __video_id = message.utils.yt_anchor_parse(this.href);
+ });
+ }
+ var __email_anchors = vulcan.objects.by_class('pm_email_link');
+ for (var i = 0; i < __email_anchors.length; i++)
+ {
+ vulcan.events.attach(id, __email_anchors[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var address = this.href;
+ compose.print_form(address, '', '', '');
+ helper.scroll_fix('pm_right');
+ });
+ }
+ return true;
+ };
+ this.msg_pagination = function()
+ {
+ var __msg_pgn = vulcan.objects.by_class('pm_msg_pgn');
+ for (var i = 0; i < __msg_pgn.length; i++)
+ {
+ vulcan.events.attach(id, __msg_pgn[i], 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __page_num = this.getAttribute('data-page');
+ msg_list.paginate(__page_num);
+ });
+ }
+ return true;
+ };
+ this.compose_form = function()
+ {
+ vulcan.events.attach(id, vulcan.objects.by_id('send_email'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var __from = vulcan.objects.by_id('compose_from').value;
+ var __to = vulcan.objects.by_id('compose_mail_to').value;
+ var __cc = vulcan.objects.by_id('compose_mail_cc').value;
+ var __bcc = vulcan.objects.by_id('compose_mail_bcc').value;
+ var __reply_to = vulcan.objects.by_id('compose_mail_replyto').value;
+ var __subject = vulcan.objects.by_id('compose_mail_subject').value;
+ var __msg = vulcan.objects.by_id('composebody').value;
+ compose.send(__from, __to, __cc, __bcc, __reply_to, __subject, __msg);
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('cc-link'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ compose.show_row('cc');
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('bcc-link'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ compose.show_row('bcc');
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('replyto-link'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ compose.show_row('replyto');
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('cc-delete-link'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ compose.hide_row('cc');
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('bcc-delete-link'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ compose.hide_row('bcc');
+ });
+ vulcan.events.attach(id, vulcan.objects.by_id('replyto-delete-link'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ compose.hide_row('replyto');
+ });
+ return true;
+ };
+ }
+ function add_account_model()
+ {
+ var me = this;
+ function add_acc_print()
+ {
+ this.button = function()
+ {
+ var __add_acc_btn = '<h3 class="add_acc_title" id="add_acc_form">+ Add new account<\/h3>';
+ print.into_tag('add_acc_box', __add_acc_btn);
+ attach_events.add_account_btn();
+ return true;
+ };
+ this.form = function()
+ {
+ var __add_acc_form= '<h4 class="pm_message">Add and Connect your mail account to GreyOS!<\/h4>' +
+ '<div class="pm_connect_body"><a class="pm_host_box" id="pm_host" data-id="gmail.com">' +
+ '<i class="pm_host_icon gmail_icon"><\/i>' +
+ '<span class="pm_host_name1">Connect and Add<\/span>' +
+ '<span class="pm_host_name">GMail<\/span><\/a>' +
+ '<a class="pm_host_box" id="pm_host" data-id="yahoo.com">' +
+ '<i class="pm_host_icon yahoo_icon"><\/i>' +
+ '<span class="pm_host_name1">Connect and Add<\/span>' +
+ '<span class="pm_host_name">Yahoo Mail<\/span><\/a>' +
+ '<a class="pm_host_box" id="pm_host" data-id="Aol Mail">' +
+ '<i class="pm_host_icon aol_icon"><\/i>' +
+ '<span class="pm_host_name1">Connect and Add<\/span>' +
+ '<span class="pm_host_name">Aol Mail<\/span><\/a>' +
+ '<a class="pm_host_box" id="pm_host" data-id="Zoho Mail">' +
+ '<i class="pm_host_icon zoho_icon"><\/i>' +
+ '<span class="pm_host_name1">Connect and Add<\/span>' +
+ '<span class="pm_host_name">Zoho Mail<\/span><\/a>' +
+ '<\/div>' +
+ '<br style="clear:both" \/><br>' +
+ '<div id="new_mail_account_set" style="display:none">' +
+ '<input type="hidden" id="gmail_auth" size="15" value="0"\/>' +
+ '<label>Account name:<\/label> <br> <input type="text" class="settings_form" id="pm_acc_name" size="15" \/><br>' +
+ '<label>Email:<\/label> <br> <input type="text" class="settings_form" id="pm_username" size="15" \/><br>' +
+ '<label>Password:<\/label> <br> <input type="password" class="settings_form" id="pm_password" size="15" ' +
+ 'data-celement="add_mail_account"\/><br><br>' +
+ '<input type="submit" class="settings_form" id="add_mail_account" value="Add Account" \/><\/div>' +
+ '<div id="gmail_notification"><\/div>';
+ print.into_tag('pm_right', __add_acc_form);
+ attach_events.add_account();
+ return true;
+ };
+ this.gmail_auth = function()
+ {
+ var __auth_msg = 'In order to use GMail with Teal Mail, you need to allow GreyOS access to your Google account. <br><br><br>' +
+ 'Click <a href="#" id="gmail_auth_open">HERE</a> to allow access.<br><br> ' +
+ 'When you are done click <a href="#" id="continue_add_acc">HERE</a> to continue.<br><br>';
+ print.into_tag('gmail_notification', __auth_msg);
+ attach_events.gmail_auth();
+ return true;
+ };
+ }
+ this.select_mail_acc = function(id)
+ {
+ if (vulcan.validation.misc.is_undefined(id))
+ return false;
+ me.reset_form();
+ var __acc_form = vulcan.objects.by_id('new_mail_account_set');
+ __acc_form.style.display = '';
+ var __mail_acc_array = vulcan.objects.by_class('pm_host_box');
+ for (var i = 0; i < __mail_acc_array.length; i++)
+ {
+ var __this_id = __mail_acc_array[i].getAttribute('data-id');
+ if (__this_id === id)
+ __mail_acc_array[i].className = 'pm_host_box selected';
+ else
+ __mail_acc_array[i].className = 'pm_host_box';
+ }
+ if (id === 'gmail.com' )
+ __acc_form.style.paddingLeft = '0px';
+ else if (id === 'yahoo.com' )
+ __acc_form.style.paddingLeft = '143px';
+ else if (id === 'Aol Mail' )
+ __acc_form.style.paddingLeft = '286px';
+ else if (id === 'Zoho Mail' )
+ __acc_form.style.paddingLeft = '429px';
+ return true;
+ };
+ this.reset_form = function()
+ {
+ fx.visibility.hide('gmail_notification', 1 );
+ vulcan.objects.by_id('pm_acc_name').value = '';
+ vulcan.objects.by_id('pm_username').value = '';
+ vulcan.objects.by_id('pm_password').value = '';
+ return true;
+ };
+ this.get_selected_host = function()
+ {
+ var __mail_acc_array = vulcan.objects.by_class('pm_host_box selected');
+ for (var i = 0; i < __mail_acc_array.length; i++)
+ {
+ return __mail_acc_array[i].getAttribute('data-id');
+ }
+ return false;
+ };
+ this.open_gmail_auth = function()
+ {
+ window.open('https://accounts.google.com/DisplayUnlockCaptcha',
+ 'gmail_auth',
+ 'location=0,status=0,width=800,height=550');
+ return true;
+ };
+ this.continue_add_acc = function()
+ {
+ vulcan.objects.by_id('gmail_auth').value = 1;
+ vulcan.objects.by_id('add_mail_account').click();
+ vulcan.objects.by_id('gmail_auth').value = 0;
+ return true;
+ };
+ this.new_acc = function(__name, __email, __gmail_auth, __pass, __host)
+ {
+ if (__host === false)
+ {
+ utils.show_notification('You must select mail host!');
+ return false;
+ }
+ if (!__name)
+ {
+ utils.show_notification('Forgot to enter your account name? <br> <br> ;)');
+ return false;
+ }
+ if (!helper.validate_email(__email.replace(/\s+/g, '')))
+ {
+ utils.show_notification('Please enter a valid email address!');
+ return false;
+ }
+ if (!__pass)
+ {
+ utils.show_notification('Forgot to enter password? <br> <br> ;)');
+ return false;
+ }
+ if ((__host === 'gmail.com') && (__gmail_auth === '0'))
+ {
+ add_acc.print.gmail_auth();
+ fx.visibility.show('gmail_notification', 1 );
+ }
+ else
+ {
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=add_account' +
+ '&email=' + __email +
+ '&name=' + __name +
+ '&pass=' + __pass +
+ '&timezone_offset=' + utils.get_timezone_offset() +
+ '&host=' + __host,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ flags.current_folder = 'Inbox';
+ flags.current_page = 1;
+ flags.folder_displayed = true;
+ flags.msg_displayed = false;
+ html_fix.div_size();
+ helper.scroll_fix('pm_left');
+ scroll_bar_destroy('pm_right');
+ helper.scroll_fix('pm_msg_list');
+ attach_events.mail_account();
+ utils.update_unread_number();
+ }
+ });
+ }
+ };
+ this.print = new add_acc_print();
+ }
+ function mail_accounts_model()
+ {
+ this.update_ids = function(current_id)
+ {
+ var __mail_acc_array = vulcan.objects.by_class('pm_account');
+ for (var i = 0; i < __mail_acc_array.length; i++)
+ {
+ var __this_id = __mail_acc_array[i].id;
+ var __this_identity_id = __mail_acc_array[i].getAttribute('data-id');
+ if (__this_identity_id === current_id)
+ __mail_acc_array[i].id = 'current';
+ else if (__this_id === 'current')
+ {
+ __mail_acc_array[i].id = 'active';
+ print.into_tag('pm_ident_' + __this_identity_id, '');
+ }
+ else if (__mail_acc_array[i].id !== 'inactive')
+ __mail_acc_array[i].id = 'active';
+ }
+ return true;
+ };
+ this.update_unread = function(data)
+ {
+ if (data !== undefined)
+ {
+ for (var id in data)
+ {
+ if (data.hasOwnProperty(id))
+ {
+ var __unread_badge = vulcan.objects.by_id('pm_ident_badge_' + id);
+ if (__unread_badge !== null)
+ {
+ __unread_badge.innerHTML = data[id];
+ if (__unread_badge.innerHTML !== '0')
+ __unread_badge.style.opacity = 1;
+ else
+ __unread_badge.style.opacity = 0;
+ __unread_badge.className = 'pm_ident_unread_badge';
+ }
+ }
+ }
+ }
+ return true;
+ };
+ this.update_account = function(data)
+ {
+ if (data !== undefined)
+ {
+ for (var id in data)
+ {
+ if (data.hasOwnProperty(id))
+ {
+ if (utils.replace_element('pm_acc_'+id, data[id]) === false)
+ return false;
+ }
+ }
+ }
+ attach_events.mail_accounts();
+ return true;
+ };
+ this.remove_account = function(acc_id)
+ {
+ if (utils.remove_element('pm_acc_' + acc_id) === true)
+ return true;
+ else
+ return false;
+ };
+ }
+ function mail_identity_model()
+ {
+ this.delete = function(id)
+ {
+ if (confirm('Are you sure you want to delete this account?'))
+ {
+ utils.start_progress('Deleting account...');
+ flags.query_active = true;
+ ajax.query('action=delete_account' +
+ '&identity_id=' + id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ flags.current_folder = null;
+ flags.current_page = null;
+ flags.folder_displayed = false;
+ flags.msg_displayed = false;
+ config.identity_id = 0;
+ helper.scroll_fix('pm_left');
+ helper.scroll_fix('pm_right');
+ }
+ });
+ }
+ return true;
+ };
+ this.login = function(id, pass)
+ {
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=login' +
+ '&id=' + id +
+ '&pass=' + pass,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ flags.current_folder = 'Inbox';
+ flags.current_page = 1;
+ flags.folder_displayed = true;
+ flags.msg_displayed = false;
+ config.identity_id = id;
+ helper.scroll_fix('pm_left');
+ scroll_bar_destroy('pm_right');
+ helper.scroll_fix('pm_msg_list');
+ attach_events.mail_account();
+ }
+ });
+ return true;
+ };
+ this.logout = function()
+ {
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=logout' +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ flags.current_folder = null;
+ flags.current_page = null;
+ flags.folder_displayed = false;
+ flags.msg_displayed = false;
+ flags.current_folder = null;
+ flags.compose_form_displayed = false;
+ flags.current_page = null;
+ helper.scroll_fix('pm_left');
+ scroll_bar_scroll_to('pm_left', 'top');
+ }
+ });
+ };
+ this.load_session = function(id)
+ {
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=change_session' +
+ '&id=' + id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results() === true)
+ {
+ flags.folder_displayed = true;
+ flags.current_folder = 'Inbox';
+ flags.current_page = 1;
+ flags.msg_displayed = false;
+ mail_accounts.update_ids(id);
+ mail_identity.toggle(id, true);
+ helper.scroll_fix('pm_left');
+ scroll_bar_destroy('pm_right');
+ helper.scroll_fix('pm_msg_list');
+ attach_events.mail_account();
+ utils.check_new_mails();
+ }
+ });
+ };
+ this.activate = function(__id)
+ {
+ var __mail_acc_array = vulcan.objects.by_class('pm_account');
+ for (var i = 0; i < __mail_acc_array.length; i++)
+ {
+ if (__mail_acc_array[i].getAttribute('data-id') === __id)
+ __mail_acc_array[i].id = 'current';
+ else if (__mail_acc_array[i].id === 'current')
+ {
+ __mail_acc_array[i].id = 'active';
+ print.into_tag('pm_ident_' + __mail_acc_array[i].getAttribute('data-id'), '');
+ }
+ }
+ };
+ this.load_folder = function(folder)
+ {
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=folder' +
+ '&folder=' + encodeURIComponent(folder) +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ flags.current_folder = folder;
+ flags.folder_displayed = true;
+ flags.current_page = 1;
+ flags.msg_displayed = false;
+ scroll_bar_destroy('pm_right');
+ helper.scroll_fix('pm_msg_list');
+ var __mail_folders = vulcan.objects.by_class('pm_folder');
+ for (var i = 0; i < __mail_folders.length; i++)
+ {
+ if (__mail_folders[i].getAttribute('data-folder') === folder)
+ __mail_folders[i].id = 'pm_active_folder';
+ else
+ __mail_folders[i].id = 'inactive';
+ }
+ this.id = 'active';
+ utils.check_new_mails();
+ }
+ });
+ return true;
+ };
+ this.toggle = function(id, force_open)
+ {
+ var __folders = vulcan.objects.by_id('pm_ident_' + id);
+ var __badge = vulcan.objects.by_id('pm_ident_badge_' + id);
+ if (force_open === true)
+ {
+ fx.visibility.show('pm_ident_' + id, 1 );
+ fx.visibility.hide('pm_ident_badge_' + id, 1 );
+ }
+ else if (__folders.style.display === 'block')
+ {
+ fx.visibility.hide('pm_ident_' + id, 1 );
+ if (!__badge.innerHTML)
+ fx.visibility.hide('pm_ident_badge_' + id, 1 );
+ else
+ __badge.style.display = '';
+ }
+ else if (__folders.style.display === 'none')
+ {
+ fx.visibility.show('pm_ident_' + id, 1 );
+ fx.visibility.hide('pm_ident_badge_' + id, 1 );
+ }
+ helper.scroll_fix('pm_left');
+ return true;
+ };
+ this.update_unread = function(msg_num)
+ {
+ var __inbox_badge = vulcan.objects.by_id('pm_inbox_unread_badge');
+ var __identity_badge = vulcan.objects.by_id('pm_ident_badge_' + config.identity_id);
+ if (__inbox_badge !== null)
+ __inbox_badge.innerHTML = msg_num;
+ if (__identity_badge !== null)
+ __identity_badge.innerHTML = msg_num;
+ if (msg_num === 0)
+ {
+ if (__inbox_badge !== null)
+ __inbox_badge.style.opacity = 0;
+ if (__identity_badge !== null)
+ __identity_badge.style.opacity = 0;
+ }
+ else
+ {
+ if (__inbox_badge !== null)
+ __inbox_badge.style.opacity = 1;
+ if (__identity_badge !== null)
+ __identity_badge.style.opacity = 1;
+ }
+ return true;
+ };
+ this.decrement_unread = function(number)
+ {
+ var __unread = vulcan.objects.by_id('pm_ident_badge_' + config.identity_id).innerHTML;
+ number = parseInt(number, 10);
+ __unread = parseInt(__unread, 10);
+ __unread = __unread - number;
+ mail_identity.update_unread(__unread);
+ return true;
+ };
+ this.increment_unread = function(number)
+ {
+ var __unread = vulcan.objects.by_id('pm_ident_badge_' + config.identity_id).innerHTML;
+ number = parseInt(number, 10);
+ __unread = parseInt(__unread, 10);
+ __unread = __unread + number;
+ mail_identity.update_unread(__unread);
+ return true;
+ };
+ }
+ function message_list_model()
+ {
+ var me = this;
+ this.print = function(data)
+ {
+ var __msgs = '';
+ if (data !== undefined)
+ {
+ var __selected = me.get_selected();
+ for (var id in data)
+ {
+ if (data.hasOwnProperty(id))
+ {
+ var __msg = vulcan.objects.by_id('pm_msg_list_' + id);
+ if ( __msg !== null)
+ {
+ var __msg_item = __msg.outerHTML;
+ __msgs = __msg_item + __msgs;
+ }
+ else
+ __msgs = data[id] + __msgs;
+ }
+ }
+ vulcan.objects.by_id('pm_msg_list').innerHTML = __msgs;
+ me.select(__selected);
+ }
+ };
+ this.read_msg = function(uid)
+ {
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=read_message' +
+ '&uid=' + uid +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (message.print())
+ {
+ flags.msg_displayed = true;
+ me.hide_list();
+ helper.scroll_fix('pm_msg_view');
+ if ((me.is_unread(uid) === true) && (flags.current_folder.toLowerCase() === 'inbox'))
+ mail_identity.decrement_unread(1);
+ message.load_inline_images(uid);
+ }
+ });
+ return true;
+ };
+ this.get_preview = function(uid)
+ {
+ var __preview = vulcan.objects.by_id('pm_msg_preview_' + uid);
+ if ((__preview === false) || (__preview === null))
+ return false;
+ if (__preview.title === '')
+ return false;
+ __preview.style.cursor = 'progress';
+ __preview.className = 'pm_msg_preview preview_loading';
+ ajax.query('action=get_preview' +
+ '&uid=' + uid +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ __preview.className = 'pm_msg_preview';
+ if (print.ajax_results())
+ __preview.title = '';
+ __preview.style.cursor = 'pointer';
+ });
+ return true;
+ };
+ this.update_preview = function(data)
+ {
+ if (vulcan.validation.misc.is_undefined(data))
+ return false;
+ if (data !== undefined)
+ {
+ for (var id in data)
+ {
+ if (data.hasOwnProperty(id))
+ {
+ var __preview = vulcan.objects.by_id('pm_msg_preview_' + id);
+ if ((__preview !== null) && (__preview !== false))
+ __preview.innerHTML = data[id];
+ }
+ }
+ }
+ return true;
+ };
+ this.delete = function(uids)
+ {
+ if (vulcan.validation.misc.is_undefined(uids))
+ return false;
+ utils.start_progress('Deleting...');
+ flags.query_active = true;
+ ajax.query('action=delete_message' +
+ '&uid=' + uids +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ helper.scroll_fix('pm_msg_list');
+ for (var i = 0; i < uids.length; i++)
+ {
+ if ((msg_list.is_unread(uids[i])) && (flags.current_folder.toLowerCase() === 'inbox'))
+ mail_identity.decrement_unread(1);
+ msg_list.mark_as_deleted(uids[i]);
+ }
+ me.deselect_all();
+ }
+ });
+ return true;
+ };
+ this.change_flag = function(uids, flag)
+ {
+ var __filtered_uids = [];
+ var __count = 0;
+ for (var i = 0; i < uids.length; i++)
+ {
+ if (flag === 'SEEN')
+ {
+ if (me.is_unread(uids[i]))
+ {
+ __filtered_uids[__count] = uids[i];
+ __count++;
+ }
+ }
+ else if (flag === 'UNSEEN')
+ {
+ if (!me.is_unread(uids[i]))
+ {
+ __filtered_uids[__count] = uids[i];
+ __count++;
+ }
+ }
+ }
+ if (__filtered_uids.length === 0)
+ return false;
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=change_flag' +
+ '&uid=' + __filtered_uids +
+ '&identity_id=' + config.identity_id +
+ '&flag=' + flag,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ helper.scroll_fix('pm_msg_list');
+ if (flag === 'SEEN')
+ {
+ mail_identity.decrement_unread(__count);
+ for (var i = 0; i < __filtered_uids.length; i++)
+ msg_list.mark_as_read(__filtered_uids[i]);
+ }
+ else if (flag === 'UNSEEN')
+ {
+ mail_identity.increment_unread(__count);
+ for (var i = 0; i < __filtered_uids.length; i++)
+ msg_list.mark_as_unread(__filtered_uids[i]);
+ }
+ me.deselect_all();
+ }
+ });
+ return true;
+ };
+ this.paginate = function(page_num)
+ {
+ utils.start_progress('Loading...');
+ flags.query_active = true;
+ ajax.query('action=folder_pagination' +
+ '&page=' + page_num +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if ( print.ajax_results())
+ {
+ flags.current_page = page_num;
+ flags.folder_displayed = true;
+ flags.msg_displayed = false;
+ scroll_bar_destroy('pm_right');
+ helper.scroll_fix('pm_msg_list');
+ }
+ });
+ return true;
+ };
+ this.search = function(search_query)
+ {
+ utils.start_progress('Searching...');
+ flags.query_active = true;
+ ajax.query('action=search_mail' +
+ '&query=' + search_query +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if ( print.ajax_results())
+ {
+ scroll_bar_destroy('pm_right');
+ helper.scroll_fix('pm_msg_list');
+ }
+ });
+ return true;
+ };
+ this.show_msg_actions = function()
+ {
+ var __msg_actions = vulcan.objects.by_id('pm_msg_list_actions');
+ __msg_actions.style.height = '30px';
+ __msg_actions.style.opacity = 1;
+ __msg_actions.style.top = '4px';
+ return true;
+ };
+ this.hide_msg_actions = function()
+ {
+ var __msg_actions = vulcan.objects.by_id('pm_msg_list_actions');
+ __msg_actions.style.opacity = 0;
+ __msg_actions.style.height = 0;
+ __msg_actions.style.top = '-30px';
+ return true;
+ };
+ this.cb_change = function()
+ {
+ if (me.count_selected() > 0)
+ me.show_msg_actions();
+ else
+ me.hide_msg_actions();
+ return true;
+ };
+ this.count_selected = function()
+ {
+ var __msg_list_checks = vulcan.objects.by_class('pm_msg_cb');
+ var __count = 0;
+ for (var i = 0; i < __msg_list_checks.length; i++)
+ {
+ if (__msg_list_checks[i].checked)
+ __count++;
+ }
+ return __count;
+ };
+ this.count_selected_unread = function()
+ {
+ var __msg_list_checks = vulcan.objects.by_class('pm_msg_cb');
+ var __count = 0;
+ for (var i = 0; i < __msg_list_checks.length; i++)
+ {
+ if (__msg_cbs[i].checked)
+ {
+ var __uid = __msg_cbs[i].id.substring(5);
+ if (me.is_unread(__uid))
+ __count++;
+ }
+ }
+ return __count;
+ };
+ this.get_selected = function()
+ {
+ var __uids = [];
+ var __count = 0;
+ var __msg_cbs = vulcan.objects.by_class('pm_msg_cb');
+ for (var i = 0; i < __msg_cbs.length; i++)
+ {
+ if (__msg_cbs[i].checked)
+ {
+ if (__msg_cbs[i].id !== 'pm_msg_cb_master')
+ {
+ var __uid = __msg_cbs[i].id.substring(5);
+ __uids[__count] = __uid;
+ __count++;
+ }
+ }
+ }
+ if (__count === 0)
+ return false;
+ return __uids;
+ };
+ this.select = function(uids)
+ {
+ if (uids !== false)
+ {
+ for (var i = 0; i < uids.length; i++)
+ {
+ var __cb = vulcan.objects.by_id('muid_' + uids[i]);
+ if ((__cb !== null) && (__cb!== false))
+ __cb.checked = true;
+ }
+ }
+ };
+ this.hide_list = function()
+ {
+ fx.visibility.hide('pm_msg_list_header', 1 );
+ fx.visibility.hide('pm_msg_list', 1 );
+ return true;
+ };
+ this.show_list = function()
+ {
+ fx.visibility.show('pm_msg_list_header', 1 );
+ fx.visibility.show('pm_msg_list', 1 );
+ return true;
+ };
+ this.mark_as_read = function(uid)
+ {
+ vulcan.objects.by_id('pm_msg_list_'+uid).className = 'pm_msg_list_item';
+ return true;
+ };
+ this.mark_as_unread = function(uid)
+ {
+ vulcan.objects.by_id('pm_msg_list_'+uid).className = 'pm_msg_list_item pm_unread_msg';
+ return true;
+ };
+ this.mark_as_deleted = function(uid)
+ {
+ vulcan.objects.by_id('pm_msg_list_'+uid).className = 'pm_msg_list_item pm_deleted_msg';
+ return true;
+ };
+ this.is_unread = function(id)
+ {
+ var __msg = vulcan.objects.by_id('pm_msg_list_'+id);
+ if (__msg === false)
+ return false;
+ if (__msg.className === 'pm_msg_list_item pm_unread_msg')
+ return true;
+ else
+ return false;
+ };
+ this.deselect_all = function()
+ {
+ var __cb_array = vulcan.objects.by_class('pm_msg_cb');
+ for (var i = 0; i < __cb_array.length; i++)
+ vulcan.objects.by_id(__cb_array[i].id).checked = false;
+ };
+ }
+ function message_model()
+ {
+ var me = this;
+ function message_model_utilities()
+ {
+ this.link_fix = function()
+ {
+ var __message = vulcan.objects.by_id('pm_message_body');
+ var __anchors = __message.getElementsByTagName('a');
+ if (__anchors === null)
+ return false;
+ for (var i = 0; i < __anchors.length; i++)
+ {
+ if (me.utils.yt_anchor_parse(__anchors[i].href))
+ __anchors[i].className = __anchors[i].className + ' pm_yt_video';
+ else if (__anchors[i].href.substring(0,7) === 'mailto:')
+ __anchors[i].className = __anchors[i].className + ' pm_email_link';
+ else
+ __anchors[i].setAttribute('target', '_blank');
+ }
+ return true;
+ };
+ this.yt_anchor_parse = function(url)
+ {
+ var __reg_exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/,
+ __match = url.match(__reg_exp);
+ if (__match && __match[7].length === 11)
+ return __match[7];
+ return false;
+ };
+ }
+ this.print = function()
+ {
+ var __result = vulcan.objects.by_id('teal_mail_ajax_result').innerHTML;
+ if (__result.substring(2,12) === '__show_error')
+ {
+ var __data = JSON.parse(__result);
+ for (var __id in __data)
+ {
+ if (__data.hasOwnProperty(__id))
+ {
+ if (__id === '__show_error')
+ {
+ utils.show_notification(__data[__id]);
+ return false;
+ }
+ }
+ }
+ }
+ print.into_tag('pm_msg_view', __result);
+ me.utils.link_fix();
+ attach_events.message_view();
+ return true;
+ };
+ this.load_inline_images = function(uid)
+ {
+ var __msg_body = vulcan.objects.by_id('pm_message_body');
+ var __imgs = __msg_body.getElementsByTagName('img');
+ for (var i = 0; i < __imgs.length; i++)
+ {
+ var __get_data = me.get_url_vars(__imgs[i].src);
+ var __part = __get_data['_part'];
+ var __embed = __get_data['_embed'];
+ var __mimeclass = __get_data['_mimeclass'];
+ if (__part !== undefined)
+ {
+ __imgs[i].id = 'inline_image_'+__part;
+ __imgs[i].src = '/framework/extensions/js/teal_mail/themes/icons/image_loader.gif';
+ ajax.query('action=get_message_inline_image' +
+ '&uid=' + uid +
+ '&part=' + __part +
+ '&identity_id=' + config.identity_id ,
+ function()
+ {
+ print.ajax_results();
+ });
+ }
+ }
+ return true;
+ };
+ this.set_inline_image = function(id, url)
+ {
+ var __image = vulcan.objects.by_id(id);
+ __image.src = url;
+ helper.scroll_fix('pm_msg_view');
+ return true;
+ };
+ this.get_url_vars = function(src)
+ {
+ var __vars = {};
+ var __parts = src.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+ function(__m, __key, __value)
+ {
+ __vars[__key] = __value;
+ });
+ return __vars;
+ };
+ this.delete = function(uid)
+ {
+ utils.start_progress('Deleting...');
+ flags.query_active = true;
+ ajax.query('action=delete_message' +
+ '&uid=' + uid +
+ '&identity_id=' + config.identity_id,
+ function()
+ {
+ utils.end_progress();
+ flags.query_active = false;
+ if (print.ajax_results())
+ {
+ flags.msg_displayed = false;
+ helper.scroll_fix('pm_msg_list');
+ utils.check_new_mails();
+ }
+ });
+ return true;
+ };
+ this.utils = new message_model_utilities();
+ }
+ function compose_mail()
+ {
+ this.print_form = function(to, cc, subject, body)
+ {
+ var __compose_form = '<table class="compose-headers">' +
+ '<tbody>' +
+ '<tr>' +
+ '<td class="compose_title">From<\/td>' +
+ '<td class="editfield">' +
+ '<select name="_from" id="compose_from" class="compose_form">';
+ var __mail_acc_array = vulcan.objects.by_class('pm_account');
+ for (var i = 0; i < __mail_acc_array.length; i++)
+ {
+ if ((__mail_acc_array[i].id === 'active') || (__mail_acc_array[i].id === 'current'))
+ {
+ if (__mail_acc_array[i].getAttribute('data-id') === config.identity_id)
+ __compose_form += '<option value="' + __mail_acc_array[i].getAttribute('data-id') + '" selected>' + __mail_acc_array[i].title + '</option>';
+ else
+ __compose_form += '<option value="' + __mail_acc_array[i].getAttribute('data-id') + '">' + __mail_acc_array[i].title + '</option>';
+ }
+ }
+ __compose_form += '<\/select>' +
+ '<\/td>' +
+ '<\/tr>' +
+ '<tr>' +
+ '<td class="compose_title top"><label for="_to">To<\/label><\/td>' +
+ '<td class="editfield">' +
+ '<input name="compose_mail_to" id="compose_mail_to" class="compose_form" value="' + to + '"' +
+ 'type="text" placeholder="Example: mail@example.com, secondmail@example.com">' +
+ '<\/td>' +
+ '<\/tr>' +
+ '<tr id="compose_cc" style="display: none;">' +
+ '<td class="compose_title top">' +
+ '<label for="_cc">Cc<\/label>' +
+ '<a href="#" id="cc-delete-link" class="delete_compose_row" title="Delete">x<\/a>' +
+ '<\/td>' +
+ '<td class="editfield">' +
+ '<input name="_cc" id="compose_mail_cc" class="compose_form" value="' + cc + '" type="text"><\/input>' +
+ '<\/td>' +
+ '<\/tr>' +
+ '<tr id="compose_bcc" style="display: none;">' +
+ '<td class="compose_title top">' +
+ '<label for="_bcc">Bcc<\/label>' +
+ '<a href="#" id="bcc-delete-link" class="delete_compose_row" title="Delete">x<\/a>' +
+ '<\/td>' +
+ '<td class="editfield">' +
+ '<input name="_bcc" id="compose_mail_bcc" class="compose_form" value="" type="text"><\/td>' +
+ '<\/tr>' +
+ '<tr id="compose_replyto" style="display: none;">' +
+ '<td class="compose_title top">' +
+ '<label for="_replyto">Reply-To<\/label>' +
+ '<a href="#" id="replyto-delete-link" class="delete_compose_row" title="Delete">x<\/a>' +
+ '<\/td>' +
+ '<td class="editfield">' +
+ '<input name="_replyto" id="compose_mail_replyto" class="compose_form" value="" type="text">' +
+ '<\/td>' +
+ '<\/tr>' +
+ '<tr>' +
+ '<td><\/td>' +
+ '<td class="formlinks">' +
+ '<a href="#" id="cc-link" class="add_compose_row"' +
+ 'style="display: inline-block;">' +
+ 'Add Cc <\/a>' +
+ '<a href="#" id="bcc-link" class="add_compose_row"' +
+ 'style="display: inline-block;">' +
+ 'Add Bcc <\/a>' +
+ '<a href="#" id="replyto-link" class="add_compose_row" >' +
+ 'Add Reply-To<\/a>' +
+ '<\/td>' +
+ '<\/tr>' +
+ '<tr>' +
+ '<td class="compose_title"><label for="compose_mail_subject">Subject<\/label><\/td>' +
+ '<td class="editfield"><input name="_subject" id="compose_mail_subject"' +
+ 'class="compose_form" value="' + subject + '" type="text"><\/td>' +
+ '<\/tr> ' +
+ '<tr>' +
+ '<td class="compose_title"><label for="compose-msg_body">Message<\/label><\/td>' +
+ '<td class="editfield">' +
+ '<textarea name="_message" id="composebody" class="compose_message" cols="70" rows="20"' +
+ 'value="' + body + '"><\/textarea><\/td>' +
+ '<\/tr> ' +
+ '<tr>' +
+ '<td class="compose_title"><\/td>' +
+ '<td class="editfield"><input type="submit" id="send_email" value="Send"><\/td>' +
+ '<\/tr>' +
+ '<\/tbody>' +
+ '<\/table>' +
+ '<script>' +
+ ' ' +
+ '<\/script>';
+ print.into_tag('pm_right', __compose_form);
+ attach_events.compose_form();
+ return true;
+ };
+ this.show_row = function(id)
+ {
+ vulcan.objects.by_id('compose_' + id).style.display = 'table-row';
+ vulcan.objects.by_id(id + '-link').style.display = 'none';
+ helper.scroll_fix('pm_right');
+ return true;
+ };
+ this.hide_row = function(id)
+ {
+ vulcan.objects.by_id('compose_' + id).style.display = 'none';
+ vulcan.objects.by_id(id + '-link').style.display = 'inline-block';
+ helper.scroll_fix('pm_right');
+ return true;
+ };
+ this.send = function(from, to, cc, bcc, reply_to, subject, msg)
+ {
+ if (!to)
+ {
+ utils.show_notification('You need to enter at least one recipient!');
+ return false;
+ }
+ var __email_array = to.split(',');
+ for (var i = 0; i < __email_array.length; i++)
+ {
+ if (!helper.validate_email(__email_array[i].replace(/\s+/g, '')))
+ {
+ utils.show_notification('Incorect email address in field \'To:\' \n Please enter a valid email addresses separated by commas!');
+ return false;
+ }
+ }
+ if (cc !== '')
+ {
+ var __email_array = cc.split(',');
+ for (var i = 0; i < __email_array.length; i++)
+ {
+ if (!helper.validate_email(__email_array[i].replace(/\s+/g, '')))
+ {
+ utils.show_notification('Incorect email address in field \'Cc:\' \n Please enter a valid email addresses separated by commas!');
+ return false;
+ }
+ }
+ }
+ if (bcc !== '')
+ {
+ var __email_array = bcc.split(',');
+ for (var i = 0; i < __email_array.length; i++)
+ {
+ if (!helper.validate_email(__email_array[i].replace(/\s+/g, '')))
+ {
+ utils.show_notification('Incorect email address in field \'Bcc:\' \n Please enter a valid email addresses separated by commas!');
+ return false;
+ }
+ }
+ }
+ if (reply_to !== '')
+ {
+ var __email_array = reply_to.split(',');
+ for (var i = 0; i < __email_array.length; i++)
+ {
+ if (!helper.validate_email(__email_array[i].replace(/\s+/g, '')))
+ {
+ utils.show_notification('Incorect email address in field \'Reply To:\' \n Please enter a valid email addresses separated by commas!');
+ return false;
+ }
+ }
+ }
+ if (msg === '')
+ {
+ utils.show_notification('Sorry dude, you can\'t send email without content!');
+ return false;
+ }
+ utils.start_progress('Sending Message...');
+ ajax.send_mail('from=' + from +
+ '&to=' + to +
+ '&cc=' + cc +
+ '&bcc=' + bcc +
+ '&reply_to=' + reply_to +
+ '&subject=' + subject +
+ '&msg=' + msg,
+ function()
+ {
+ if (print.ajax_results())
+ mail_identity.load_folder('Inbox');
+ return true;
+ });
+ };
+ }
+ function print()
+ {
+ this.html_backbone = function()
+ {
+ var __html_backbone = '<div id="pm_progress_box"></div>' +
+ '<div id="pm_notifications_box"></div>' +
+ '<div id="teal_mail">' +
+ ' <div id="pm_left">' +
+ ' <div id="pm_accounts"></div>' +
+ ' <div class="pm_add_acc_box" id="add_acc_box"></div>' +
+ ' </div>' +
+ ' <div id="pm_right"></div>' +
+ '</div>' +
+ '<div id="teal_mail_ajax_result"></div>';
+ teal_mail_bee.settings.data.window.content(__html_backbone);
+ attach_events.general();
+ return true;
+ };
+ this.acc_actions = function()
+ {
+ var __acctions = '<div class="pm_account_options" id="pm_acc_actions_">' +
+ '<div id="pm_check_inbox" class="pm_icon_1 pm_refresh_loading" title="Chek new mails"></div>' +
+ '<div id="pm_compose_mail" class="pm_icon_1 pm_compose_icon" title="Compose new mail"></div>' +
+ '<div id="pm_acc_setting" class="pm_icon_1 pm_settings_icon" title="Settings"></div>' +
+ '<div id="pm_logout" class="pm_icon_1 pm_logout_icon" title="Logout"></div>' +
+ '<div id="pm_delete_acc" class="pm_icon_1 pm_delete_icon" title="Delete this account"></div>' +
+ '</div>';
+ };
+ this.msg_list_backbone = function()
+ {
+ var __msg_list_backbone = '<div id="pm_msg_list_header">' +
+ '<div id="msg_list_master_select">' +
+ '<div class="pm_checkbox">' +
+ '<input type="checkbox" name="check" value="None"' +
+ 'class="pm_msg_cb" id="pm_msg_cb_master">' +
+ '<label for="pm_msg_cb_master">‌</label>' +
+ '</div>' +
+ '</div>' +
+ '<div id="pm_msg_list_actions" style="height: 0px; opacity: 0; top: -30px;">' +
+ '<div class="pm_msg_list_btn" id="msg_list_delete">' +
+ '<div class="pm_icon_2 pm_delete_icon2">Delete</div>' +
+ '</div>' +
+ '<div class="pm_msg_list_btn" id="change_msg_flag_s" data-flag="SEEN">' +
+ '<div class="pm_icon_2 pm_mark_as_r">Mark as read</div>' +
+ '</div>' +
+ '<div class="pm_msg_list_btn" id="change_msg_flag_u" data-flag="UNSEEN">' +
+ '<div class="pm_icon_2 pm_mark_as_u">Mark as unread</div>' +
+ '</div>' +
+ '</div>' +
+ '<div id="pm_search_form">' +
+ '<input type="text" id="pm_search_input" size="40" placeholder="Search...">' +
+ '</div>' +
+ '<div id="pm_msg_list_pagination">' +
+ '</div>' +
+ '</div>' +
+ '<div id="pm_msg_list"></div>' +
+ '<div id="pm_msg_view"></div>';
+ vulcan.objects.by_id('pm_right').innerHTML = __msg_list_backbone;
+ };
+ this.into_tag = function(id, content)
+ {
+ if (vulcan.objects.by_id(id))
+ vulcan.objects.by_id(id).innerHTML = content;
+ else
+ console.log('erro writng to:' + id);
+ return true;
+ };
+ this.ajax_results = function()
+ {
+ var __result = vulcan.objects.by_id('teal_mail_ajax_result').innerHTML;
+ var __temp_div = document.createElement('div');
+ __temp_div.innerHTML = __result;
+ var __scripts = __temp_div.getElementsByTagName('script');
+ var __i = __scripts.length;
+ while (__i--)
+ __scripts[__i].parentNode.removeChild(__scripts[__i]);
+ __result = __temp_div.innerHTML;
+ if (__result === '')
+ return false;
+ var __data = JSON.parse(__result);
+ for (var __id in __data)
+ {
+ if (__data.hasOwnProperty(__id))
+ {
+ if (__id === '__print_bones')
+ print.html_backbone();
+ else if (__id === '__print_msg_list_bones')
+ print.msg_list_backbone();
+ else if (__id === '__update_unread')
+ mail_identity.update_unread(__data[__id]);
+ else if (__id === '__update_accounts_unread')
+ mail_accounts.update_unread(__data[__id]);
+ else if (__id === '__activate_account')
+ {
+ var __myarr = __data[__id].split('::');
+ var __id = __myarr[0];
+ var __msg_num = __myarr[1];
+ mail_identity.update_unread(__msg_num);
+ mail_identity.toggle(__id, true);
+ mail_identity.activate(__id);
+ }
+ else if (__id === '__set_identity_id')
+ config.identity_id = parseInt(__data[__id], 10);
+ else if (__id === '__update_account')
+ mail_accounts.update_account(__data[__id]);
+ else if (__id === '__show_error')
+ {
+ utils.show_notification(__data[__id]);
+ return false;
+ }
+ else if (__id === '__show_notification')
+ utils.show_notification(__data[__id]);
+ else if (__id === '__print_add_acc_btn')
+ add_acc.print.button();
+ else if (__id === '__no_accounts_fix')
+ html_fix.no_mail_acc_fix();
+ else if (__id === '__print_add_acc')
+ add_acc.print.form();
+ else if (__id === '__delete_account')
+ mail_accounts.remove_account(__data[__id]);
+ else if (__id === 'pm_msg_list')
+ msg_list.print(__data[__id]);
+ else if (__id === '__status_msg')
+ teal_mail_bee.settings.data.window.labels.status_bar(__data[__id]);
+ else if (__id.substring(0,13) === 'inline_image_')
+ message.set_inline_image(__id,__data[__id]);
+ else if (__id === '__update_msg_preview')
+ msg_list.update_preview(__data[__id]);
+ else
+ print.into_tag(__id, __data[__id]);
+ if (__id === 'pm_accounts')
+ attach_events.mail_accounts();
+ else if (__id === 'pm_msg_list')
+ attach_events.msg_list();
+ else if (__id === 'pm_msg_list_pagination')
+ attach_events.msg_pagination();
+ }
+ }
+ return true;
+ };
+ }
+ function helpers()
+ {
+ this.validate_email = function(email)
+ {
+ if (vulcan.validation.misc.is_undefined(email))
+ return false;
+ var __start_pos = email.indexOf('<') + 1;
+ if (__start_pos !== 0)
+ {
+ var __end_pos = email.indexOf('>', __start_pos);
+ if ((__end_pos !== 0) && (__end_pos > __start_pos))
+ var email = email.substring(__start_pos, __end_pos);
+ }
+ var __re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+ return __re.test(email);
+ };
+ this.scroll_fix = function(id)
+ {
+ if (vulcan.validation.misc.is_undefined(id))
+ return false;
+ scroll_bar_destroy(id);
+ scroll_bar_fix(id);
+ return true;
+ };
+ }
+ function ajax_model()
+ {
+ this.query = function(args, callback)
+ {
+ var __url;
+ var __data;
+ var __result;
+ var __element_id = 'teal_mail_ajax_result';
+ var __ajax = new bull();
+ __url = '/framework/extensions/ajax/teal_mail/teal_mail.php';
+ __data = vulcan.validation.misc.is_undefined(args) ? ' ' : args;
+ __result = __ajax.data(__url, __data, __element_id, 1, 1, false, callback);
+ return __result;
+ };
+ this.send_mail = function(args, callback)
+ {
+ var __url;
+ var __data;
+ var __result;
+ var __element_id = 'teal_mail_ajax_result';
+ var __ajax = new bull();
+ __url = '/framework/extensions/ajax/teal_mail/send_mail.php';
+ __data = vulcan.validation.misc.is_undefined(args) ? ' ' : args;
+ __result = __ajax.data(__url, __data, __element_id, 1, 1, false, callback);
+ return __result;
+ };
+ }
+ function utilities()
+ {
+ var me = this;
+ this.check_new_mails = function()
+ {
+ if ((config.identiy_id === 0))
+ return false;
+ if (flags.query_active === true)
+ return false;
+ config.app_msg = teal_mail_bee.settings.data.window.labels.status_bar();
+ teal_mail_bee.settings.data.window.labels.status_bar('Checking for new mails...');
+ var __check_icon = vulcan.objects.by_id('pm_check_inbox');
+ var __mail_app = vulcan.objects.by_id('teal_mail');
+ var __update_inbox = 0;
+ if ((flags.current_folder.toLowerCase() === 'inbox') && (flags.current_page === 1))
+ __update_inbox = 1;
+ __check_icon.className='pm_icon_1 pm_refresh_loading';
+ ajax.query('action=check_new_mails' +
+ '&identity_id=' + config.identity_id +
+ '&update_inbox=' + __update_inbox,
+ function()
+ {
+ teal_mail_bee.settings.data.window.labels.status_bar(config.app_msg);
+ print.ajax_results();
+ me.update_unread_number();
+ __check_icon.className='pm_icon_1 pm_refresh_icon';
+ helper.scroll_fix('pm_msg_list');
+ });
+ return true;
+ };
+ this.update_unread_number = function(ignore_acc)
+ {
+ var __accs = vulcan.objects.by_class('pm_account');
+ for (var i = 0; i < __accs.length; i++)
+ {
+ var __id = __accs[i].getAttribute('data-id');
+ if ((__id !== null) && (__id !== ignore_acc) && (__accs[i].id === 'active'))
+ {
+ vulcan.objects.by_id('pm_ident_badge_'+__id).className = 'pm_ident_unread_badge badge_loading';
+ vulcan.objects.by_id('pm_ident_badge_'+__id).style.opacity = 1;
+ vulcan.objects.by_id('pm_ident_badge_'+__id).innerHTML = '';
+ ajax.query('action=update_unread_number' +
+ '&identity_id=' + __id,
+ function()
+ {
+ print.ajax_results();
+ });
+ }
+ }
+ return true;
+ };
+ this.count_all_unread = function()
+ {
+ var __badge_array = document.getElementsByClassName('unread_badge');
+ var __unread = 0;
+ for (var i = 0; i < __badge_array.length; i++)
+ __unread += parseInt(__badge_array[i].innerHTML);
+ return __unread;
+ };
+ this.update_unread_in_hive = function()
+ {
+ var __unread = me.count_all_unread();
+ print.into_tag('hive_bee_' + id + '_title',
+ teal_mail_bee.settings.data.window.labels.title() +
+ ' <span class="badge_hive">' + __unread + '</span>');
+ return true;
+ };
+ this.start_progress = function(status_bar_msg)
+ {
+ if (vulcan.objects.by_id('pm_msg_list_actions') !== null)
+ msg_list.hide_msg_actions();
+ fx.visibility.show('pm_progress_box', 1 );
+ config.app_msg = teal_mail_bee.settings.data.window.labels.status_bar();
+ teal_mail_bee.settings.data.window.labels.status_bar(status_bar_msg);
+ infinity.begin();
+ return true;
+ };
+ this.end_progress = function()
+ {
+ teal_mail_bee.settings.data.window.labels.status_bar(config.app_msg);
+ fx.visibility.hide('pm_progress_box', 1 );
+ infinity.end();
+ return true;
+ };
+ this.show_notification = function(message)
+ {
+ var __notification = vulcan.objects.by_id('pm_notifications_box');
+ __notification.style.height = '100%';
+ __notification.style.opacity = 1;
+ __notification.innerHTML = '<div id="pm_notifications_msg">' + message + '</div>';
+ };
+ this.hide_notification = function()
+ {
+ var __notification = vulcan.objects.by_id('pm_notifications_box');
+ __notification.style.opacity = 0;
+ __notification.style.height = 0;
+ __notification.innerHTML = '';
+ };
+ this.enter_to_click = function(this_event, id)
+ {
+ if (vulcan.validation.misc.is_undefined(this_event))
+ return false;
+ var keycode = teal_mail_bee.gui.keys.get(this_event);
+ if (keycode === 13)
+ vulcan.objects.by_id(id).click();
+ return true;
+ };
+ this.get_timezone_offset = function()
+ {
+ var __date = new Date();
+ var __timezone_offset = -__date.getTimezoneOffset()/60;
+ return __timezone_offset;
+ };
+ this.sleep = function(milliseconds)
+ {
+ var __start = new Date().getTime();
+ for (var i = 0; i < 1e7; i++)
+ {
+ if ((new Date().getTime() - __start) > milliseconds)
+ break;
+ }
+ return true;
+ };
+ this.remove_element = function(element_id)
+ {
+ var __element = vulcan.objects.by_id(element_id);
+ if ((__element !== null) && (__element !== false))
+ {
+ __element.outerHTML = "";
+ delete __element;
+ return true;
+ }
+ else
+ return false;
+ };
+ this.replace_element = function(element_id, new_element)
+ {
+ var __element = vulcan.objects.by_id(element_id);
+ if ((__element !== null) && (__element !== false))
+ {
+ __element.outerHTML = new_element;
+ return true;
+ }
+ else
+ return false;
+ };
+ }
+ function html_fix()
+ {
+ this.no_mail_acc_fix = function()
+ {
+ fx.visibility.hide('pm_left', 1 );
+ vulcan.objects.by_id('pm_right').style.position = 'absolute';
+ vulcan.objects.by_id('pm_right').style.marginLeft = '200px';
+ };
+ this.div_size = function()
+ {
+ var __height = teal_mail_bee.gui.size.height() - 88;
+ var __width = teal_mail_bee.gui.size.width();
+ var __elem = vulcan.objects.by_id('pm_right');
+ __elem.style.width = (__width - 265) + 'px';
+ var __elem = vulcan.objects.by_id('pm_left');
+ __elem.style.height = __height + 'px';
+ var __elem = vulcan.objects.by_id('pm_right');
+ __elem.style.height = __height + 'px';
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return teal_mail_bee;
+ };
+ function config_model()
+ {
+ this.identity_id = 0;
+ this.app_msg = null;
+ this.id = 'teal_mail';
+ }
+ function flags_model()
+ {
+ this.current_folder = null;
+ this.current_page = null;
+ this.folder_displayed = false;
+ this.msg_displayed = false;
+ this.compose_form_displayed = false;
+ this.settings_displayed = false;
+ this.query_active = false;
+ }
+ function gui_init()
+ {
+ print.html_backbone();
+ html_fix.div_size();
+ var __timezone_offset = utils.get_timezone_offset();
+ utils.start_progress('Loading...');
+ ajax.query('action=init_mail'+
+ '&timezone_offset='+__timezone_offset,
+ function()
+ {
+ utils.end_progress();
+ print.ajax_results();
+ utils.update_unread_number();
+ helper.scroll_fix('pm_left');
+ helper.scroll_fix('pm_right');
+ });
+ setInterval(function()
+ {
+ if (config.identity_id !== 0)
+ utils.check_new_mails();
+ }, 150000);
+ return true;
+ }
+ this.init = function()
+ {
+ if (is_init === true)
+ return false;
+ is_init = true;
+ teal_mail_bee = dev_box.get('bee');
+ fx = dev_box.get('fx');
+ infinity.init(cosmos);
+ fx.init(cosmos);
+ infinity.setup('pm_progress_box');
+ vulcan.graphics.apply_theme('/framework/extensions/js/teal_mail/themes', 'teal_mail');
+ teal_mail_bee.init(cosmos, id, 2);
+ teal_mail_bee.settings.data.window.labels.title('Teal Mail');
+ teal_mail_bee.settings.data.window.labels.status_bar('Multiple accounts webmail!');
+ teal_mail_bee.gui.position.left(0);
+ teal_mail_bee.gui.position.top(0);
+ teal_mail_bee.gui.size.width(980);
+ teal_mail_bee.gui.size.height(500);
+ teal_mail_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ teal_mail_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ teal_mail_bee.on('open', function() { teal_mail_bee.gui.fx.fade.into(); });
+ teal_mail_bee.on('opened', function() { return gui_init(); });
+ teal_mail_bee.on('dragging', function()
+ {
+ teal_mail_bee.gui.fx.opacity.settings.set(0.7);
+ teal_mail_bee.gui.fx.opacity.apply();
+ });
+ teal_mail_bee.on('dragged', function() { teal_mail_bee.gui.fx.opacity.reset(); });
+ teal_mail_bee.on('in_hive', function() { utils.update_unread_in_hive(); });
+ teal_mail_bee.on('close', function() { teal_mail_bee.gui.fx.fade.out(); });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ vulcan = cosmos.hub.access('vulcan');
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = matrix.get('colony');
+ swarm = matrix.get('swarm');
+ pythia = matrix.get('pythia');
+ infinity = matrix.get('infinity');
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ is_init = false,
+ cosmos = null,
+ vulcan = null,
+ matrix = null,
+ dev_box = null,
+ pythia = null,
+ infinity = null,
+ colony = null,
+ swarm = null,
+ fx = null,
+ teal_mail_bee = null,
+ id = 'teal_mail',
+ attach_events = new events(),
+ add_acc = new add_account_model(),
+ mail_accounts = new mail_accounts_model(),
+ mail_identity = new mail_identity_model(),
+ msg_list = new message_list_model(),
+ message = new message_model(),
+ compose = new compose_mail(),
+ ajax = new ajax_model(),
+ print = new print(),
+ html_fix = new html_fix(),
+ helper = new helpers(),
+ config = new config_model(),
+ flags = new flags_model(),
+ utils = new utilities();
+}
+function cloud_edit()
+{
+ var self = this;
+ function config_model()
+ {
+ function ce_model()
+ {
+ this.editor = null;
+ this.exec_button = null;
+ this.status_label = null;
+ }
+ this.id = null;
+ this.content = null;
+ this.ce = new ce_model();
+ }
+ function ce_program_api()
+ {
+ this.telemetry = function(prog_id)
+ {
+ program_id = prog_id;
+ return true;
+ };
+ this.reset = function()
+ {
+ return utils_int.reset();
+ };
+ }
+ function utilities()
+ {
+ var me = this;
+ function run_code(event_object)
+ {
+ var __code = null;
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (event_object.buttons !== 1)
+ return false;
+ if (program_is_running === true)
+ return utils_int.reset();
+ __code = config.ce.editor.getValue();
+ if (!executor.load(__code))
+ {
+ config.ce.status_label.innerHTML = '[EMPTY]';
+ config.ce.exec_button.value = 'Run';
+ config.ce.exec_button.classList.remove('ce_stop');
+ frog('CLOUD EDIT', '% Empty %',
+ 'No code detected!');
+ return false;
+ }
+ if (executor.process(ce_api) !== true)
+ {
+ if (executor.error.last.code() === executor.error.codes.INVALID)
+ {
+ config.ce.status_label.innerHTML = '[INVALID]';
+ config.ce.exec_button.value = 'Run';
+ config.ce.exec_button.classList.remove('ce_stop');
+ frog('CLOUD EDIT', '% Invalid %',
+ executor.error.last.message() + '\nPlease check the template...');
+ }
+ else if (executor.error.last.code() === executor.error.codes.MISMATCH)
+ {
+ config.ce.status_label.innerHTML = '[ERROR]';
+ config.ce.exec_button.value = 'Run';
+ config.ce.exec_button.classList.remove('ce_stop');
+ frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
+ }
+ else if (executor.error.last.code() === executor.error.codes.OTHER)
+ {
+ config.ce.status_label.innerHTML = '[ERROR]';
+ config.ce.exec_button.value = 'Run';
+ config.ce.exec_button.classList.remove('ce_stop');
+ frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
+ }
+ return executor.terminate();
+ }
+ config.ce.status_label.innerHTML = '[RUNNING]';
+ config.ce.exec_button.value = 'Stop';
+ config.ce.exec_button.classList.add('ce_stop');
+ program_is_running = true;
+ return true;
+ }
+ this.gui_init = function()
+ {
+ var __data_content_id = cloud_edit_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_functions();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ var dynamic_elements = document.createElement('span');
+ config.ce.exec_button = document.createElement('input');
+ config.ce.exec_button.id = 'ce_run_stop';
+ config.ce.exec_button.type = 'button';
+ config.ce.exec_button.value = 'Run';
+ config.ce.status_label = document.createElement('span');
+ config.ce.status_label.id = 'ce_status';
+ config.ce.status_label.innerHTML = '[READY]';
+ dynamic_elements.append(config.ce.status_label);
+ dynamic_elements.append(config.ce.exec_button);
+ utils_sys.objects.by_id(cloud_edit_bee.settings.general.id() + '_status_bar_msg').append(dynamic_elements);
+ return true;
+ };
+ this.attach_functions = function()
+ {
+ config.ce.editor = ace.edit(cloud_edit_bee.settings.general.id() + '_data');
+ ace.require('ace/ext/settings_menu').init(config.ce.editor);
+ config.ce.editor.setTheme('ace/theme/tomorrow_night');
+ config.ce.editor.session.setMode('ace/mode/javascript');
+ config.ce.editor.setOptions({ enableBasicAutocompletion: true,
+ enableSnippets: true,
+ enableLiveAutocompletion: true,
+ printMargin: false,
+ vScrollBarAlwaysVisible: true,
+ fontSize: '14'
+ });
+ config.ce.editor.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'},
+ exec: function(this_editor) { this_editor.showSettingsMenu(); }
+ } ]);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ utils_sys.events.attach(config.ce.exec_button.id, config.ce.exec_button, 'mousedown',
+ function(event) { run_code(event); });
+ return true;
+ };
+ this.reset = function()
+ {
+ executor.terminate();
+ config.ce.status_label.innerHTML = '[READY]';
+ config.ce.exec_button.value = 'Run';
+ config.ce.exec_button.classList.remove('ce_stop');
+ program_is_running = false;
+ return true;
+ };
+ this.destroy_editor = function()
+ {
+ config.ce.editor.destroy();
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return cloud_edit_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ cloud_edit_bee = dev_box.get('bee');
+ config.id = 'cloud_edit';
+ config.content = `// Welcome to Cloud Edit!\n// Please load the test template from https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ cloud_edit_bee.init(config.id, 2);
+ cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
+ cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
+ cloud_edit_bee.settings.data.window.content(config.content);
+ cloud_edit_bee.settings.data.hints.icon('Cloud Edit is cool!');
+ cloud_edit_bee.settings.actions.can_edit_title(false);
+ cloud_edit_bee.gui.position.left(330);
+ cloud_edit_bee.gui.position.top(80);
+ cloud_edit_bee.gui.size.width(800);
+ cloud_edit_bee.gui.size.height(530);
+ cloud_edit_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ cloud_edit_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ cloud_edit_bee.on('open', function() { cloud_edit_bee.gui.fx.fade.into(); });
+ cloud_edit_bee.on('opened', function() { utils_int.gui_init(); });
+ cloud_edit_bee.on('dragging', function()
+ {
+ cloud_edit_bee.gui.fx.opacity.settings.set(0.7);
+ cloud_edit_bee.gui.fx.opacity.apply();
+ });
+ cloud_edit_bee.on('dragged', function() { cloud_edit_bee.gui.fx.opacity.reset(); });
+ cloud_edit_bee.on('close', function()
+ {
+ cloud_edit_bee.gui.fx.fade.out();
+ utils_int.reset();
+ utils_int.destroy_editor();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = cosmos.hub.access('colony');
+ executor = dev_box.get('executor');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ program_is_running = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ colony = null,
+ executor = null,
+ nature = null,
+ infinity = null,
+ cloud_edit_bee = null,
+ config = new config_model(),
+ ce_api = new ce_program_api(),
+ utils_int = new utilities(),
+ utils_sys = new vulcan();
+}
+function radio_dude()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.player = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = radio_dude_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ selected_stream = 'https://stream.zeno.fm/qmqe8k5e74zuv';
+ me.draw();
+ config.player = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_ctlr');
+ config.player.volume = 0.3;
+ utils_int.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ radio_dude_bee.settings.data.window.content('<div class="radio_dude_player">' +
+ ' <audio id="' + radio_dude_bee.settings.general.id() + '_ctlr" width="300" height="32" ' +
+ ' autoplay="false" controls="false" src="' + selected_stream + '">' +
+ ' </audio>' +
+ '</div>' +
+ '<div class="radio_dude_list">' +
+ ' <div id="radio_dude_streams">' +
+ ' <div id="' + radio_dude_bee.settings.general.id() + '_stream_genres" class="stream_genres">' +
+ ' <div data-stream="1" class="radio_dude_selected_stream">Pop/Rock</div>' +
+ ' <div data-stream="2">Dance/House</div>' +
+ ' <div data-stream="3">Jazz/Blues</div>' +
+ ' <div data-stream="4">Country</div>' +
+ ' </div>' +
+ ' </div>' +
+ '</div>');
+ radio_dude_bee.settings.data.casement.content(``);
+ return true;
+ };
+ this.stream = function(stream_id)
+ {
+ if (!utils_sys.validation.numerics.is_number(stream_id) | stream_id < 1 || stream_id > 10)
+ return false;
+ var streams = [];
+ streams[1] = 'https://stream.zeno.fm/qmqe8k5e74zuv';
+ streams[2] = 'https://i4.streams.ovh/sc/musicfactory/stream';
+ streams[3] = 'https://c30.radioboss.fm:18119/stream';
+ streams[4] = 'https://ais-sa2.cdnstream1.com/1963_128.mp3';
+ selected_stream = streams[stream_id];
+ config.player.pause();
+ config.player.src = streams[stream_id];
+ config.player.play();
+ return true;
+ };
+ this.choose = function(list_id)
+ {
+ if (!utils_sys.validation.numerics.is_number(list_id))
+ return false;
+ var __streams_list = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_stream_genres'),
+ __streams_list_num = __streams_list.children.length;
+ for (var i = 0; i < __streams_list_num; i++)
+ __streams_list.children[i].setAttribute('class', '');
+ __streams_list.children[list_id - 1].setAttribute('class', 'radio_dude_selected_stream');
+ return true;
+ };
+ this.change_stream = function()
+ {
+ me.stream(this.getAttribute('data-stream'));
+ me.choose(this.getAttribute('data-stream'));
+ };
+ this.attach_events = function()
+ {
+ var __streams_list = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_stream_genres'),
+ __streams_list_num = __streams_list.children.length;
+ for (var i = 0; i < __streams_list_num; i++)
+ __streams_list.children[i].onclick = me.change_stream;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return radio_dude_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ config.id = 'radio_dude';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ radio_dude_bee = dev_box.get('bee');
+ radio_dude_bee.init(config.id, 2);
+ radio_dude_bee.settings.data.window.labels.title('Radio Dude');
+ radio_dude_bee.settings.data.window.labels.status_bar('Music babe... [ M U S I C ]');
+ radio_dude_bee.settings.data.casement.labels.title('Weather');
+ radio_dude_bee.settings.data.casement.labels.status('');
+ radio_dude_bee.settings.general.single_instance(true);
+ radio_dude_bee.gui.position.static(true);
+ radio_dude_bee.gui.position.left(930);
+ radio_dude_bee.gui.position.top(120);
+ radio_dude_bee.gui.size.width(320);
+ radio_dude_bee.gui.size.height(270);
+ radio_dude_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ radio_dude_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ radio_dude_bee.on('open', function() { radio_dude_bee.gui.fx.fade.into(); });
+ radio_dude_bee.on('opened', function() { utils_int.gui_init(); });
+ radio_dude_bee.on('dragging', function()
+ {
+ radio_dude_bee.gui.fx.opacity.settings.set(0.7);
+ radio_dude_bee.gui.fx.opacity.apply();
+ });
+ radio_dude_bee.on('dragged', function() { radio_dude_bee.gui.fx.opacity.reset(); });
+ radio_dude_bee.on('close', function() { radio_dude_bee.gui.fx.fade.out(); });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ swarm = matrix.get('swarm');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ swarm = null,
+ nature = null,
+ infinity = null,
+ selected_stream = null,
+ radio_dude_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function Banana()
+{
+ var dynamic_object = null,
+ utils = new vulcan();
+ dynamic_object = document.createElement('link');
+ dynamic_object.setAttribute('rel', 'Stylesheet');
+ dynamic_object.setAttribute('type', 'text/css');
+ dynamic_object.setAttribute('media', 'screen');
+ dynamic_object.setAttribute('href', '/framework/extensions/js/user/banana/banana.css');
+ document.getElementsByTagName('head')[0].appendChild(dynamic_object);
+ dynamic_object = document.createElement('div');
+ dynamic_object.id = 'banana';
+ dynamic_object.innerHTML = '<div class="banana_trigger" title="Dudes, send us your suggestions!">' +
+ '<br><br><br>O<br>P<br>E<br>N<br><br>M<br>E</div>' +
+ '<div class="banana_body">' +
+ '<div class="banana_title">User Suggestions</div>' +
+ '<div class="banana_box">' +
+ '<textarea id="banana_suggestion" placeholder="Please write your suggestions in here..."></textarea>' +
+ '</div>' +
+ '<div><input id="banana_send" type="button" value="Send"></div>' +
+ '<div id="banana_info"></div>' +
+ '</div>';
+ setTimeout(function()
+ {
+ utils.objects.by_id('desktop').appendChild(dynamic_object);
+ utils.objects.by_id('banana_send').addEventListener('click', function() { __Banana_Post(); }, false);
+ }, 1500);
+ return true;
+}
+function __Banana_Post()
+{
+ var utils = new vulcan(),
+ data = 'gate=banana&suggestion=' + utils.objects.by_id('banana_suggestion').value;
+ ajax_factory(data, function(result)
+ {
+ utils.objects.by_id('banana_suggestion').value = '';
+ if (result === '1')
+ utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
+ else
+ utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
+ setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
+ },
+ function()
+ {
+ },
+ function()
+ {
+ });
+ return true;
+}
+function e_games()
+{
+ var self = this;
+ this.init = function(game)
+ {
+ if (game === undefined)
+ return false;
+ vulcan = cosmos.hub.access('vulcan');
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = matrix.get('colony');
+ swarm = matrix.get('swarm');
+ e_games_bee = dev_box.get('bee');
+ fx = dev_box.get('fx');
+ fx.init(cosmos);
+ vulcan.graphics.apply_theme('/framework/extensions/js/e_games/themes', 'e_games');
+ if (game === 'Trigger Rally')
+ {
+ id = 'trigger_rally_app';
+ e_games_bee.init(cosmos, id, 1);
+ e_games_bee.settings.data.window.labels.status_bar('All credits go to https://triggerrally.com/');
+ }
+ else if (game === 'BananaBread')
+ {
+ id = 'banana_bread_app';
+ e_games_bee.init(cosmos, id, 1);
+ e_games_bee.settings.data.window.labels.status_bar('All credits go to Mozilla');
+ }
+ else
+ {
+ id = 'epic_citadel_app';
+ e_games_bee.init(cosmos, id, 1);
+ e_games_bee.settings.data.window.labels.status_bar('All credits go to http://www.unrealengine.com/html5/');
+ }
+ e_games_bee.settings.data.window.labels.title(game);
+ e_games_bee.gui.position.left(180);
+ e_games_bee.gui.position.top(10);
+ e_games_bee.gui.size.width(900);
+ e_games_bee.gui.size.height(520);
+ e_games_bee.gui.size.min.width(900);
+ e_games_bee.gui.size.min.height(520);
+ e_games_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ e_games_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ e_games_bee.on('open', function() { e_games_bee.gui.fx.fade.into(); });
+ e_games_bee.on('opened', function() { return gui_init(); });
+ e_games_bee.on('drag', function() { vulcan.objects.by_id('e_games_overlay').style.display = 'block'; });
+ e_games_bee.on('dragging', function()
+ {
+ e_games_bee.gui.fx.opacity.settings.set(0.7);
+ e_games_bee.gui.fx.opacity.apply();
+ });
+ e_games_bee.on('dragged', function()
+ {
+ e_games_bee.gui.fx.opacity.reset();
+ vulcan.objects.by_id('e_games_overlay').style.display = 'none';
+ });
+ e_games_bee.on('resize', function() { vulcan.objects.by_id('e_games_overlay').style.display = 'block'; });
+ e_games_bee.on('resized', function() { vulcan.objects.by_id('e_games_overlay').style.display = 'none'; });
+ e_games_bee.on('close', function() { e_games_bee.gui.fx.fade.out(); });
+ return true;
+ };
+ this.get_bee = function()
+ {
+ return e_games_bee;
+ };
+ this.get_id = function()
+ {
+ return id;
+ };
+ function gui_init()
+ {
+ var game_url = null;
+ if (id === 'trigger_rally_app')
+ game_url = 'https://triggerrally.com/';
+ else if (id === 'banana_bread_app')
+ game_url = 'https://developer.cdn.mozilla.net/media/uploads/demos/a/z/azakai/3baf4ad7e600cbda06ec46efec5ec3b8/bananabread_1373485124_demo_package/game.html?setup=medium&serve';
+ else
+ game_url = 'http://www.unrealengine.com/html5/';
+ e_games_bee.settings.data.window.content('<div id="e_games_overlay"></div>' +
+ '<iframe id="e_games_frame" class="e_games_frame" src="' + game_url + '"></iframe>');
+ return true;
+ }
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ cosmos = null,
+ vulcan = null,
+ matrix = null,
+ dev_box = null,
+ colony = null,
+ swarm = null,
+ fx = null,
+ e_games_bee = null,
+ id = 'e_games';
+}
+function i_fb()
+{
+ var self = this;
+ function utilities()
+ {
+ var me = this;
+ function draw()
+ {
+ this.enable_navigation = function()
+ {
+ vulcan.objects.by_id('i_fb_status_bar').innerHTML =
+ '<div id="i_fb_status_bar_menu_icon">' +
+ '<img id="i_fb_status_bar_bullets" src="/framework/extensions/js/i_fb/themes/pix/bullets.png">' +
+ '</div>' +
+ '<div id="i_fb_main_bottom_navigation" style="display: none;">' +
+ '</div>' +
+ '<div id="i_fb_mask" value="99" style="display: none;">' +
+ '</div>';
+ return true;
+ };
+ this.navigation_selected_menu_hover = function(tab_id)
+ {
+ if (tab_id === undefined)
+ return false;
+ var menu_tabs = vulcan.objects.by_id('i_fb_navigation').getElementsByClassName('menu_box');
+ var menu_tabs_length = menu_tabs.length;
+ var procedure;
+ for (var i = 0; i < menu_tabs_length; i++)
+ {
+ if (menu_tabs[i].id === 'active_tab')
+ menu_tabs[i].removeAttribute('id');
+ if (menu_tabs[i].childNodes[0].id === tab_id)
+ {
+ menu_tabs[i].setAttribute('id', 'active_tab');
+ procedure = true;
+ }
+ }
+ if (procedure)
+ return true;
+ else
+ return false;
+ };
+ this.gui_init = function()
+ {
+ infinity.begin();
+ me.ajax.data(config.id + '_data', 'action=start', function()
+ {
+ me.events.login();
+ me.events.main_page();
+ me.draw.enable_navigation();
+ me.events.bottom_navigation();
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ return true;
+ };
+ }
+ function ajax()
+ {
+ this.data = function(element_id, args, callback)
+ {
+ if (vulcan.validation.misc.is_undefined(element_id))
+ return false;
+ var __url = null,
+ __data = null,
+ __ajax = new bull();
+ __url = '/framework/extensions/ajax/i_fb/i_fb.php';
+ __data = (args === undefined) ? ' ' : args;
+ __ajax.data(__url, __data, element_id, 1, 1, false, callback);
+ return true;
+ };
+ this.response = function(args)
+ {
+ var __url = null,
+ __data = null,
+ __ajax = new bull();
+ __url = '/framework/extensions/ajax/i_fb/i_fb.php';
+ __data = (args === undefined) ? ' ' : args;
+ __ajax.response(__url, __data, 1);
+ return true;
+ };
+ }
+ function attach_events()
+ {
+ this.bottom_navigation = function()
+ {
+ };
+ this.main_page = function()
+ {
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('feed'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=home', function()
+ {
+ me.draw.navigation_selected_menu_hover('feed');
+ me.events.load('feed');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('profile'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=profile', function()
+ {
+ me.draw.navigation_selected_menu_hover('profile');
+ me.events.load('profile');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('requests'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=requests', function()
+ {
+ me.draw.navigation_selected_menu_hover('requests');
+ me.events.load('requests');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('inbox'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=messages', function()
+ {
+ me.draw.navigation_selected_menu_hover('inbox');
+ me.events.load('messages');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('nots'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=notifications', function()
+ {
+ me.draw.navigation_selected_menu_hover('nots');
+ me.events.load('notifications');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('photo'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=photos', function()
+ {
+ me.draw.navigation_selected_menu_hover('photo');
+ me.events.load('photo');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('checkin'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=checkin', function()
+ {
+ me.draw.navigation_selected_menu_hover('checkin');
+ me.events.load('checkin');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('status'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.ajax.data('i_fb_main_content', 'action=status', function()
+ {
+ me.draw.navigation_selected_menu_hover('status');
+ me.events.load('status');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ };
+ this.login = function()
+ {
+ var login = vulcan.objects.by_id('facebook_login_button');
+ vulcan.events.attach('i_fb', login, 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var login_url = this.getAttribute('data-url');
+ var w = 420;
+ var h = 300;
+ var left = (screen.width/2)-(w/2);
+ var top = (screen.height/2)-(h/2);
+ config.auth_window = window.open(login_url, 'Facebook_Login', 'location=0,status=0,width='+w+',height='+h+', top='+top+', left='+left);
+ me.check_auth_closed();
+ });
+ };
+ this.load = function(group)
+ {
+ if (group === 'feed')
+ {
+ }
+ else if (group === 'profile')
+ {
+ }
+ else if (group === 'requests')
+ {
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('fb_confirm_request'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ var id = this.getAttribute('data-friend');
+ me.ajax.data('i_fb_main_content', 'action=confirm_request&friend_id=' + id, function()
+ {
+ me.draw.navigation_selected_menu_hover('requests');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ }
+ else if (group === 'inbox')
+ {
+ }
+ else if (group === 'notifications')
+ {
+ }
+ else if (group === 'photo')
+ {
+ vulcan.events.attach('i_fb', vulcan.objects.by_class('album_table_general'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ var id = this.getAttribute('data-id');
+ if (id === 'create_album')
+ {
+ me.ajax.data('i_fb_main_content', 'action=create_album', function()
+ {
+ me.draw.navigation_selected_menu_hover('photo');
+ me.events.load('create_album');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ }
+ else
+ {
+ me.ajax.data('i_fb_main_content', 'action=display_album&album_id=' + id, function()
+ {
+ me.draw.navigation_selected_menu_hover('photo');
+ me.events.load('album_events');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ }
+ });
+ }
+ else if (group === 'album_events')
+ {
+ vulcan.events.attach('i_fb', vulcan.objects.by_class('album_table'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ infinity.setup(config.content_id);
+ infinity.begin();
+ var id = this.getAttribute('data-photo');
+ me.ajax.data('i_fb_main_content', 'action=display_photo&photo_id=' + id, function()
+ {
+ me.draw.navigation_selected_menu_hover('photo');
+ me.events.load('photo_events');
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ }
+ else if (group === 'photo_events')
+ {
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('right_photo'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('left_photo'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('photo_x'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ });
+ }
+ else if (group === 'checkin')
+ {
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('checkin_button'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ });
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('map_click'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ });
+ }
+ else if (group === 'status')
+ {
+ vulcan.events.attach('i_fb', vulcan.objects.by_id('update_status'), 'click',
+ function(event_object)
+ {
+ event_object.preventDefault();
+ var message = vulcan.objects.by_id('status_message').value;
+ if (message.length === 0)
+ {
+ notification_push('#i_fb_navigation', 'Please type something to update your status!');
+ }
+ else
+ {
+ infinity.begin();
+ var result = me.ajax.data('i_fb_main_content','action=update_status&message=' + message);
+ if (result)
+ {
+ vulcan.objects.by_id('status_message').value = '';
+ notification_push('#i_fb_navigation', 'You have successfully updated your status!');
+ }
+ else
+ notification_push('#i_fb_navigation', 'Something went wrong! Please try again!');
+ scroll_bar_fix(config.content_id);
+ infinity.end();
+ }
+ });
+ }
+ };
+ }
+ this.check_auth_closed = function()
+ {
+ if (config.auth_window && config.auth_window.closed)
+ {
+ window.clearInterval(config.auth_window_timer);
+ me.draw.gui_init();
+ }
+ else
+ config.auth_window_timer = setTimeout(me.check_auth_closed, 500);
+ return true;
+ };
+ this.events = new attach_events();
+ this.ajax = new ajax();
+ this.draw = new draw();
+ }
+ function settings()
+ {
+ var me = this;
+ var __id = null;
+ this.id = function()
+ {
+ __id = 'i_fb';
+ return __id;
+ };
+ }
+ function config_model()
+ {
+ this.auth_window = null;
+ this.auth_window_timer = null;
+ return true;
+ }
+ function initialize_map()
+ {
+ var me = this;
+ function init()
+ {
+ var my_options = {
+ center: new google.maps.LatLng(48.814099, -122.294312 ),
+ zoom: 7,
+ mapTypeId: google.maps.MapTypeId.HYBRID
+ };
+ var geocoder = new google.maps.Geocoder();
+ var map = new google.maps.Map(utils.objects.by_id('map_canvas'), my_options);
+ var marker;
+ google.maps.event.addListener(map, 'click', function(event)
+ {
+ place_marker(event.latLng, marker);
+ option_places();
+ });
+ }
+ this.place_marker = function(location, marker)
+ {
+ if (marker)
+ {
+ marker.setPosition(location);
+ }
+ else
+ {
+ marker = new google.maps.Marker(
+ {
+ position: location,
+ map: map
+ });
+ }
+ vulcan.objects.by_id('lat').value = location.lat();
+ vulcan.objects.by_id('lng').value = location.lng();
+ return true;
+ };
+ this.option_places = function()
+ {
+ var latitude = vulcan.objects.by_id('lat').value;
+ var longitude = vulcan.objects.by_id('lng').value;
+ me.ajax.data('checkin_places', 'action=add_places_option&latitude=' + latitude + '&longitude=' + longitude);
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return config.bee;
+ };
+ this.init = function()
+ {
+ if (is_init === true)
+ return false;
+ is_init = true;
+ config.bee = dev_box.get('bee');
+ config.id = 'i_fb';
+ config.content_id = 'i_fb_main_content';
+ infinity.setup(config.id + '_data');
+ fx = dev_box.get('fx');
+ fx.init(cosmos);
+ scrollbar = dev_box.get('scrollbar');
+ scrollbar.init(cosmos);
+ vulcan.graphics.apply_theme('/framework/extensions/js/i_fb/themes', 'i_fb');
+ config.bee.init(cosmos, config.id, 2);
+ config.bee.settings.data.window.labels.title('Facebook Application');
+ config.bee.settings.data.window.labels.status_bar('Sign in to socialize with your friends');
+ config.bee.gui.position.left(200);
+ config.bee.gui.position.top(20);
+ config.bee.gui.size.width(700);
+ config.bee.gui.size.height(500);
+ config.bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ config.bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ config.bee.on('open', function() { config.bee.gui.fx.fade.into(); });
+ config.bee.on('opened', function() { return utils.draw.gui_init(); });
+ config.bee.on('dragging', function()
+ {
+ config.bee.gui.fx.opacity.settings.set(0.7);
+ config.bee.gui.fx.opacity.apply();
+ });
+ config.bee.on('dragged', function() { config.bee.gui.fx.opacity.reset(); });
+ config.bee.on('close', function() { config.bee.gui.fx.fade.out(); });
+ config.bee.settings.data.casement.content('Extra GUI...');
+ config.bee.settings.data.casement.labels.title('FB Update');
+ config.bee.settings.data.casement.labels.status('Helping (secondary) status bar messages...');
+ console.log(config.bee);
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ vulcan = cosmos.hub.access('vulcan');
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ pythia = matrix.get('pythia');
+ colony = matrix.get('colony');
+ swarm = matrix.get('swarm');
+ infinity = matrix.get('infinity');
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ is_init = false,
+ cosmos = null,
+ vulcan = null,
+ matrix = null,
+ dev_box = null,
+ pythia = null,
+ infinity = null,
+ scrollbar = null,
+ colony = null,
+ swarm = null,
+ fx = null,
+ settings = new settings(),
+ config = new config_model(),
+ utils = new utilities(),
+ map = new initialize_map();
+}
+function i_twitter()
+{
+ var self = this;
+ function utilities()
+ {
+ var me = this;
+ function draw()
+ {
+ this.bottom_menu = function()
+ {
+ vulcan.objects.by_id(config.id + '_status_bar').innerHTML +=
+ '<div id="twitter_status_bar_menu_icon">' +
+ ' <img id="twitter_status_bar_bullets" src="framework/extensions/js/i_twitter/themes/pix/bullets.png">' +
+ '</div>' +
+ '<nav id="twitter_nav_main_bottom_navigation">' +
+ ' <ul id="twitter_main_bottom_navigation">' +
+ ' <li><a id="home_timeline" title="Home" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/home.png"></a></li>' +
+ ' <li><a id="view_tweets" title="Me" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/me.png"></a></li>' +
+ ' <li><a id="mentions" title="Mentions" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/mentions.png"></a></li>' +
+ ' <li><a id="new_status" title="Compose Tweet" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/newtweet.png"></a></li>' +
+ ' <li><a id="followers_list" title="Followers" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/followers.png"></a></li>' +
+ ' <li><a id="friends_list" title="Following" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/friends.png"></a></li>' +
+ ' <li><a id="suggestions" title="Suggestions" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/suggestions.png"></a></li>' +
+ ' <li><a id="favorites" title="Favorites" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/favorites.png"></a></li>' +
+ ' <li><a id="account_settings" title="Settings" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/settings.png"></a></li>' +
+ ' <li><a id="direct_messages" title="Messages" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/messages.png"></a></li>' +
+ ' <li><a id="search" title="Search" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/search.png"></a></li>' +
+ ' <li class="logout"><a id="logout" title="Logout" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/logout.png"></a></li>' +
+ ' <li id="twitter_menu_separator_li"><div id="twitter_menu_separator_div"></div></li>' +
+ ' </ul>' +
+ '</nav>';
+ me.events.attach(2);
+ me.events.attach(3);
+ return true;
+ };
+ this.header = function()
+ {
+ };
+ this.gui_init = function()
+ {
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.id + '_data', 'action=start', function()
+ {
+ if(vulcan.objects.by_id('twitter_login_div') !== null)
+ {
+ me.status_bar.update(1);
+ me.events.attach(1);
+ infinity.end();
+ }
+ else
+ {
+ me.status_bar.update(3, 10);
+ me.draw.bottom_menu();
+ me.events.attach(4);
+ me.events.attach(5);
+ me.events.attach(6);
+ me.events.attach(7);
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ }
+ });
+ return true;
+ };
+ }
+ function ajax()
+ {
+ this.data = function(element_id, args, callback)
+ {
+ if (vulcan.validation.misc.is_undefined(element_id))
+ return false;
+ var __url = null,
+ __data = null,
+ __ajax = new bull();
+ __url = '/framework/extensions/ajax/i_twitter/i_twitter.php';
+ __data = (args === undefined) ? ' ' : args;
+ __ajax.data(__url, __data, element_id, 1, 1, false, callback);
+ return true;
+ };
+ }
+ function events()
+ {
+ this.attach = function(action)
+ {
+ if (!vulcan.validation.numerics.is_number(action) || action > 7 || action < 0)
+ return false;
+ if (action === 1)
+ {
+ vulcan.events.attach('twitter_app', vulcan.objects.by_id('twitter_access_token'), 'click', function(event)
+ {
+ event.preventDefault();
+ config.auth_window = window.open('framework/extensions/ajax/i_twitter/i_twitter.php?action=authorization',
+ 'Twitter_Login',
+ 'location=0,status=0,width=800,height=550');
+ me.check_auth_closed();
+ });
+ return true;
+ }
+ else if (action === 2)
+ {
+ vulcan.events.attach('twitter_app', vulcan.objects.by_id('twitter_status_bar_bullets'), 'click', function()
+ {
+ fx.visibility.toggle('twitter_main_bottom_navigation', 1);
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_id(config.id + '_data'), 'click', function()
+ {
+ if(fx.visibility.is_visible('twitter_main_bottom_navigation', 1))
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ });
+ return true;
+ }
+ else if (action === 3)
+ {
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #home_timeline'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=home_timeline', function()
+ {
+ me.status_bar.update(3, 10);
+ me.events.attach(5);
+ me.events.attach(6);
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #view_tweets'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=user_timeline', function(){
+ me.status_bar.update(3, 10);
+ me.events.attach(5);
+ me.events.attach(6);
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #mentions'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=mentions_timeline', function(){
+ me.status_bar.update(3, 10);
+ me.events.attach(5);
+ me.events.attach(6);
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #new_status'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=compose_tweet', function()
+ {
+ me.status_bar.update(4);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #followers_list'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=followers', function()
+ {
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #friends_list'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=following', function()
+ {
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #suggestions'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=suggestions', function()
+ {
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #favorites'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=favorites', function()
+ {
+ infinity.end();
+ me.events.attach(5);
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #account_settings'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=account_settings', function()
+ {
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #direct_messages'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=messages', function()
+ {
+ infinity.end();
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #search'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.selectors.first('#twitter_main_bottom_navigation #logout'), 'click',
+ function(event)
+ {
+ event.preventDefault();
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.id + '_data', 'action=logout', function(){
+ me.status_bar.update(1);
+ me.events.attach(1);
+ infinity.end();
+ });
+ });
+ return true;
+ }
+ else if (action === 4)
+ {
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('twitter_statistic'), 'click', function()
+ {
+ var section = this.getAttribute('data-section');
+ if (section === 'tweets')
+ {
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=user_timeline', function()
+ {
+ me.status_bar.update(3, 10);
+ infinity.end();
+ me.events.attach(5);
+ scroll_bar_fix(config.content_id);
+ });
+ }
+ else if (section === 'following')
+ {
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=following', function()
+ {
+ infinity.end();
+ me.events.attach(5);
+ scroll_bar_fix(config.content_id);
+ });
+ }
+ else if (section === 'followers')
+ {
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=following', function()
+ {
+ infinity.end();
+ me.events.attach(5);
+ scroll_bar_fix(config.content_id);
+ });
+ }
+ else
+ return false;
+ });
+ return true;
+ }
+ else if (action === 5)
+ {
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_hashtag'), 'click', function(event)
+ {
+ event.preventDefault();
+ var query = '#' + this.getAttribute('data-hashtag');
+ query = encodeURIComponent(query);
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=search&query=' + query, function()
+ {
+ infinity.end();
+ me.events.attach(5);
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_url'), 'click', function()
+ {
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_user_mention'), 'click', function()
+ {
+ event.preventDefault();
+ var screen_name = this.getAttribute('data-screen_name');
+ infinity.setup(config.content_id);
+ infinity.begin();
+ me.status_bar.update(2);
+ me.ajax.data(config.content_id, 'action=user_timeline&screen_name=' + screen_name, function()
+ {
+ infinity.end();
+ me.events.attach(5);
+ scroll_bar_fix(config.content_id);
+ });
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_media_photo'), 'click', function()
+ {
+ });
+ }
+ else if (action === 6)
+ {
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_action_reply'), 'click', function(event)
+ {
+ event.preventDefault();
+ fx.visibility.toggle(this.parentNode.parentNode.nextSibling, 4);
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_action_retweet'), 'click', function(event)
+ {
+ event.preventDefault();
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_action_favorite'), 'click', function(event)
+ {
+ event.preventDefault();
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_class('tweet_action_more'), 'click', function(event)
+ {
+ event.preventDefault();
+ });
+ }
+ else if (action === 7)
+ {
+ vulcan.events.attach('twitter_app', vulcan.objects.by_id('twitter_more_button'), 'click', function(event)
+ {
+ event.preventDefault();
+ alert(1);
+ });
+ vulcan.events.attach('twitter_app', vulcan.objects.by_id('twitter_back_to_top'), 'click', function(event)
+ {
+ event.preventDefault();
+ scroll_bar_scroll_to(config.content_id, 'top');
+ });
+ }
+ };
+ }
+ function status_bar()
+ {
+ this.update = function(action, data)
+ {
+ if (!vulcan.validation.numerics.is_number(action))
+ return false;
+ var __status_message = null;
+ if (action === 1)
+ __status_message = 'Sign in to view your tweets';
+ else if (action === 2)
+ __status_message = "Loading...";
+ else if (action === 3)
+ {
+ if (vulcan.validation.misc.is_undefined(data))
+ return false;
+ var __num_of_twts = data;
+ __status_message = "Viewing " + __num_of_twts + " tweets...";
+ }
+ else if (action === 4)
+ __status_message = "Compose your new tweet..";
+ else if (action === 5)
+ {
+ var __followers = 0;
+ __status_message = __followers + ' people are following you..';
+ }
+ else if (action === 6)
+ {
+ var __following = 0;
+ __status_message = 'You are following ' + __following + ' people';
+ }
+ else if (action === 7)
+ __status_message = "Suggested topics!";
+ else if (action === 8)
+ {
+ var __fav_twts = 0;
+ __status_message = "Viewing " + __fav_twts + " of your favorite tweets...";
+ }
+ else if (action === 9)
+ __status_message = "Account settings..";
+ else if (action === 10)
+ __status_message = 'Your direct messages..';
+ else if (action === 11)
+ {
+ var __search_results = 0;
+ __status_message = "Viewing " + __search_results + " search results...";
+ }
+ else
+ return false;
+ config.bee.settings.data.window.labels.status_bar(__status_message);
+ return true;
+ };
+ }
+ this.check_auth_closed = function()
+ {
+ if (config.auth_window && config.auth_window.closed)
+ {
+ window.clearInterval(config.auth_window_timer);
+ me.draw.gui_init();
+ }
+ else
+ config.auth_window_timer = setTimeout(me.check_auth_closed, 500);
+ };
+ this.status_bar = new status_bar();
+ this.events = new events();
+ this.ajax = new ajax();
+ this.draw = new draw();
+ }
+ function config_model()
+ {
+ this.id = null;
+ this.content_id = null;
+ this.bee = null;
+ this.auth_window = null;
+ this.auth_window_timer = null;
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return config.bee;
+ };
+ this.init = function()
+ {
+ if (is_init === true)
+ return false;
+ is_init = true;
+ config.bee = dev_box.get('bee');
+ config.id = 'twitter_app';
+ config.content_id = 'twitter_main_response_data';
+ infinity.setup(config.id + '_data');
+ fx = dev_box.get('fx');
+ fx.init(cosmos);
+ scrollbar = dev_box.get('scrollbar');
+ scrollbar.init(cosmos);
+ vulcan.graphics.apply_theme('/framework/extensions/js/i_twitter/themes', 'i_twitter');
+ config.bee.init(cosmos, config.id, 2);
+ config.bee.settings.data.window.labels.title('Twitter');
+ config.bee.settings.data.window.labels.status_bar('Sign in to view your tweets');
+ config.bee.gui.position.left(740);
+ config.bee.gui.position.top(10);
+ config.bee.gui.size.width(350);
+ config.bee.gui.size.height(510);
+ config.bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ config.bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ config.bee.on('open', function() { config.bee.gui.fx.fade.into(); });
+ config.bee.on('opened', function() { return utils.draw.gui_init(); });
+ config.bee.on('dragging', function()
+ {
+ config.bee.gui.fx.opacity.settings.set(0.7);
+ config.bee.gui.fx.opacity.apply();
+ });
+ config.bee.on('dragged', function() { config.bee.gui.fx.opacity.reset(); });
+ config.bee.on('close', function() { config.bee.gui.fx.fade.out(); });
+ config.bee.settings.data.casement.content('This is an extra GUI that extends and enhances the users eperience!');
+ config.bee.settings.data.casement.labels.title('Twitter Update');
+ config.bee.settings.data.casement.labels.status('Helping (secondary) status bar messages...');
+ console.log(config.bee);
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ vulcan = cosmos.hub.access('vulcan');
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = matrix.get('colony');
+ swarm = matrix.get('swarm');
+ pythia = matrix.get('pythia');
+ infinity = matrix.get('infinity');
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ is_init = false,
+ cosmos = null,
+ vulcan = null,
+ matrix = null,
+ dev_box = null,
+ pythia = null,
+ infinity = null,
+ scrollbar = null,
+ colony = null,
+ swarm = null,
+ fx = null,
+ config = new config_model(),
+ utils = new utilities();
+}
+function i_linkedin()
+{
+ function utilities()
+ {
+ var me = this;
+ function draw()
+ {
+ var me_draw = this;
+ this.gui_init = function()
+ {
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=start', function()
+ {
+ if (vulcan.objects.by_id('linkedin_login_div') !== null) // Login
+ {
+ me.status_bar.update(1);
+ me.events.attach(1);
+ }
+ else if (vulcan.objects.by_id('linkedin_home_div') !== null) // Home
+ {
+ me.status_bar.update(2);
+ me.events.attach(2);
+ var __gui = vulcan.objects.by_id(linkedin_bee.settings.general.id()),
+ __content = vulcan.objects.by_id(linkedin_bee.gui.config.window.content.id()),
+ __data = vulcan.objects.by_id(linkedin_bee.gui.config.window.content.data.id()),
+ __status_bar = vulcan.objects.by_id(linkedin_bee.gui.config.window.status_bar.id());
+ __gui.style.overflowY = 'scroll';
+ __content.style.overflow = 'visible';
+ __data.style.height = 'auto';
+ __status_bar.style.display = 'none';
+ }
+ infinity.end();
+ });
+ return true;
+ };
+ this.error_message = function(error_message)
+ {
+ var __element = vulcan.objects.by_id('linkedin_error_div');
+ __element.innerHTML = error_message;
+ return true;
+ };
+ this.clear_error_message = function()
+ {
+ me_draw.error_message('');
+ };
+ }
+ function ajax()
+ {
+ this.data = function(element_id, args, callback, content_fill_mode)
+ {
+ if (element_id === undefined)
+ return false;
+ if (content_fill_mode === undefined)
+ content_fill_mode = false;
+ var __url = '/framework/extensions/ajax/i_linkedin/i_linkedin.php',
+ __data = (args === undefined) ? '' : args,
+ __ajax = new bull();
+ __ajax.data(__url, __data, element_id, 1, 1, content_fill_mode, callback);
+ return true;
+ };
+ }
+ function events()
+ {
+ function network_updates()
+ {
+ this.get = function(event, direction)
+ {
+ event.preventDefault();
+ if (direction === undefined)
+ direction = 0;
+ var __data;
+ if (direction === 0) // Show entire page
+ {
+ __data = 'action=network_updates'
+ + '&direction=' + direction;
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __data, function()
+ {
+ me.status_bar.update(7);
+ me.events.attach(7);
+ infinity.end();
+ });
+ }
+ else if (direction === -1) // Append response
+ {
+ __data = 'action=network_updates'
+ + '&direction=' + direction
+ + '&no_wrapper=true';
+ me.ajax.data('linkedin_network_updates_div', __data, function()
+ {
+ me.status_bar.update(7);
+ me.events.attach(7);
+ infinity.end();
+ }, true);
+ }
+ };
+ }
+ function company_search()
+ {
+ this.get = function(event, direction)
+ {
+ event.preventDefault();
+ if (direction === undefined)
+ direction = 0;
+ var __sort = vulcan.objects.by_id('linkedin_company_search_sort'),
+ __keywords = vulcan.objects.by_id('linkedin_company_search_keywords');
+ utils.draw.clear_error_message();
+ var __data = 'action=company_search'
+ + '&sort=' + __sort.value
+ + '&keywords=' + __keywords.value
+ + '&direction=' + direction;
+ infinity.begin();
+ me.status_bar.update(0);
+ utils.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __data, function()
+ {
+ infinity.end();
+ me.status_bar.update(6);
+ me.events.attach(6);
+ });
+ };
+ }
+ this.attach = function(action)
+ {
+ if (!vulcan.validation.numerics.is_number(action))
+ return false;
+ if (action === 1) // Login
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_access_token'), 'click', function(event)
+ {
+ event.preventDefault();
+ var __window_height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height,
+ __window_width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width,
+ __new_window_height = 700,
+ __new_window_width = 400,
+ __top = (__window_height / 2) - (__new_window_height / 2),
+ __left = (__window_width / 2) - (__new_window_width / 2);
+ config.auth_window = window.open('framework/extensions/ajax/i_linkedin/i_linkedin.php?action=authorization',
+ 'LinkedIn_Login',
+ 'location=0,status=0,width=' + __new_window_width + ',height=' + __new_window_height + ',top=' + __top + ',left=' + __left);
+ me.check_auth_closed();
+ });
+ return true;
+ }
+ else if (action === 2) // Home
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_logout_link'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=logout', function()
+ {
+ me.status_bar.update(1);
+ me.events.attach(1);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_network_updates_link'), 'click', function(event)
+ {
+ event.preventDefault();
+ me.events.network_updates.get(event);
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_companies_followed'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=companies_followed', function()
+ {
+ me.status_bar.update(11);
+ me.events.attach(11);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_companies_suggested'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=companies_suggested', function()
+ {
+ me.status_bar.update(12);
+ me.events.attach(12);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_groups_joined'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=groups_joined', function()
+ {
+ me.status_bar.update(14);
+ me.events.attach(14);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_groups_suggested'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=groups_suggested', function()
+ {
+ me.status_bar.update(15);
+ me.events.attach(15);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_people_search_link'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=people_search', function()
+ {
+ me.status_bar.update(4);
+ me.events.attach(4);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_job_search_link'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=job_search', function()
+ {
+ me.status_bar.update(5);
+ me.events.attach(5);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_company_search_link'), 'click', function(event)
+ {
+ event.preventDefault();
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), 'action=company_search', function()
+ {
+ me.status_bar.update(6);
+ me.events.attach(6);
+ infinity.end();
+ });
+ });
+ return true;
+ }
+ else if (action === 3) // View person
+ {
+ return true;
+ }
+ else if (action === 4) // People search
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_people_search_form'), 'submit', function(event)
+ {
+ event.preventDefault();
+ var __sort = vulcan.objects.by_id('linkedin_people_search_sort'),
+ __keywords = vulcan.objects.by_id('linkedin_people_search_keywords'),
+ __first_name = vulcan.objects.by_id('linkedin_people_search_first_name'),
+ __last_name = vulcan.objects.by_id('linkedin_people_search_last_name'),
+ __company_name = vulcan.objects.by_id('linkedin_people_search_company_name'),
+ __current_company = vulcan.objects.by_id('linkedin_people_search_current_company'),
+ __title = vulcan.objects.by_id('linkedin_people_search_title'),
+ __current_title = vulcan.objects.by_id('linkedin_people_search_current_title'),
+ __school_name = vulcan.objects.by_id('linkedin_people_search_school_name'),
+ __current_school = vulcan.objects.by_id('linkedin_people_search_current_school'),
+ __country_code = vulcan.objects.by_id('linkedin_people_search_country_code'),
+ __postal_code = vulcan.objects.by_id('linkedin_people_search_postal_code'),
+ __distance = vulcan.objects.by_id('linkedin_people_search_distance');
+ utils.draw.clear_error_message();
+ var __data = 'action=people_search'
+ + '&sort=' + __sort.value
+ + '&keywords=' + __keywords.value
+ + '&first_name=' + __first_name.value
+ + '&last_name=' + __last_name.value
+ + '&company_name=' + __company_name.value
+ + '&current_company=' + __current_company.value
+ + '&title=' + __title.value
+ + '&current_title=' + __current_title.value
+ + '&school_name=' + __school_name.value
+ + '&current_school=' + __current_school.value
+ + '&country_code=' + __country_code.value
+ + '&postal_code=' + __postal_code.value
+ + '&distance=' + __distance.value;
+ infinity.begin();
+ me.status_bar.update(0);
+ utils.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __data, function()
+ {
+ infinity.end();
+ me.status_bar.update(4);
+ me.events.attach(4);
+ });
+ });
+ return true;
+ }
+ else if (action === 5) // Job search
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_job_search_form'), 'submit', function(event)
+ {
+ event.preventDefault();
+ var __sort = vulcan.objects.by_id('linkedin_job_search_sort'),
+ __keywords = vulcan.objects.by_id('linkedin_job_search_keywords'),
+ __company_name = vulcan.objects.by_id('linkedin_job_search_company_name'),
+ __job_title = vulcan.objects.by_id('linkedin_job_search_job_title'),
+ __country_code = vulcan.objects.by_id('linkedin_job_search_country_code'),
+ __postal_code = vulcan.objects.by_id('linkedin_job_search_postal_code'),
+ __distance = vulcan.objects.by_id('linkedin_job_search_distance');
+ utils.draw.clear_error_message();
+ var __data = 'action=job_search'
+ + '&sort=' + __sort.value
+ + '&keywords=' + __keywords.value
+ + '&company_name=' + __company_name.value
+ + '&job_title=' + __job_title.value
+ + '&country_code=' + __country_code.value
+ + '&postal_code=' + __postal_code.value
+ + '&distance=' + __distance.value;
+ infinity.begin();
+ me.status_bar.update(0);
+ utils.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __data, function()
+ {
+ infinity.end();
+ me.status_bar.update(5);
+ me.events.attach(5);
+ });
+ });
+ }
+ else if (action === 6) // Company search
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_company_search_form'), 'submit', me.events.company_search.get);
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_company_search_prev'), 'click', function(event)
+ {
+ event.preventDefault();
+ me.events.company_search.get(event, -1);
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_company_search_next'), 'click', function(event)
+ {
+ event.preventDefault();
+ me.events.company_search.get(event, 1);
+ });
+ }
+ else if (action === 7) // Network updates
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_share_form'), 'submit', function(event)
+ {
+ event.preventDefault();
+ var __comment = vulcan.objects.by_id('linkedin_share_comment'),
+ __visibility = vulcan.objects.by_id('linkedin_share_visibility');
+ if (__comment.value.length < 1)
+ utils.draw.error_message('Please enter your update message.');
+ else if (__comment.value.length > 700)
+ utils.draw.error_message('Your update message can not be longer than 700 characters.');
+ else
+ {
+ utils.draw.clear_error_message();
+ var __data = 'action=share'
+ + '&comment=' + __comment.value
+ + '&visibility=' + __visibility.value;
+ infinity.begin();
+ me.status_bar.update(0);
+ utils.ajax.data('linkedin_network_updates_div', __data, function()
+ {
+ infinity.end();
+ me.status_bar.update(2);
+ me.events.attach(2);
+ __comment.value = '';
+ });
+ }
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_network_updates_show_more'), 'click', function(event)
+ {
+ event.preventDefault();
+ me.events.network_updates.get(event, -1);
+ });
+ }
+ else if (action === 8) // View company
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_company_follow'), 'click', function(event)
+ {
+ event.preventDefault();
+ var __id = this.getAttribute('data-id'),
+ __args = 'action=company_follow&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(8);
+ me.events.attach(8);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_company_unfollow'), 'click', function(event)
+ {
+ event.preventDefault();
+ var __id = this.getAttribute('data-id'),
+ __args = 'action=company_unfollow&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(8);
+ me.events.attach(8);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_company_products'), 'click', function(event)
+ {
+ event.preventDefault();
+ var __id = this.getAttribute('data-id'),
+ __args = 'action=companies_products&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(13);
+ me.events.attach(13);
+ infinity.end();
+ });
+ });
+ return true;
+ }
+ else if (action === 9) // View job
+ {
+ return true;
+ }
+ else if (action === 10) // View group
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_group_join'), 'click', function(event)
+ {
+ event.preventDefault();
+ var __id = this.getAttribute('data-id'),
+ __args = 'action=group_join&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(10);
+ me.events.attach(10);
+ infinity.end();
+ });
+ });
+ vulcan.events.attach(config.id, vulcan.objects.by_id('linkedin_group_leave'), 'click', function(event)
+ {
+ event.preventDefault();
+ var __id = this.getAttribute('data-id'),
+ __args = 'action=group_leave&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(10);
+ me.events.attach(10);
+ infinity.end();
+ });
+ });
+ return true;
+ }
+ else if (action === 11) // Followed companies
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ return true;
+ }
+ else if (action === 12) // Suggested companies
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ return true;
+ }
+ else if (action === 13) // Company products
+ {
+ return true;
+ }
+ else if (action === 14) // Joined groups
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ return true;
+ }
+ else if (action === 15) // Suggested groups
+ {
+ vulcan.events.attach(config.id, vulcan.objects.by_class('link'), 'click', me.events.generic_link);
+ return true;
+ }
+ else
+ return false;
+ };
+ this.generic_link = function(event)
+ {
+ event.preventDefault();
+ var __type = this.getAttribute('data-type'),
+ __id = this.getAttribute('data-id');
+ switch (__type)
+ {
+ case 'person':
+ var __args = 'action=view&type=' + __type + '&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(3);
+ me.events.attach(3);
+ infinity.end();
+ });
+ break;
+ case 'company':
+ var __args = 'action=view&type=' + __type + '&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(8);
+ me.events.attach(8);
+ infinity.end();
+ });
+ break;
+ case 'job':
+ var __args = 'action=view&type=' + __type + '&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(9);
+ me.events.attach(9);
+ infinity.end();
+ });
+ break;
+ case 'group':
+ var __args = 'action=view&type=' + __type + '&id=' + __id;
+ infinity.begin();
+ me.status_bar.update(0);
+ me.ajax.data(linkedin_bee.gui.config.window.content.data.id(), __args, function()
+ {
+ me.status_bar.update(10);
+ me.events.attach(10);
+ infinity.end();
+ });
+ break;
+ }
+ };
+ this.company_search = new company_search();
+ this.network_updates = new network_updates();
+ }
+ function status_bar()
+ {
+ this.update = function(action)
+ {
+ if (!vulcan.validation.numerics.is_number(action))
+ return false;
+ var __status_message = null;
+ if (action === 0)
+ __status_message = 'Loading...';
+ else if (action === 1)
+ __status_message = 'Sign in';
+ else if (action === 2)
+ __status_message = 'Home';
+ else if (action === 3)
+ __status_message = 'Profile';
+ else if (action === 4)
+ __status_message = 'People search';
+ else if (action === 5)
+ __status_message = 'Job search';
+ else if (action === 6)
+ __status_message = 'Company search';
+ else if (action === 7)
+ __status_message = 'Network updates';
+ else if (action === 8)
+ __status_message = 'Company';
+ else if (action === 9)
+ __status_message = 'Job';
+ else if (action === 10)
+ __status_message = 'Group';
+ else if (action === 11)
+ __status_message = 'Followed companies';
+ else if (action === 12)
+ __status_message = 'Suggested companies';
+ else if (action === 13)
+ __status_message = 'Products and Recommendations';
+ else if (action === 14)
+ __status_message = 'Joined groups';
+ else if (action === 15)
+ __status_message = 'Suggested groups';
+ else
+ return false;
+ linkedin_bee.settings.data.window.labels.status_bar(__status_message);
+ return true;
+ };
+ }
+ this.check_auth_closed = function()
+ {
+ if (config.auth_window && config.auth_window.closed)
+ {
+ window.clearInterval(config.auth_window_timer);
+ me.draw.gui_init();
+ }
+ else
+ config.auth_window_timer = setTimeout(me.check_auth_closed, 500);
+ };
+ this.status_bar = new status_bar();
+ this.events = new events();
+ this.ajax = new ajax();
+ this.draw = new draw();
+ }
+ function config_model()
+ {
+ this.id = 'i_linkedin';
+ this.auth_window = null;
+ this.auth_window_timer = null;
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return linkedin_bee;
+ };
+ this.init = function()
+ {
+ if (is_init === true)
+ return false;
+ is_init = true;
+ vulcan.graphics.apply_theme('/framework/extensions/js/i_linkedin/themes', 'i_linkedin');
+ scrollbar = dev_box.get('scrollbar');
+ scrollbar.init(cosmos);
+ linkedin_bee = dev_box.get('bee');
+ fx = dev_box.get('fx');
+ fx.init(cosmos);
+ linkedin_bee.init(cosmos, config.id, 2);
+ linkedin_bee.settings.data.window.labels.title('LinkedIn');
+ linkedin_bee.settings.data.window.labels.status_bar('Sign in');
+ linkedin_bee.gui.position.left(300);
+ linkedin_bee.gui.position.top(30);
+ linkedin_bee.gui.size.width(350);
+ linkedin_bee.gui.size.height(410);
+ linkedin_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ linkedin_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ linkedin_bee.on('open', function() { linkedin_bee.gui.fx.fade.into(); });
+ linkedin_bee.on('opened', function() { return utils.draw.gui_init(); });
+ linkedin_bee.on('dragging', function()
+ {
+ linkedin_bee.gui.fx.opacity.settings.set(0.7);
+ linkedin_bee.gui.fx.opacity.apply();
+ });
+ linkedin_bee.on('dragged', function() { linkedin_bee.gui.fx.opacity.reset(); });
+ linkedin_bee.on('close', function() { linkedin_bee.gui.fx.fade.out(); });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ vulcan = cosmos.hub.access('vulcan');
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = matrix.get('colony');
+ swarm = matrix.get('swarm');
+ pythia = matrix.get('pythia');
+ infinity = matrix.get('infinity');
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ is_init = false,
+ cosmos = null,
+ vulcan = null,
+ matrix = null,
+ dev_box = null,
+ pythia = null,
+ infinity = null,
+ scrollbar = null,
+ colony = null,
+ swarm = null,
+ fx = null,
+ linkedin_bee = null,
+ config = new config_model(),
+ utils = new utilities();
+}
+function i_youtube()
+{
+ var self = this;
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ infinity.setup(config.id + '_data');
+ infinity.begin();
+ me.status_bar(0);
+ ajax.data(i_youtube_bee.gui.config.window.content.data.id(), 'action=load_main', function()
+ {
+ if (vulcan.objects.by_id('yt_login_div') !== null)
+ {
+ events.attach(1);
+ me.status_bar(2);
+ infinity.end();
+ }
+ else
+ {
+ ajax.data('yt_search_results', 'action=top_rated', function()
+ {
+ bee.player.open();
+ events.attach(5);
+ video.favorites.add();
+ me.status_bar(16);
+ scroll_bar_fix('yt_search_results');
+ });
+ html.bottom_menu();
+ me.status_bar(3);
+ events.attach(8);
+ events.attach(9);
+ fx.visibility.hide('yt_load_more_button', 1);
+ infinity.end();
+ }
+ });
+ return true;
+ };
+ this.video_init = function()
+ {
+ html.video_player();
+ html.player_menu();
+ bee.player.iframe();
+ return true;
+ };
+ this.record_init = function()
+ {
+ html.record_content();
+ bee.recorder.iframe();
+ return true;
+ };
+ this.enter_value = function(event, id)
+ {
+ if (vulcan.validation.misc.is_undefined(event))
+ return false;
+ var keycode = i_youtube_bee.gui.keys.get(event);
+ if (keycode === 13)
+ vulcan.objects.by_id(id).click();
+ return true;
+ };
+ this.url_parse = function(url)
+ {
+ if (vulcan.validation.misc.is_undefined(url))
+ return false;
+ var __reg_exp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/,
+ __match = url.match(__reg_exp);
+ if (__match && __match[7].length === 11)
+ return __match[7];
+ return false;
+ };
+ this.check_auth_closed = function()
+ {
+ if (config.auth_window && config.auth_window.closed)
+ {
+ window.clearInterval(config.auth_window_timer);
+ me.gui_init();
+ }
+ else
+ config.auth_window_timer = setTimeout(me.check_auth_closed, 500);
+ };
+ this.status_bar = function(action, counter)
+ {
+ if (!vulcan.validation.numerics.is_number(action))
+ return false;
+ var __status_message = null;
+ if (action === 0)
+ __status_message = 'Loading...';
+ else if (action === 1)
+ __status_message = 'Try again!';
+ else if (action === 2)
+ __status_message = 'Sign in to watch your favorite videos';
+ else if (action === 3)
+ __status_message = 'Search videos on YouTube';
+ else if (action === 4)
+ __status_message = 'Show more videos on YouTube';
+ else if (action === 5)
+ {
+ if (vulcan.validation.misc.is_undefined(counter))
+ return false;
+ var __number = counter;
+ if (__number === 1 || __number === 0)
+ __status_message = 'You have uploaded ' + __number + ' video';
+ else
+ __status_message = 'You have uploaded ' + __number + ' videos';
+ }
+ else if (action === 6)
+ __status_message = 'Processing video upload...';
+ else if (action === 7)
+ {
+ if (vulcan.validation.misc.is_undefined(counter))
+ return false;
+ var __number = counter;
+ if (__number === 1 || __number === 0)
+ __status_message = 'Your ' + __number + ' favorite video';
+ else
+ __status_message = 'Your ' + __number + ' favorite videos';
+ }
+ else if (action === 8)
+ __status_message = 'Playlists';
+ else if (action === 9)
+ {
+ if (vulcan.validation.misc.is_undefined(counter))
+ return false;
+ var __number = counter;
+ if (__number === 1 || __number === 0)
+ __status_message = __number + ' video in watch history';
+ else
+ __status_message = __number + ' videos in watch history';
+ }
+ else if (action === 10)
+ __status_message = 'User channel';
+ else if (action === 11)
+ __status_message = 'My channel';
+ else if (action === 12)
+ __status_message = 'Subscriptions';
+ else if (action === 13)
+ {
+ if (vulcan.validation.misc.is_undefined(counter))
+ return false;
+ var __number = counter;
+ if (__number === 1 || __number === 0)
+ __status_message = __number + ' video in watch later';
+ else
+ __status_message = __number + ' videos in watch later';
+ }
+ else if (action === 14)
+ __status_message = 'Suggestions';
+ else if (action === 15)
+ __status_message = 'Settings';
+ else if (action === 16)
+ __status_message = 'Top Rated Videos';
+ else
+ return false;
+ i_youtube_bee.settings.data.window.labels.status_bar(__status_message);
+ return true;
+ };
+ }
+ function draw_html()
+ {
+ this.draw_tag = function(id, content)
+ {
+ if (vulcan.objects.by_id(id) === null)
+ return false;
+ vulcan.objects.by_id(id).innerHTML = content;
+ return true;
+ };
+ this.video_player = function()
+ {
+ var __player_div = '<div id="yt_player_overlay_' +config.video_tag + '" class="yt_overlay"></div>' +
+ '<div id="yt_player_' + config.video_tag + '"></div>' +
+ '<div id="yt_player_data_description">' +
+ '<a href="#" class="yt_player_close_button" data-id="' + config.video_tag + '"' +
+ 'data-action="yt_player_data_description"><img src="/framework/' +
+ 'extensions/js/i_youtube/themes/pix/close_1.png"></a>' +
+ '<div id="yt_video_description"></div>' +
+ '<div id="yt_video_view_count"></div>' +
+ '<div id="yt_video_uploader"></div>' +
+ '<div id="yt_video_published"></div>' +
+ '</div>' +
+ '<div id="yt_comments_container">' +
+ '<a href="#" class="yt_player_close_button" data-id="' + config.video_tag +
+ '" data-action="yt_comments_container"><img src=' +
+ '"/framework/extensions/js/i_youtube/themes/pix/close_1.png"></a>' +
+ '<div id="yt_player_data_comments">' +
+ '<textarea class="yt_text_comment" name="comment" placeholder="Put your comment here"></textarea>' +
+ '<a href="#" class="yt_post_comment">Post</a>' +
+ '<div id="yt_video_comments_' + config.video_id + '"></div>' +
+ '<a href="#" class="yt_show_more_comments" data-id="' + config.video_tag + '">Show More</a>' +
+ '</div>' +
+ '</div>' +
+ '<div class="yt_player_content_background">' +
+ '<a href="#" class="yt_player_close_button" data-id="' + config.video_tag +
+ '" data-action="yt_player_content_background"><img src=' +
+ '"/framework/extensions/js/i_youtube/themes/pix/close_1.png"></a>' +
+ '</div>' +
+ '<div class="yt_video_player_content_details">' +
+ '<div class="yt_player_content" data-link="share">' +
+ '<ul class="yt_a_share_buttons">' +
+ '<li><a href="https://www.facebook.com/sharer/sharer.php?u=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_facebook"></a></li>' +
+ '<li><a href="https://twitter.com/intent/tweet?url=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_twitter"></a></li>' +
+ '<li><a href="https://plus.google.com/u/0/share?url=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank" ' +
+ 'class="yt_share_socail_media" id="yt_share_gplus"></a></li>' +
+ '<li><a href="http://blogger.com/blog-this.g?t=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_blogger"></a></li>' +
+ '<li><a href="http://www.linkedin.com/shareArticle?url=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_linkedin"></a></li>' +
+ '<li><a href="http://www.reddit.com/submit?url=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_reddit"></a></li>' +
+ '<li><a href="http://www.tumblr.com/share?v=3&u=' +
+ 'http%3A//www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_tumblr"></a></li>' +
+ '<li><a href="https://www.stumbleupon.com/submit?url=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_stumbleupon"></a></li>' +
+ '<li><a href="http://www.pinterest.com/pin/create/button/?url=' +
+ 'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+ 'class="yt_share_socail_media" id="yt_share_pinterest"></a></li>' +
+ '</ul>' +
+ '</div>' +
+ '<div class="yt_player_content yt_player_embed" data-link="embed">' +
+ '<textarea class="yt_player_embed_text_content" onclick="this.focus(); this.select()" readonly>' +
+ '<iframe title="YouTube video" width="420" height="315" src="//www.youtube.com/embed/' +
+ config.video_id + '" frameborder="0" allowfullscreen></iframe>' +
+ '</textarea>' +
+ '</div>' +
+ '</div>' +
+ '<div id="yt_share_on_email_container">' +
+ '<a href="#" class="yt_player_close_button" data-id="' + config.video_tag +
+ '" data-action="yt_share_on_email_container"><img src=' +
+ '"/framework/extensions/js/i_youtube/themes/pix/close_1.png"></a>' +
+ '<div id="yt_email_form"></div>' +
+ '</div>';
+ i_yt_play_bee.settings.data.window.content(__player_div);
+ events.attach(4);
+ return true;
+ };
+ this.record_content = function()
+ {
+ var __record_div = '<div id="yt_record_overlay_' + config.rec_tag + '" class="yt_overlay"></div>' +
+ '<div id="yt_record_' + config.rec_tag + '"></div>' +
+ '<div class="yt_content_info_rec_v">' +
+ '<input type="text" class="yt_info_rec_v_title" placeholder="Video title...">' +
+ '<br><textarea name="message" class="yt_info_rec_v_description" rows="2"' +
+ 'placeholder="Video description..."></textarea>' +
+ '<div id="yt_privacy_set_button">' +
+ '<input type="radio" name="yt_info_rec_v_privacy_' + config.rec_tag + '"' +
+ 'value="public" checked="checked">Public</input>' +
+ '<input type="radio" name="yt_info_rec_v_privacy_' + config.rec_tag + '"' +
+ 'value="unlisted">Unlisted</input>' +
+ '<input type="radio" name="yt_info_rec_v_privacy_' + config.rec_tag + '"' +
+ 'value="private">Private</input>' +
+ '<input type="button" name="yt_rec_v_save_button" class="yt_rec_v_save_button" value="Add info" disabled="disabled">' +
+ '</div>' +
+ '</div>'+
+ '<div class="yt_rec_front_glass glass_' + config.rec_tag + '"></div>';
+ i_yt_rec_bee.settings.data.window.content(__record_div);
+ events.attach(3);
+ return true;
+ };
+ this.bottom_menu = function()
+ {
+ var __status_bar_box = vulcan.objects.by_id(config.id + '_status_bar');
+ __status_bar_box.innerHTML += '<div id="yt_status_bar_menu_icon">' +
+ '<img id="yt_status_bar_bullets"' +
+ 'src="/framework/extensions/js/i_youtube/themes/pix/bullets.png">' +
+ '</div>' +
+ '<nav id="yt_nav_main_bottom_navigation">' +
+ '<ul id="yt_main_bottom_navigation">' +
+ '<li><a id="yt_user_profile" title="Me" href="#">' +
+ '<img src="/framework/extensions/js/i_youtube/themes/pix/me.png">' +
+ '</a></li>' +
+ '<li><a id="yt_record_video_button" title="Record a video" href="#">' +
+ '<img src="/framework/extensions/js/i_youtube/themes/pix/yt_record_video.png">' +
+ '</a></li>' +
+ '<li><a id="yt_uploads" title="Uploads" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/uploads.png">' +
+ '</a></li>' +
+ '<li><a id="yt_favorites" title="Favorites" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/favorites.png">' +
+ '</a></li>' +
+ '<li><a id="yt_playlists" title="Playlists" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/playlist.png">' +
+ '</a></li>' +
+ '<li><a id="yt_subscriptions" title="Subscriptions" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/subscriptions.png">' +
+ '</a></li>' +
+ '<li><a id="yt_suggestions" title="Suggestions" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/suggestions.png">' +
+ '</a></li>' +
+ '<li><a id="yt_later" title="Watch later" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/later.png">' +
+ '</a></li>' +
+ '<li><a id="yt_history" title="Watch history" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/history.png">' +
+ '</a></li>' +
+ '<li><a id="yt_messages" title="Messages" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/messages.png">' +
+ '</a></li>' +
+ '<li><a id="yt_settings" title="Settings" href="#">' +
+ '<img src="framework/extensions/js/i_youtube/themes/pix/settings.png">' +
+ '</a></li>' +
+ '<li class="logout"><a id="i_yt_logout" title="Logout" href="#">' +
+ '<img src="/framework/extensions/js/i_youtube/themes/pix/logout.png">' +
+ '</a></li>' +
+ '<li id="yt_menu_separator_li"><div id="yt_menu_separator_div">' +
+ '</div></li>' +
+ '</ul>' +
+ '</nav>';
+ events.attach(2);
+ return true;
+ };
+ this.upload_box = function()
+ {
+ var __div = '<div id="youtube_uploads_container">' +
+ ' <div id="yt_upload_file_container">' +
+ ' <input type="text" id="yt_up_title" name="title" placeholder="Title...">' +
+ ' <textarea id="yt_up_description" name="description" rows="3"' +
+ ' placeholder="Video description..."></textarea>' +
+ ' <textarea id="yt_up_tag" name="tag" rows="1"' +
+ ' placeholder="Tags (e.g., flying pig, mashup)"></textarea>' +
+ ' <div id="yt_selector">' +
+ ' <select id="yt_up_category" name="category">' +
+ ' <option value="0" >Autos & Vehicles</option>' +
+ ' <option value="1">Comedy</option>' +
+ ' <option value="2">Education</option>' +
+ ' <option value="3">Entertainment</option>' +
+ ' <option value="4">Film & Animation</option>' +
+ ' <option value="5">Gaming</option>' +
+ ' <option value="6">Howto & Style</option>' +
+ ' <option value="7">Music</option>' +
+ ' <option value="8">News & Politics</option>' +
+ ' <option value="9">Nonprofits & Activism</option>' +
+ ' <option value="11" selected>People & Blogs</option>' +
+ ' <option value="7">Pets & Animals</option>' +
+ ' <option value="8">Science & Technology</option>' +
+ ' <option value="9">Sports</option>' +
+ ' <option value="10">Travel & Events</option>' +
+ ' </select>' +
+ ' </div>' +
+ ' <div id="yt_choose_file">' +
+ ' <div id="__yt">Choose Video</div>' +
+ ' <input type="file" name="file_to_upload" id="file_to_upload" accept="video/*">' +
+ ' <input type="text" value="" id="yt_up_file" name="yt_up_file">'+
+ ' </div>' +
+ ' <input type="button" name="upload_video" id="upload_video" value="Upload" disabled="disabled">' +
+ ' <div id="yt_file_info">' +
+ ' <div id="yt_file_name"></div>' +
+ ' <div id="yt_file_size"></div>' +
+ ' <div id="yt_file_type"></div>' +
+ ' </div>' +
+ ' <div id="yt_uploaded_new_video"></div>' +
+ ' </div>' +
+ ' <div id="yt_split_containers">' +
+ ' <a href="#" id="yt_show_upload_container">Upload box</a>' +
+ ' <div id="yt_list_title">Uploads</div>' +
+ ' </div>' +
+ ' <div id="yt_upload_list_container">' +
+ ' <div id="yt_user_upload_list"></div>' +
+ ' </div>' +
+ '</div>';
+ vulcan.objects.by_id('yt_search_results').innerHTML = __div;
+ };
+ this.player_menu = function()
+ {
+ var __status_bar_box = vulcan.objects.by_id(config.video_tag + '_msg');
+ __status_bar_box.innerHTML += '<div class="yt_player_all_buttons">' +
+ '<li><a href="#" class="yt_player_buttons" data-link="description"' +
+ 'data-id="' + config.video_tag + '">About</a></li>' +
+ '<li><a href="#" class="yt_player_buttons" data-link="comments"' +
+ 'data-id="' + config.video_tag + '">Comments</a></li>' +
+ '<li><a href="#" class="yt_player_buttons" data-link="share"' +
+ 'data-id="' + config.video_tag + '">Share</a></li>' +
+ '<li><a href="#" class="yt_player_buttons" data-link="embed"' +
+ 'data-id="' + config.video_tag + '">Embed</a></li>' +
+ '<li><a href="#" class="yt_player_buttons" data-link="email"' +
+ 'data-id="' + config.video_tag + '">Email</a></li>' +
+ '</div>';
+ events.attach(6);
+ return true;
+ };
+ }
+ function ajax_request()
+ {
+ this.data = function(element_id, args, callback)
+ {
+ if (element_id === undefined)
+ return false;
+ var __url = null,
+ __data = null,
+ __result = null,
+ __ajax = new bull();
+ __url = config.url;
+ __data = (args === undefined) ? ' ' : args;
+ __result = __ajax.data(__url, __data, element_id, 1, 1, false, callback);
+ return __result;
+ };
+ this.search = function(element_id, search_value, callback)
+ {
+ if (vulcan.validation.misc.is_undefined(element_id) ||
+ vulcan.validation.misc.is_undefined(search_value))
+ return null;
+ var __url,
+ __data,
+ __result,
+ __ajax = new bull();
+ __url = config.url;
+ __data = 'search_value=' + vulcan.objects.by_id(search_value).value +
+ '&per_page=' + vulcan.objects.by_id('yt_per_page').value +
+ '&start_index=' + vulcan.objects.by_id('yt_start_index').value;
+ __result = __ajax.data(__url, __data, element_id, 1, 1, false, callback);
+ return __result;
+ };
+ this.upload = function(element_id, callback)
+ {
+ if (vulcan.validation.misc.is_undefined(element_id))
+ return null;
+ var __url,
+ __data,
+ __result,
+ __ajax = new bull(),
+ __title = vulcan.objects.by_id('yt_up_title').value,
+ __description = vulcan.objects.by_id('yt_up_description').value,
+ __tag = vulcan.objects.by_id('yt_up_tag').value,
+ __category = vulcan.objects.by_id('yt_up_category'),
+ __options = __category.getElementsByTagName('option'),
+ __file = vulcan.objects.by_id('yt_up_file').value;
+ for(var i = 0; i < __options.length; i++)
+ {
+ if (__options[i].selected)
+ break;
+ }
+ __url = config.url;
+ __data = 'title=' + __title +'&description=' + __description + '&tag=' + __tag +
+ '&category=' + __options[i].innerHTML + '&file=' + __file;
+ __result = __ajax.data(__url, __data, element_id, 1, 1, false, callback);
+ return __result;
+ };
+ this.comments = function(element_id, callback)
+ {
+ if (vulcan.validation.misc.is_undefined(element_id))
+ return null;
+ var __url,
+ __data,
+ __result,
+ __ajax = new bull(),
+ __comment = vulcan.objects.selectors.first('.yt_text_comment').value;
+ __url = config.url;
+ __data = 'comment=' + __comment + '&video_id=' + config.video_id;
+ __result = __ajax.data(__url, __data, element_id, 1, 1, false, callback);
+ return __result;
+ };
+ this.send_email = function()
+ {
+ var __recipients = vulcan.objects.selectors.first('.yt_email_input').value,
+ __message = vulcan.objects.selectors.first('.yt_email_textarea').value,
+ __xhr = window.XMLHttpRequest ?
+ new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+ __xhr.onreadystatechange = function()
+ {
+ if (__xhr.readyState === 4 && __xhr.status === 200)
+ alert(__xhr.responseText);
+ };
+ __xhr.open('POST', config.url, true);
+ __xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+ __xhr.send('recipients=' + __recipients + '&message=' + __message);
+ return true;
+ };
+ }
+ function video_channels()
+ {
+ this.my_profile = function()
+ {
+ var __user_profile = vulcan.objects.by_id('yt_user_profile');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ utils.status_bar(0);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ ajax.data('yt_search_results', 'action=user_profile', function()
+ {
+ scroll_bar_fix('yt_search_results');
+ utils.status_bar(11);
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __user_profile, 'click', __handler);
+ return true;
+ };
+ this.user_profile = function()
+ {
+ return true;
+ };
+ function subscribes()
+ {
+ var me = this;
+ this.subscriptions = function()
+ {
+ var __subscriptions = vulcan.objects.by_id('yt_subscriptions');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ utils.status_bar(0);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ ajax.data('yt_search_results', 'action=subscriptions', function()
+ {
+ me.remove();
+ scroll_bar_fix('yt_search_results');
+ utils.status_bar(12);
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __subscriptions, 'click', __handler);
+ return true;
+ };
+ this.add = function()
+ {
+ var __subscribe = vulcan.objects.by_class('yt_subscribe_button');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __object = this;
+ config.channel_id = __object.getAttribute('rel');
+ ajax.data('yt_per_page', 'action=subscriptions_add_channel&channel_id=' + config.channel_id, function()
+ {
+ notification_push('#yt_search', 'You added new channel in subscriptions.');
+ });
+ var __subscribe_id = vulcan.objects.by_id('yt_channel_' + config.channel_id);
+ setTimeout(function()
+ {
+ __subscribe_id.style.display = 'none';
+ }, 1000);
+ };
+ for (var i = 0; i < __subscribe.length; i++)
+ vulcan.events.attach(i_youtube_bee, __subscribe[i], 'click', __handler);
+ return true;
+ };
+ this.remove = function()
+ {
+ var __unsubscribe = vulcan.objects.by_class('yt_unsubscribe_button');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __object = this;
+ config.channel_id = __object.getAttribute('rel');
+ ajax.data('yt_per_page', 'action=subscriptions_remove&channel_id=' + config.channel_id, function()
+ {
+ notification_push('#yt_search', 'You have removed channel from subscriptions.');
+ });
+ var __unsubscribe_id = vulcan.objects.by_id('yt_channel_' + config.channel_id);
+ setTimeout(function()
+ {
+ __unsubscribe_id.style.display = 'none';
+ }, 1000);
+ };
+ for (var i = 0; i < __unsubscribe.length; i++)
+ vulcan.events.attach(i_youtube_bee, __unsubscribe[i], 'click', __handler);
+ return true;
+ };
+ this.suggestions = function()
+ {
+ var __suggestions = vulcan.objects.by_id('yt_suggestions');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ utils.status_bar(0);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ ajax.data('yt_search_results', 'action=suggestions', function()
+ {
+ me.add();
+ scroll_bar_fix('yt_search_results');
+ utils.status_bar(14);
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __suggestions, 'click', __handler);
+ return true;
+ };
+ }
+ this.settings = function()
+ {
+ var __settings = vulcan.objects.by_id('yt_settings');
+ __handler = function()
+ {
+ notification_push('#yt_search', 'Currently not available');
+ utils.status_bar(15);
+ };
+ vulcan.events.attach(i_youtube_bee, __settings, 'click', __handler);
+ return true;
+ };
+ this.subscribes = new subscribes();
+ }
+ function video_manager()
+ {
+ var __handler = null;
+ function activities()
+ {
+ this.watch_history = function()
+ {
+ var __history = vulcan.objects.by_id('yt_history');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ utils.status_bar(0);
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ ajax.data('yt_search_results' , 'action=watch_history', function()
+ {
+ bee.player.open();
+ events.attach(5);
+ var __delete = vulcan.objects.by_class('yt_delete_button'),
+ __number = vulcan.objects.by_id('yt_videos_counter').value;
+ if (__number === undefined)
+ return false;
+ utils.status_bar(9, __number);
+ __handler = function()
+ {
+ notification_push('#yt_search', 'Currently not available');
+ };
+ for (var i = 0; i < __delete.length; i++)
+ vulcan.events.attach(i_youtube_bee, __delete[i], 'click', __handler);
+ scroll_bar_fix('yt_search_results');
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __history, 'click', __handler);
+ return true;
+ };
+ this.watch_later = function()
+ {
+ var __later = vulcan.objects.by_id('yt_later');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ utils.status_bar(0);
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ ajax.data('yt_search_results' , 'action=watch_later', function()
+ {
+ bee.player.open();
+ events.attach(5);
+ var __delete = vulcan.objects.by_class('yt_delete_button'),
+ __number = vulcan.objects.by_id('yt_videos_counter').value;
+ if (__number === undefined)
+ return false;
+ utils.status_bar(13, __number);
+ __handler = function()
+ {
+ notification_push('#yt_search', 'Currently not available');
+ };
+ for (var i = 0; i < __delete.length; i++)
+ vulcan.events.attach(i_youtube_bee, __delete[i], 'click', __handler);
+ scroll_bar_fix('yt_search_results');
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __later, 'click', __handler);
+ return true;
+ };
+ }
+ function playlists()
+ {
+ var me = this;
+ this.get_list = function()
+ {
+ var __playlists = vulcan.objects.by_id('yt_playlists');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ utils.status_bar(0);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ ajax.data('yt_search_results', 'action=playlists', function()
+ {
+ scroll_bar_fix('yt_search_results');
+ utils.status_bar(8);
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __playlists, 'click', __handler);
+ return true;
+ };
+ this.create = function()
+ {
+ return true;
+ };
+ this.add = function()
+ {
+ return true;
+ };
+ this.delete = function()
+ {
+ return true;
+ };
+ }
+ function favorites()
+ {
+ this.list = function()
+ {
+ var __favorites = vulcan.objects.by_id('yt_favorites');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ utils.status_bar(0);
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ ajax.data('yt_search_results', 'action=get_favorites', function()
+ {
+ bee.player.open();
+ events.attach(5);
+ var __delete = vulcan.objects.by_class('yt_delete_button'),
+ __number = vulcan.objects.by_id('yt_videos_counter').value;
+ if (__number === undefined)
+ return false;
+ utils.status_bar(7, __number);
+ __handler = function()
+ {
+ notification_push('#yt_search', 'Currently not available');
+ };
+ for (var i = 0; i < __delete.length; i++)
+ vulcan.events.attach(i_youtube_bee, __delete[i], 'click', __handler);
+ scroll_bar_fix('yt_search_results');
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __favorites, 'click', __handler);
+ return true;
+ };
+ this.add = function()
+ {
+ var __favorite = vulcan.objects.by_class('yt_favorite_button');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var object = this;
+ config.video_id = object.getAttribute('rel');
+ ajax.data('yt_per_page', 'action=add_favorite&video_id=' + config.video_id, function()
+ {
+ notification_push('#yt_search', 'You added new video in favorites.');
+ });
+ };
+ for (var i = 0; i < __favorite.length; i++)
+ vulcan.events.attach(i_youtube_bee, __favorite[i], 'click', __handler);
+ return true;
+ };
+ this.remove = function()
+ {
+ return true;
+ };
+ }
+ function uploads()
+ {
+ var me = this;
+ this.validation = function()
+ {
+ __handler = function()
+ {
+ var __input = true;
+ if (vulcan.objects.by_id('yt_up_title').value === '')
+ __input = false;
+ if (vulcan.objects.by_id('yt_up_description').value === '')
+ __input = false;
+ if (vulcan.objects.by_id('yt_up_tag').value === '')
+ __input = false;
+ if (__input)
+ vulcan.objects.by_id('upload_video').disabled = false;
+ else
+ vulcan.objects.by_id('upload_video').disabled = true;
+ };
+ vulcan.events.attach(i_youtube_bee, document, 'keyup', __handler);
+ };
+ this.selected = function()
+ {
+ var __a = vulcan.objects.by_id('file_to_upload');
+ __a.onchange = function()
+ {
+ var __file = vulcan.objects.by_id('file_to_upload').files[0];
+ if (__file)
+ {
+ var __file_size = 0;
+ if (__file.size > 1024 * 1024)
+ __file_size = (Math.round(__file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+ else
+ __file_size = (Math.round(__file.size * 100 / 1024) / 100).toString() + 'KB';
+ vulcan.objects.by_id('yt_file_name').innerHTML = 'Name: ' + __file.name;
+ vulcan.objects.by_id('yt_file_size').innerHTML = 'Size: ' + __file_size;
+ vulcan.objects.by_id('yt_file_type').innerHTML = 'Type: ' + __file.type;
+ vulcan.objects.by_id('yt_up_file').value = __file.name;
+ }
+ var __ext = this.value.match(/\.(.+)$/)[1];
+ switch(__ext)
+ {
+ case 'MOV': case 'MPEG4': case 'MP4': case 'AVI': case 'WMV': case 'MPEGPS':
+ case 'FLV': case '3GPP': case 'WebM':case 'mov': case 'mpeg4': case 'mp4':
+ case 'avi': case 'wmv': case 'mpegps': case 'flv': case '3gpp': case 'webm':
+ break;
+ default:
+ notification_push('#yt_search', 'File type not allowed!');
+ vulcan.objects.by_id('yt_file_name').innerHTML = 'Name:';
+ vulcan.objects.by_id('yt_file_size').innerHTML = 'Size:';
+ vulcan.objects.by_id('yt_file_type').innerHTML = 'Type:';
+ }
+ };
+ __handler = function()
+ {
+ var __file = vulcan.objects.by_id('file_to_upload');
+ if (me.size(__file, 524288000) === false)
+ {
+ notification_push('#yt_search', 'Video file size should be less than 500MB!');
+ fx.visibility.hide('yt_file_info', 1);
+ }
+ else
+ fx.visibility.show('yt_file_info', 1);
+ };
+ vulcan.events.attach(i_youtube_bee, __a, 'change', __handler);
+ };
+ this.size = function (video, max_size)
+ {
+ var __size = null;
+ if(navigator.appName === 'Check File Size')
+ {
+ if (video.value)
+ {
+ var __s= new ActiveXObject("Scripting.FileSystemObject"),
+ __e=__s.getFile(video.value);
+ __size=__e.size;
+ }
+ }
+ else
+ {
+ if(video.files[0] !== undefined)
+ __size = video.files[0].size;
+ }
+ if(__size !== undefined && __size > max_size)
+ {
+ video.focus();
+ return false;
+ }
+ else
+ return true;
+ };
+ this.file = function()
+ {
+ var __a = vulcan.objects.by_id('upload_video');
+ __handler = function()
+ {
+ var __fd = new FormData();
+ __fd.append('file_to_upload', vulcan.objects.by_id('file_to_upload').files[0]);
+ var __xhr = new XMLHttpRequest();
+ vulcan.events.attach(i_youtube_bee, __xhr, 'load', me.complete);
+ __xhr.open('POST', config.url);
+ __xhr.send(__fd);
+ };
+ vulcan.events.attach(i_youtube_bee, __a, 'click', __handler);
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ fx.visibility.hide('yt_load_more_button', 1);
+ return true;
+ };
+ this.complete = function(event_object)
+ {
+ vulcan.objects.by_id('yt_up_file').value = event_object.target.responseText;
+ notification_push('#yt_search', 'Your video will be uploaded.');
+ fx.visibility.hide('yt_file_info', 1);
+ ajax.upload('yt_uploaded_new_video', 'yt_up_file', function()
+ {
+ bee.player.open();
+ var __number = vulcan.objects.by_id('yt_videos_counter').value;
+ if (__number === undefined)
+ return false;
+ utils.status_bar(5, __number);
+ return false;
+ });
+ return true;
+ };
+ this.get_list = function()
+ {
+ var __uploads = vulcan.objects.by_id('yt_uploads');
+ __handler = function()
+ {
+ html.upload_box();
+ utils.status_bar(0);
+ fx.visibility.hide('yt_upload_file_container', 1);
+ var __show = vulcan.objects.by_id('yt_show_upload_container');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ fx.visibility.toggle('yt_upload_file_container', 1);
+ };
+ vulcan.events.attach(i_youtube_bee, __show, 'click', __handler);
+ me.validation();
+ me.selected();
+ me.file();
+ ajax.data('yt_user_upload_list', 'action=upload_list', function()
+ {
+ bee.player.open();
+ events.attach(5);
+ me.delete();
+ var __number = vulcan.objects.by_id('yt_videos_counter').value;
+ utils.status_bar(5, __number);
+ scroll_bar_fix('yt_user_upload_list');
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __uploads, 'click', __handler);
+ return true;
+ };
+ this.delete = function()
+ {
+ var __delete = vulcan.objects.by_class('yt_delete_button');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __object = this;
+ config.video_id = __object.getAttribute('rel');
+ ajax.data('yt_per_page', 'action=upload_delete&video_id=' + config.video_id, function()
+ {
+ notification_push('#yt_search', 'You have deleted your video.');
+ });
+ var __delete_id = vulcan.objects.by_id('yt_video_' + config.video_id);
+ setTimeout(function()
+ {
+ __delete_id.style.display = 'none';
+ }, 1000);
+ };
+ for (var i = 0; i < __delete.length; i++)
+ vulcan.events.attach(i_youtube_bee, __delete[i], 'click', __handler);
+ return true;
+ };
+ }
+ this.activities = new activities();
+ this.playlists = new playlists();
+ this.favorites = new favorites();
+ this.uploads = new uploads();
+ }
+ function events_attach()
+ {
+ var __handler = null;
+ this.attach = function(action)
+ {
+ if (!vulcan.validation.numerics.is_number(action))
+ return false;
+ if (action === 1)
+ {
+ var __access_token = vulcan.objects.by_id('yt_access_token');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __login = this.getAttribute('data-url'),
+ __width = 480,
+ __height = 640,
+ __left = (screen.width / 2) - (__width / 2),
+ __top = (screen.height / 2) - (__height / 2);
+ config.auth_window = window.open(__login, 'YouTube_Login', 'location=0, status=0, width=' + __width + ',' +
+ 'height=' + __height + ', top=' + __top + ', left=' + __left);
+ utils.check_auth_closed();
+ };
+ vulcan.events.attach(i_youtube_bee, __access_token, 'click', __handler);
+ return true;
+ }
+ else if (action === 2)
+ {
+ var __status_box_toggle = vulcan.objects.by_id('yt_status_bar_bullets'),
+ __data = vulcan.objects.by_id(config.id + '_data'),
+ __logout = vulcan.objects.by_id('i_yt_logout'),
+ __open_rec_bee = vulcan.objects.by_id('yt_record_video_button');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ };
+ vulcan.events.attach(i_youtube_bee, __status_box_toggle, 'click', __handler);
+ __handler = function()
+ {
+ if (fx.visibility.is_visible('twitter_main_bottom_navigation', 1))
+ fx.visibility.hide('twitter_main_bottom_navigation', 1);
+ };
+ vulcan.events.attach(i_youtube_bee, __data, __handler);
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ fx.visibility.hide('yt_main_bottom_navigation', 1);
+ infinity.begin();
+ utils.status_bar(0);
+ ajax.data(i_youtube_bee.gui.config.window.content.data.id(), 'action=logout', function()
+ {
+ events.attach(1);
+ fx.visibility.hide('yt_status_bar_menu_icon', 1);
+ utils.status_bar(2);
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __logout, 'click', __handler);
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ bee.recorder.init();
+ fx.visibility.toggle('yt_main_bottom_navigation', 1);
+ };
+ vulcan.events.attach(i_youtube_bee, __open_rec_bee, 'click', __handler);
+ channels.my_profile();
+ channels.settings();
+ channels.subscribes.subscriptions();
+ channels.subscribes.suggestions();
+ video.activities.watch_later();
+ video.activities.watch_history();
+ video.favorites.list();
+ video.uploads.get_list();
+ video.playlists.get_list();
+ return true;
+ }
+ else if (action === 3)
+ {
+ bee.recorder.validate();
+ var __a = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].lastChild.lastChild,
+ __title = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].firstChild,
+ __description = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].children[2],
+ __glass = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[3];
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ bee.recorder.add_info();
+ __a.disabled = true;
+ __a.value = 'Saved';
+ __title.disabled = true;
+ __description.disabled = true;
+ __glass.style.display = 'none';
+ };
+ vulcan.events.attach(i_yt_rec_bee, __a, 'click', __handler);
+ return true;
+ }
+ else if (action === 4)
+ {
+ var __b = vulcan.objects.by_class('yt_share_socail_media'),
+ __text = vulcan.objects.selectors.first('.yt_text_comment');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var settings = 'width=600,height=420';
+ window.open(this.href,'pagename',settings);
+ };
+ vulcan.events.attach(i_yt_play_bee, __b, 'click', __handler);
+ __handler = function(ev)
+ {
+ this.style.height = '4px';
+ this.style.height = this.scrollHeight + 2 + 'px';
+ };
+ vulcan.events.attach(i_yt_play_bee, __text, 'keyup', __handler);
+ return true;
+ }
+ else if (action === 5)
+ {
+ var __embed = vulcan.objects.by_class('yt_embed_button');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __content = this.parentNode.querySelectorAll('.yt_embed_content');
+ for (var i = 0; i < __content.length; i++)
+ {
+ if (__content[i].style.display === 'none' || __content[i].style.display === 'block')
+ __content[i].style.display = '';
+ else
+ __content[i].style.display = 'block';
+ }
+ [].forEach.call(vulcan.objects.selectors.all('.yt_text_embed'), function(el)
+ {
+ vulcan.events.attach(i_youtube_bee, el, 'click', function()
+ {
+ var __text = this.parentNode.parentNode.querySelectorAll('.yt_text_embed');
+ for (var i = 0; i < __text.length; i++)
+ __text[i].select();
+ });
+ });
+ };
+ for (var i = 0; i < __embed.length; i++)
+ vulcan.events.attach(i_youtube_bee, __embed[i], 'click', __handler);
+ return true;
+ }
+ else if (action === 6)
+ {
+ var __c = vulcan.objects.by_class('yt_player_buttons'),
+ __all_buttons = vulcan.objects.selectors.first('.yt_player_all_buttons'),
+ __tag_el = __all_buttons.querySelectorAll('li a');
+ __handler = function()
+ {
+ var __random = this.getAttribute('data-id'),
+ __nav = vulcan.objects.selectors.first('.yt_player_all_buttons'),
+ __buttons = __nav.querySelectorAll('li a[data-id="' + __random + '"]');
+ for(var m = 0; m < __buttons.length; m = m + 1)
+ __buttons[m].style.color="#FFFFFF";
+ this.style.color = '#5C5C5C';
+ };
+ vulcan.events.attach(i_yt_play_bee, __tag_el, 'click', __handler);
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __random = this.getAttribute('data-id'),
+ __action = this.getAttribute('data-link');
+ vulcan.objects.by_id(__random + '_data').childNodes[2].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[3].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[4].style.display = 'block';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].style.display = 'block';
+ vulcan.objects.by_id(__random + '_data').childNodes[6].style.display = 'none';
+ if (__action === 'description')
+ {
+ vulcan.objects.by_id(__random + '_data').childNodes[2].style.display = 'block';
+ vulcan.objects.by_id(__random + '_data').childNodes[3].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[4].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[0].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[1].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[6].style.display = 'none';
+ bee.player.description();
+ }
+ else if (__action === 'comments')
+ {
+ vulcan.objects.by_id(__random + '_data').childNodes[2].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[3].style.display = 'block';
+ vulcan.objects.by_id(__random + '_data').childNodes[4].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[0].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[1].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[6].style.display = 'none';
+ bee.player.comments();
+ }
+ else if (__action === 'share')
+ {
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[0].style.display = 'block';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[1].style.display = 'none';
+ }
+ else if (__action === 'embed')
+ {
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[0].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[1].style.display = 'block';
+ }
+ else if (__action === 'email')
+ {
+ vulcan.objects.by_id(__random + '_data').childNodes[2].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[3].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[4].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[0].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[1].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[6].style.display = 'block';
+ ajax.data('yt_email_form', 'action=send_email', function()
+ {
+ var __send = vulcan.objects.by_class('yt_send_email_button');
+ __handler = function()
+ {
+ ajax.send_email('yt_email_form', 'message', function() { });
+ };
+ vulcan.events.attach(i_yt_play_bee, __send, 'click', __handler);
+ var __textarea = vulcan.objects.selectors.first('.yt_email_textarea'),
+ __copy_textarea = vulcan.objects.selectors.first('.yt_email_copy_message'),
+ __char = vulcan.objects.selectors.first('.yt_message_char_left'),
+ __video_link = vulcan.objects.selectors.first('.yt_email_link_share'),
+ __remaining = 0;
+ __video_link.innerHTML = 'http://www.youtube.com/watch?v=' + config.video_id;
+ __handler = function(e)
+ {
+ e.preventDefault();
+ __copy_textarea.innerHTML = this.value;
+ __remaining = 200 - parseInt(__textarea.value.length);
+ if (__remaining < 0)
+ {
+ __textarea.value = __textarea.value.substring(0, 200);
+ return false;
+ }
+ __char.innerHTML = __remaining + ' characters remaining';
+ };
+ __textarea.addEventListener('keyup', __handler);
+ scroll_bar_fix('yt_email_border_copy_div');
+ scroll_bar_fix('yt_email_form');
+ });
+ }
+ };
+ for (var n = 0; n < __c.length; n++)
+ vulcan.events.attach(i_yt_play_bee, __c[n], 'click', __handler);
+ [].forEach.call(vulcan.objects.selectors.all('.yt_player_close_button'), function(el)
+ {
+ vulcan.events.attach(i_yt_play_bee, el, 'click', function()
+ {
+ var __random = this.getAttribute('data-id'),
+ __action = this.getAttribute('data-action'),
+ __nav = vulcan.objects.selectors.first('.yt_player_all_buttons'),
+ __buttons = __nav.querySelectorAll('li a[data-id="' + __random + '"]');
+ for (var s = 0; s < __buttons.length; s = s + 1)
+ __buttons[s].style.color="#FFFFFF";
+ if (__action === 'yt_player_data_description')
+ vulcan.objects.by_id(__random + '_data').childNodes[2].style.display = 'none';
+ else if (__action === 'yt_comments_container')
+ vulcan.objects.by_id(__random + '_data').childNodes[3].style.display = 'none';
+ else if (__action === 'yt_player_content_background')
+ {
+ vulcan.objects.by_id(__random + '_data').childNodes[4].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[0].style.display = 'none';
+ vulcan.objects.by_id(__random + '_data').childNodes[5].childNodes[1].style.display = 'none';
+ }
+ else if (__action === 'yt_share_on_email_container')
+ vulcan.objects.by_id(__random + '_data').childNodes[6].style.display = 'none';
+ });
+ });
+ return true;
+ }
+ else if (action === 7)
+ {
+ var __d = vulcan.objects.by_id(config.video_tag + '_data').childNodes[3].children[1].lastChild,
+ __e = vulcan.objects.by_id(config.video_tag + '_data').childNodes[3].children[1].children[1],
+ __textarea = vulcan.objects.selectors.first('.yt_text_comment');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __lists = vulcan.objects.selectors.all('yt_video_comments');
+ bee.player.more_comments(__lists.length, 11, event_object);
+ setTimeout(function()
+ {
+ scroll_bar_update(config.video_tag + '_data #yt_player_data_comments');
+ }, 400);
+ };
+ vulcan.events.attach(i_yt_play_bee, __d, 'click', __handler);
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ ajax.comments('youtube_comment', 'comment', function() { });
+ __textarea.value = '';
+ };
+ vulcan.events.attach(i_yt_play_bee, __e, 'click', __handler);
+ return true;
+ }
+ else if (action === 8)
+ {
+ var __input_value = vulcan.objects.by_id('yt_search_value');
+ __handler = function(event_object)
+ {
+ utils.enter_value(event_object, this.getAttribute('data-search'));
+ return true;
+ };
+ vulcan.events.attach(i_youtube_bee, __input_value, 'keydown', __handler);
+ return true;
+ }
+ else if (action === 9)
+ {
+ var __yt_search_button = vulcan.objects.by_id('yt_search_button');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ utils.status_bar(0);
+ fx.visibility.hide('yt_main_bottom_navigation', 1);
+ if (vulcan.objects.by_id('yt_search_value').value.length > 100)
+ {
+ notification_push('#yt_search', 'Sorry, the maximum characters allowed are 100!');
+ utils.status_bar(3);
+ return true;
+ }
+ var __ajax = new bull(10, 3);
+ __ajax.response(config.url,
+ 'action=search_to_thor' +
+ '&search_query_thor=' + vulcan.objects.by_id('yt_search_value').value, 1);
+ infinity.setup('yt_search_results');
+ infinity.begin();
+ if (vulcan.objects.by_id('yt_search_value').value.length < 101)
+ {
+ vulcan.objects.by_id('yt_start_index').value = 1;
+ ajax.search('yt_search_results', 'yt_search_value', function()
+ {
+ var __counter = vulcan.objects.by_id('yt_videos_counter').value,
+ __container = vulcan.objects.by_class('yt_search_results_container').length;
+ events.attach(5);
+ video.favorites.add();
+ events.attach(10);
+ if (__counter < 10)
+ fx.visibility.hide('yt_load_more_button', 1);
+ else if (__container > 0)
+ fx.visibility.show('yt_load_more_button', 1);
+ else
+ {
+ fx.visibility.hide('yt_load_more_button', 1);
+ utils.status_bar(1);
+ return false;
+ }
+ scroll_bar_fix('yt_search_results');
+ utils.status_bar(4);
+ bee.player.open();
+ infinity.end();
+ });
+ }
+ else
+ return false;
+ };
+ vulcan.events.attach(i_youtube_bee, __yt_search_button, 'click', __handler);
+ return true;
+ }
+ else if (action === 10)
+ {
+ var __load = vulcan.objects.by_id('yt_load_more'),
+ __static = vulcan.objects.by_id('yt_search_results');
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __old_content = __static.getElementsByClassName('yt_search_results_container')[0].innerHTML;
+ utils.status_bar(0);
+ var __index = vulcan.objects.by_id('yt_start_index');
+ __index.value = parseInt(__index.value, 10) + parseInt(config.max_results, 10);
+ infinity.begin();
+ ajax.search('yt_search_results', 'yt_search_value', function()
+ {
+ var __new_content = __static.getElementsByClassName('yt_search_results_container')[0].innerHTML,
+ __add = __static.getElementsByClassName('yt_search_results_container')[0];
+ __static.getElementsByClassName('yt_search_results_container')[0].innerHTML = '';
+ __add.innerHTML = __add.innerHTML + __old_content;
+ scroll_bar_fix('yt_search_results');
+ scroll_bar_scroll_to('yt_search_results', 'bottom');
+ __add.innerHTML = __add.innerHTML + __new_content;
+ setTimeout(function()
+ {
+ scroll_bar_update('yt_search_results');
+ }, 800);
+ utils.status_bar(4);
+ bee.player.open();
+ events.attach(5);
+ video.favorites.add();
+ infinity.end();
+ });
+ };
+ vulcan.events.attach(i_youtube_bee, __load, 'click', __handler);
+ return true;
+ }
+ };
+ }
+ function new_bees()
+ {
+ function player()
+ {
+ var me = this;
+ this.init = function(__title, video_id)
+ {
+ if (vulcan.validation.misc.is_undefined(__title) || vulcan.validation.misc.is_undefined(video_id))
+ return false;
+ i_yt_play_bee = dev_box.get('bee');
+ fx = dev_box.get('fx');
+ fx.init(cosmos);
+ config.video_tag = 'i_youtube_player';
+ var __elements = null;
+ vulcan.graphics.apply_theme('/framework/extensions/js/i_youtube/themes', 'i_youtube');
+ i_yt_play_bee.init(cosmos, config.video_tag, 1);
+ i_yt_play_bee.settings.data.window.labels.title(__title);
+ i_yt_play_bee.gui.position.left(430);
+ i_yt_play_bee.gui.position.top(10);
+ i_yt_play_bee.gui.size.width(440);
+ i_yt_play_bee.gui.size.min.width(440);
+ i_yt_play_bee.gui.size.height(320);
+ i_yt_play_bee.gui.size.min.height(320);
+ i_yt_play_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_yt_play_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_yt_play_bee.on('open', function() { i_yt_play_bee.gui.fx.fade.into(); });
+ i_yt_play_bee.on('opened', function() { return utils.video_init(); });
+ i_yt_play_bee.on('in_hive', function() { me.pause(); me.in_hive(); });
+ i_yt_play_bee.on('drag', function() { vulcan.objects.by_id('yt_player_overlay_' + config.video_tag).style.display = 'block'; me.ghost_icon(); });
+ i_yt_play_bee.on('dragging', function()
+ {
+ i_yt_play_bee.gui.fx.opacity.settings.set(0.7);
+ i_yt_play_bee.gui.fx.opacity.apply();
+ });
+ i_yt_play_bee.on('dragged', function()
+ {
+ i_yt_play_bee.gui.fx.opacity.reset();
+ vulcan.objects.by_id('yt_player_overlay_' + config.video_tag).style.display = 'none';
+ });
+ i_yt_play_bee.on('resize', function() { vulcan.objects.by_id('yt_player_overlay_' + config.video_tag).style.display = 'block'; });
+ i_yt_play_bee.on('resized', function() { vulcan.objects.by_id('yt_player_overlay_' + config.video_tag).style.display = 'none'; });
+ i_yt_play_bee.on('close', function() { i_yt_play_bee.gui.fx.fade.out(); });
+ this.show(i_yt_play_bee);
+ __elements = vulcan.objects.by_id(config.video_tag);
+ __elements.classList.add('yt_video_element');
+ return true;
+ };
+ this.show = function(bee)
+ {
+ swarm.bees.insert(bee);
+ bee.show();
+ return true;
+ };
+ this.in_hive = function()
+ {
+ var __hive = vulcan.objects.by_id('hive_bee_' + config.video_tag + '_icon');
+ __hive.classList.add('yt_player_hive');
+ return true;
+ };
+ this.ghost_icon = function()
+ {
+ var __hive = vulcan.objects.by_id('hive_ghost_bee');
+ if (__hive.childNodes[0] === undefined)
+ return false;
+ __hive.childNodes[0].classList.add('yt_player_hive');
+ };
+ this.play = function()
+ {
+ config.i_youtube_video.playVideo();
+ return true;
+ };
+ this.pause = function()
+ {
+ config.i_youtube_video.pauseVideo();
+ return true;
+ };
+ this.iframe = function()
+ {
+ if (is_init === false)
+ return false;
+ var __frame = new YT.Player('yt_player_' + config.video_tag,
+ {
+ height: '100%',
+ width: '100%',
+ videoId: config.video_id,
+ playerVars: { autoplay: 1, autohide: 1, wmode: 'transparent', rel: 0 }
+ });
+ config.i_youtube_video = __frame;
+ return true;
+ };
+ this.description = function()
+ {
+ var __get_json = function(url, success, error)
+ {
+ if (vulcan.validation.misc.is_undefined(url))
+ return false;
+ var __http = new XMLHttpRequest();
+ __http.open('get', url, true);
+ __http.responseType = 'json';
+ __http.onload = function()
+ {
+ var __s = function()
+ {
+ 'use this';
+ return true;
+ };
+ var __status = __http.status;
+ if (__status === 200)
+ __s(success && success(__http.response));
+ else
+ __s(error && error(__status));
+ };
+ __http.send();
+ };
+ __get_json('http://gdata.youtube.com/feeds/api/videos/' +
+ config.video_id + '?v=2&alt=jsonc', function(data)
+ {
+ var __description =vulcan.objects.by_id(config.video_tag + '_data').childNodes[2].childNodes[1],
+ __views_count = data.data.viewCount,
+ __views = __views_count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'),
+ __date = data.data.uploaded,
+ __locale = "en-us",
+ __new_date = new Date(Date.parse(__date.replace(/ *\(.*\)/, ""))),
+ __date_format = __new_date.toLocaleString(__locale, {month: "short"}) +
+ " " + __new_date.getDate() + ", " + __new_date.getFullYear();
+ __date.toLocaleString(__locale, {month: "long"});
+ __description.innerHTML =
+ '<div class="yt_text_description"><b>Description:</b></br><bdi>' +
+ data.data.description + '</bdi></br></br>' +
+ '<div class="yt_number_views_video"><b>Views: </b>' +
+ __views + '</div>' +
+ '<div class="yt_video_uploader"><b>Author: </b>' +
+ data.data.uploader + '</div>' +
+ '<div class="yt_video_published"><b>Published on: </b>' +
+ __date_format + '</div><br></div>';
+ scroll_bar_fix(config.video_tag + '_data #yt_video_description');
+ });
+ return true;
+ };
+ this.comments = function()
+ {
+ me.more_comments(config.start_index, config.max_results);
+ events.attach(7);
+ return true;
+ };
+ this.more_comments = function(start_index, max_results, who)
+ {
+ if (who !== undefined)
+ {
+ var __data = who.currentTarget.dataset;
+ if (__data.count === undefined)
+ {
+ start_index = max_results + 1;
+ who.currentTarget.dataset.count = start_index + max_results;
+ }
+ else
+ {
+ start_index = __data.count;
+ who.currentTarget.dataset.count = parseInt(start_index) + parseInt(max_results);
+ }
+ }
+ var __src = 'https://gdata.youtube.com/feeds/api/videos/' + config.video_id + '/comments?' +
+ 'v=2&alt=json&max-results=' + max_results + '&start-index=' + start_index;
+ var __xhr = new XMLHttpRequest();
+ __xhr.open("GET", __src, true);
+ __xhr.onreadystatechange = function()
+ {
+ if (this.readyState === 4 && this.status === 200)
+ {
+ var __data = JSON.parse(this.response);
+ if (__data.feed && __data.feed.entry)
+ {
+ var __list = vulcan.objects.by_id('yt_video_comments_' + config.video_id),
+ __entries = __data.feed.entry,
+ __length = __entries.length;
+ for (var i = 0; i < __length; i++)
+ {
+ if (__list)
+ {
+ __list.innerHTML += '<div class="youtube_comment">' +
+ '<div class="youtube_user">' + __entries[i].author[0].name.$t + '</div>' +
+ '<div class="yt_video_comments_content">' + __entries[i].content.$t + '</div>' +
+ '</div>';
+ }
+ }
+ var __a = vulcan.objects.by_id(config.video_tag + '_data').childNodes[3].children[1].lastChild;
+ if (start_index === 89)
+ __a.style.display = 'none' ;
+ else if (__length < 10)
+ __a.style.display = 'none' ;
+ else
+ __a.style.display = 'block';
+ }
+ scroll_bar_fix(config.video_tag + '_data #yt_player_data_comments');
+ }
+ };
+ __xhr.send();
+ return true;
+ };
+ this.open = function()
+ {
+ var __wait = 1;
+ var __titles = vulcan.objects.by_class('yt_video_title');
+ if (__titles.length > 0)
+ {
+ __wait = 0;
+ var __foreach = Array.prototype.forEach,
+ __bind = vulcan.objects.selectors.all.bind(document),
+ __handler = null;
+ __foreach.call(__bind('.yt_video_title, .yt_video_thumbnail'), function(v)
+ {
+ __handler = function(event_object)
+ {
+ event_object.preventDefault();
+ var __url = this.getAttribute('data-link'),
+ __title = this.getAttribute('data-title');
+ config.video_id = utils.url_parse(__url);
+ me.init(__title, config.video_id);
+ };
+ vulcan.events.attach(i_youtube_bee, v, 'click', __handler);
+ });
+ }
+ return true;
+ };
+ }
+ function recorder()
+ {
+ this.init = function()
+ {
+ i_yt_rec_bee = dev_box.get('bee');
+ fx = dev_box.get('fx');
+ fx.init(cosmos);
+ config.rec_tag = 'i_youtube_recorder';
+ var __elements = null;
+ vulcan.graphics.apply_theme('/framework/extensions/js/i_youtube/themes', 'i_youtube');
+ i_yt_rec_bee.init(cosmos, config.rec_tag, 1);
+ i_yt_rec_bee.settings.data.window.labels.title('Record from webcam');
+ i_yt_rec_bee.gui.position.left(430);
+ i_yt_rec_bee.gui.position.top(0);
+ i_yt_rec_bee.gui.size.width(440);
+ i_yt_rec_bee.gui.size.min.width(440);
+ i_yt_rec_bee.gui.size.height(510);
+ i_yt_rec_bee.gui.size.min.height(510);
+ i_yt_rec_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_yt_rec_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_yt_rec_bee.on('open', function() { i_yt_rec_bee.gui.fx.fade.into(); });
+ i_yt_rec_bee.on('opened', function() { return utils.record_init(); });
+ i_yt_rec_bee.on('in_hive', function() { bee.recorder.in_hive(); });
+ i_yt_rec_bee.on('drag', function() { vulcan.objects.by_id('yt_record_overlay_' + config.rec_tag).style.display = 'block'; bee.recorder.ghost_icon(); });
+ i_yt_rec_bee.on('dragging', function()
+ {
+ i_yt_rec_bee.gui.fx.opacity.settings.set(0.7);
+ i_yt_rec_bee.gui.fx.opacity.apply();
+ });
+ i_yt_rec_bee.on('dragged', function()
+ {
+ i_yt_rec_bee.gui.fx.opacity.reset();
+ vulcan.objects.by_id('yt_record_overlay_' + config.rec_tag).style.display = 'none';
+ });
+ i_yt_rec_bee.on('resize', function() { vulcan.objects.by_id('yt_record_overlay_' + config.rec_tag).style.display = 'block'; });
+ i_yt_rec_bee.on('resized', function() { vulcan.objects.by_id('yt_record_overlay_' + config.rec_tag).style.display = 'none'; });
+ i_yt_rec_bee.on('close', function() { i_yt_rec_bee.gui.fx.fade.out(); });
+ this.show(i_yt_rec_bee);
+ __elements = vulcan.objects.by_id(config.rec_tag);
+ __elements.classList.add('yt_video_element');
+ return true;
+ };
+ this.show = function(bee)
+ {
+ swarm.bees.insert(bee);
+ bee.show();
+ };
+ this.in_hive = function()
+ {
+ var __hive = vulcan.objects.by_id('hive_bee_' + config.rec_tag + '_icon');
+ __hive.classList.add('yt_recorder_hive');
+ return true;
+ };
+ this.ghost_icon = function()
+ {
+ var __hive = vulcan.objects.by_id('hive_ghost_bee');
+ if (__hive === undefined)
+ return false;
+ __hive.classList.add('yt_recorder_hive');
+ return true;
+ };
+ this.iframe = function()
+ {
+ if (is_init === false)
+ return false;
+ var __frame = new YT.UploadWidget('yt_record_' + config.rec_tag,
+ {
+ height: '75%',
+ width: '100%',
+ events: { 'onApiReady': bee.recorder.add_info }
+ });
+ config.i_youtube_record = __frame;
+ return true;
+ };
+ this.add_info = function()
+ {
+ if (is_init === false)
+ return false;
+ var __title = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].firstChild,
+ __description = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].children[2],
+ __privacy = document.getElementsByName('yt_info_rec_v_privacy_' + config.rec_tag),
+ __privacy_length = __privacy.length,
+ __privacy_value = null;
+ for (var i = 0; i < __privacy_length; i++)
+ {
+ if (__privacy[i].checked)
+ __privacy_value = __privacy[i].value;
+ }
+ config.i_youtube_record.setVideoTitle(__title.value);
+ config.i_youtube_record.setVideoDescription(__description.value);
+ config.i_youtube_record.setVideoPrivacy(__privacy_value);
+ return true;
+ };
+ this.validate = function()
+ {
+ __handler = function()
+ {
+ var __input = true,
+ __title = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].firstChild,
+ __description = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].children[2],
+ __save = vulcan.objects.by_id(config.rec_tag + '_data').childNodes[2].lastChild.lastChild;
+ if (__title.value === '')
+ __input = false;
+ if (__description.value === '')
+ __input = false;
+ if (__input)
+ {
+ __save.disabled = false;
+ __save.value = 'Save';
+ }
+ else
+ {
+ __save.disabled = true;
+ __save.value = 'Add info';
+ }
+ };
+ vulcan.events.attach(i_youtube_bee, document, 'keyup', __handler);
+ return true;
+ };
+ }
+ this.player = new player();
+ this.recorder = new recorder();
+ }
+ function config_model()
+ {
+ this.id = null;
+ this.app_msg = null;
+ this.auth_window = null;
+ this.auth_window_timer = null;
+ this.i_youtube_video = null;
+ this.i_youtube_record = null;
+ this.video_tag = null;
+ this.rec_tag = null;
+ this.video_id = null;
+ this.channel_id = null,
+ this.start_index = 1;
+ this.max_results = 10;
+ this.url = '/framework/extensions/ajax/i_youtube/i_youtube.php';
+ var __dynamic_object = document.createElement('script');
+ __dynamic_object.src = 'https://www.youtube.com/iframe_api';
+ document.getElementsByTagName('head')[0].appendChild(__dynamic_object);
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_youtube_bee;
+ };
+ this.init = function()
+ {
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_youtube_bee = dev_box.get('bee');
+ config.id = 'i_youtube';
+ infinity.setup(config.id + '_data');
+ fx = dev_box.get('fx');
+ fx.init(cosmos);
+ scrollbar = dev_box.get('scrollbar');
+ scrollbar.init(cosmos);
+ vulcan.graphics.apply_theme('/framework/extensions/js/i_youtube/themes', 'i_youtube');
+ i_youtube_bee.init(cosmos, config.id, 2);
+ i_youtube_bee.settings.data.window.labels.title('YouTube');
+ i_youtube_bee.settings.data.window.labels.status_bar(utils.status_bar(2));
+ i_youtube_bee.settings.data.casement.content('This is an extra GUI that extends and enhances the users eperience!');
+ i_youtube_bee.settings.data.casement.labels.title('YouTube Update');
+ i_youtube_bee.settings.data.casement.labels.status('Helping (secondary) status bar messages...');
+ i_youtube_bee.gui.position.left(400);
+ i_youtube_bee.gui.position.top(0);
+ i_youtube_bee.gui.size.width(350);
+ i_youtube_bee.gui.size.height(510);
+ i_youtube_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_youtube_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_youtube_bee.on('open', function() { i_youtube_bee.gui.fx.fade.into(); });
+ i_youtube_bee.on('opened', function() { return utils.gui_init(); });
+ i_youtube_bee.on('dragging', function()
+ {
+ i_youtube_bee.gui.fx.opacity.settings.set(0.7);
+ i_youtube_bee.gui.fx.opacity.apply();
+ });
+ i_youtube_bee.on('dragged', function() { i_youtube_bee.gui.fx.opacity.reset(); });
+ i_youtube_bee.on('close', function() { i_youtube_bee.gui.fx.fade.out(); });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ vulcan = cosmos.hub.access('vulcan');
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = matrix.get('colony');
+ swarm = matrix.get('swarm');
+ infinity = matrix.get('infinity');
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ is_init = false,
+ cosmos = null,
+ vulcan = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ scrollbar = null,
+ colony = null,
+ swarm = null,
+ fx = null,
+ i_youtube_bee = null,
+ i_yt_play_bee = null,
+ i_yt_rec_bee = null,
+ html = new draw_html(),
+ channels = new video_channels(),
+ video = new video_manager(),
+ bee = new new_bees(),
+ events = new events_attach(),
+ ajax = new ajax_request(),
+ config = new config_model(),
+ utils = new utilities();
+}
+function i_bassoon()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_bassoon_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_bassoon_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe title="Bassoon" src="https://www.stef.be/bassoontracker/?file=demomods%2Fspacedeb.mod"></iframe>\
+ </div>';
+ i_bassoon_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_bassoon_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_bassoon_bee = dev_box.get('bee');
+ config.id = 'i_bassoon';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_bassoon_bee.init(config.id, 1);
+ i_bassoon_bee.settings.data.window.labels.title('iBassoon (Integrated Bassoon Tracker)');
+ i_bassoon_bee.settings.data.window.labels.status_bar('Online DAW for fun!');
+ i_bassoon_bee.settings.general.single_instance(true);
+ i_bassoon_bee.settings.actions.can_edit_title(false);
+ i_bassoon_bee.settings.actions.can_use_menu(false);
+ i_bassoon_bee.gui.position.left(250);
+ i_bassoon_bee.gui.position.top(50);
+ i_bassoon_bee.gui.size.width(900);
+ i_bassoon_bee.gui.size.height(600);
+ i_bassoon_bee.gui.size.min.width(900);
+ i_bassoon_bee.gui.size.min.height(600);
+ i_bassoon_bee.gui.size.max.width(1000);
+ i_bassoon_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_bassoon_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_bassoon_bee.on('open', function() { i_bassoon_bee.gui.fx.fade.into(); });
+ i_bassoon_bee.on('opened', function() { utils_int.gui_init(); });
+ i_bassoon_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_bassoon_bee.on('dragging', function()
+ {
+ i_bassoon_bee.gui.fx.opacity.settings.set(0.7);
+ i_bassoon_bee.gui.fx.opacity.apply();
+ });
+ i_bassoon_bee.on('dragged', function()
+ {
+ i_bassoon_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ i_bassoon_bee.on('resize', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ i_bassoon_bee.on('resized', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ i_bassoon_bee.on('close', function()
+ {
+ i_bassoon_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ i_bassoon_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_quakejs()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_quakejs_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_quakejs_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe id= "' + i_quakejs_bee.settings.general.id() + '_frame" title="Quake JS"\
+ src="https://fte.triptohell.info/demo" scrolling="no">\
+ </iframe>\
+ </div>';
+ i_quakejs_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ var __overlay_object = utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay'),
+ __iframe_object = utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_frame');
+ utils_sys.events.attach(config.id, __overlay_object, 'click',
+ function()
+ {
+ __overlay_object.style.display = 'none';
+ __iframe_object.focus();
+ });
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_quakejs_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_quakejs_bee = dev_box.get('bee');
+ config.id = 'i_quakejs';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_quakejs_bee.init(config.id, 2);
+ i_quakejs_bee.settings.data.window.labels.title('iQuakeJS (Integrated Online Multiplayer Game)');
+ i_quakejs_bee.settings.data.window.labels.status_bar('Frag the hell out of them all!');
+ i_quakejs_bee.settings.general.single_instance(true);
+ i_quakejs_bee.settings.actions.can_edit_title(false);
+ i_quakejs_bee.settings.actions.can_use_menu(false);
+ i_quakejs_bee.gui.position.left((swarm.settings.right() / 2) - 600);
+ i_quakejs_bee.gui.position.top(30);
+ i_quakejs_bee.gui.size.width(1057);
+ i_quakejs_bee.gui.size.height(810);
+ i_quakejs_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_quakejs_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_quakejs_bee.on('open', function() { i_quakejs_bee.gui.fx.fade.into(); });
+ i_quakejs_bee.on('opened', function() { utils_int.gui_init(); });
+ i_quakejs_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_quakejs_bee.on('dragging', function()
+ {
+ i_quakejs_bee.gui.fx.opacity.settings.set(0.7);
+ i_quakejs_bee.gui.fx.opacity.apply();
+ });
+ i_quakejs_bee.on('dragged', function()
+ {
+ i_quakejs_bee.gui.fx.opacity.reset();
+ });
+ i_quakejs_bee.on('close', function()
+ {
+ i_quakejs_bee.gui.fx.fade.out();
+ });
+ i_quakejs_bee.on('keydown', function()
+ {
+ console.log('QUAKE JS');
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ swarm = matrix.get('swarm');
+ infinity = matrix.get('infinity');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ swarm = null,
+ infinity = null,
+ nature = null,
+ i_quakejs_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_minecraft()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_minecraft_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_minecraft_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe id= "' + i_minecraft_bee.settings.general.id() + '_frame" title="Minecraft" \
+ src="https://classic.minecraft.net/" scrolling="no">\
+ </iframe>\
+ </div>';
+ i_minecraft_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ var __overlay_object = utils_sys.objects.by_id(i_minecraft_bee.settings.general.id() + '_overlay'),
+ __iframe_object = utils_sys.objects.by_id(i_minecraft_bee.settings.general.id() + '_frame');
+ utils_sys.events.attach(config.id, __overlay_object, 'click',
+ function()
+ {
+ __overlay_object.style.display = 'none';
+ __iframe_object.focus();
+ });
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_minecraft_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_minecraft_bee = dev_box.get('bee');
+ config.id = 'i_minecraft';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_minecraft_bee.init(config.id, 2);
+ i_minecraft_bee.settings.data.window.labels.title('iMinecraft (Integrated Online Multiplayer Game)');
+ i_minecraft_bee.settings.data.window.labels.status_bar('Build new worlds!');
+ i_minecraft_bee.settings.general.single_instance(true);
+ i_minecraft_bee.settings.actions.can_edit_title(false);
+ i_minecraft_bee.settings.actions.can_use_menu(false);
+ i_minecraft_bee.gui.position.left((swarm.settings.right() / 2) - 600);
+ i_minecraft_bee.gui.position.top(30);
+ i_minecraft_bee.gui.size.width(1057);
+ i_minecraft_bee.gui.size.height(810);
+ i_minecraft_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_minecraft_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_minecraft_bee.on('open', function() { i_minecraft_bee.gui.fx.fade.into(); });
+ i_minecraft_bee.on('opened', function() { utils_int.gui_init(); });
+ i_minecraft_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_minecraft_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_minecraft_bee.on('dragging', function()
+ {
+ i_minecraft_bee.gui.fx.opacity.settings.set(0.7);
+ i_minecraft_bee.gui.fx.opacity.apply();
+ });
+ i_minecraft_bee.on('dragged', function()
+ {
+ i_minecraft_bee.gui.fx.opacity.reset();
+ });
+ i_minecraft_bee.on('close', function()
+ {
+ i_minecraft_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ swarm = matrix.get('swarm');
+ infinity = matrix.get('infinity');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ swarm = null,
+ infinity = null,
+ nature = null,
+ i_minecraft_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_youdj()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_youdj_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_youdj_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe title="YouDJ" src="https://youdj.online/"></iframe>\
+ </div>';
+ i_youdj_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_youdj_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_youdj_bee = dev_box.get('bee');
+ config.id = 'i_youdj';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_youdj_bee.init(config.id, 1);
+ i_youdj_bee.settings.data.window.labels.title('iYouDJ');
+ i_youdj_bee.settings.data.window.labels.status_bar('Let\'s party!');
+ i_youdj_bee.settings.general.single_instance(true);
+ i_youdj_bee.settings.actions.can_edit_title(false);
+ i_youdj_bee.settings.actions.can_use_menu(false);
+ i_youdj_bee.gui.position.left(250);
+ i_youdj_bee.gui.position.top(50);
+ i_youdj_bee.gui.size.width(1120);
+ i_youdj_bee.gui.size.height(900);
+ i_youdj_bee.gui.size.min.width(900);
+ i_youdj_bee.gui.size.min.height(600);
+ i_youdj_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_youdj_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_youdj_bee.on('open', function() { i_youdj_bee.gui.fx.fade.into(); });
+ i_youdj_bee.on('opened', function() { utils_int.gui_init(); });
+ i_youdj_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_youdj_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_youdj_bee.on('dragging', function()
+ {
+ i_youdj_bee.gui.fx.opacity.settings.set(0.7);
+ i_youdj_bee.gui.fx.opacity.apply();
+ });
+ i_youdj_bee.on('dragged', function()
+ {
+ i_youdj_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(i_youdj_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ i_youdj_bee.on('resize', function() { utils_sys.objects.by_id(i_youdj_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ i_youdj_bee.on('resized', function() { utils_sys.objects.by_id(i_youdj_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ i_youdj_bee.on('close', function()
+ {
+ i_youdj_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ i_youdj_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_audiomass()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_audiomass_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_audiomass_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe title="AudioMass" src="https://audiomass.co/"></iframe>\
+ </div>';
+ i_audiomass_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_audiomass_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_audiomass_bee = dev_box.get('bee');
+ config.id = 'i_audiomass';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_audiomass_bee.init(config.id, 1);
+ i_audiomass_bee.settings.data.window.labels.title('iAudioMass');
+ i_audiomass_bee.settings.data.window.labels.status_bar('Online audio editor!');
+ i_audiomass_bee.settings.general.single_instance(true);
+ i_audiomass_bee.settings.actions.can_edit_title(false);
+ i_audiomass_bee.settings.actions.can_use_menu(false);
+ i_audiomass_bee.gui.position.left(250);
+ i_audiomass_bee.gui.position.top(50);
+ i_audiomass_bee.gui.size.width(1300);
+ i_audiomass_bee.gui.size.height(800);
+ i_audiomass_bee.gui.size.min.width(950);
+ i_audiomass_bee.gui.size.min.height(650);
+ i_audiomass_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_audiomass_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_audiomass_bee.on('open', function() { i_audiomass_bee.gui.fx.fade.into(); });
+ i_audiomass_bee.on('opened', function() { utils_int.gui_init(); });
+ i_audiomass_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_audiomass_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_audiomass_bee.on('dragging', function()
+ {
+ i_audiomass_bee.gui.fx.opacity.settings.set(0.7);
+ i_audiomass_bee.gui.fx.opacity.apply();
+ });
+ i_audiomass_bee.on('dragged', function()
+ {
+ i_audiomass_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(i_audiomass_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ i_audiomass_bee.on('resize', function() { utils_sys.objects.by_id(i_audiomass_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ i_audiomass_bee.on('resized', function() { utils_sys.objects.by_id(i_audiomass_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ i_audiomass_bee.on('close', function()
+ {
+ i_audiomass_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ i_audiomass_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_soundtrap()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_soundtrap_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_soundtrap_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe title="SoundTrap" src="https://www.soundtrap.com/studio/"></iframe>\
+ </div>';
+ i_soundtrap_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_soundtrap_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_soundtrap_bee = dev_box.get('bee');
+ config.id = 'i_soundtrap';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_soundtrap_bee.init(config.id, 1);
+ i_soundtrap_bee.settings.data.window.labels.title('iSoundTrap - DAW');
+ i_soundtrap_bee.settings.data.window.labels.status_bar('Ready');
+ i_soundtrap_bee.settings.general.single_instance(true);
+ i_soundtrap_bee.settings.actions.can_edit_title(false);
+ i_soundtrap_bee.settings.actions.can_use_menu(false);
+ i_soundtrap_bee.gui.position.left(120);
+ i_soundtrap_bee.gui.position.top(20);
+ i_soundtrap_bee.gui.size.width(1600);
+ i_soundtrap_bee.gui.size.height(920);
+ i_soundtrap_bee.gui.size.min.width(1200);
+ i_soundtrap_bee.gui.size.min.height(800);
+ i_soundtrap_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_soundtrap_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_soundtrap_bee.on('open', function() { i_soundtrap_bee.gui.fx.fade.into(); });
+ i_soundtrap_bee.on('opened', function() { utils_int.gui_init(); });
+ i_soundtrap_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_soundtrap_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_soundtrap_bee.on('dragging', function()
+ {
+ i_soundtrap_bee.gui.fx.opacity.settings.set(0.7);
+ i_soundtrap_bee.gui.fx.opacity.apply();
+ });
+ i_soundtrap_bee.on('dragged', function()
+ {
+ i_soundtrap_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(i_soundtrap_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ i_soundtrap_bee.on('resize', function() { utils_sys.objects.by_id(i_soundtrap_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ i_soundtrap_bee.on('resized', function() { utils_sys.objects.by_id(i_soundtrap_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ i_soundtrap_bee.on('close', function()
+ {
+ i_soundtrap_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ i_soundtrap_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_ampedstudio()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_ampedstudio_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_ampedstudio_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe title="AmpedStudio" src="https://app.ampedstudio.com/"></iframe>\
+ </div>';
+ i_ampedstudio_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_ampedstudio_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_ampedstudio_bee = dev_box.get('bee');
+ config.id = 'i_ampedstudio';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_ampedstudio_bee.init(config.id, 1);
+ i_ampedstudio_bee.settings.data.window.labels.title('iAmpedStudio - DAW');
+ i_ampedstudio_bee.settings.data.window.labels.status_bar('Ready');
+ i_ampedstudio_bee.settings.general.single_instance(true);
+ i_ampedstudio_bee.settings.actions.can_edit_title(false);
+ i_ampedstudio_bee.settings.actions.can_use_menu(false);
+ i_ampedstudio_bee.gui.position.left(80);
+ i_ampedstudio_bee.gui.position.top(20);
+ i_ampedstudio_bee.gui.size.width(1600);
+ i_ampedstudio_bee.gui.size.height(920);
+ i_ampedstudio_bee.gui.size.min.width(1200);
+ i_ampedstudio_bee.gui.size.min.height(800);
+ i_ampedstudio_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_ampedstudio_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_ampedstudio_bee.on('open', function() { i_ampedstudio_bee.gui.fx.fade.into(); });
+ i_ampedstudio_bee.on('opened', function() { utils_int.gui_init(); });
+ i_ampedstudio_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_ampedstudio_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_ampedstudio_bee.on('dragging', function()
+ {
+ i_ampedstudio_bee.gui.fx.opacity.settings.set(0.7);
+ i_ampedstudio_bee.gui.fx.opacity.apply();
+ });
+ i_ampedstudio_bee.on('dragged', function()
+ {
+ i_ampedstudio_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(i_ampedstudio_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ i_ampedstudio_bee.on('resize', function() { utils_sys.objects.by_id(i_ampedstudio_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ i_ampedstudio_bee.on('resized', function() { utils_sys.objects.by_id(i_ampedstudio_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ i_ampedstudio_bee.on('close', function()
+ {
+ i_ampedstudio_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ i_ampedstudio_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_vectorink()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_vectorink_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_vectorink_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe title="VectorInk" src="https://vectorink.io/app/"></iframe>\
+ </div>';
+ i_vectorink_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_vectorink_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_vectorink_bee = dev_box.get('bee');
+ config.id = 'i_vectorink';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_vectorink_bee.init(config.id, 1);
+ i_vectorink_bee.settings.data.window.labels.title('iVectorInk');
+ i_vectorink_bee.settings.data.window.labels.status_bar('Online vector graphics design studio!');
+ i_vectorink_bee.settings.general.single_instance(true);
+ i_vectorink_bee.settings.actions.can_edit_title(false);
+ i_vectorink_bee.settings.actions.can_use_menu(false);
+ i_vectorink_bee.gui.position.left(250);
+ i_vectorink_bee.gui.position.top(30);
+ i_vectorink_bee.gui.size.width(1300);
+ i_vectorink_bee.gui.size.height(900);
+ i_vectorink_bee.gui.size.min.width(900);
+ i_vectorink_bee.gui.size.min.height(600);
+ i_vectorink_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_vectorink_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_vectorink_bee.on('open', function() { i_vectorink_bee.gui.fx.fade.into(); });
+ i_vectorink_bee.on('opened', function() { utils_int.gui_init(); });
+ i_vectorink_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_vectorink_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_vectorink_bee.on('dragging', function()
+ {
+ i_vectorink_bee.gui.fx.opacity.settings.set(0.7);
+ i_vectorink_bee.gui.fx.opacity.apply();
+ });
+ i_vectorink_bee.on('dragged', function()
+ {
+ i_vectorink_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(i_vectorink_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ i_vectorink_bee.on('resize', function() { utils_sys.objects.by_id(i_vectorink_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ i_vectorink_bee.on('resized', function() { utils_sys.objects.by_id(i_vectorink_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ i_vectorink_bee.on('close', function()
+ {
+ i_vectorink_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ i_vectorink_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_ganttio()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_ganttio_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_ganttio_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe title="GanttIO" src="https://app.gantt.io/"></iframe>\
+ </div>';
+ i_ganttio_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_ganttio_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_ganttio_bee = dev_box.get('bee');
+ config.id = 'i_ganttio';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_ganttio_bee.init(config.id, 1);
+ i_ganttio_bee.settings.data.window.labels.title('iGanttIO');
+ i_ganttio_bee.settings.data.window.labels.status_bar('Online Gantt diagrams the easy way!');
+ i_ganttio_bee.settings.general.single_instance(true);
+ i_ganttio_bee.settings.actions.can_edit_title(false);
+ i_ganttio_bee.settings.actions.can_use_menu(false);
+ i_ganttio_bee.gui.position.left(250);
+ i_ganttio_bee.gui.position.top(50);
+ i_ganttio_bee.gui.size.width(1280);
+ i_ganttio_bee.gui.size.height(840);
+ i_ganttio_bee.gui.size.min.width(900);
+ i_ganttio_bee.gui.size.min.height(600);
+ i_ganttio_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_ganttio_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_ganttio_bee.on('open', function() { i_ganttio_bee.gui.fx.fade.into(); });
+ i_ganttio_bee.on('opened', function() { utils_int.gui_init(); });
+ i_ganttio_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_ganttio_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_ganttio_bee.on('dragging', function()
+ {
+ i_ganttio_bee.gui.fx.opacity.settings.set(0.7);
+ i_ganttio_bee.gui.fx.opacity.apply();
+ });
+ i_ganttio_bee.on('dragged', function()
+ {
+ i_ganttio_bee.gui.fx.opacity.reset();
+ utils_sys.objects.by_id(i_ganttio_bee.settings.general.id() + '_overlay').style.display = 'none';
+ });
+ i_ganttio_bee.on('resize', function() { utils_sys.objects.by_id(i_ganttio_bee.settings.general.id() + '_overlay').style.display = 'block'; });
+ i_ganttio_bee.on('resized', function() { utils_sys.objects.by_id(i_ganttio_bee.settings.general.id() + '_overlay').style.display = 'none'; });
+ i_ganttio_bee.on('close', function()
+ {
+ i_ganttio_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ nature = matrix.get('nature');
+ infinity = matrix.get('infinity');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ infinity = null,
+ nature = null,
+ i_ganttio_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}
+function i_webgl_preview()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.content = null;
+ }
+ function utilities()
+ {
+ var me = this;
+ this.gui_init = function()
+ {
+ var __data_content_id = i_webgl_preview_bee.settings.general.id() + '_data';
+ infinity.setup(__data_content_id);
+ infinity.begin();
+ me.draw();
+ me.attach_events();
+ infinity.end();
+ return true;
+ };
+ this.draw = function()
+ {
+ config.content = '<div class="' + config.id + '">\
+ <div id="' + i_webgl_preview_bee.settings.general.id() + '_overlay" class="overlay"></div>\
+ <iframe id= "' + i_webgl_preview_bee.settings.general.id() + '_frame" title="Play Canvas"\
+ src="https://playcanv.as/p/RqJJ9oU9/" scrolling="no">\
+ </iframe>\
+ </div>';
+ i_webgl_preview_bee.settings.data.window.content(config.content);
+ return true;
+ };
+ this.attach_events = function()
+ {
+ var __overlay_object = utils_sys.objects.by_id(i_webgl_preview_bee.settings.general.id() + '_overlay'),
+ __iframe_object = utils_sys.objects.by_id(i_webgl_preview_bee.settings.general.id() + '_frame');
+ utils_sys.events.attach(config.id, __overlay_object, 'click',
+ function()
+ {
+ __overlay_object.style.display = 'none';
+ __iframe_object.focus();
+ });
+ return true;
+ };
+ }
+ this.get_bee = function()
+ {
+ if (is_init === false)
+ return false;
+ return i_webgl_preview_bee;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ i_webgl_preview_bee = dev_box.get('bee');
+ config.id = 'i_webgl_preview';
+ nature.theme([config.id]);
+ nature.apply('new');
+ infinity.init();
+ i_webgl_preview_bee.init(config.id, 2);
+ i_webgl_preview_bee.settings.data.window.labels.title('iWebGL (Preview) :: BMW showcase');
+ i_webgl_preview_bee.settings.data.window.labels.status_bar('The car, the style...');
+ i_webgl_preview_bee.settings.general.single_instance(true);
+ i_webgl_preview_bee.settings.actions.can_edit_title(false);
+ i_webgl_preview_bee.settings.actions.can_use_menu(false);
+ i_webgl_preview_bee.gui.position.left((swarm.settings.right() / 2) - 600);
+ i_webgl_preview_bee.gui.position.top(30);
+ i_webgl_preview_bee.gui.size.width(1057);
+ i_webgl_preview_bee.gui.size.height(810);
+ i_webgl_preview_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
+ i_webgl_preview_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
+ i_webgl_preview_bee.on('open', function() { i_webgl_preview_bee.gui.fx.fade.into(); });
+ i_webgl_preview_bee.on('opened', function() { utils_int.gui_init(); });
+ i_webgl_preview_bee.on('drag', function()
+ {
+ utils_sys.objects.by_id(i_webgl_preview_bee.settings.general.id() + '_overlay').style.display = 'block';
+ });
+ i_webgl_preview_bee.on('dragging', function()
+ {
+ i_webgl_preview_bee.gui.fx.opacity.settings.set(0.7);
+ i_webgl_preview_bee.gui.fx.opacity.apply();
+ });
+ i_webgl_preview_bee.on('dragged', function()
+ {
+ i_webgl_preview_bee.gui.fx.opacity.reset();
+ });
+ i_webgl_preview_bee.on('close', function()
+ {
+ i_webgl_preview_bee.gui.fx.fade.out();
+ });
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ swarm = matrix.get('swarm');
+ infinity = matrix.get('infinity');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ matrix = null,
+ dev_box = null,
+ swarm = null,
+ infinity = null,
+ nature = null,
+ i_webgl_preview_bee = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ utils_int = new utilities();
+}

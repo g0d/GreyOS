@@ -49,6 +49,9 @@
 
         foreach ($all_js_files as $js_file => $js_level)
         {
+            if ($js_file === 'ace')
+                continue;
+
             $ext_contents = file_get_contents('framework/extensions/js/' . $js_level . '/' . $js_file . '/' . $js_file . '.js');
 
             $minified_js_file .= minify_js($ext_contents);
