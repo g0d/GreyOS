@@ -1,12 +1,12 @@
 /*
     BULL (AJAX System/Framework)
 
-    File name: bull.js (Version: 18.2)
+    File name: bull.js (Version: 18.4)
     Description: This file contains the BULL extension.
     Dependencies: Vulcan and JAP.
 
     Coded by George Delaportas (G0D) / Contributions by Catalin Maftei
-    Copyright (C) 2013 - 2022
+    Copyright (C) 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -29,12 +29,19 @@ function bull()
                                                             "value"   :   { "type" : "string" }
                                                         },
                                                         {
-                                                            "key"     :   { "name" : "data", "optional" : false },
+                                                            "key"     :   { "name" : "data", "optional" : true },
                                                             "value"   :   { "type" : "*" }
                                                         },
                                                         {
                                                             "key"     :   { "name" : "element_id", "optional" : true },
                                                             "value"   :   { "type" : "string" }
+                                                        },
+                                                        {
+                                                            "key"     :   { "name" : "method", "optional" : true },
+                                                            "value"   :   {
+                                                                                "type"     :   "string",
+                                                                                "choices"  :   ["get", "post"]
+                                                                          }
                                                         },
                                                         {
                                                             "key"     :   { "name" : "ajax_mode", "optional" : true },
@@ -75,12 +82,11 @@ function bull()
     {
         function ajax_model()
         {
-            this.http_session = function(url, data, mode)
+            this.http_session = function(url, data, method, mode)
             {
-                __xml_http.open('POST', url, mode);
-                __xml_http.setRequestHeader('Access-Control-Allow-Origin', '*');
+                __xml_http.open(method.toUpperCase(), url, mode);
                 
-                if (!utils.validation.misc.is_object(data))
+                if (method === 'post' && !utils.validation.misc.is_object(data))
                     __xml_http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 
                 __xml_http.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -204,22 +210,22 @@ function bull()
             
             run_timer(response_timeout);
             
-            ajax.http_session(url, data, true);
+            ajax.http_session(url, data, 'post', true);
             
             return null;
         };
         
-        this.request = function(url, data, ajax_mode, success_callback, fail_callback, response_timeout, timeout_callback)
+        this.request = function(url, data, method, ajax_mode, success_callback, fail_callback, response_timeout, timeout_callback)
         {
             set_callbacks(success_callback, fail_callback, timeout_callback);
             
             run_timer(response_timeout);
             
             if (ajax_mode === 'asynchronous')
-                ajax.http_session(url, data, true);
+                ajax.http_session(url, data, method, true);
             else
             {
-                ajax.http_session(url, data, false);
+                ajax.http_session(url, data, method, false);
                 
                 if (!utils.validation.misc.is_invalid(__ajax_response))
                     return __ajax_response;
@@ -248,15 +254,19 @@ function bull()
         if (!config_parser.verify(config_definition_model, user_config))
             return false;
         
-        if (utils.validation.misc.is_nothing(user_config.url) || utils.validation.misc.is_nothing(user_config.data) || 
+        if (utils.validation.misc.is_nothing(user_config.url) || 
             !utils.validation.misc.is_invalid(user_config.response_timeout) && 
             (!utils.validation.numerics.is_integer(user_config.response_timeout) || 
              user_config.response_timeout < 1 || user_config.response_timeout > 60000))
             return false;
         
-        if (user_config.type === 'data')        // AJAX data (Asynchronous)
+        if (utils.validation.misc.is_invalid(user_config.data))
+            user_config.data = null;
+        
+        if (user_config.type === 'data')        // [AJAX Data] => Modes: Asynchronous / Methods: POST
         {
-            if (!utils.validation.misc.is_undefined(user_config.ajax_mode) || 
+            if (utils.validation.misc.is_invalid(user_config.data) || 
+                !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) || 
                 !utils.objects.by_id(user_config.element_id) || utils.validation.misc.is_invalid(user_config.content_fill_mode))
                 return false;
             
@@ -264,12 +274,17 @@ function bull()
                                         user_config.on_success, user_config.on_fail, 
                                         user_config.response_timeout, user_config.on_timeout);
         }
-        else                                    // AJAX request (Asynchronous [1] / Synchronous [2])
+        else                                    // [AJAX Request] => Modes: Asynchronous, Synchronous / Methods: GET, POST
         {
             if (utils.validation.misc.is_invalid(user_config.ajax_mode))
                 return false;
             
-            return new ajax_core().request(user_config.url, user_config.data, user_config.ajax_mode, 
+            if (utils.validation.misc.is_invalid(user_config.method))
+                user_config.method = 'get';
+            else
+                user_config.method = user_config.method.toLowerCase();
+            
+            return new ajax_core().request(user_config.url, user_config.data, user_config.method, user_config.ajax_mode, 
                                            user_config.on_success, user_config.on_fail, 
                                            user_config.response_timeout, user_config.on_timeout);
         }

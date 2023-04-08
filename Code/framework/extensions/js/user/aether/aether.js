@@ -1,12 +1,12 @@
 /*
     Aether (AJAX Traffic Controller [TC] / QoS for web apps)
 
-    File name: aether.js (Version: 2.6)
+    File name: aether.js (Version: 2.8)
     Description: This file contains the Aether extension.
     Dependencies: Vulcan, BULL, Pythia, JAP, Centurion, Stopwatch and Sensei.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2014 - 2022
+    Copyright (C) 2014 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -36,6 +36,12 @@ function aether()
                 this.REQUEST = 'request';
             }
 
+            function http_method_model()
+            {
+                this.GET = 'get';
+                this.POST = 'post';
+            }
+
             function ajax_mode_model()
             {
                 this.ASYNCHRONOUS = 'asynchronous';
@@ -55,6 +61,7 @@ function aether()
             }
 
             this.type = new type_model();
+            this.http_method = new http_method_model();
             this.ajax_mode = new ajax_mode_model();
             this.content_fill_mode = new content_fill_mode_model();
             this.repeat = new repeat_model();
@@ -339,6 +346,7 @@ function aether()
                     }
                     else
                     {
+                        __ajax_config.method = __this_task.method;
                         __ajax_config.ajax_mode = __this_task.ajax_mode;
                         __ajax_config.on_success = __this_task.success_callback;
                         __ajax_config.on_fail = __this_task.fail_callback;
@@ -387,7 +395,12 @@ function aether()
 
                     if (!utils.validation.misc.is_invalid(__task_bandwidth))
                     {
-                        var __ajax_bandwidth = __this_task.data.length;
+                        var __ajax_bandwidth = 0;
+
+                        if (!utils.validation.misc.is_nothing(__this_task.data))
+                            __ajax_bandwidth = __this_task.data.length;
+                        else
+                            __ajax_bandwidth = __task_bandwidth.min;
 
                         if ((__task_bandwidth.min !== system_constants.misc.IGNORE && __ajax_bandwidth < __task_bandwidth.min) || 
                             (__task_bandwidth.max !== system_constants.misc.IGNORE && __ajax_bandwidth > __task_bandwidth.max))
@@ -404,6 +417,7 @@ function aether()
                                                     "type"                  :   "request",
                                                     "url"                   :   __this_task.url,
                                                     "data"                  :   __this_task.data,
+                                                    "method"                :   __this_task.method,
                                                     "ajax_mode"             :   "asynchronous"
                                                 },
                             __ping_tester = new centurion();
@@ -501,16 +515,26 @@ function aether()
                                                                         "value"   :   { "type" : "string" }
                                                                     },
                                                                     {
-                                                                        "key"     :   { "name" : "data", "optional" : false },
+                                                                        "key"     :   { "name" : "data", "optional" : true },
                                                                         "value"   :   { "type" : "string" }
+                                                                    },
+                                                                    {
+                                                                        "key"     :   { "name" : "callbacks", "optional" : false },
+                                                                        "value"   :   { "type" : "object" }
                                                                     },
                                                                     {
                                                                         "key"     :   { "name" : "response_timeout", "optional" : false },
                                                                         "value"   :   { "type" : "number" }
                                                                     },
                                                                     {
-                                                                        "key"     :   { "name" : "callbacks", "optional" : false },
-                                                                        "value"   :   { "type" : "object" }
+                                                                        "key"     :   { "name" : "method", "optional" : true },
+                                                                        "value"   :   {
+                                                                                            "type"     :   "string",
+                                                                                            "choices"  :   [
+                                                                                                                system_constants.tasks.http_method.GET,
+                                                                                                                system_constants.tasks.http_method.POST
+                                                                                                           ]
+                                                                                      }
                                                                     },
                                                                     {
                                                                         "key"     :   { "name" : "ajax_mode", "optional" : true },
@@ -701,24 +725,25 @@ function aether()
 
                 if (__this_config_task.type === system_constants.tasks.type.DATA)
                 {
-                    if (!__this_config_task.hasOwnProperty('element_id') || !__this_config_task.hasOwnProperty('content_fill_mode') || 
-                        __this_config_task.hasOwnProperty('ajax_mode'))
+                    if (!__this_config_task.hasOwnProperty('data') || 
+                        !__this_config_task.hasOwnProperty('element_id') || !__this_config_task.hasOwnProperty('content_fill_mode') || 
+                        __this_config_task.hasOwnProperty('method')|| __this_config_task.hasOwnProperty('ajax_mode'))
                     {
                         system_tools.reset();
 
-                        sensei('Aether', 'Task type: "data" requires fields: "element_id" and\n"content_fill_mode" to operate!');
+                        sensei('Aether', 'Task type: "data" requires fields: "data", "element_id" and\n"content_fill_mode" to operate!');
 
                         return false;
                     }
                 }
                 else
                 {
-                    if (!__this_config_task.hasOwnProperty('ajax_mode') || 
+                    if (!__this_config_task.hasOwnProperty('method') || !__this_config_task.hasOwnProperty('ajax_mode') || 
                         __this_config_task.hasOwnProperty('element_id') || __this_config_task.hasOwnProperty('content_fill_mode'))
                     {
                         system_tools.reset();
 
-                        sensei('Aether', 'Task type: "request" requires field: "ajax_mode" to operate!');
+                        sensei('Aether', 'Task type: "request" requires fields: "method" and\n"ajax_mode" to operate!');
 
                         return false;
                     }
@@ -735,16 +760,15 @@ function aether()
 
                 __new_task.url = __this_config_task.url;
 
-                if (utils.validation.misc.is_nothing(__this_config_task.data))
+                if (!__this_config_task.hasOwnProperty('data'))
+                    __new_task.data = '1';
+                else
                 {
-                    system_tools.reset();
-
-                    sensei('Aether', 'Field: "data" can\'t be empty!');
-
-                    return false;
+                    if (!utils.validation.misc.is_nothing(__this_config_task.data))
+                        __new_task.data = __this_config_task.data;
+                    else
+                        __new_task.data = '1';
                 }
-
-                __new_task.data = __this_config_task.data;
 
                 if (__this_config_task.response_timeout < 1 || __this_config_task.response_timeout > system_constants.misc.MAX_DELAY)
                 {
@@ -773,6 +797,9 @@ function aether()
                 }
 
                 __new_task.callbacks = __this_config_task.callbacks;
+
+                if (__this_config_task.hasOwnProperty('method'))
+                    __new_task.method = __this_config_task.method;
 
                 if (__this_config_task.hasOwnProperty('ajax_mode'))
                 {

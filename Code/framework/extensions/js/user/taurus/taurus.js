@@ -1,12 +1,12 @@
 /*
     Taurus (Advanced AJAX System/Framework)
 
-    File name: taurus.js (Version: 1.0)
+    File name: taurus.js (Version: 1.2)
     Description: This file contains the Taurus extension.
     Dependencies: Vulcan, JAP and BULL.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2022
+    Copyright (C) 2022 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -29,12 +29,19 @@ function taurus()
                                                             "value"   :   { "type" : "string" }
                                                         },
                                                         {
-                                                            "key"     :   { "name" : "data", "optional" : false },
+                                                            "key"     :   { "name" : "data", "optional" : true },
                                                             "value"   :   { "type" : "*" }
                                                         },
                                                         {
                                                             "key"     :   { "name" : "element_id", "optional" : true },
                                                             "value"   :   { "type" : "string" }
+                                                        },
+                                                        {
+                                                            "key"     :   { "name" : "method", "optional" : true },
+                                                            "value"   :   {
+                                                                                "type"     :   "string",
+                                                                                "choices"  :   ["get", "post"]
+                                                                          }
                                                         },
                                                         {
                                                             "key"     :   { "name" : "ajax_mode", "optional" : true },
@@ -79,6 +86,7 @@ function taurus()
             __fail_callback = null,
             __timer_handler = null,
             __ajax_response = null,
+            __content_type = null,
             __is_timeout = false;
         
         function set_callbacks(success_callback, fail_callback, timeout_callback)
@@ -128,12 +136,17 @@ function taurus()
             
             run_timer(response_timeout);
             
+            if (!utils.validation.misc.is_object(data))
+                __content_type = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            else
+                __content_type = {};
+            
             fetch(url, {
                             method: 'POST',
                             mode: 'cors',
                             cache: 'no-cache',
                             credentials: 'same-origin',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            headers: __content_type,
                             redirect: 'error',
                             referrerPolicy: 'no-referrer',
                             body: data
@@ -165,18 +178,23 @@ function taurus()
             return null;
         };
         
-        this.request = async function(url, data, success_callback, fail_callback, response_timeout, timeout_callback)
+        this.request = async function(url, data, method, success_callback, fail_callback, response_timeout, timeout_callback)
         {
             set_callbacks(success_callback, fail_callback, timeout_callback);
             
             run_timer(response_timeout);
             
+            if (method === 'post' && !utils.validation.misc.is_object(data))
+                __content_type = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            else
+                __content_type = {};
+            
             __ajax_response = await fetch(url, {
-                                                    method: 'POST',
+                                                    method: method.toUpperCase(),
                                                     mode: 'cors',
                                                     cache: 'no-cache',
                                                     credentials: 'same-origin',
-                                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                                    headers: __content_type,
                                                     redirect: 'error',
                                                     referrerPolicy: 'no-referrer',
                                                     body: data
@@ -205,17 +223,21 @@ function taurus()
         if (!config_parser.verify(config_definition_model, user_config))
             return false;
         
-        if (utils.validation.misc.is_nothing(user_config.url) || utils.validation.misc.is_nothing(user_config.data) || 
+        if (utils.validation.misc.is_nothing(user_config.url) || 
             !utils.validation.misc.is_invalid(user_config.response_timeout) && 
             (!utils.validation.numerics.is_integer(user_config.response_timeout) || 
              user_config.response_timeout < 1 || user_config.response_timeout > 60000))
             return false;
         
+        if (utils.validation.misc.is_invalid(user_config.data))
+            user_config.data = null;
+        
         if (window.fetch)
         {
-            if (user_config.type === 'data')                    // AJAX data (Asynchronous)
+            if (user_config.type === 'data')                    // [AJAX Data] => Modes: Asynchronous / Methods: POST
             {
-                if (!utils.validation.misc.is_undefined(user_config.ajax_mode) || 
+                if (utils.validation.misc.is_invalid(user_config.data) || 
+                    !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) || 
                     !utils.objects.by_id(user_config.element_id) || utils.validation.misc.is_invalid(user_config.content_fill_mode))
                     return false;
                 
@@ -223,18 +245,23 @@ function taurus()
                                             user_config.on_success, user_config.on_fail, 
                                             user_config.response_timeout, user_config.on_timeout);
             }
-            else                                                // AJAX request (Asynchronous / Synchronous)
+            else                                                // [AJAX Request] => Modes: Asynchronous, Synchronous / Methods: GET, POST
             {
-                if (user_config.ajax_mode === 'asynchronous')   // Only asynchronous mode is supported by Fetch API
+                if (user_config.ajax_mode === 'asynchronous')   // Fetch => Asynchronous mode
                 {
                     if (utils.validation.misc.is_invalid(user_config.ajax_mode))
                         return false;
                     
-                    return new ajax_core().request(user_config.url, user_config.data, 
-                                                user_config.on_success, user_config.on_fail, 
-                                                user_config.response_timeout, user_config.on_timeout);
+                    if (utils.validation.misc.is_invalid(user_config.method))
+                        user_config.method = 'get';
+                    else
+                        user_config.method = user_config.method.toLowerCase();
+                    
+                    return new ajax_core().request(user_config.url, user_config.data, user_config.method, 
+                                                   user_config.on_success, user_config.on_fail, 
+                                                   user_config.response_timeout, user_config.on_timeout);
                 }
-                else                                            // Use BULL for synchronous mode
+                else                                            // BULL => Synchronous mode
                     return new bull().run(user_config);
             }
         }

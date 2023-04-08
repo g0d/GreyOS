@@ -1,7 +1,7 @@
 var my_aether = new aether();
 var aether_config = {
                         "settings"  :   {
-                                            "chain_mode"                :   "callback",             // CHOICES: ['serial' (Process based on 'priority' / Disable 'delay'), 'parallel', 'delay', 'callback' (Proceed to next task on 'success' callback / Respect both 'priority' and 'delay')]
+                                            "chain_mode"                :   "callback",             // CHOICES: ['serial' (Process based on 'priority' / Disables 'delay'), 'parallel', 'delay', 'callback' (Proceed to next task on 'success' callback / Respects both 'priority' and 'delay')]
                                             "init_delay"                :   1000,                   // OPTIONAL (Delay initialization of scheduler by so many milliseconds)
                                             "interval"                  :   2000,                   // OPTIONAL (Repeat scheduled tasks every so many milliseconds)
                                             "optional_task_callbacks"   :   true,                   // OPTIONAL (Allow optional task callbacks: 'fail' and 'timeout' - DEFAULT: true)
@@ -21,9 +21,9 @@ var aether_config = {
                                                 "type"                  :   "data",                                                         // CHOICES: ['data', 'request']
                                                 "element_id"            :   "test_results",                                                 // OPTIONAL (Use only with 'data' type / Any valid HTML element ID)
                                                 "content_fill_mode"     :   "replace",                                                      // OPTIONAL (Use only with 'data' type / Modes: 'replace' or 'append')
-                                                "url"                   :   "/",
-                                                "data"                  :   "x2y",
-                                                "response_timeout"      :   100,                                                            // RESPONSE TIMEOUT: Waiting time of response until timeout in milliseconds
+                                                "url"                   :   "/en/beat/",
+                                                "data"                  :   "x2y",                                                          // OPTIONAL (Only with 'request' type)
+                                                "response_timeout"      :   400,                                                            // RESPONSE TIMEOUT: Waiting time of response until timeout in milliseconds
                                                 "callbacks"             :   {
                                                                                 "success"   :   function()
                                                                                                 {
@@ -49,9 +49,9 @@ var aether_config = {
                                             {
                                                 "priority"              :   1,
                                                 "type"                  :   "request",
+                                                "method"                :   "get",                                                          // OPTIONAL (Use only with 'request' type / Methods: 'get' or 'post')
                                                 "ajax_mode"             :   "asynchronous",                                                 // OPTIONAL (Use only with 'request' type / Modes: 'asynchronous' or 'synchronous')
                                                 "url"                   :   "/",
-                                                "data"                  :   "1",
                                                 "response_timeout"      :   400,
                                                 "callbacks"             :   {
                                                                                 "success"       :   function()
@@ -76,7 +76,8 @@ var aether_config = {
                                             },
                                             {
                                                 "type"                  :   "request",
-                                                "ajax_mode"             :   "asynchronous",
+                                                "method"                :   "get",
+                                                "ajax_mode"             :   "synchronous",
                                                 "url"                   :   "/",
                                                 "data"                  :   "d=30",
                                                 "response_timeout"      :   400,
@@ -101,9 +102,9 @@ var aether_config = {
                                             },
                                             {
                                                 "type"                  :   "request",
+                                                "method"                :   "post",
                                                 "ajax_mode"             :   "asynchronous",
                                                 "url"                   :   "/",
-                                                "data"                  :   "d=00",
                                                 "response_timeout"      :   400,
                                                 "callbacks"             :   {
                                                                                 "success"       :   function()

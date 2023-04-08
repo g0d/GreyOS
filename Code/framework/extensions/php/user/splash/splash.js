@@ -6,7 +6,7 @@
     Dependencies: Vulcan and BULL.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2013
+    Copyright (C) 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -56,7 +56,7 @@ var splash = function(action, mode, misc, func)
                          var ajax = new bull();
                          var ajax_config = {
                                                 "type"                  :   "data",
-                                                "url"                   :   '/',
+                                                "url"                   :   "/",
                                                 "data"                  :   "gate=splash_event&splash_ajax_post=1&splash_ajax_action=" + action,
                                                 "element_id"            :   misc,
                                                 "content_fill_mode"     :   "replace",
@@ -69,7 +69,7 @@ var splash = function(action, mode, misc, func)
                      return true;
                  }
 
-                 // Set splash input
+                 // Set spl@sh input
                  function __set_input(type, action)
                  {
                      if (isNaN(type) || type < 1 || type > 2 || 
