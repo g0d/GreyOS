@@ -16,7 +16,7 @@
     // Enable sessions
     session_start();
 
-    // Include MICRO MVC framework
+    // Include micro-MVC framework
     require('framework/micro_mvc.php');
 
     // Include the config loader

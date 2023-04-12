@@ -15,10 +15,10 @@
     if (!defined('micro_mvc'))
         exit();
 
-    // Load JS utilities and AJAX support
-    UTIL::Load_Extension('vulcan', 'js');
-    UTIL::Load_Extension('jap', 'js');
-    UTIL::Load_Extension('bull', 'js');
+    // Load JS utilities and AJAX support (Only if not autoloaded via all_ext_min.js)
+    //UTIL::Load_Extension('vulcan', 'js');
+    //UTIL::Load_Extension('jap', 'js');
+    //UTIL::Load_Extension('bull', 'js');
 
     // Include HELPERS class
     require_once('helpers/helpers.php');

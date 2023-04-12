@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?=LANG::Get('this'); ?>">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="Cache-control" content="public">
@@ -10,8 +10,6 @@
         <link rel="icon" type="image/png" href="/site/pix/greyos_icon.png">
         <link rel="stylesheet" href="/site/css/main.css">
         <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500&subset=latin,greek" rel="stylesheet" type="text/css">
-        <!-- [*] Uncomment the line below to load all JS extensions in one file after using the JS Compactor [*] -->
-        <!-- <script src="/site/js/all_ext_min.js"></script> -->
         <title><?=UTIL::Load_Content('title', 'static');?></title>
     </head>
     <body>
@@ -19,13 +17,21 @@
         <?php
             UTIL::Load_Section('header');
             
+            // Include the JS Compactor to optimize and load all JS extensions on reload (Optional - Use for speed at release)
+            require('site/php/js_compactor.php');
+            
             $this_route = MVC::Get_Route('this');
             
             if ($this_route === false)
                 require('framework/errors/404.phtml');
             else
             {
-                UTIL::Autoload_Extensions();
+                /*
+                    [!] ATTENTION [!]
+                    If you use the "JS Compactor" do not call "Autoload_Extensions()" and "Load_Extension(..., 'js')" API for any pre-loaded JS
+                    If you do so, you will end up with duplicated non-optimized JS extensions with strange behavior.
+                */
+                //UTIL::Autoload_Extensions();
                 
                 require('site/php/ext_loader.php');
                 
