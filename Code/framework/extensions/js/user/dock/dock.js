@@ -138,7 +138,8 @@ function dock()
 
                                 __bee = __app.get_bee();
 
-                                swarm.bees.insert(__bee);
+                                if (!swarm.bees.insert(__bee))
+                                    return false;
 
                                 if (__bee.run())
                                 {
@@ -152,6 +153,8 @@ function dock()
                                     if (__bee.error.last() === __bee.error.codes.POSITION || 
                                         __bee.error.last() === __bee.error.codes.SIZE)
                                     {
+                                        swarm.bees.remove(__bee);
+
                                         msg_win = new msgbox();
 
                                         msg_win.init('desktop');
@@ -262,10 +265,6 @@ function dock()
 
         this.draw = function()
         {
-            msg_win = new msgbox();
-
-            msg_win.init('desktop');
-
             ajax_load(self.settings.container(), function()
                                                  {
                                                     create_dock_array();
@@ -359,6 +358,10 @@ function dock()
 
         nature.theme('dock');
         nature.apply('new');
+
+        msg_win = new msgbox();
+
+        msg_win.init('desktop');
 
         utils_int.draw();
 

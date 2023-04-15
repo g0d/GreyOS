@@ -5711,6 +5711,13 @@ function colony()
  var __objects_num = objects_array.length;
  if (__objects_num === 0 || (__objects_num > (bees.max - bees.num)))
  {
+ if (__objects_num > 0)
+ {
+ xenon = matrix.get('xenon');
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(xenon.load('os_name'), 'Maximum apps for this session, reached! Please close a few apps in order to open others.');
+ }
  if (backtrace === true)
  {
  if (__objects_num === 0)
@@ -5826,10 +5833,14 @@ function colony()
  if (utils_sys.validation.misc.is_undefined(cosmos_object))
  return false;
  cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
  return true;
  };
  var backtrace = false,
  cosmos = null,
+ matrix = null,
+ xenon = null,
+ msg_win = null,
  bees = new bees_model(),
  utils_sys = new vulcan();
 }
@@ -9099,7 +9110,8 @@ function dock()
  var __app = app_box.get(__app_id);
  __app.init();
  __bee = __app.get_bee();
- swarm.bees.insert(__bee);
+ if (!swarm.bees.insert(__bee))
+ return false;
  if (__bee.run())
  {
  utils_sys.objects.by_id('app_' + __app_id).classList.remove('app_' + __app_id + '_off');
@@ -9111,6 +9123,7 @@ function dock()
  if (__bee.error.last() === __bee.error.codes.POSITION ||
  __bee.error.last() === __bee.error.codes.SIZE)
  {
+ swarm.bees.remove(__bee);
  msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
@@ -9198,8 +9211,6 @@ function dock()
  }
  this.draw = function()
  {
- msg_win = new msgbox();
- msg_win.init('desktop');
  ajax_load(self.settings.container(), function()
  {
  create_dock_array();
@@ -9268,6 +9279,8 @@ function dock()
  dock_id = self.settings.id();
  nature.theme('dock');
  nature.apply('new');
+ msg_win = new msgbox();
+ msg_win.init('desktop');
  utils_int.draw();
  return true;
  };
@@ -9410,6 +9423,7 @@ function user_profile()
  var __user_profile_div = utils_sys.objects.by_id('user_profile');
  if (__user_profile_div === null)
  return false;
+ __user_profile_div.style = 'width: 182px; margin-left: 25px;';
  __user_profile_div.innerHTML = '<div id="' + user_profile_id + '" title="Manage profile">\
  <div id="notifications_num">00</div>\
  <div id="profile_access">\
@@ -10150,7 +10164,7 @@ function tik_tok()
  __dynamic_object = document.createElement('div');
  __dynamic_object.setAttribute('id', __tik_tok_id);
  __dynamic_object.setAttribute('class', 'tik_tok');
- __dynamic_object.setAttribute('title', 'Time and calendar');
+ __dynamic_object.setAttribute('title', 'Time & calendar');
  __dynamic_object.innerHTML = '<div id="' + __tik_tok_id + '_date" class="clock_date"></div>' +
  '<div id="' + __tik_tok_id + '_time" class="clock_time"></div>';
  __dynamic_object.style.display = 'block';
@@ -12757,6 +12771,7 @@ function bee()
  this.initialized = false;
  this.running = false;
  this.active = false;
+ this.error = false;
  this.in_hive = false;
  this.id_changed = false;
  this.type_changed = false;
@@ -12907,8 +12922,6 @@ function bee()
  __bee_gui = self.gui,
  __marquee_class = '',
  __html = null;
- if (__bee_gui.size.width() >= swarm.settings.right() || __bee_gui.size.height() >= swarm.settings.bottom())
- return false;
  populate_ui_config();
  if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
  {
@@ -13450,6 +13463,10 @@ function bee()
  this.active = function(val)
  {
  return validate('active', 'system', val);
+ };
+ this.error = function(val)
+ {
+ return validate('error', 'system', val);
  };
  this.id_changed = function(val)
  {
@@ -14170,6 +14187,12 @@ function bee()
  return false;
  return bee_statuses.active();
  };
+ this.error = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.error();
+ };
  this.in_hive = function()
  {
  if (is_init === false)
@@ -14631,6 +14654,8 @@ function bee()
  if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
  {
  error_code = self.error.codes.POSITION;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  if (limit === 'right' || limit === 'bottom')
@@ -14645,6 +14670,8 @@ function bee()
  if (val >= __position_settings.limits[limit])
  {
  error_code = self.error.codes.POSITION;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -14654,6 +14681,8 @@ function bee()
  if (val <= __position_settings.limits[limit])
  {
  error_code = self.error.codes.POSITION;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -14664,6 +14693,8 @@ function bee()
  if (val > __position_settings.limits[limit])
  {
  error_code = self.error.codes.POSITION;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -14677,15 +14708,21 @@ function bee()
  this.left = function(val)
  {
  var __alt_val = val;
+ if (!utils_sys.validation.misc.is_undefined(val))
+ {
  if (!bee_statuses.running() && __is_static === false)
  __alt_val = randomize_pos(val);
+ }
  return validate(1, 'left', 'right', __alt_val);
  };
  this.top = function(val)
  {
  var __alt_val = val;
+ if (!utils_sys.validation.misc.is_undefined(val))
+ {
  if (!bee_statuses.running() && __is_static === false)
  __alt_val = randomize_pos(val);
+ }
  return validate(1, 'top', 'bottom', __alt_val);
  };
  this.z_index = function(val)
@@ -14720,8 +14757,8 @@ function bee()
  }
  function max()
  {
- this.width = window.innerWidth;
- this.height = window.innerHeight;
+ this.width = 1366;
+ this.height = 700;
  }
  this.width = 300;
  this.height = 220;
@@ -14742,23 +14779,29 @@ function bee()
  if (!utils_sys.validation.numerics.is_integer(val) || val < 0)
  {
  error_code = self.error.codes.SIZE;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  if (mode === 1)
  {
  if (type === 1)
  {
- if (val < me.size.min.width() || val > me.size.max.width())
+ if (val < me.size.min.width() || (me.position.left() + val) > me.size.max.width())
  {
  error_code = self.error.codes.SIZE;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
  else if (type === 2)
  {
- if (val < me.size.min.height() || val > me.size.max.height())
+ if (val < me.size.min.height() || (me.position.top() + val) > me.size.max.height())
  {
  error_code = self.error.codes.SIZE;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -14770,6 +14813,8 @@ function bee()
  if (val < me.size.min.width() || val > me.size.width())
  {
  error_code = self.error.codes.SIZE;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -14778,6 +14823,8 @@ function bee()
  if (val < me.size.min.height() || val > me.size.height())
  {
  error_code = self.error.codes.SIZE;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -14789,6 +14836,8 @@ function bee()
  if (val < me.size.width())
  {
  error_code = self.error.codes.SIZE;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -14797,6 +14846,8 @@ function bee()
  if (val < me.size.height())
  {
  error_code = self.error.codes.SIZE;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
  return false;
  }
  }
@@ -15481,7 +15532,6 @@ function bee()
  if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
  return false;
  }
- bee_statuses.running(true);
  if (headless === false)
  {
  if (!utils_int.gui_init())
@@ -15492,6 +15542,7 @@ function bee()
  return false;
  }
  }
+ bee_statuses.running(true);
  bee_statuses.active(true);
  morpheus.execute(my_bee_id, 'system', 'running');
  owl.status.applications.set(my_bee_id, __app_id, 'RUN');
@@ -15508,8 +15559,10 @@ function bee()
  function remove_me(this_object)
  {
  var __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
+ error_code = null;
  morpheus.execute(my_bee_id, 'gui', 'closed');
  morpheus.clear(my_bee_id);
+ bee_statuses.error(false);
  bee_statuses.running(false);
  bee_statuses.closed(true);
  swarm.settings.active_bee(null);
@@ -16274,6 +16327,8 @@ function bee()
  if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id) || !self.settings.general.type(type))
  return false;
  my_bee_id = self.settings.general.id();
+ self.gui.size.max.width(swarm.settings.right());
+ self.gui.size.max.height(swarm.settings.bottom());
  nature.theme(['bee']);
  nature.apply('new');
  bee_statuses.initialized(true);

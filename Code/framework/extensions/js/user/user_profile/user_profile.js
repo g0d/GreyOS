@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 1.4)
+    GreyOS - User Profile (Version: 1.5)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -133,6 +133,7 @@ function user_profile()
             if (__user_profile_div === null)
                 return false;
 
+            __user_profile_div.style = 'width: 182px; margin-left: 25px;';
             __user_profile_div.innerHTML = '<div id="' + user_profile_id + '" title="Manage profile">\
                                                 <div id="notifications_num">00</div>\
                                                 <div id="profile_access">\

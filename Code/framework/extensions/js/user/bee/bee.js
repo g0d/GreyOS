@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 4.7)
+    GreyOS - Bee (Version: 4.8)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -198,6 +198,7 @@ function bee()
             this.initialized = false;
             this.running = false;
             this.active = false;
+            this.error = false;
             this.in_hive = false;
             this.id_changed = false;
             this.type_changed = false;
@@ -368,9 +369,6 @@ function bee()
                 __bee_gui = self.gui,
                 __marquee_class = '',
                 __html = null;
-
-            if (__bee_gui.size.width() >= swarm.settings.right() || __bee_gui.size.height() >= swarm.settings.bottom())
-                return false;
 
             populate_ui_config();
 
@@ -1077,6 +1075,11 @@ function bee()
         this.active = function(val)
         {
             return validate('active', 'system', val);
+        };
+
+        this.error = function(val)
+        {
+            return validate('error', 'system', val);
         };
 
         this.id_changed = function(val)
@@ -2050,6 +2053,14 @@ function bee()
                 return bee_statuses.active();
             };
 
+            this.error = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.error();
+            };
+
             this.in_hive = function()
             {
                 if (is_init === false)
@@ -2646,6 +2657,10 @@ function bee()
                 {
                     error_code = self.error.codes.POSITION;
 
+                    owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                    bee_statuses.error(true);
+
                     return false;
                 }
 
@@ -2662,6 +2677,10 @@ function bee()
                         {
                             error_code = self.error.codes.POSITION;
 
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
+
                             return false;
                         }        
                     }
@@ -2671,6 +2690,10 @@ function bee()
                     if (val <= __position_settings.limits[limit])
                     {
                         error_code = self.error.codes.POSITION;
+
+                        owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                        bee_statuses.error(true);
 
                         return false;
                     }    
@@ -2683,11 +2706,15 @@ function bee()
                         {
                             error_code = self.error.codes.POSITION;
 
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
+
                             return false;
                         }        
                     }
                 }
-                
+
                 if (mode === 1)
                     __position_settings[position] = val;
                 else
@@ -2700,8 +2727,11 @@ function bee()
             {
                 var __alt_val = val;
 
-                if (!bee_statuses.running() && __is_static === false)
-                    __alt_val = randomize_pos(val);
+                if (!utils_sys.validation.misc.is_undefined(val))
+                {
+                    if (!bee_statuses.running() && __is_static === false)
+                        __alt_val = randomize_pos(val);
+                }
 
                 return validate(1, 'left', 'right', __alt_val);
             };
@@ -2710,8 +2740,11 @@ function bee()
             {
                 var __alt_val = val;
 
-                if (!bee_statuses.running() && __is_static === false)
-                    __alt_val = randomize_pos(val);
+                if (!utils_sys.validation.misc.is_undefined(val))
+                {
+                    if (!bee_statuses.running() && __is_static === false)
+                        __alt_val = randomize_pos(val);
+                }
 
                 return validate(1, 'top', 'bottom', __alt_val);
             };
@@ -2757,8 +2790,8 @@ function bee()
 
                 function max()
                 {
-                    this.width = window.innerWidth;
-                    this.height = window.innerHeight;
+                    this.width = 1366;
+                    this.height = 700;
                 }
 
                 this.width = 300;
@@ -2784,6 +2817,10 @@ function bee()
                 {
                     error_code = self.error.codes.SIZE;
 
+                    owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                    bee_statuses.error(true);
+
                     return false;
                 }
 
@@ -2791,18 +2828,26 @@ function bee()
                 {
                     if (type === 1)
                     {
-                        if (val < me.size.min.width() || val > me.size.max.width())
+                        if (val < me.size.min.width() || (me.position.left() + val) > me.size.max.width())
                         {
                             error_code = self.error.codes.SIZE;
+
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
 
                             return false;
                         }
                     }
                     else if (type === 2)
                     {
-                        if (val < me.size.min.height() || val > me.size.max.height())
+                        if (val < me.size.min.height() || (me.position.top() + val) > me.size.max.height())
                         {
                             error_code = self.error.codes.SIZE;
+
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
 
                             return false;
                         }
@@ -2816,6 +2861,10 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
+
                             return false;
                         }
                     }
@@ -2824,6 +2873,10 @@ function bee()
                         if (val < me.size.min.height() || val > me.size.height())
                         {
                             error_code = self.error.codes.SIZE;
+
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
 
                             return false;
                         }
@@ -2837,6 +2890,10 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
+
                             return false;
                         }
                     }
@@ -2845,6 +2902,10 @@ function bee()
                         if (val < me.size.height())
                         {
                             error_code = self.error.codes.SIZE;
+
+                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                            bee_statuses.error(true);
 
                             return false;
                         }
@@ -3749,8 +3810,6 @@ function bee()
                         return false;
                 }
 
-                bee_statuses.running(true);
-
                 if (headless === false)
                 {
                     if (!utils_int.gui_init())
@@ -3764,6 +3823,7 @@ function bee()
                     }
                 }
 
+                bee_statuses.running(true);
                 bee_statuses.active(true);
 
                 morpheus.execute(my_bee_id, 'system', 'running');
@@ -3788,9 +3848,12 @@ function bee()
                 {
                     var __honeycomb_id = hive.status.bees.honeycomb_id(my_bee_id);
 
+                    error_code = null;
+
                     morpheus.execute(my_bee_id, 'gui', 'closed');
                     morpheus.clear(my_bee_id);
 
+                    bee_statuses.error(false);
                     bee_statuses.running(false);
                     bee_statuses.closed(true);
 
@@ -4771,6 +4834,9 @@ function bee()
             return false;
 
         my_bee_id = self.settings.general.id();
+
+        self.gui.size.max.width(swarm.settings.right());
+        self.gui.size.max.height(swarm.settings.bottom());
 
         nature.theme(['bee']);
         nature.apply('new');

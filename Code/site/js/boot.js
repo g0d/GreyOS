@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 3.6)
+    GreyOS - Bootstrap facility (Version: 3.7)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -33,7 +33,7 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '3.3 (alpha)');  // Meta-OS version
+    os_settings.set('version', '3.4 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
     os_settings.set('max_services', 50);        // Maximum number of allowed active services per session
     os_settings.set('max_apps', 16);            // Maximum number of allowed active apps per session
@@ -139,6 +139,7 @@ function boot_script()
             // Load basic services and UI infrastructure
             var new_xenon = matrix_container.get('xenon');
             var new_parrot = matrix_container.get('parrot');
+            var new_tik_tok = matrix_container.get('tik_tok');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
             var new_swarm = matrix_container.get('swarm');
@@ -158,6 +159,9 @@ function boot_script()
 
             // Initialize only the sound service (no UI)
             new_parrot.init();
+
+            // Initialize the system clock
+            new_tik_tok.init('clock');
 
             // Initialize desktop module
             new_swarm.init('desktop', 12, 100, window.innerWidth - 28, window.innerHeight - 120);
@@ -180,12 +184,12 @@ function boot_script()
         function run_krator_app()
         {
             var krator_app = app_box_container.get('krator');
+            var msg_win = new msgbox();
+
+            msg_win.init('desktop');
 
             if (!krator_app.init(login_success_callback))
             {
-                var msg_win = new msgbox();
-
-                msg_win.init('desktop');
                 msg_win.show('GreyOS', 'A system error occurred. Your system will be rebooted!', 
                 function()
                 {
@@ -225,7 +229,6 @@ function boot_script()
             matrix_container.get('swarm').reset('desktop', 44, 100, window.innerWidth - 60, window.innerHeight - 118);
             matrix_container.get('hive').init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             matrix_container.get('eagle').init('desktop');
-            matrix_container.get('tik_tok').init('clock');
             matrix_container.get('octopus').init('device_manager');
             matrix_container.get('super_tray').init('services_tray');
             matrix_container.get('parrot').load('audio');
