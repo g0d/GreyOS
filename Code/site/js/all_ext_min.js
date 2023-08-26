@@ -7661,8 +7661,8 @@ function hive()
  else
  {
  stack_trace.bee_drag = true;
- var __this_bee = swarm.status.active_bee(),
- __hive_bee = utils_sys.objects.by_id('hive_bee_' + __this_bee),
+ var __active_bee_id = swarm.status.active_bee(),
+ __hive_bee = utils_sys.objects.by_id('hive_bee_' + __active_bee_id),
  __hive_object = utils_sys.objects.by_id(hive_id),
  __ghost_bee_width = 230,
  __ghost_bee_height = 30,
@@ -7678,7 +7678,7 @@ function hive()
  self.stack.bees.expel(event_object);
  __honeycomb.removeChild(__hive_bee);
  }
- me.draw_hive_bee(honeycomb_views.visible(), __this_bee, 1);
+ me.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 1);
  if (__bee_x <= __stack_offset_x_space)
  {
  utils_sys.objects.by_id('hive_ghost_bee').style.left = coords.mouse_x + 10 + 'px';
@@ -7700,17 +7700,17 @@ function hive()
  {
  if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
  return false;
- var __this_bee = swarm.status.active_bee();
- if (__this_bee)
+ var __active_bee_id = swarm.status.active_bee();
+ if (__active_bee_id)
  {
- var __this_hive_bee = colony.get(__this_bee);
- if (utils_sys.objects.by_id(__this_bee) === null)
+ var __this_hive_bee = colony.get(__active_bee_id);
+ if (utils_sys.objects.by_id(__active_bee_id) === null)
  {console.error('{ *** [ ! ( ^ ) ! ] *** }');
  }
- utils_sys.objects.by_id(__this_bee).style.display = 'block';
+ utils_sys.objects.by_id(__active_bee_id).style.display = 'block';
  utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
  if (__this_hive_bee.status.gui.casement_deployed())
- utils_sys.objects.by_id(__this_bee + '_casement').style.display = 'block';
+ utils_sys.objects.by_id(__active_bee_id + '_casement').style.display = 'block';
  stack_trace.bee_drag = false;
  return true;
  }
@@ -8066,6 +8066,8 @@ function hive()
  var __bee_id = object.settings.general.id();
  if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
  return false;
+ if (colony.get(__bee_id).status.system.in_hive())
+ return false;
  if (honeycomb_view === null)
  {
  for (var i = 0; i < honeycomb_views.num(); i++)
@@ -8103,7 +8105,6 @@ function hive()
  return false;
  if (!colony.remove(__bee_id))
  return false;
- object.settings.general.in_hive(false);
  return true;
  };
  this.put = function(event_object)
@@ -8122,23 +8123,41 @@ function hive()
  if (honeycomb_views.list(i).id === honeycomb_views.visible() &&
  honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
  {
- var __this_bee = swarm.status.active_bee();
- honeycomb_views.list(i).bees.add(__this_bee);
- colony.get(__this_bee).settings.general.in_hive(true);
- swarm.bees.remove(__this_bee);
- utils_int.draw_hive_bee(honeycomb_views.visible(), __this_bee, 0);
+ var __active_bee_id = swarm.status.active_bee();
+ honeycomb_views.list(i).bees.add(__active_bee_id);
+ colony.get(__active_bee_id).settings.general.in_hive(true);
+ swarm.bees.remove(__active_bee_id);
+ utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
  swarm.settings.active_bee(null);
  return true;
  }
  }
  return false;
  }
- return true;
  };
  this.expel = function(event_object)
  {
  if (is_init === false)
  return false;
+ if (event_object === null)
+ {
+ for (var i = 0; i < honeycomb_views.num(); i++)
+ {
+ var __tmp_bees_list = honeycomb_views.list(i).bees.list();
+ for (var j = 0; j < __tmp_bees_list.length; j++)
+ {
+ var __this_bee_id = __tmp_bees_list[j],
+ __this_bee = colony.get(__this_bee_id);
+ self.stack.bees.remove(__this_bee, i + 1);
+ console.log(swarm.bees.insert(__this_bee));
+ swarm.settings.active_bee(__this_bee_id);
+ utils_int.set_z_index(__this_bee_id);
+ }
+ }
+ return true;
+ }
+ else
+ {
  if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
  return false;
  if (swarm.status.active_bee())
@@ -8147,31 +8166,30 @@ function hive()
  {
  if (honeycomb_views.list(i).id === honeycomb_views.visible())
  {
- var __this_bee = swarm.status.active_bee();
- honeycomb_views.list(i).bees.remove(__this_bee);
- swarm.bees.insert(__this_bee);
- colony.get(__this_bee).settings.general.in_hive(false);
- swarm.settings.active_bee(__this_bee);
- utils_int.set_z_index(__this_bee);
+ var __active_bee_id = swarm.status.active_bee();
+ honeycomb_views.list(i).bees.remove(__active_bee_id);
+ swarm.bees.insert(__active_bee_id);
+ colony.get(__active_bee_id).settings.general.in_hive(false);
+ swarm.settings.active_bee(__active_bee_id);
+ utils_int.set_z_index(__active_bee_id);
  return true;
  }
  }
  return false;
  }
- return true;
+ }
  };
  this.show = function(honeycomb_view)
  {
  if (is_init === false)
  return false;
- var j = 0;
  if (colony.num() === 0 || !utils_int.validate_honeycomb_range(honeycomb_view))
  return false;
  var __bees_num = honeycomb_views.list(honeycomb_view).bees.num(),
  __bees = honeycomb_views.list(honeycomb_view).bees.list();
  for (var i = 0; i < __bees_num; i++)
  {
- for (j = 0; j < colony.num(); j++)
+ for (var j = 0; j < colony.num(); j++)
  {
  if (colony.list(j).settings.general.id() === __bees[i])
  utils_int.show_hive_bee(honeycomb_view, colony, j);
@@ -8489,7 +8507,7 @@ function trinity()
  roost = cosmos.hub.access('roost');
  swarm = matrix.get('swarm');
  nature = matrix.get('nature');
- infinity = matrix.get('infinity');
+ infinity = dev_box.get('infinity');
  return true;
  };
  var is_init = false,
@@ -8594,56 +8612,55 @@ function krator()
  __register_username = utils_sys.objects.by_id('register_username_text'),
  __register_password = utils_sys.objects.by_id('register_password_text'),
  __register_password_confirm = utils_sys.objects.by_id('register_password_confirm_text'),
- __register_button = utils_sys.objects.by_id('register_button');
- utils_sys.events.attach(config.id, __login_username, 'keydown',
- function(event)
+ __register_button = utils_sys.objects.by_id('register_button'),
+ __handler = null,
+ __args_array = null;
+ __handler = function() { me.check_login_credentials(__login_username, __login_password, __login_button); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __login_button);
+ __handler = function()
  {
- var __args_array = [__login_username, __login_password, __login_button];
- me.scan_enter(event, 'login', __args_array);
- });
- utils_sys.events.attach(config.id, __login_password, 'keydown',
- function(event)
- {
- var __args_array = [__login_username, __login_password, __login_button];
- me.scan_enter(event, 'login', __args_array);
- });
- utils_sys.events.attach(config.id, __login_button, 'click',
- function()
- {
- me.check_login_credentials(__login_username, __login_password, __login_button);
- });
- utils_sys.events.attach(config.id, __register_link, 'mousedown',
- function(event)
+ me.check_registration_credentials(__register_username, __register_password,
+ __register_password_confirm, __register_button);
+ };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __register_button);
+ __handler = function(event)
  {
  if (krator_bee.status.gui.casement_deployed())
  krator_bee.gui.actions.casement.hide(event);
  else
  krator_bee.gui.actions.casement.deploy(event);
- });
- utils_sys.events.attach(config.id, __register_username, 'keydown',
- function(event)
+ };
+ morpheus.run(config.id, 'mouse', 'mousedown', __handler, __register_link);
+ __handler = function(event)
  {
- var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+ __args_array = [__login_username, __login_password, __login_button];
+ me.scan_enter(event, 'login', __args_array);
+ };
+ morpheus.run(config.id, 'key', 'keydown', __handler, __login_username);
+ __handler = function(event)
+ {
+ __args_array = [__login_username, __login_password, __login_button];
+ me.scan_enter(event, 'login', __args_array);
+ };
+ morpheus.run(config.id, 'key', 'keydown', __handler, __login_password);
+ __handler = function(event)
+ {
+ __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
  me.scan_enter(event, 'registration', __args_array);
- });
- utils_sys.events.attach(config.id, __register_password, 'keydown',
- function(event)
+ };
+ morpheus.run(config.id, 'key', 'keydown', __handler, __register_username);
+ __handler = function(event)
  {
- var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+ __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
  me.scan_enter(event, 'registration', __args_array);
- });
- utils_sys.events.attach(config.id, __register_password_confirm, 'keydown',
- function(event)
+ };
+ morpheus.run(config.id, 'key', 'keydown', __handler, __register_password);
+ __handler = function(event)
  {
- var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+ __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
  me.scan_enter(event, 'registration', __args_array);
- });
- utils_sys.events.attach(config.id, __register_button, 'click',
- function()
- {
- me.check_registration_credentials(__register_username, __register_password,
- __register_password_confirm, __register_button);
- });
+ };
+ morpheus.run(config.id, 'key', 'keydown', __handler, __register_password_confirm);
  return true;
  };
  this.scan_enter = function(event, form_id, args_array)
@@ -8662,21 +8679,31 @@ function krator()
  };
  this.check_login_credentials = function(username_object, password_object, login_button_object)
  {
+ function enable_controls()
+ {
+ username_object.disabled = false;
+ password_object.disabled = false;
+ login_button_object.disabled = false;
+ }
+ function disable_controls()
+ {
+ username_object.disabled = true;
+ password_object.disabled = true;
+ login_button_object.disabled = true;
+ }
  msg_win = new msgbox();
  msg_win.init('desktop');
+ disable_controls();
  if (!utils_sys.validation.utilities.is_email(username_object.value))
  {
- msg_win.show(os_name, 'The email format is invalid!');
+ msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
  return;
  }
  if (username_object.value.length < 3 || password_object.value.length < 8)
  {
- msg_win.show(os_name, 'Credentials are invalid!');
+ msg_win.show(os_name, 'Credentials are invalid!', () => { enable_controls(); });
  return;
  }
- username_object.disabled = true;
- password_object.disabled = true;
- login_button_object.disabled = true;
  var data = 'gate=auth&mode=login&username=' + username_object.value + '&password=' + password_object.value;
  ajax_factory(data, function()
  {
@@ -8685,56 +8712,59 @@ function krator()
  },
  function()
  {
- msg_win.show(os_name, 'Your credentials are wrong!');
+ msg_win.show(os_name, 'Your credentials are wrong!', () => { enable_controls(); });
  },
  function()
  {
- username_object.disabled = false;
- password_object.disabled = false;
- login_button_object.disabled = false;
  });
  };
  this.check_registration_credentials = function(username_object, password_object, password_comfirm_object, register_button_object)
  {
- msg_win = new msgbox();
- msg_win.init('desktop');
- if (!utils_sys.validation.utilities.is_email(username_object.value))
- {
- msg_win.show(os_name, 'The email format is invalid!');
- return;
- }
- if (username_object.value.length < 3 || password_object.value.length < 8)
- {
- msg_win.show(os_name, 'Please choose more complex credentials!');
- return;
- }
- if (password_object.value !== password_comfirm_object.value)
- {
- msg_win.show(os_name, 'Password confirmation failed!');
- return;
- }
- username_object.disabled = true;
- password_object.disabled = true;
- password_comfirm_object.disabled = true;
- register_button_object.disabled = true;
- var data = 'gate=register&mode=reg&username=' + username_object.value +
- '&password=' + password_object.value +
- '&confirm=' + password_comfirm_object.value;
- ajax_factory(data, function()
- {
- msg_win.show(os_name, 'Registration succeeded!',
- function() { });
- },
- function()
- {
- msg_win.show(os_name, 'Registration failed!');
- },
- function()
+ function enable_controls()
  {
  username_object.disabled = false;
  password_object.disabled = false;
  password_comfirm_object.disabled = false;
  register_button_object.disabled = false;
+ }
+ function disable_controls()
+ {
+ username_object.disabled = true;
+ password_object.disabled = true;
+ password_comfirm_object.disabled = true;
+ register_button_object.disabled = true;
+ }
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ disable_controls();
+ if (!utils_sys.validation.utilities.is_email(username_object.value))
+ {
+ msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
+ return;
+ }
+ if (username_object.value.length < 3 || password_object.value.length < 8)
+ {
+ msg_win.show(os_name, 'Please choose more complex credentials!', () => { enable_controls(); });
+ return;
+ }
+ if (password_object.value !== password_comfirm_object.value)
+ {
+ msg_win.show(os_name, 'Password confirmation failed!', () => { enable_controls(); });
+ return;
+ }
+ var data = 'gate=register&mode=reg&username=' + username_object.value +
+ '&password=' + password_object.value +
+ '&confirm=' + password_comfirm_object.value;
+ ajax_factory(data, function()
+ {
+ msg_win.show(os_name, 'Registration succeeded!', () => { enable_controls(); });
+ },
+ function()
+ {
+ msg_win.show(os_name, 'Registration failed!', () => { enable_controls(); });
+ },
+ function()
+ {
  });
  };
  this.load_desktop_ui = function(script)
@@ -8771,6 +8801,7 @@ function krator()
  krator_bee.settings.actions.can_edit_title(false);
  krator_bee.settings.actions.can_use_menu(false);
  krator_bee.settings.actions.can_close(false);
+ krator_bee.settings.general.single_instance(true);
  krator_bee.gui.size.width(420);
  krator_bee.gui.size.height(400);
  krator_bee.gui.position.static(true);
@@ -8797,6 +8828,7 @@ function krator()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  dev_box = cosmos.hub.access('dev_box');
+ morpheus = matrix.get('morpheus');
  xenon = matrix.get('xenon');
  swarm = matrix.get('swarm');
  nature = matrix.get('nature');
@@ -8808,6 +8840,7 @@ function krator()
  cosmos = null,
  matrix = null,
  dev_box = null,
+ morpheus = null,
  xenon = null,
  swarm = null,
  nature = null,
@@ -8918,7 +8951,7 @@ function ui_controls()
  {
  if (is_init === false)
  return false;
- if (!colony.list())
+ if (colony.list().length === 0)
  return false;
  if (config.is_boxified === false)
  {
@@ -8936,21 +8969,22 @@ function ui_controls()
  {
  if (is_init === false)
  return false;
- if (!colony.list())
- return false;
  if (config.is_stack === false)
  {
- utils_int.make_active('stack_all', 'placement');
  var __bees = colony.list(),
  __bees_length = __bees.length;
  if (__bees_length === 0)
  return false;
  for (var i = 0; i < __bees_length; i++)
  hive.stack.bees.insert(__bees[i], null);
+ utils_int.make_active('stack_all', 'placement');
  config.is_stack = true;
  }
  else
  {
+ if (colony.list().length === 0)
+ return false;
+ hive.stack.bees.expel(null);
  utils_int.make_inactive('stack_all', 'placement');
  config.is_stack = false;
  }
@@ -9053,6 +9087,7 @@ function dock()
  {
  var __bull_config = {
  "type" : "request",
+ "method" : "post",
  "url" : "/",
  "data" : "gate=dock&action=save&apps=" + apps_array,
  "ajax_mode" : "synchronous",
@@ -9128,6 +9163,13 @@ function dock()
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
  You need a larger screen or higher resolution to run it!');
+ }
+ else if (__bee.error.last() === __bee.error.codes.INSTANCE_NUM_LIMIT)
+ {
+ swarm.bees.remove(__bee);
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
  }
  }
  };
@@ -9279,8 +9321,6 @@ function dock()
  dock_id = self.settings.id();
  nature.theme('dock');
  nature.apply('new');
- msg_win = new msgbox();
- msg_win.init('desktop');
  utils_int.draw();
  return true;
  };
@@ -9594,6 +9634,8 @@ function user_profile()
  nature.theme('user_profile');
  nature.apply('new');
  utils_int.draw_user_profile();
+ msg_win = new msgbox();
+ msg_win.init('desktop');
  return true;
  };
  this.cosmos = function(cosmos_object)
@@ -10725,6 +10767,12 @@ function meta_script()
  return false;
  return __new_app.status.gui.resized();
  };
+ this.topmost = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.status.gui.topmost();
+ };
  this.menu_activated = function()
  {
  if (__new_app === null)
@@ -10778,12 +10826,6 @@ function meta_script()
  }
  function settings()
  {
- this.topmost = function(val)
- {
- if (__new_app === null)
- return false;
- return __new_app.settings.general.topmost(val);
- };
  this.status_bar_marquee = function(val)
  {
  if (__new_app === null)
@@ -11032,7 +11074,7 @@ function meta_script()
  super_tray = matrix.get('super_tray');
  owl = matrix.get('owl');
  teal_fs = matrix.get('teal_fs');
- infinity = matrix.get('infinity');
+ infinity = dev_box.get('infinity');
  return true;
  };
  var is_program_loaded = false,
@@ -12500,6 +12542,236 @@ function infinity()
  this.status = new status_model();
  this.settings = new settings_model();
 }
+function scrollbar()
+{
+ var self = this;
+ function config_model()
+ {
+ this.id = null;
+ this.container_id = null;
+ this.scroll_ratio = 0.0;
+ this.handle_pos = 0;
+ this.offset_pos = 0;
+ this.is_scrolling = false;
+ this.is_wheel = false;
+ this.side = null; // 1 is for right side, 2 is for left side
+ this.handle_width = null;
+ }
+ function utilities()
+ {
+ this.draw = function(id)
+ {
+ var __content = vulcan.objects.by_id(id);
+ __content.innerHTML = '<div id="' + config.id + '_content" class="scrollbar-content">' + __content.innerHTML + '</div>';
+ var __container = vulcan.objects.by_id(id);
+ __content = vulcan.objects.by_id(config.id + '_content');
+ var __track_div = document.createElement('div');
+ __track_div.id = config.id + '_track';
+ __track_div.className = 'scrollbar-track';
+ __track_div.innerHTML = '<div id="' + config.id + '_handle" class="scrollbar-handle"></div>';
+ __container.appendChild(__track_div);
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __content_height = __content.clientHeight,
+ __container_height = __content.parentNode.clientHeight,
+ __scroll_ratio = (__content_height - __container_height) / (__container_height - __handle.clientHeight - 8);
+ if (__scroll_ratio <= 1.0)
+ return false;
+ __content.style.height = '100%';
+ if (config.side === 1)
+ {
+ __track.style.right = '5px';
+ __track.style.cssFloat = 'right';
+ __content.style.cssFloat = 'left';
+ }
+ else // Apply Scroll Bar on the left side
+ __content.style.marginLeft = __handle.offsetWidth + 'px';
+ config.scroll_ratio = __scroll_ratio;
+ config.handle_width = __handle.offsetWidth;
+ return true;
+ };
+ this.bind_events = function()
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __handle = vulcan.objects.by_id(config.id + '_handle');
+ morpheus.run(config.id, 'mouse', 'mousewheel', events.mouse.wheel, __content);
+ morpheus.run(config.id, 'mouse', 'mousedown', events.mouse.down, __handle);
+ morpheus.run(config.id, 'mouse', 'mouseup', events.mouse.up, document);
+ morpheus.run(config.id, 'mouse', 'mousemove', events.mouse.move, document);
+ return true;
+ };
+ }
+ function events_manager()
+ {
+ function mouse()
+ {
+ this.up = function()
+ {
+ config.is_scrolling = false;
+ return true;
+ };
+ this.down = function(this_event)
+ {
+ if (config.handle_pos === 0)
+ config.handle_pos = this_event.clientY;
+ config.is_scrolling = true;
+ config.is_wheel = false;
+ return true;
+ };
+ this.move = function(this_event)
+ {
+ if (!config.is_scrolling)
+ return false;
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __track_height = __track.clientHeight,
+ __handle_height = __handle.clientHeight,
+ __moved = config.offset_pos + this_event.clientY - config.handle_pos,
+ __top = __moved;
+ if (__moved < 0)
+ __top = 0;
+ else if (__moved > __track_height - __handle_height)
+ __top = __track_height - __handle_height;
+ __handle.style.top = __top + 'px';
+ __content.scrollTop = __top * config.scroll_ratio;
+ return true;
+ };
+ this.wheel = function(this_event)
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __track_height = __track.clientHeight,
+ __handle_height = __handle.clientHeight,
+ __mouse_direction = this_event.detail ? this_event.detail * -1 : this_event.wheelDelta / 120,
+ __moved = config.offset_pos - config.handle_pos,
+ __top = __moved;
+ if (__mouse_direction < 0)
+ {
+ if (__moved > __track_height - __handle_height)
+ __top = __track_height - __handle_height;
+ __handle.style.top = __top + 'px';
+ __content.scrollTop += config.scroll_ratio;
+ }
+ else
+ {
+ if (__moved < 0)
+ __top = 0;
+ __handle.style.top = __top + 'px';
+ __content.scrollTop -= config.scroll_ratio;
+ }
+ config.handle_pos = __top;
+ config.is_wheel = true;
+ return true;
+ };
+ }
+ this.mouse = new mouse();
+ }
+ function status()
+ {
+ }
+ function side()
+ {
+ this.change = function()
+ {
+ if (is_init === false)
+ return false;
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track');
+ if (config.side === 1)
+ {
+ __track.style.right = '';
+ __content.style.marginLeft = config.handle_width + 'px';
+ config.side = 2;
+ }
+ else
+ {
+ __content.style.marginLeft = '';
+ __track.style.right = '5px';
+ config.side = 1;
+ }
+ return true;
+ };
+ }
+ function scroll()
+ {
+ this.top = function()
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __handle = vulcan.objects.by_id(config.id + '_handle');
+ config.offset_pos = 0;
+ __content.scrollTop = 0;
+ };
+ this.bottom = function()
+ {
+ var __content = vulcan.objects.by_id(config.id + '_content'),
+ __track = vulcan.objects.by_id(config.id + '_track'),
+ __handle = vulcan.objects.by_id(config.id + '_handle'),
+ __track_height = __track.clientHeight,
+ __handle_height = __handle.clientHeight,
+ __top = __track_height - __handle_height;
+ config.offset_pos = __top;
+ __content.scrollTop = __content.scrollHeight - __handle.clientHeight;
+ };
+ }
+ this.apply = function(container_id, side)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.alpha.is_symbol(container_id))
+ return false;
+ if (!vulcan.validation.numerics.is_integer(side) || side < 1 || side > 2)
+ return false;
+ var __scrollbar_exists = vulcan.objects.by_id(container_id).getElementsByClassName('scrollbar-content')[0];
+ if (__scrollbar_exists)
+ return false;
+ config.container_id = container_id;
+ config.side = side;
+ utils.draw(container_id);
+ utils.bind_events();
+ return true;
+ };
+ this.destroy = function(container_id)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.alpha.is_symbol(container_id))
+ return false;
+ return true;
+ };
+ this.init = function()
+ {
+ if (is_init === true)
+ return false;
+ is_init = true;
+ vulcan = cosmos.hub.access('vulcan');
+ var __pythia = cosmos.hub.access('matrix').get('pythia');
+ config.id = 'scrollbar_' + __pythia.generate();
+ vulcan.graphics.apply_theme('/framework/extensions/js/scrollbar/themes', 'scrollbar');
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ morpheus = matrix.get('morpheus');
+ return true;
+ };
+ var is_init = false,
+ cosmos = null,
+ morpheus = null,
+ utils_sys = new vulcan(),
+ config = new config_model(),
+ events = new events_manager(),
+ utils = new utilities();
+ this.status = new status();
+ this.side = new side();
+ this.scroll = new scroll();
+}
 function max_screen()
 {
  var self = this;
@@ -12789,6 +13061,7 @@ function bee()
  this.restored = false;
  this.maximize = false;
  this.maximized = false;
+ this.topmost = false;
  this.drag = false;
  this.dragging = false;
  this.dragged = false;
@@ -12838,9 +13111,10 @@ function bee()
  {
  function codes()
  {
- this.POSITION = 0xF1;
- this.SIZE = 0xF2;
- this.FX = 0xF3;
+ this.INSTANCE_NUM_LIMIT = 0xA1;
+ this.POSITION = 0xE1;
+ this.SIZE = 0xE2;
+ this.FX = 0xE3;
  }
  this.last = function()
  {
@@ -13524,6 +13798,10 @@ function bee()
  {
  return validate('maximized', 'gui', val);
  };
+ this.topmost = function(val)
+ {
+ return validate('topmost', 'gui', val);
+ };
  this.drag = function(val)
  {
  return validate('drag', 'gui', val);
@@ -13663,7 +13941,7 @@ function bee()
  __app_type = 0,
  __desktop_id = 0,
  __single_instance = false,
- __topmost = false,
+ __allowed_instances = 0,
  __status_bar_marquee = false,
  __resize_tooltip = false,
  __backtrace = false,
@@ -13734,17 +14012,32 @@ function bee()
  __single_instance = val;
  return true;
  };
+ this.allowed_instances = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __allowed_instances;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.numerics.is_integer(val) || val < 1)
+ return false;
+ __allowed_instances = val;
+ return true;
+ };
  this.topmost = function(val)
  {
  if (is_init === false)
  return false;
  if (utils_sys.validation.misc.is_undefined(val))
- return __topmost;
- if (bee_statuses.running())
  return false;
  if (!utils_sys.validation.misc.is_bool(val))
  return false;
- __topmost = val;
+ if (bee_statuses.running())
+ return false;
+ bee_statuses.topmost(val);
+ if (val === true)
+ morpheus.execute(my_bee_id, 'gui', 'topmost');
  return true;
  };
  this.in_hive = function(val)
@@ -14358,6 +14651,12 @@ function bee()
  if (is_init === false)
  return false;
  return bee_statuses.maximized();
+ };
+ this.topmost = function()
+ {
+ if (is_init === false)
+ return false;
+ return bee_statuses.topmost();
  };
  this.drag = function()
  {
@@ -15526,10 +15825,11 @@ function bee()
  return false;
  if (utils_int.is_lonely_bee(my_bee_id))
  return false;
- var __app_id = self.settings.general.app_id();
- if (parent_app_id === null)
+ var __app_id = self.settings.general.app_id(),
+ __is_running_instance = owl.status.applications.get.by_proc_id(__app_id, 'RUN');
+ if (__is_running_instance)
  {
- if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+ if (colony.is_single_instance(__app_id))
  return false;
  }
  if (headless === false)
@@ -15670,7 +15970,7 @@ function bee()
  return false;
  var __z_index = swarm.status.z_index();
  swarm.settings.z_index(__z_index + 2);
- if (self.settings.general.topmost())
+ if (bee_statuses.topmost())
  {
  var __new_topmost_z_index = me.position.topmost_z_index() + __z_index;
  me.position.topmost_z_index(__new_topmost_z_index);
@@ -15697,7 +15997,7 @@ function bee()
  morpheus.execute(my_bee_id, 'system', 'active');
  morpheus.execute(my_bee_id, 'gui', 'touch');
  morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
- if (self.settings.general.topmost())
+ if (bee_statuses.topmost())
  return true;
  me.actions.set_top();
  return true;
@@ -16312,6 +16612,28 @@ function bee()
  return false;
  if (error_code !== null)
  return false;
+ var __app_id = self.settings.general.app_id(),
+ __all_bees = colony.list(),
+ __max_allowed_instances = self.settings.general.allowed_instances(),
+ __currrent_running_instances_num = 0;
+ if (__max_allowed_instances > 0)
+ {
+ for (var this_bee of __all_bees)
+ {
+ if (this_bee.settings.general.app_id() === __app_id)
+ {
+ __currrent_running_instances_num++;
+ if (__currrent_running_instances_num > __max_allowed_instances)
+ {
+ error_code = self.error.codes.INSTANCE_NUM_LIMIT;
+ owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+ bee_statuses.error(true);
+ utils_int.log('Run', 'INSTANCES LIMIT');
+ return false;
+ }
+ }
+ }
+ }
  if (!self.gui.actions.show(parent_app_id, headless))
  return false;
  utils_int.log('Run', 'OK');
@@ -16532,98 +16854,227 @@ function coyote()
  this.id = null;
  this.pages = [];
  this.index = 0;
+ this.ping_interval = 600000
+ this.is_full_screen = false;
+ this.hb_options = {
+ "kiosk" : true,
+ "webgl" : true,
+ "hide_cursor" : true,
+ "dark" : true,
+ "search_engine" : "google",
+ "tag" : "greyos",
+ "region" : "EU",
+ "width" : 1920,
+ "height" : 1080,
+ "fps" : 30,
+ "profile" : {
+ "save" : true
+ }
+ };
+ this.ajax_config = {
+ "type" : "request",
+ "method" : "post",
+ "url" : "/",
+ "data" : "gate=hyperbeam&config=" + JSON.stringify(this.hb_options),
+ "ajax_mode" : "asynchronous",
+ };
  }
  function utilities()
  {
  var me = this;
+ this.close_new_user_tab = function()
+ {
+ var __all_tabs_promise = hb_manager.tabs.query({ active: true, title : "New Tab" });
+ __all_tabs_promise.then((result) =>
+ {
+ result.forEach(element =>
+ {
+ hb_manager.tabs.remove(element.id);
+ });
+ });
+ };
+ this.update_controls_delegate = function(tab_id, change_info, tab)
+ {
+ if (tab.status === 'complete')
+ me.update_browsing_controls(tab.url);
+ };
+ this.update_browsing_controls = function(url)
+ {
+ if (utils_sys.validation.misc.is_nothing(url))
+ return false;
+ if (config.index > 0 && config.pages[config.index - 1] === url)
+ return false;
+ if (!url.includes('http'))
+ url = 'https://' + url;
+ browser_address_box.value = url;
+ config.pages[config.index] = url;
+ config.index++;
+ return url;
+ };
+ this.go_to = function(url)
+ {
+ var full_url = me.update_browsing_controls(url);
+ if (full_url === false)
+ self.browser_controls.refresh(true);
+ else
+ hb_manager.tabs.update({ url: full_url });
+ return true;
+ };
  this.gui_init = function()
  {
- var __data_content_id = coyote_bee.settings.general.id() + '_data';
- config.pages[0] = 'https://probotek.eu/';
- infinity.setup(__data_content_id);
- infinity.begin();
+ coyote_bee_id = coyote_bee.settings.general.id();
  me.draw_normal();
- me.draw_full_screen();
- me.attach_events('fullscreen');
- infinity.end();
+ me.draw_full_screen_layer();
+ me.attach_events('normal_to_fullscreen');
+ me.init_hyberbeam(config.pages[0], () => { hb_manager.resize(1006, 575); });
  return true;
  };
  this.draw_normal = function()
  {
- coyote_bee.settings.data.window.content('<div id="' + coyote_bee.settings.general.id() + '_tabs_bar" class="coyote_tabs_bar">' +
- ' <div id="' + coyote_bee.settings.general.id() + '_tab_greyos" class="tab tab_selected">' +
- ' <div id="' + coyote_bee.settings.general.id() + '_tab_x" class="tab_close"></div>' +
+ coyote_bee.settings.data.window.content('<div id="' + coyote_bee_id + '_tabs_bar" class="coyote_tabs_bar">' +
+ ' <div id="' + coyote_bee_id + '_tab_greyos" class="tab tab_selected">' +
+ ' <div id="' + coyote_bee_id + '_tab_x" class="tab_close"></div>' +
  ' <div class="tab_text">GreyOS</div>' +
  ' </div>' +
  ' <div class="tab create_new_tab" title="Sorry, new tabs are not supported yet..."></div>' +
  '</div>' +
  '<div class="coyote_control_bar">' +
- ' <div id="' + coyote_bee.settings.general.id() + '_back" class="history_back browser_button"></div>' +
- ' <div id="' + coyote_bee.settings.general.id() + '_forward" class="history_forward browser_button"></div>' +
- ' <div id="' + coyote_bee.settings.general.id() + '_refresh" class="page_refresh browser_button"></div>' +
- ' <div id="' + coyote_bee.settings.general.id() + '_settings" class="browser_settings browser_button" ' +
+ ' <div id="' + coyote_bee_id + '_back" class="history_back browser_button"></div>' +
+ ' <div id="' + coyote_bee_id + '_forward" class="history_forward browser_button"></div>' +
+ ' <div id="' + coyote_bee_id + '_refresh" class="page_refresh browser_button"></div>' +
+ ' <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' +
  ' title="Sorry, settings are not available yet...">' +
  '</div>' +
- '<div id="' + coyote_bee.settings.general.id() + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode"></div>' +
+ '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode"></div>' +
  ' <div class="adress_bar">' +
- ' <div id="' + coyote_bee.settings.general.id() + '_page_info" class="page_info browser_button" ' +
+ ' <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' +
  ' title="Sorry, page information is not available yet...">' +
  ' </div>' +
- ' <input type="text" id="' + coyote_bee.settings.general.id() + '_address_box" class="address_box" value="https://probotek.eu/" placeholder="Enter an address...">' +
+ ' <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" value="' + init_url + '" placeholder="Enter a web address...">' +
  ' </div>' +
  '</div>' +
- '<div id="' + coyote_bee.settings.general.id() + '_overlay" class="max_screen_overlay"></div>' +
- '<iframe id="' + coyote_bee.settings.general.id() + '_frame" class="coyote_frame" title="Coyote" src="https://probotek.eu/"></iframe>');
- utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
+ '<div id="' + coyote_bee_id + '_frame" class="coyote_frame" title="Coyote"></div>');
+ browser_address_box = utils_sys.objects.by_id(coyote_bee_id + '_address_box');
+ browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');
+ browser_frame.style.width = (coyote_bee.status.gui.size.width() - 18) + 'px';
  return true;
  };
- this.draw_full_screen = function()
+ this.draw_full_screen_layer = function()
  {
- var dynamic_object = null;
- dynamic_object = document.createElement('div');
- dynamic_object.setAttribute('id', coyote_bee.settings.general.id() + '_full_screen_layer');
- dynamic_object.setAttribute('class', 'coyote_full_screen_layer');
- document.body.appendChild(dynamic_object);
+ coyote_fs_layer = document.createElement('div');
+ coyote_fs_layer.setAttribute('id', coyote_bee_id + '_full_screen_layer');
+ coyote_fs_layer.setAttribute('class', 'coyote_full_screen_layer');
+ document.body.appendChild(coyote_fs_layer);
  return true;
+ };
+ this.browser_frame_size = function()
+ {
+ var browser_frame_width, browser_frame_height;
+ browser_address_box.style.width =
+ (coyote_bee.status.gui.size.width() - 185) + 'px';
+ browser_frame_width = (coyote_bee.status.gui.size.width() - 18);
+ browser_frame.style.width = browser_frame_width + 'px';
+ browser_frame_height = (coyote_bee.status.gui.size.height() - 145);
+ browser_frame.style.height = browser_frame_height + 'px';
  };
  this.attach_events = function(mode)
  {
- var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
- __refresh = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_refresh'),
- __back = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_back'),
- __forward = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_forward'),
- __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen'),
- __tab_close = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_tab_x');
- utils_sys.events.attach(config.id, __address_box, 'keydown', function(event) { self.browse(__address_box.value, event); });
- utils_sys.events.attach(config.id, __refresh, 'click', function(event) { self.refresh(event); });
- utils_sys.events.attach(config.id, __back, 'click', function(event) { self.go.back(event); });
- utils_sys.events.attach(config.id, __forward, 'click', function(event) { self.go.forward(event); });
- utils_sys.events.attach(config.id, __tab_close, 'click', function(event) { self.close_tab(event); });
- if (mode === 'fullscreen')
- utils_sys.events.attach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 1); });
+ var __refresh = utils_sys.objects.by_id(coyote_bee_id + '_refresh'),
+ __back = utils_sys.objects.by_id(coyote_bee_id + '_back'),
+ __forward = utils_sys.objects.by_id(coyote_bee_id + '_forward'),
+ __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen'),
+ __tab_close = utils_sys.objects.by_id(coyote_bee_id + '_tab_x'),
+ __handler = null;
+ browser_address_box = utils_sys.objects.by_id(coyote_bee_id + '_address_box');
+ if (config.pages.length == 1)
+ browser_address_box.value = config.pages[0];
+ else
+ browser_address_box.value = config.pages[config.index - 1];
+ __handler = function(event) { self.browser_controls.address(browser_address_box.value, event); };
+ morpheus.run(config.id, 'key', 'keydown', __handler, browser_address_box);
+ __handler = function(event) { self.browser_controls.refresh(event); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __refresh);
+ __handler = function(event) { self.browser_controls.go.back(event); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __back);
+ __handler = function(event) { self.browser_controls.go.forward(event); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __forward);
+ __handler = function(event) { self.browser_controls.tabs.destroy(event); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __tab_close);
+ if (mode === 'normal_to_fullscreen')
+ {
+ morpheus.delete('click', config.id, __full_screen);
+ __handler = function(event) { self.browser_controls.full_screen(event, 1); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
+ }
+ else
+ {
+ morpheus.delete('click', config.id, __full_screen);
+ __handler = function(event) { self.browser_controls.full_screen(event, 2); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
+ }
  return true;
  };
- }
- this.get_bee = function()
+ this.init_hyberbeam = function(url, callback)
  {
- return coyote_bee;
+ config.ajax_config.on_success = async (hb_url) =>
+ {
+ hb_manager = await hyperbeam(browser_frame, hb_url);
+ if (utils_sys.validation.misc.is_nothing(url))
+ url = init_url;
+ hb_manager.tabs.update({ url: url });
+ hb_manager.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { me.update_controls_delegate(tabId, changeInfo, tab); });
+ hb_manager.tabs.onCreated.addListener(() => { me.close_new_user_tab(); });
+ ping_timer.start(config.ping_interval, () => { hb_manager.ping(); });
+ if (callback !== undefined)
+ callback.call(this);
+ is_browser_loading = false;
+ setTimeout(function() { infinity.end(); }, 500);
  };
- this.close_tab = function(event_object)
+ config.ajax_config.on_timeout = () => { };
+ config.ajax_config.on_fail = () => { };
+ infinity.setup(coyote_bee_id + '_data');
+ infinity.begin();
+ ajax.run(config.ajax_config);
+ };
+ }
+ function browser_ctrl()
+ {
+ function tab_ctrl()
+ {
+ this.create = function(event_object)
  {
  if (is_init === false)
  return false;
  if (event_object === undefined)
  return false;
- var __tabs_bar = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_tabs_bar'),
- __greyos_tek_tab = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_tab_greyos'),
- __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
- __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
- __tabs_bar.removeChild(__greyos_tek_tab);
- __address_box.value = '';
- __frame.src = '';
+ var __tabs_bar = utils_sys.objects.by_id(coyote_bee_id + '_tabs_bar'),
+ __greyos_tab = utils_sys.objects.by_id(coyote_bee_id + '_tab_greyos');
+ if (config.is_full_screen)
+ utils_sys.objects.by_id(coyote_bee_id).style = 'visibility: hidden';
+ browser_address_box.value = '';
+ __tabs_bar.addChild(__greyos_tab);
+ if (__tabs_bar.childNodes.length === 10)
+ ;
  return true;
  };
- function go()
+ this.destroy = function(event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (event_object === undefined)
+ return false;
+ var __tabs_bar = utils_sys.objects.by_id(coyote_bee_id + '_tabs_bar'),
+ __greyos_tab = utils_sys.objects.by_id(coyote_bee_id + '_tab_greyos');
+ if (config.is_full_screen)
+ utils_sys.objects.by_id(coyote_bee_id).style = 'visibility: hidden';
+ browser_address_box.value = '';
+ __tabs_bar.removeChild(__greyos_tab);
+ if (__tabs_bar.childNodes.length === 3)
+ coyote_bee.gui.actions.close(null);
+ return true;
+ };
+ }
+ function explore_ctrl()
  {
  this.back = function(event_object)
  {
@@ -16631,18 +17082,13 @@ function coyote()
  return false;
  if (event_object === undefined)
  return false;
- if (config.index === 0)
+ if (config.index < 2)
  return false;
- config.index--;
- if (config.pages[config.index] === undefined)
- {
- config.index++;
+ if (config.pages[config.index - 2] === browser_address_box.value)
  return false;
- }
- var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
- __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
- __address_box.value = config.pages[config.index];
- __frame.src = config.pages[config.index];
+ config.index -= 2;
+ browser_address_box.value = config.pages[config.index];
+ utils_int.go_to(browser_address_box.value);
  return true;
  };
  this.forward = function(event_object)
@@ -16653,97 +17099,108 @@ function coyote()
  return false;
  if (config.index === 100)
  return false;
- config.index++;
  if (config.pages[config.index] === undefined)
- {
- config.index--;
  return false;
- }
- var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
- __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
- __address_box.value = config.pages[config.index];
- __frame.src = config.pages[config.index];
+ if (config.pages[config.index] === browser_address_box.value)
+ return false;
+ browser_address_box.value = config.pages[config.index];
+ config.index++;
+ utils_int.go_to(browser_address_box.value);
  return true;
  };
  }
- this.browse = function(url, event_object)
- {
- if (is_init === false)
- return false;
- if (url === undefined)
- return false;
- var __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box');
- __address_box.value = url;
- if (event_object === undefined)
- {
- utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').src = url;
- config.index++;
- config.pages[config.index] = url;
- }
- else
- {
- if (coyote_bee.gui.keys.get(event_object) === 13)
- {
- utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').src = url;
- config.index++;
- config.pages[config.index] = url;
- }
- }
- return true;
- };
  this.refresh = function(event_object)
  {
  if (is_init === false)
  return false;
  if (event_object === undefined)
  return false;
- var __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame');
- __frame.src = __frame.src;
+ hb_manager.tabs.update({ url: config.pages[config.index - 1] });
+ return true;
+ };
+ this.address = function(url, event_object)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_nothing(url))
+ return false;
+ if (event_object === true)
+ utils_int.go_to(url);
+ else
+ {
+ if (coyote_bee.gui.keys.get(event_object) === 13)
+ utils_int.go_to(url);
+ }
  return true;
  };
  this.full_screen = function(event_object, mode)
  {
  if (is_init === false)
  return false;
- if (event_object === undefined && mode === undefined || mode < 1 || mode > 2)
+ if ((event_object === undefined && mode === undefined) || mode < 1 || mode > 2)
  return false;
- var __coyote_fs_layer = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen_layer'),
- __coyote_content = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_data'),
- __page_info = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_page_info'),
- __address_box = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box'),
- __frame = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame'),
- __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen');
+ var __coyote_content = utils_sys.objects.by_id(coyote_bee_id + '_data'),
+ __page_info = utils_sys.objects.by_id(coyote_bee_id + '_page_info'),
+ __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen');
  if (mode === 1)
  {
  __page_info.style.left = '87px';
  __page_info.style.top = '30px';
- __address_box.style.width = 'Calc(100vw - 167px)';
- __frame.style.height = '90.5%';
+ browser_address_box.style.width = 'Calc(100vw - 167px)';
  __full_screen.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/coyote/pix/full_screen_hover.png')";
- __coyote_fs_layer.innerHTML = __coyote_content.innerHTML;
- __coyote_content.innerHTML = null;
- __coyote_fs_layer.style.display = 'block';
- utils_sys.events.detach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 1); });
- var __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen');
- utils_sys.events.attach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 2); });
+ __full_screen.title = 'Normal mode';
+ coyote_fs_layer.innerHTML = __coyote_content.innerHTML;
+ coyote_fs_layer.style.display = 'block';
+ __coyote_content.innerHTML = '';
+ browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');
+ browser_frame.style.margin = 'auto';
+ browser_frame.style.width = '100%';
+ browser_frame.style.height = (window.innerHeight - 63) + 'px';
+ config.is_full_screen = true;
  }
  else
  {
  __page_info.style.left = '90px';
  __page_info.style.top = '34px';
- __address_box.style.width = (coyote_bee.status.gui.size.width() - 185) + 'px';
- __frame.style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
- __full_screen.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/coyote/pix/full_screen.png')";
- __coyote_content.innerHTML = __coyote_fs_layer.innerHTML;
- __coyote_fs_layer.innerHTML = null;
- __coyote_fs_layer.style.display = 'none';
- utils_sys.events.detach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 2); });
- var __full_screen = utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_full_screen');
- utils_sys.events.attach(config.id, __full_screen, 'click', function(event) { self.full_screen(event, 1); });
+ browser_address_box.style.width = (coyote_bee.status.gui.size.width() - 185) + 'px';
+ __full_screen.style.backgroundImage = '';
+ __full_screen.title = 'Full screen mode';
+ __coyote_content.innerHTML = coyote_fs_layer.innerHTML;
+ coyote_fs_layer.innerHTML = '';
+ coyote_fs_layer.style.display = 'none';
+ browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');
+ browser_frame.style.margin = '';
+ browser_frame.style.width = (coyote_bee.status.gui.size.width() - 18) + 'px';
+ browser_frame.style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
+ config.is_full_screen = false;
  }
- __address_box.value = __frame.src;
- utils_int.attach_events();
+ hb_manager.destroy();
+ utils_int.init_hyberbeam(config.pages[config.index - 1], () =>
+ {
+ if (mode === 1)
+ {
+ utils_int.attach_events('fullscreen_to_normal');
+ hb_manager.resize(1920, 1080);
+ }
+ else
+ {
+ utils_int.attach_events('normal_to_fullscreen');
+ var browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
+ browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
+ hb_manager.resize(browser_frame_width, browser_frame_height);
+ }
+ });
  return true;
+ };
+ this.settings = function()
+ {
+ };
+ this.tabs = new tab_ctrl();
+ this.go = new explore_ctrl();
+ };
+ this.get_bee = function()
+ {
+ return coyote_bee;
  };
  this.init = function()
  {
@@ -16754,26 +17211,29 @@ function coyote()
  is_init = true;
  coyote_bee = dev_box.get('bee');
  config.id = 'coyote';
+ config.pages[0] = init_url;
  nature.theme([config.id]);
  nature.apply('new');
  infinity.init();
  coyote_bee.init(config.id, 1);
  coyote_bee.settings.data.window.labels.title('Coyote');
  coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
+ coyote_bee.settings.data.casement.labels.title('Tools');
+ coyote_bee.settings.data.casement.labels.status('Feel the power of meta-integration.');
+ coyote_bee.settings.general.casement_width(50);
+ coyote_bee.settings.general.allowed_instances(1);
  coyote_bee.gui.position.left(70);
  coyote_bee.gui.position.top(10);
- coyote_bee.gui.size.width(720);
- coyote_bee.gui.size.height(480);
- coyote_bee.gui.size.min.width(560);
- coyote_bee.gui.size.min.height(400);
+ coyote_bee.gui.size.width(1024);
+ coyote_bee.gui.size.height(720);
+ coyote_bee.gui.size.min.width(960);
+ coyote_bee.gui.size.min.height(680);
+ coyote_bee.gui.size.max.width(1920);
+ coyote_bee.gui.size.max.height(1080);
  coyote_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
  coyote_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
  coyote_bee.on('open', function() { coyote_bee.gui.fx.fade.into(); });
  coyote_bee.on('opened', function() { utils_int.gui_init(); });
- coyote_bee.on('drag', function()
- {
- utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'block';
- });
  coyote_bee.on('dragging', function()
  {
  coyote_bee.gui.fx.opacity.settings.set(0.7);
@@ -16782,18 +17242,34 @@ function coyote()
  coyote_bee.on('dragged', function()
  {
  coyote_bee.gui.fx.opacity.reset();
- utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'none';
  });
  coyote_bee.on('resizing', function()
  {
- utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_address_box').style.width =
- (coyote_bee.status.gui.size.width() - 185) + 'px';
- utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_frame').style.height =
- (coyote_bee.status.gui.size.height() - 145) + 'px';
+ utils_int.browser_frame_size();
+ infinity.begin();
+ browser_frame.style.visibility = 'hidden';
  });
- coyote_bee.on('resize', function() { utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'block'; });
- coyote_bee.on('resized', function() { utils_sys.objects.by_id(coyote_bee.settings.general.id() + '_overlay').style.display = 'none'; });
- coyote_bee.on('close', function() { coyote_bee.gui.fx.fade.out(); });
+ coyote_bee.on('resized', function()
+ {
+ if (is_browser_loading)
+ return;
+ var browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
+ browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
+ if (hb_manager !== null && browser_frame_height !== false)
+ {
+ hb_manager.resize(browser_frame_width, browser_frame_height);
+ browser_frame.style.visibility = 'visible';
+ setTimeout(function() { infinity.end(); }, 200);
+ }
+ });
+ coyote_bee.on('close', function()
+ {
+ browser_frame.innerHTML = '';
+ document.body.removeChild(coyote_fs_layer);
+ ping_timer.stop();
+ hb_manager.destroy();
+ coyote_bee.gui.fx.fade.out();
+ });
  return true;
  };
  this.cosmos = function(cosmos_object)
@@ -16803,21 +17279,32 @@ function coyote()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  dev_box = cosmos.hub.access('dev_box');
+ morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
- infinity = matrix.get('infinity');
+ infinity = dev_box.get('infinity');
  return true;
  };
  var is_init = false,
+ is_browser_loading = true,
  cosmos = null,
  matrix = null,
  dev_box = null,
- infinity = null,
+ morpheus = null,
  nature = null,
+ infinity = null,
  coyote_bee = null,
+ coyote_bee_id = null,
+ browser_address_box = null,
+ browser_frame = null,
+ coyote_fs_layer = null,
+ hb_manager = null,
+ init_url = 'https://www.bing.com/?setlang=en&cc=gb',
  utils_sys = new vulcan(),
+ ajax = new bull(),
+ ping_timer = new stopwatch(),
  config = new config_model(),
  utils_int = new utilities();
- this.go = new go();
+ this.browser_controls = new browser_ctrl();
 }
 function cloud_edit()
 {
@@ -16946,8 +17433,9 @@ function cloud_edit()
  };
  this.attach_events = function()
  {
- utils_sys.events.attach(config.ce.exec_button.id, config.ce.exec_button, 'mousedown',
- function(event) { run_code(event); });
+ var __handler = null;
+ __handler = function(event) { run_code(event); };
+ morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.exec_button);
  return true;
  };
  this.reset = function()
@@ -16990,6 +17478,7 @@ function cloud_edit()
  cloud_edit_bee.settings.data.window.content(config.content);
  cloud_edit_bee.settings.data.hints.icon('Cloud Edit is cool!');
  cloud_edit_bee.settings.actions.can_edit_title(false);
+ cloud_edit_bee.settings.general.allowed_instances(4);
  cloud_edit_bee.gui.position.left(330);
  cloud_edit_bee.gui.position.top(80);
  cloud_edit_bee.gui.size.width(800);
@@ -17020,9 +17509,10 @@ function cloud_edit()
  matrix = cosmos.hub.access('matrix');
  dev_box = cosmos.hub.access('dev_box');
  colony = cosmos.hub.access('colony');
- executor = dev_box.get('executor');
+ morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
- infinity = matrix.get('infinity');
+ infinity = dev_box.get('infinity');
+ executor = dev_box.get('executor');
  return true;
  };
  var is_init = false,
@@ -17031,6 +17521,7 @@ function cloud_edit()
  matrix = null,
  dev_box = null,
  colony = null,
+ morpheus = null,
  executor = null,
  nature = null,
  infinity = null,
@@ -17081,7 +17572,7 @@ function radio_dude()
  ' </div>' +
  ' </div>' +
  '</div>');
- radio_dude_bee.settings.data.casement.content(``);
+ radio_dude_bee.settings.data.casement.content(`<div class="radio_dude_weather"><center><br><br>Coming soon...</center></div>`);
  return true;
  };
  this.stream = function(stream_id)
@@ -17174,7 +17665,7 @@ function radio_dude()
  dev_box = cosmos.hub.access('dev_box');
  swarm = matrix.get('swarm');
  nature = matrix.get('nature');
- infinity = matrix.get('infinity');
+ infinity = dev_box.get('infinity');
  return true;
  };
  var is_init = false,

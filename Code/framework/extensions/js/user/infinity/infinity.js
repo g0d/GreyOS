@@ -1,11 +1,11 @@
 /*
-    GreyOS - Infinity (Version: 2.0)
+    GreyOS - Infinity (Version: 2.1)
 
     File name: infinity.js
-    Description: This file contains the Infinity - Progress indicator facility.
+    Description: This file contains the Infinity - Progress indicator development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 

@@ -2802,7 +2802,7 @@ function i_youtube()
 
         colony = matrix.get('colony');
         swarm = matrix.get('swarm');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
 
         cosmos_exists = true;
 

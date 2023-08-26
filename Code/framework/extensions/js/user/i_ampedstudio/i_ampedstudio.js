@@ -140,7 +140,7 @@ function i_ampedstudio()
         dev_box = cosmos.hub.access('dev_box');
 
         nature = matrix.get('nature');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
 
         return true;
     };

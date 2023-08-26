@@ -5,7 +5,7 @@
     Description: This file contains the Dock module.
 
     Coded by John Inglessis (negle) and George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -59,6 +59,7 @@ function dock()
         {
             var __bull_config = {
                                     "type"          :   "request",
+                                    "method"        :   "post",
                                     "url"           :   "/",
                                     "data"          :   "gate=dock&action=save&apps=" + apps_array,
                                     "ajax_mode"     :   "synchronous",
@@ -159,7 +160,16 @@ function dock()
 
                                         msg_win.init('desktop');
                                         msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
-                                                                You need a larger screen or higher resolution to run it!');
+                                                                             You need a larger screen or higher resolution to run it!');
+                                    }
+                                    else if (__bee.error.last() === __bee.error.codes.INSTANCE_NUM_LIMIT)
+                                    {
+                                        swarm.bees.remove(__bee);
+
+                                        msg_win = new msgbox();
+
+                                        msg_win.init('desktop');
+                                        msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
                                     }
                                 }
                             };
@@ -358,10 +368,6 @@ function dock()
 
         nature.theme('dock');
         nature.apply('new');
-
-        msg_win = new msgbox();
-
-        msg_win.init('desktop');
 
         utils_int.draw();
 

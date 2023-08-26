@@ -140,7 +140,7 @@ function i_vectorink()
         dev_box = cosmos.hub.access('dev_box');
 
         nature = matrix.get('nature');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
 
         return true;
     };
@@ -149,8 +149,8 @@ function i_vectorink()
         cosmos = null,
         matrix = null,
         dev_box = null,
-        infinity = null,
         nature = null,
+        infinity = null,
         i_vectorink_bee = null,
         utils_sys = new vulcan(),
         config = new config_model(),

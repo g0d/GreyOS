@@ -33,9 +33,9 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '3.4 (alpha)');  // Meta-OS version
+    os_settings.set('version', '3.5 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
-    os_settings.set('max_services', 50);        // Maximum number of allowed active services per session
+    os_settings.set('max_services', 20);        // Maximum number of allowed active services per session
     os_settings.set('max_apps', 16);            // Maximum number of allowed active apps per session
     os_settings.set('apps_per_view', 18);       // Apps per stack bar view
     os_settings.set('stack_bars', 4);           // Number of stack bars
@@ -47,12 +47,11 @@ function boot_script()
         var containers_list = [dev_box, app_box, matrix, colony, roost];
 
         // List of development tools
-        var dev_tools = [bee, bat, meta_program_config, meta_script, executor];
+        var dev_tools = [bee, bat, meta_program_config, meta_script, executor, infinity, scrollbar];
 
         // List of system services
         var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            teal_fs, morpheus, panda, octopus, super_tray, parrot, owl, infinity, 
-                            nature, chameleon];
+                            teal_fs, morpheus, panda, octopus, super_tray, parrot, owl, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, 
@@ -426,11 +425,11 @@ function boot_script()
         var containers_list = [dev_box, app_box, matrix, colony, roost];
 
         // List of development tools
-        var dev_tools = [bee, bat, meta_program_config, meta_script, executor];
+        var dev_tools = [bee, bat, meta_program_config, meta_script, executor, infinity, scrollbar];
 
         // List of system services
         var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            morpheus, panda, octopus, super_tray, parrot, owl, infinity, nature, chameleon];
+                            morpheus, panda, octopus, super_tray, parrot, owl, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_webgl_preview];

@@ -951,7 +951,7 @@ function i_twitter()
         colony = matrix.get('colony');
         swarm = matrix.get('swarm');
         pythia = matrix.get('pythia');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
 
         cosmos_exists = true;
 

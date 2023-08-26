@@ -1,5 +1,5 @@
 /*
-    GreyOS - Krator :: Login & registration form (Version: 1.1)
+    GreyOS - Krator :: Login & registration form (Version: 1.4)
 
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
@@ -111,69 +111,68 @@ function krator()
                 __register_username = utils_sys.objects.by_id('register_username_text'),
                 __register_password = utils_sys.objects.by_id('register_password_text'),
                 __register_password_confirm = utils_sys.objects.by_id('register_password_confirm_text'),
-                __register_button = utils_sys.objects.by_id('register_button');
+                __register_button = utils_sys.objects.by_id('register_button'),
+                __handler = null,
+                __args_array = null;
 
-            utils_sys.events.attach(config.id, __login_username, 'keydown', 
-            function(event)
+            __handler = function() { me.check_login_credentials(__login_username, __login_password, __login_button); };
+            morpheus.run(config.id, 'mouse', 'click', __handler, __login_button);
+
+            __handler = function()
             {
-                var __args_array = [__login_username, __login_password, __login_button];
+                me.check_registration_credentials(__register_username, __register_password, 
+                                                  __register_password_confirm, __register_button);
+            };
+            morpheus.run(config.id, 'mouse', 'click', __handler, __register_button);
 
-                me.scan_enter(event, 'login', __args_array);
-            });
-
-            utils_sys.events.attach(config.id, __login_password, 'keydown', 
-            function(event)
-            {
-                var __args_array = [__login_username, __login_password, __login_button];
-
-                me.scan_enter(event, 'login', __args_array);
-            });
-
-            utils_sys.events.attach(config.id, __login_button, 'click', 
-            function()
-            {
-                me.check_login_credentials(__login_username, __login_password, __login_button);
-            });
-
-            utils_sys.events.attach(config.id, __register_link, 'mousedown', 
-            function(event)
+            __handler = function(event)
             {
                 if (krator_bee.status.gui.casement_deployed())
                     krator_bee.gui.actions.casement.hide(event);
                 else
                     krator_bee.gui.actions.casement.deploy(event);
-            });
+            };
+            morpheus.run(config.id, 'mouse', 'mousedown', __handler, __register_link);
 
-            utils_sys.events.attach(config.id, __register_username, 'keydown', 
-            function(event)
+            __handler = function(event)
             {
-                var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+                __args_array = [__login_username, __login_password, __login_button];
+
+                me.scan_enter(event, 'login', __args_array);
+            };
+            morpheus.run(config.id, 'key', 'keydown', __handler, __login_username);
+
+            __handler = function(event)
+            {
+                __args_array = [__login_username, __login_password, __login_button];
+
+                me.scan_enter(event, 'login', __args_array);
+            };
+            morpheus.run(config.id, 'key', 'keydown', __handler, __login_password);
+
+            __handler = function(event)
+            {
+                __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
 
                 me.scan_enter(event, 'registration', __args_array);
-            });
+            };
+            morpheus.run(config.id, 'key', 'keydown', __handler, __register_username);
 
-            utils_sys.events.attach(config.id, __register_password, 'keydown', 
-            function(event)
+            __handler = function(event)
             {
-                var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+                __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
 
                 me.scan_enter(event, 'registration', __args_array);
-            });
+            };
+            morpheus.run(config.id, 'key', 'keydown', __handler, __register_password);
 
-            utils_sys.events.attach(config.id, __register_password_confirm, 'keydown', 
-            function(event)
+            __handler = function(event)
             {
-                var __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
+                __args_array = [__register_username, __register_password, __register_password_confirm, __register_button];
 
                 me.scan_enter(event, 'registration', __args_array);
-            });
-
-            utils_sys.events.attach(config.id, __register_button, 'click', 
-            function()
-            {
-                me.check_registration_credentials(__register_username, __register_password, 
-                                                  __register_password_confirm, __register_button);
-            });
+            };
+            morpheus.run(config.id, 'key', 'keydown', __handler, __register_password_confirm);
 
             return true;
         };
@@ -197,27 +196,39 @@ function krator()
 
         this.check_login_credentials = function(username_object, password_object, login_button_object)
         {
+            function enable_controls()
+            {
+                username_object.disabled = false;
+                password_object.disabled = false;
+                login_button_object.disabled = false;
+            }
+
+            function disable_controls()
+            {
+                username_object.disabled = true;
+                password_object.disabled = true;
+                login_button_object.disabled = true;
+            }
+
             msg_win = new msgbox();
 
             msg_win.init('desktop');
 
+            disable_controls();
+
             if (!utils_sys.validation.utilities.is_email(username_object.value))
             {
-                msg_win.show(os_name, 'The email format is invalid!');
+                msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
 
                 return;
             }
 
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show(os_name, 'Credentials are invalid!');
+                msg_win.show(os_name, 'Credentials are invalid!', () => { enable_controls(); });
 
                 return;
             }
-
-            username_object.disabled = true;
-            password_object.disabled = true;
-            login_button_object.disabled = true;
 
             var data = 'gate=auth&mode=login&username=' + username_object.value + '&password=' + password_object.value;
 
@@ -229,67 +240,74 @@ function krator()
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Your credentials are wrong!');
+                                    msg_win.show(os_name, 'Your credentials are wrong!', () => { enable_controls(); });
                                },
                                function()
                                {
-                                    username_object.disabled = false;
-                                    password_object.disabled = false;
-                                    login_button_object.disabled = false;
+                                    // Nothing...
                                });
         };
 
         this.check_registration_credentials = function(username_object, password_object, password_comfirm_object, register_button_object)
         {
+            function enable_controls()
+            {
+                username_object.disabled = false;
+                password_object.disabled = false;
+                password_comfirm_object.disabled = false;
+                register_button_object.disabled = false;
+            }
+
+            function disable_controls()
+            {
+                username_object.disabled = true;
+                password_object.disabled = true;
+                password_comfirm_object.disabled = true;
+                register_button_object.disabled = true;
+            }
+
             msg_win = new msgbox();
 
             msg_win.init('desktop');
 
+            disable_controls();
+
             if (!utils_sys.validation.utilities.is_email(username_object.value))
             {
-                msg_win.show(os_name, 'The email format is invalid!');
+                msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
     
                 return;
             }
     
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show(os_name, 'Please choose more complex credentials!');
+                msg_win.show(os_name, 'Please choose more complex credentials!', () => { enable_controls(); });
     
                 return;
             }
     
             if (password_object.value !== password_comfirm_object.value)
             {
-                msg_win.show(os_name, 'Password confirmation failed!');
+                msg_win.show(os_name, 'Password confirmation failed!', () => { enable_controls(); });
     
                 return;
             }
-    
-            username_object.disabled = true;
-            password_object.disabled = true;
-            password_comfirm_object.disabled = true;
-            register_button_object.disabled = true;
-    
+
             var data = 'gate=register&mode=reg&username=' + username_object.value + 
                        '&password=' + password_object.value + 
                        '&confirm=' + password_comfirm_object.value;
     
             ajax_factory(data, function()
                                {
-                                    msg_win.show(os_name, 'Registration succeeded!', 
-                                                 function() {  });
+                                    msg_win.show(os_name, 'Registration succeeded!', () => { enable_controls(); });
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Registration failed!');
+                                    msg_win.show(os_name, 'Registration failed!', () => { enable_controls(); });
                                },
                                function()
                                {
-                                    username_object.disabled = false;
-                                    password_object.disabled = false;
-                                    password_comfirm_object.disabled = false;
-                                    register_button_object.disabled = false;
+                                    // Nothing...
                                });
         };
 
@@ -341,6 +359,7 @@ function krator()
         krator_bee.settings.actions.can_edit_title(false);
         krator_bee.settings.actions.can_use_menu(false);
         krator_bee.settings.actions.can_close(false);
+        krator_bee.settings.general.single_instance(true);
         krator_bee.gui.size.width(420);
         krator_bee.gui.size.height(400);
         krator_bee.gui.position.static(true);
@@ -372,6 +391,7 @@ function krator()
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
 
+        morpheus = matrix.get('morpheus');
         xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         nature = matrix.get('nature');
@@ -385,6 +405,7 @@ function krator()
         cosmos = null,
         matrix = null,
         dev_box = null,
+        morpheus = null,
         xenon = null,
         swarm = null,
         nature = null,

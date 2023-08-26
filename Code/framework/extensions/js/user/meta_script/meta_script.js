@@ -519,6 +519,14 @@ function meta_script()
                     return __new_app.status.gui.resized();
                 };
 
+                this.topmost = function()
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.status.gui.topmost();
+                };
+
                 this.menu_activated = function()
                 {
                     if (__new_app === null)
@@ -589,14 +597,6 @@ function meta_script()
 
             function settings()
             {
-                this.topmost = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.topmost(val);
-                };
-
                 this.status_bar_marquee = function(val)
                 {
                     if (__new_app === null)
@@ -939,7 +939,7 @@ function meta_script()
         super_tray = matrix.get('super_tray');
         owl = matrix.get('owl');
         teal_fs = matrix.get('teal_fs');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
 
         return true;
     };

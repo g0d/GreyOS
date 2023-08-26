@@ -123,7 +123,7 @@ function trinity()
 
         swarm = matrix.get('swarm');
         nature = matrix.get('nature');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
 
         return true;
     };

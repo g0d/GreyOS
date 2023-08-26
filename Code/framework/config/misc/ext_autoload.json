@@ -5,6 +5,6 @@
                  "scenario", "multiverse", "cosmos", "matrix", "dev_box", "app_box", "colony", "roost", "xenon", "teal_fs", "owl", 
                  "forest", "swarm", "hive", "trinity", "krator", "ui_controls", "dock", "user_profile", "chameleon", "nature", 
                  "eagle", "tik_tok", "meta_program_config", "meta_script", "executor", "morpheus", "panda", "octopus", 
-                 "super_tray", "parrot", "infinity", "max_screen", "bee", "bat", "oz", "coyote", "radio_dude", "cloud_edit"],
+                 "super_tray", "parrot", "infinity", "scrollbar", "max_screen", "bee", "bat", "oz", "coyote", "radio_dude", "cloud_edit"],
     "php"   :   ["splash"]
 }

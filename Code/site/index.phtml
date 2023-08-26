@@ -13,6 +13,13 @@
         <title><?=UTIL::Load_Content('title', 'static');?></title>
     </head>
     <body>
+        <script type="module">
+            import Hyperbeam, { getRegionInfo } from "https://unpkg.com/@hyperbeam/web@latest/dist/index.js";
+
+            const regionInfo = await getRegionInfo();
+
+            window.hyperbeam = Hyperbeam;
+        </script>
         <div id="greyos">
         <?php
             UTIL::Load_Section('header');
@@ -50,7 +57,7 @@
             <script src="/framework/extensions/js/user/ace/src/ace-min.js"></script>
             <script src="/framework/extensions/js/user/ace/src/ext-language_tools.js"></script>
             <script src="/framework/extensions/js/user/ace/src/ext-settings_menu.js"></script>
-            <script src="/site/js/boot.js"></script>
+            <script src="/site/js/boot.js" defer></script>
         </div>
     </body>
 </html>

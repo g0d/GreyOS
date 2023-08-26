@@ -63,7 +63,7 @@ function radio_dude()
                                                         '  </div>' + 
                                                         '</div>');
 
-            radio_dude_bee.settings.data.casement.content(``);
+            radio_dude_bee.settings.data.casement.content(`<div class="radio_dude_weather"><center><br><br>Coming soon...</center></div>`);
 
             return true;
         };
@@ -187,7 +187,7 @@ function radio_dude()
 
         swarm = matrix.get('swarm');
         nature = matrix.get('nature');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
 
         return true;
     };

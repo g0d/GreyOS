@@ -2,7 +2,7 @@
     GreyOS - Tik Tok (Version: 2.0)
 
     File name: tik_tok.js
-    Description: This file contains the Tik Tok - Clock application.
+    Description: This file contains the Tik Tok - Clock service.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2023

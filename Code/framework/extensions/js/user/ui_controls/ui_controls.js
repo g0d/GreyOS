@@ -143,7 +143,7 @@ function ui_controls()
             if (is_init === false)
                 return false;
 
-            if (!colony.list())
+            if (colony.list().length === 0)
                 return false;
 
             if (config.is_boxified === false)
@@ -167,13 +167,8 @@ function ui_controls()
             if (is_init === false)
                 return false;
 
-            if (!colony.list())
-                return false;
-
             if (config.is_stack === false)
             {
-                utils_int.make_active('stack_all', 'placement');
-
                 var __bees = colony.list(),
                     __bees_length = __bees.length;
 
@@ -183,10 +178,17 @@ function ui_controls()
                 for (var i = 0; i < __bees_length; i++)
                     hive.stack.bees.insert(__bees[i], null);
 
+                utils_int.make_active('stack_all', 'placement');
+
                 config.is_stack = true;
             }
             else
-            {   
+            {
+                if (colony.list().length === 0)
+                    return false;
+
+                hive.stack.bees.expel(null);
+
                 utils_int.make_inactive('stack_all', 'placement');
 
                 config.is_stack = false;

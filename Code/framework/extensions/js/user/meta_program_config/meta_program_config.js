@@ -2,7 +2,7 @@
     GreyOS - Meta-Program Config (Version: 1.0)
 
     File name: meta_program_config.js
-    Description: This file contains the Meta-Program Config validator extension.
+    Description: This file contains the Meta-Program Config validator development module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2022

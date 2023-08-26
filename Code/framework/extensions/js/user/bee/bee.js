@@ -5,7 +5,7 @@
     Description: This file contains the Bee - Floating window development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -217,6 +217,7 @@ function bee()
             this.restored = false;
             this.maximize = false;
             this.maximized = false;
+            this.topmost = false;
             this.drag = false;
             this.dragging = false;
             this.dragged = false;
@@ -270,9 +271,10 @@ function bee()
     {
         function codes()
         {
-            this.POSITION = 0xF1;
-            this.SIZE = 0xF2;
-            this.FX = 0xF3;
+            this.INSTANCE_NUM_LIMIT = 0xA1;
+            this.POSITION = 0xE1;
+            this.SIZE = 0xE2;
+            this.FX = 0xE3;
         }
 
         this.last = function()
@@ -1152,6 +1154,11 @@ function bee()
             return validate('maximized', 'gui', val);
         };
 
+        this.topmost = function(val)
+        {
+            return validate('topmost', 'gui', val);
+        };
+
         this.drag = function(val)
         {
             return validate('drag', 'gui', val);
@@ -1324,7 +1331,7 @@ function bee()
                 __app_type = 0,
                 __desktop_id = 0,
                 __single_instance = false,
-                __topmost = false,
+                __allowed_instances = 0,
                 __status_bar_marquee = false,
                 __resize_tooltip = false,
                 __backtrace = false,
@@ -1430,21 +1437,43 @@ function bee()
                 return true;
             };
 
+            this.allowed_instances = function(val)
+            {
+                if (is_init === false)
+                    return false;
+
+                if (utils_sys.validation.misc.is_undefined(val))
+                    return __allowed_instances;
+
+                if (bee_statuses.running())
+                    return false;
+
+                if (!utils_sys.validation.numerics.is_integer(val) || val < 1)
+                    return false;
+
+                __allowed_instances = val;
+
+                return true;
+            };
+
             this.topmost = function(val)
             {
                 if (is_init === false)
                     return false;
 
                 if (utils_sys.validation.misc.is_undefined(val))
-                    return __topmost;
-
-                if (bee_statuses.running())
                     return false;
 
                 if (!utils_sys.validation.misc.is_bool(val))
                     return false;
 
-                __topmost = val;
+                if (bee_statuses.running())
+                    return false;
+
+                bee_statuses.topmost(val);
+
+                if (val === true)
+                    morpheus.execute(my_bee_id, 'gui', 'topmost');
 
                 return true;
             };
@@ -2273,6 +2302,14 @@ function bee()
                     return false;
 
                 return bee_statuses.maximized();
+            };
+
+            this.topmost = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.topmost();
             };
 
             this.drag = function()
@@ -3802,11 +3839,12 @@ function bee()
                 if (utils_int.is_lonely_bee(my_bee_id))
                     return false;
 
-                var __app_id = self.settings.general.app_id();
+                var __app_id = self.settings.general.app_id(),
+                    __is_running_instance = owl.status.applications.get.by_proc_id(__app_id, 'RUN');
 
-                if (parent_app_id === null)
+                if (__is_running_instance)
                 {
-                    if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+                    if (colony.is_single_instance(__app_id))
                         return false;
                 }
 
@@ -4006,7 +4044,7 @@ function bee()
 
                 swarm.settings.z_index(__z_index + 2);
 
-                if (self.settings.general.topmost())
+                if (bee_statuses.topmost())
                 {
                     var __new_topmost_z_index = me.position.topmost_z_index() + __z_index;
 
@@ -4044,7 +4082,7 @@ function bee()
                 morpheus.execute(my_bee_id, 'gui', 'touch');
                 morpheus.execute(my_bee_id, 'gui', 'mouse_clicked');
 
-                if (self.settings.general.topmost())
+                if (bee_statuses.topmost())
                     return true;
 
                 me.actions.set_top();
@@ -4811,6 +4849,35 @@ function bee()
  
         if (error_code !== null)
             return false;
+
+        var __app_id = self.settings.general.app_id(),
+            __all_bees = colony.list(),
+            __max_allowed_instances = self.settings.general.allowed_instances(),
+            __currrent_running_instances_num = 0;
+
+        if (__max_allowed_instances > 0)
+        {
+            for (var this_bee of __all_bees)
+            {
+                if (this_bee.settings.general.app_id() === __app_id)
+                {
+                    __currrent_running_instances_num++;
+
+                    if (__currrent_running_instances_num > __max_allowed_instances)
+                    {
+                        error_code = self.error.codes.INSTANCE_NUM_LIMIT;
+
+                        owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+
+                        bee_statuses.error(true);
+
+                        utils_int.log('Run', 'INSTANCES LIMIT');
+
+                        return false;
+                    }
+                }
+            }
+        }
 
         if (!self.gui.actions.show(parent_app_id, headless))
             return false;

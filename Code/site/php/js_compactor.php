@@ -80,7 +80,7 @@
         else
             $cache_reset = '';
 
-        echo '<script src="/site/js/all_ext_min.js' . $cache_reset . '"></script>';
+        echo '<script src="/site/js/all_ext_min.js' . $cache_reset . '" defer></script>';
 
         return true;
     }

@@ -20,6 +20,7 @@
 
 #placement
 {
+    display: none;
     float: right;
     margin-top: 10px;
     margin-left: auto;

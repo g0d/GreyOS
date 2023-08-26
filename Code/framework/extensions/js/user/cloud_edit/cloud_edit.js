@@ -5,7 +5,7 @@
     Description: This file contains the Cloud Edit - Code editor application.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -175,8 +175,10 @@ function cloud_edit()
 
         this.attach_events = function()
         {
-            utils_sys.events.attach(config.ce.exec_button.id, config.ce.exec_button, 'mousedown', 
-                                    function(event) { run_code(event); });
+            var __handler = null;
+
+            __handler = function(event) { run_code(event); };
+            morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.exec_button);
 
             return true;
         };
@@ -237,6 +239,7 @@ function cloud_edit()
         cloud_edit_bee.settings.data.window.content(config.content);
         cloud_edit_bee.settings.data.hints.icon('Cloud Edit is cool!');
         cloud_edit_bee.settings.actions.can_edit_title(false);
+        cloud_edit_bee.settings.general.allowed_instances(4);
         cloud_edit_bee.gui.position.left(330);
         cloud_edit_bee.gui.position.top(80);
         cloud_edit_bee.gui.size.width(800);
@@ -273,9 +276,10 @@ function cloud_edit()
         dev_box = cosmos.hub.access('dev_box');
         colony = cosmos.hub.access('colony');
 
-        executor = dev_box.get('executor');
+        morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
-        infinity = matrix.get('infinity');
+        infinity = dev_box.get('infinity');
+        executor = dev_box.get('executor');
 
         return true;
     };
@@ -286,6 +290,7 @@ function cloud_edit()
         matrix = null,
         dev_box = null,
         colony = null,
+        morpheus = null,
         executor = null,
         nature = null,
         infinity = null,

@@ -2,7 +2,7 @@
 	/*
 		Portal (REST Framework for GET / POST)
 
-		File name: portal.php (Version: 2.4)
+		File name: portal.php (Version: 3.0)
 		Description: This file contains the Portal extension.
 
 		Coded by George Delaportas (G0D)
@@ -11,18 +11,19 @@
 	*/
 
     // Check for direct access
-    if (!defined('micro_mvc'))
+	if (!defined('micro_mvc'))
 		exit();
 
-	function Portal($url, $mode, $header_options = array(), $post_params_list = array(), $credentials = array(), $cookies_list = array(), $timeout_options = array())
+	function Portal($url, $mode, $header_options = array(), $post_params_mixed = null, $credentials = array(), $cookies_list = array(), $timeout_options = array())
 	{
-		if (empty($url) || empty($mode) || 
-			($mode !== 'get' && $mode !== 'post'))
+		if (empty($url) || empty($mode) || !in_array(strtolower($mode), array('get', 'post', 'put', 'delete')))
 			return false;
 
+		$mode = strtolower($mode);
 		$connect_timeout = 30;
 		$opt_timeout = 60;
-		$params = null;
+		$header_params = null;
+		$post_params = null;
 		$cookies = null;
 
 		$curl = curl_init();
@@ -30,9 +31,9 @@
 		if (!empty($header_options))
 		{
 			foreach ($header_options as $key => $value)
-				$params .= $key . ':' . $value;
+				$header_params .= $key . ':' . $value;
 
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array($params));
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array($header_params));
 		}
 
 		curl_setopt($curl, CURLOPT_HEADER, false);
@@ -66,15 +67,21 @@
 
 		if ($mode === 'post')
 		{
-			if (!empty($post_params_list))
+			if (!empty($post_params_mixed))
 			{
-				foreach ($post_params_list as $key => $value)
-					$params .= $key . '=' . $value . '&';
+				if (is_array($post_params_mixed))
+				{
+					foreach ($post_params_mixed as $key => $value)
+						$post_params .= $key . '=' . $value . '&';
 
-				rtrim($params, '&');
+					rtrim($post_params, '&');
 
-				curl_setopt($curl, CURLOPT_POST, count($post_params_list));
-				curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
+					curl_setopt($curl, CURLOPT_POST, count($post_params_mixed));
+				}
+				else
+					$post_params = $post_params_mixed;
+
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $post_params);
 			}
 		}
 

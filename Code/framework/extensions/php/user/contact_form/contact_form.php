@@ -60,7 +60,7 @@
         else
             echo '<center><div class="error">' . ALPHA_CMS::Load_Content('msg_report_2', 'content', $this_lang) . '</div></center>';
         
-        echo '<script type="text/javascript">
+        echo '<script>
               
                 window.setTimeout(\'window.location="/\' + global_lang + \'/"\', 1500);
               
@@ -81,7 +81,7 @@
 
 ?>
 
-<script type="text/javascript">
+<script>
 
     var contact_form_elements = new Array();
     
@@ -94,7 +94,7 @@
 
 </script>
 
-<script type="text/javascript">
+<script>
 
     // Add error class on button click
     $(document).ready(function () {

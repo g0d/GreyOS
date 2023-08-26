@@ -147,8 +147,8 @@ function i_quakejs()
         dev_box = cosmos.hub.access('dev_box');
 
         swarm = matrix.get('swarm');
-        infinity = matrix.get('infinity');
         nature = matrix.get('nature');
+        infinity = dev_box.get('infinity');
 
         return true;
     };
@@ -158,8 +158,8 @@ function i_quakejs()
         matrix = null,
         dev_box = null,
         swarm = null,
-        infinity = null,
         nature = null,
+        infinity = null,
         i_quakejs_bee = null,
         utils_sys = new vulcan(),
         config = new config_model(),

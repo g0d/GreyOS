@@ -353,6 +353,10 @@ function user_profile()
 
         utils_int.draw_user_profile();
 
+        msg_win = new msgbox();
+
+        msg_win.init('desktop');
+
         return true;
     };
 

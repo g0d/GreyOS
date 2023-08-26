@@ -1,11 +1,11 @@
 /*
-    GreyOS - Scrollbar (Version: 1.0)
+    GreyOS - Scrollbar (Version: 1.2)
 
     File name: scrollbar.js
-    Description: This file contains the Scrollbar module.
+    Description: This file contains the Scrollbar development module.
 
     Coded by Arron Bailiss (abailiss), George Delaportas (G0D) and John Inglessis (negle).
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -84,13 +84,13 @@ function scrollbar()
         this.bind_events = function()
         {
             var __content = vulcan.objects.by_id(config.id + '_content'),
-                __track = vulcan.objects.by_id(config.id + '_track'),
+                //__track = vulcan.objects.by_id(config.id + '_track'),
                 __handle = vulcan.objects.by_id(config.id + '_handle');
 
-            vulcan.events.attach(config.id, __handle, 'mousedown', events.mouse.down);
-            vulcan.events.attach(config.id, document, 'mouseup', events.mouse.up);
-            vulcan.events.attach(config.id, document, 'mousemove', events.mouse.move);
-            vulcan.events.attach(config.id, __content, 'mousewheel', events.mouse.wheel);
+            morpheus.run(config.id, 'mouse', 'mousewheel', events.mouse.wheel, __content);
+            morpheus.run(config.id, 'mouse', 'mousedown', events.mouse.down, __handle);
+            morpheus.run(config.id, 'mouse', 'mouseup', events.mouse.up, document);
+            morpheus.run(config.id, 'mouse', 'mousemove', events.mouse.move, document);
 
             return true;
         };
@@ -309,11 +309,16 @@ function scrollbar()
 
         cosmos = cosmos_object;
 
+        matrix = cosmos.hub.access('matrix');
+
+        morpheus = matrix.get('morpheus');
+
         return true;
     };
 
     var is_init = false,
         cosmos = null,
+        morpheus = null,
         utils_sys = new vulcan(),
         config = new config_model(),
         events = new events_manager(),
