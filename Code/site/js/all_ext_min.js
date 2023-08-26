@@ -9908,7 +9908,7 @@ function eagle()
  __no_right_margin = ' no_right_margin';
  if (__this_app_title.length > 13)
  __this_app_title = __this_app_title.substring(0, 12) + '...';
- __this_eagle_window.id = 'eagle_' + __running_apps[i - 1].id;
+ __this_eagle_window.id = 'eagle_' + __running_apps[i - 1].sys_id;
  __this_eagle_window.className = 'eagle_window' + __no_right_margin;
  __this_eagle_window.innerHTML = '<div class="eagle_window_title">' + __this_app_title + '</div>\
  <div class="eagle_window_body"></div>';
@@ -9942,6 +9942,8 @@ function eagle()
  __eagle_apps.scrollTo(0, 1);
  }
  __this_picked_win = __eagle_apps.childNodes[picked_window];
+ if (utils_sys.validation.misc.is_undefined(__this_picked_win))
+ return false;
  __this_picked_win.classList.add('eagle_window_selected');
  if (picked_window % 6 === 0 && picked_window > 0)
  {

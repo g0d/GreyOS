@@ -1,11 +1,11 @@
 /*
-    GreyOS - Eagle (Version: 2.0)
+    GreyOS - Eagle (Version: 2.1)
 
     File name: eagle.js
     Description: This file contains the Eagle - "Alt-Tab"-like keys facility.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -154,7 +154,7 @@ function eagle()
                 if (__this_app_title.length > 13)
                     __this_app_title = __this_app_title.substring(0, 12) + '...';
 
-                __this_eagle_window.id = 'eagle_' + __running_apps[i - 1].id;
+                __this_eagle_window.id = 'eagle_' + __running_apps[i - 1].sys_id;
                 __this_eagle_window.className = 'eagle_window' + __no_right_margin;
                 __this_eagle_window.innerHTML = '<div class="eagle_window_title">' + __this_app_title + '</div>\
                                                  <div class="eagle_window_body"></div>';
@@ -200,6 +200,9 @@ function eagle()
             }
 
             __this_picked_win = __eagle_apps.childNodes[picked_window];
+
+            if (utils_sys.validation.misc.is_undefined(__this_picked_win))
+                return false;
 
             __this_picked_win.classList.add('eagle_window_selected');
 
