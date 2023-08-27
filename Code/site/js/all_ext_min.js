@@ -16947,7 +16947,7 @@ function coyote()
  ' <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' +
  ' title="Sorry, settings are not available yet...">' +
  '</div>' +
- '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode"></div>' +
+ '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode is not available in the demo..."></div>' +
  ' <div class="adress_bar">' +
  ' <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' +
  ' title="Sorry, page information is not available yet...">' +
@@ -17002,24 +17002,14 @@ function coyote()
  morpheus.run(config.id, 'mouse', 'click', __handler, __forward);
  __handler = function(event) { self.browser_controls.tabs.destroy(event); };
  morpheus.run(config.id, 'mouse', 'click', __handler, __tab_close);
- if (mode === 'normal_to_fullscreen')
- {
- morpheus.delete('click', config.id, __full_screen);
- __handler = function(event) { self.browser_controls.full_screen(event, 1); };
- morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
- }
- else
- {
- morpheus.delete('click', config.id, __full_screen);
- __handler = function(event) { self.browser_controls.full_screen(event, 2); };
- morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
- }
  return true;
  };
  this.init_hyberbeam = function(url, callback)
  {
  config.ajax_config.on_success = async (hb_url) =>
  {
+ if (utils_sys.validation.misc.is_nothing(hb_url))
+ return false;
  hb_manager = await hyperbeam(browser_frame, hb_url);
  if (utils_sys.validation.misc.is_nothing(url))
  url = init_url;
@@ -17302,7 +17292,7 @@ function coyote()
  hb_manager = null,
  init_url = 'https://www.bing.com/?setlang=en&cc=gb',
  utils_sys = new vulcan(),
- ajax = new bull(),
+ ajax = new taurus(),
  ping_timer = new stopwatch(),
  config = new config_model(),
  utils_int = new utilities();
