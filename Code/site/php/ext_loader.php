@@ -16,7 +16,7 @@
     //UTIL::Load_Extension('teal_mail', 'js');
     UTIL::Load_Extension('i_bassoon', 'js');
     UTIL::Load_Extension('i_quakejs', 'js');
-    UTIL::Load_Extension('i_minecraft', 'js');
+    UTIL::Load_Extension('i_mariojs', 'js');
     UTIL::Load_Extension('i_youdj', 'js');
     UTIL::Load_Extension('i_audiomass', 'js');
     UTIL::Load_Extension('i_soundtrap', 'js');

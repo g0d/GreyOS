@@ -55,8 +55,13 @@
         "title": "iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"
     },
     {
-        "app_id": "i_webgl_preview",
+        "app_id": "i_mariojs",
         "position": "11",
+        "title": "iMarioJS :: 3rd-party integrated Mario game. Click me!"
+    },
+    {
+        "app_id": "i_webgl_preview",
+        "position": "12",
         "title": "iWebGL (Preview) :: 3rd-party integrated showcase. Click me!"
     }
 ]

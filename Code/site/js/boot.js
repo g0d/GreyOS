@@ -54,7 +54,7 @@ function boot_script()
                             teal_fs, morpheus, panda, octopus, super_tray, parrot, owl, nature, chameleon];
 
         // List of applications
-        var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, 
+        var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_mariojs,
                     i_youdj, i_audiomass, i_soundtrap, i_ampedstudio, i_vectorink, i_ganttio, i_webgl_preview];
 
         // Add a VM to the hypervisor
