@@ -71,11 +71,13 @@
 			{
 				session_regenerate_id(true);
 
-				UTIL::Set_Session_Variable('auth', array('login' => 1, 
+				UTIL::Set_Session_Variable('auth', array('login' => 1,
 														 'user' => array('profile' => $credentials['profile'],
-														 				 'email' => $username, 
-																		 'ip' => $_SERVER['REMOTE_ADDR'], 
-																		 'agent' => $_SERVER['HTTP_USER_AGENT']), 
+														 				 'email' => $username,
+																		 'role' => $credentials['role'],
+																		 'ip' => $_SERVER['REMOTE_ADDR'],
+																		 'agent' => $_SERVER['HTTP_USER_AGENT'],
+																		 'wallpaper' => $credentials['wallpaper']),
 														 'last_activity' => time()));
 
 				echo '1';
@@ -85,6 +87,13 @@
 		}
 
 		global $db_conn_link;
+
+		if (empty($db_conn_link))
+		{
+			echo '0';
+
+			return false;
+		}
 
 		$secure_query = 'SELECT * 
 						 FROM `users` 
@@ -104,11 +113,13 @@
 		{
 			session_regenerate_id(true);
 
-			UTIL::Set_Session_Variable('auth', array('login' => 1, 
+			UTIL::Set_Session_Variable('auth', array('login' => 1,
 													 'user' => array('profile' => $credentials['profile'],
-													 				 'email' => $username, 
-																	 'ip' => $_SERVER['REMOTE_ADDR'], 
-																	 'agent' => $_SERVER['HTTP_USER_AGENT']), 
+													 				 'email' => $username,
+																	 'role' => $credentials['role'],
+																	 'ip' => $_SERVER['REMOTE_ADDR'],
+																	 'agent' => $_SERVER['HTTP_USER_AGENT'],
+																	 'wallpaper' => $credentials['wallpaper']),
 													 'last_activity' => time()));
 
 			echo '1';

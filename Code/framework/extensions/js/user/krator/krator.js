@@ -299,15 +299,15 @@ function krator()
     
             ajax_factory(data, function()
                                {
-                                    msg_win.show(os_name, 'Registration succeeded!', () => { enable_controls(); });
+                                    msg_win.show(os_name, 'Registration succeeded!');
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Registration failed!', () => { enable_controls(); });
+                                    msg_win.show(os_name, 'Registration failed!');
                                },
                                function()
                                {
-                                    // Nothing...
+                                    enable_controls();
                                });
         };
 

@@ -14,7 +14,7 @@ body
 {
     font-family: 'Ubuntu', sans-serif;
     font-size: 18px;
-    background-image: url("pix/wallpaper3.jpg");
+    background-image: url("/site/pix/wallpapers/wallpaper3.jpg");
     background-color: #72bbc5;
     background-attachment: fixed;
     min-width: 1336px;
@@ -644,14 +644,14 @@ option
     background-color: #5b5a63d1 !important;
 }
 
-#xmass
+#xmas
 {
     position: absolute;
     display: block;
-    left: calc(90%);
-    top: calc(80%);
-    width: 512px;
-    height: 512px;
-    background-image: url('pix/xmass/xmass_tree.gif');
+    right: 0px;
+    bottom: 0px;
+    width: 786px;
+    height: 740px;
+    background-image: url('/site/pix/xmas/snowman_presents.png');
     zoom: 40%;
 }

@@ -8757,14 +8757,15 @@ function krator()
  '&confirm=' + password_comfirm_object.value;
  ajax_factory(data, function()
  {
- msg_win.show(os_name, 'Registration succeeded!', () => { enable_controls(); });
+ msg_win.show(os_name, 'Registration succeeded!');
  },
  function()
  {
- msg_win.show(os_name, 'Registration failed!', () => { enable_controls(); });
+ msg_win.show(os_name, 'Registration failed!');
  },
  function()
  {
+ enable_controls();
  });
  };
  this.load_desktop_ui = function(script)
@@ -9373,6 +9374,7 @@ function user_profile()
  {
  this.full_name = null;
  this.email = null;
+ this.wallpaper = null;
  }
  function utilities()
  {
@@ -9416,10 +9418,13 @@ function user_profile()
  var __user_details = JSON.parse(result);
  user_profile_data.full_name = __user_details.user.profile;
  user_profile_data.email = __user_details.user.email;
+ user_profile_data.wallpaper = __user_details.user.wallpaper;
  if (print === true)
  {
  utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
  utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
+ if (user_profile_data.wallpaper !== '')
+ document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
  }
  else
  return user_profile_data;
