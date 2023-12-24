@@ -61,6 +61,25 @@
     background-color: #5aa9ff;
 }
 
+#ce_deploy
+{
+    float: right;
+    width: 66px;
+    background-color: #08d43b;
+    color: white;
+    border-radius: 6px;
+    border-style: none;
+    cursor: pointer;
+    height: 22px;
+    margin-top: -2px;
+    margin-right: 6px;
+}
+
+#ce_deploy:hover
+{
+    background-color: #4bdb6f;
+}
+
 #ce_status
 {
     float: right;

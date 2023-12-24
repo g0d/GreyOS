@@ -12404,6 +12404,80 @@ function parrot()
  this.status = new status();
  this.settings = new settings();
 }
+function xgc()
+{
+ var self = this;
+ function init()
+ {
+ window.addEventListener('gamepadconnected', (event) => { console.log('XGC Status:', event.gamepad.connected); });
+ window.addEventListener('gamepaddisconnected', (event) => { console.log('XGC Status:', event.gamepad.connected); });
+ }
+ function game_controller_config()
+ {
+ this.LeftBumper = false;
+ this.RightBumper = false;
+ this.LeftTrigger = false;
+ this.RightTriger = false;
+ this.ButtonA = false;
+ this.ButtonB = false;
+ this.ButtonX = false;
+ this.ButtonY = false;
+ this.Back = false;
+ this.Start = false;
+ this.UpDPad = false;
+ this.DownDPad = false;
+ this.LeftDPad = false;
+ this.RightDPad = false;
+ this.LeftStickButton = false;
+ this.RightStickButton = false;
+ this.LeftJoystickX = 0.0;
+ this.LeftJoystickY = 0.0;
+ this.RightJoystickX = 0.0;
+ this.RightJoystickY = 0.0;
+ }
+ this.update_controller = function()
+ {
+ var __this_xgc = null;
+ for (__this_xgc of navigator.getGamepads())
+ {
+ if (!__this_xgc)
+ continue;
+ xgc_config.LeftBumper = __this_xgc.buttons[4].pressed;
+ xgc_config.RightBumper = __this_xgc.buttons[5].pressed;
+ xgc_config.LeftTrigger = __this_xgc.buttons[6].pressed;
+ xgc_config.RightTriger = __this_xgc.buttons[7].pressed;
+ xgc_config.Back = __this_xgc.buttons[8].pressed;
+ xgc_config.Start = __this_xgc.buttons[9].pressed;
+ xgc_config.UpDPad = __this_xgc.buttons[12].pressed;
+ xgc_config.DownDPad = __this_xgc.buttons[13].pressed;
+ xgc_config.LeftDPad = __this_xgc.buttons[14].pressed;
+ xgc_config.RightDPad = __this_xgc.buttons[15].pressed;
+ xgc_config.LeftStickButton = __this_xgc.buttons[10].pressed;
+ xgc_config.RightStickButton = __this_xgc.buttons[11].pressed;
+ xgc_config.ButtonA = __this_xgc.buttons[0].pressed;
+ xgc_config.ButtonB = __this_xgc.buttons[1].pressed;
+ xgc_config.ButtonX = __this_xgc.buttons[2].pressed;
+ xgc_config.ButtonY = __this_xgc.buttons[3].pressed;
+ xgc_config.LeftJoystickX = Math.round(__this_xgc.axes[0] * 100);
+ xgc_config.LeftJoystickY = -Math.round(__this_xgc.axes[1] * 100);
+ xgc_config.RightJoystickX = Math.round(__this_xgc.axes[2] * 100);
+ xgc_config.RightJoystickY = -Math.round(__this_xgc.axes[3] * 100);
+ console.log(xgc_config.RightJoystickX);
+ }
+ return true;
+ }
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ init();
+ var cosmos = null,
+ utils_sys = new vulcan(),
+ xgc_config = new game_controller_config();
+}
 function infinity()
 {
  var self = this;
@@ -17312,6 +17386,7 @@ function cloud_edit()
  {
  this.editor = null;
  this.exec_button = null;
+ this.deploy_button = null;
  this.status_label = null;
  }
  this.id = null;
@@ -17322,7 +17397,7 @@ function cloud_edit()
  {
  this.telemetry = function(prog_id)
  {
- program_id = prog_id;
+ var program_id = prog_id;
  return true;
  };
  this.reset = function()
@@ -17376,6 +17451,8 @@ function cloud_edit()
  config.ce.exec_button.classList.remove('ce_stop');
  frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
  }
+ config.ce.deploy_button.style.backgroundColor = '#97ad9c';
+ config.ce.deploy_button.disabled = true;
  return executor.terminate();
  }
  config.ce.status_label.innerHTML = '[RUNNING]';
@@ -17384,13 +17461,22 @@ function cloud_edit()
  program_is_running = true;
  return true;
  }
+ function deploy(event_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if (event_object.buttons !== 1)
+ return false;
+ console.log('Deploying...');
+ return true;
+ }
  this.gui_init = function()
  {
  var __data_content_id = cloud_edit_bee.settings.general.id() + '_data';
  infinity.setup(__data_content_id);
  infinity.begin();
  me.draw();
- me.attach_functions();
+ me.attach_ce_functions();
  me.attach_events();
  infinity.end();
  return true;
@@ -17402,15 +17488,22 @@ function cloud_edit()
  config.ce.exec_button.id = 'ce_run_stop';
  config.ce.exec_button.type = 'button';
  config.ce.exec_button.value = 'Run';
+ config.ce.deploy_button = document.createElement('input');
+ config.ce.deploy_button.id = 'ce_deploy';
+ config.ce.deploy_button.type = 'button';
+ config.ce.deploy_button.style.backgroundColor = '#97ad9c';
+ config.ce.deploy_button.value = 'Deploy';
+ config.ce.deploy_button.disabled = true;
  config.ce.status_label = document.createElement('span');
  config.ce.status_label.id = 'ce_status';
  config.ce.status_label.innerHTML = '[READY]';
  dynamic_elements.append(config.ce.status_label);
+ dynamic_elements.append(config.ce.deploy_button);
  dynamic_elements.append(config.ce.exec_button);
  utils_sys.objects.by_id(cloud_edit_bee.settings.general.id() + '_status_bar_msg').append(dynamic_elements);
  return true;
  };
- this.attach_functions = function()
+ this.attach_ce_functions = function()
  {
  config.ce.editor = ace.edit(cloud_edit_bee.settings.general.id() + '_data');
  ace.require('ace/ext/settings_menu').init(config.ce.editor);
@@ -17433,6 +17526,8 @@ function cloud_edit()
  var __handler = null;
  __handler = function(event) { run_code(event); };
  morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.exec_button);
+ __handler = function(event) { deploy(event); };
+ morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.deploy_button);
  return true;
  };
  this.reset = function()
@@ -17441,6 +17536,8 @@ function cloud_edit()
  config.ce.status_label.innerHTML = '[READY]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
+ config.ce.deploy_button.style.backgroundColor = '#08d43b';
+ config.ce.deploy_button.disabled = false;
  program_is_running = false;
  return true;
  };

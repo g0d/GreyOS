@@ -51,7 +51,7 @@ function boot_script()
 
         // List of system services
         var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            teal_fs, morpheus, panda, octopus, super_tray, parrot, owl, nature, chameleon];
+                            teal_fs, morpheus, panda, octopus, super_tray, parrot, xgc, owl, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_mariojs,
@@ -262,6 +262,7 @@ function boot_script()
             var new_octopus = matrix_container.get('octopus');
             var new_super_tray = matrix_container.get('super_tray');
             var new_parrot = matrix_container.get('parrot');
+            var new_xgc = matrix_container.get('xgc');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
             var new_ui_controls = matrix_container.get('ui_controls');
@@ -328,6 +329,7 @@ function boot_script()
                 cc_reload.init();
             });
             */
+
             os_utils.events.attach('greyos', document, 'keydown', 
             function(event) 
             {
@@ -400,7 +402,7 @@ function boot_script()
             console.log('%c ' + greyos_logo_art, 'color: #A0A0A0;');
 
             // Calculate speed index
-            os_benchmark.test(1000000);
+            os_benchmark.test(10000000);
 
             // Wait for 5 seconds and then print the result
             os_timers.start(5000, function()
@@ -429,7 +431,7 @@ function boot_script()
 
         // List of system services
         var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            morpheus, panda, octopus, super_tray, parrot, owl, nature, chameleon];
+                            morpheus, panda, octopus, super_tray, parrot, xgc, owl, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_webgl_preview];
@@ -511,6 +513,7 @@ function boot_script()
             var new_octopus = matrix_container.get('octopus');
             var new_super_tray = matrix_container.get('super_tray');
             var new_parrot = matrix_container.get('parrot');
+            var new_xgc = matrix_container.get('xgc');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
 
@@ -640,7 +643,7 @@ function boot_script()
             console.log('%c ' + greyos_logo_art, 'color: #A0A0A0;');
 
             // Calculate speed index
-            os_benchmark.test(1000000);
+            os_benchmark.test(10000000);
 
             // Wait for 5 seconds and then print the result
             os_timers.start(5000, function()

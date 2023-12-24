@@ -13,6 +13,7 @@
 body
 {
     font-family: 'Ubuntu', sans-serif;
+    background-color: #000000;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -155,6 +156,11 @@ body
     float: right;
     clear: right;
     margin-top: 7px;
+}
+
+#eureka
+{
+    display: none;
 }
 
 ::selection

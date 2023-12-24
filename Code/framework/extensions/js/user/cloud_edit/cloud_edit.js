@@ -20,6 +20,7 @@ function cloud_edit()
         {
             this.editor = null;
             this.exec_button = null;
+            this.deploy_button = null;
             this.status_label = null;
         }
 
@@ -32,7 +33,7 @@ function cloud_edit()
     {
         this.telemetry = function(prog_id)
         {
-            program_id = prog_id;
+            var program_id = prog_id;
 
             return true;
         };
@@ -102,6 +103,9 @@ function cloud_edit()
                     frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
                 }
 
+                config.ce.deploy_button.style.backgroundColor = '#97ad9c';
+                config.ce.deploy_button.disabled = true;
+
                 return executor.terminate();
             }
 
@@ -114,6 +118,20 @@ function cloud_edit()
             return true;
         }
 
+        function deploy(event_object)
+        {
+            if (utils_sys.validation.misc.is_undefined(event_object))
+                return false;
+
+            if (event_object.buttons !== 1)
+                return false;
+
+            console.log('Deploying...');
+            // TODO:...
+
+            return true;
+        }
+
         this.gui_init = function()
         {
             var __data_content_id = cloud_edit_bee.settings.general.id()  + '_data';
@@ -122,7 +140,7 @@ function cloud_edit()
             infinity.begin();
 
             me.draw();
-            me.attach_functions();
+            me.attach_ce_functions();
             me.attach_events();
 
             infinity.end();
@@ -139,11 +157,19 @@ function cloud_edit()
             config.ce.exec_button.type = 'button';
             config.ce.exec_button.value = 'Run';
 
+            config.ce.deploy_button = document.createElement('input');
+            config.ce.deploy_button.id = 'ce_deploy';
+            config.ce.deploy_button.type = 'button';
+            config.ce.deploy_button.style.backgroundColor = '#97ad9c';
+            config.ce.deploy_button.value = 'Deploy';
+            config.ce.deploy_button.disabled = true;
+
             config.ce.status_label = document.createElement('span');
             config.ce.status_label.id = 'ce_status';
             config.ce.status_label.innerHTML = '[READY]';
 
             dynamic_elements.append(config.ce.status_label);
+            dynamic_elements.append(config.ce.deploy_button);
             dynamic_elements.append(config.ce.exec_button);
 
             utils_sys.objects.by_id(cloud_edit_bee.settings.general.id() + '_status_bar_msg').append(dynamic_elements);
@@ -151,7 +177,7 @@ function cloud_edit()
             return true;
         };
 
-        this.attach_functions = function()
+        this.attach_ce_functions = function()
         {
             config.ce.editor = ace.edit(cloud_edit_bee.settings.general.id() + '_data');
 
@@ -180,6 +206,9 @@ function cloud_edit()
             __handler = function(event) { run_code(event); };
             morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.exec_button);
 
+            __handler = function(event) { deploy(event); };
+            morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.deploy_button);
+
             return true;
         };
 
@@ -190,6 +219,9 @@ function cloud_edit()
             config.ce.status_label.innerHTML = '[READY]';
             config.ce.exec_button.value = 'Run';
             config.ce.exec_button.classList.remove('ce_stop');
+
+            config.ce.deploy_button.style.backgroundColor = '#08d43b';
+            config.ce.deploy_button.disabled = false;
 
             program_is_running = false;
 
