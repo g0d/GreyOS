@@ -66,11 +66,11 @@ function __Banana_Post()
                        },
                        function()
                        {
-
+                            // Nothing...
                        },
                        function()
                        {
-                            
+                            // Nothing...
                        });
 
     return true;

@@ -137,7 +137,7 @@ function coyote()
                                                     '      <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" value="' + init_url + '" placeholder="Enter a web address...">' + 
                                                     '  </div>' + 
                                                     '</div>' +  
-                                                    '<div id="' + coyote_bee_id + '_frame" class="coyote_frame" title="Coyote"></div>');
+                                                    '<div id="' + coyote_bee_id + '_frame" class="coyote_frame"></div>');
 
             browser_address_box = utils_sys.objects.by_id(coyote_bee_id + '_address_box');
             browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');

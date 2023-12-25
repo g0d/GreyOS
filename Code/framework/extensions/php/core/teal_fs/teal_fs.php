@@ -22,7 +22,7 @@
             return;
         }
 
-        public static function Write($filename, $mode = 'replace',)
+        public static function Write($filename, $mode = 'replace')
         {
             return;
         }

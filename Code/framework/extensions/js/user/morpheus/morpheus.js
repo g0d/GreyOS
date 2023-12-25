@@ -1,11 +1,11 @@
 /*
-    GreyOS - Morpheus (Version: 1.0)
+    GreyOS - Morpheus (Version: 1.2)
 
     File name: morpheus.js
     Description: This file contains the Morpheus - Events Manager service module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -241,6 +241,8 @@ function morpheus()
                                         utils_sys.events.attach(uid, __receiver_object, event_id, 
                                                                 __scheduled_events_list[i].context_list[j].events[k].cmd);
                                     }
+                                    else if (context_id === 'controller')
+                                        utils_sys.events.attach(uid, window, event_id, __scheduled_events_list[i].context_list[j].events[k].cmd);
                                     else
                                         __scheduled_events_list[i].context_list[j].events[k].cmd.call();
                                 }
