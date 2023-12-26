@@ -231,6 +231,7 @@ function boot_script()
             matrix_container.get('octopus').init('device_manager');
             matrix_container.get('super_tray').init('services_tray');
             matrix_container.get('parrot').load('audio');
+            matrix_container.get('xgc').init();
 
             // Show preloaded or saved bees (apps)
             matrix_container.get('swarm').bees.show();
@@ -299,6 +300,7 @@ function boot_script()
             new_octopus.init('device_manager');
             new_super_tray.init('services_tray');
             new_parrot.init('audio');
+            new_xgc.init();
 
             // Show preloaded or saved bees (apps)
             new_swarm.bees.show();
@@ -542,6 +544,7 @@ function boot_script()
             new_octopus.init('device_manager');
             new_super_tray.init('services_tray');
             new_parrot.init('audio');
+            new_xgc.init(true);
 
             // Show preloaded or saved bees (apps)
             new_swarm.bees.show();

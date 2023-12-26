@@ -1,7 +1,7 @@
 /*
     Octopus - Task
 
-    File name: task.js (Version: 1.0)
+    File name: task.js (Version: 1.2)
     Description: This file contains the Octopus - Task.
 
     Coded by George Delaportas (G0D)
@@ -42,7 +42,7 @@ function octopus_task()
                 __notification_msg_object = utils_sys.objects.by_id(__octopus_id + '_message'),
                 __sys_theme = chameleon.get();
 
-            __notification_msg_object.innerHTML = 'New device ' + status + '!';
+            __notification_msg_object.innerHTML = 'Device: ' + status + '!';
             __notification_object.style.display = 'block';
 
             parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/pong.wav');
@@ -77,9 +77,9 @@ function octopus_task()
                     usb_devices.num++;
 
                     if (usb_devices.num === devices.length)
-                        __status = 'connected';
+                        __status = 'Connected';
                     else
-                        __status = 'disconnected';
+                        __status = 'Disconnected';
 
                     show_notification(__status);
 

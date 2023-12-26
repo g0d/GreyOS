@@ -1,8 +1,8 @@
 /*
-    GreyOS - XGC (Version: 0.5)
+    GreyOS - XGC (Version: 0.7)
 
     File name: xgc.js
-    Description: This file contains the XGC - Gaming Controller service module.
+    Description: This file contains the XGC - Extended Gaming Controller service module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2023
@@ -115,78 +115,102 @@ function xgc()
         this.joystick = new joystick_model();
     }
 
-    function scan_controller(controller_status)
+    function utilities()
     {
-        var __this_xgc = null,
-            __controller_type = null;
+        var me = this;
 
-        is_controller_connected = controller_status;
-
-        scan_interval = setInterval(() => 
+        this.scan_controller = function(controller_status)
         {
-            if (!controller_status)
-                return false;
+            var __this_xgc = null,
+                __controller_type = null;
 
-            for (__this_xgc of navigator.getGamepads())
+            is_controller_connected = controller_status;
+
+            scan_interval = setInterval(() => 
             {
-                if (!__this_xgc)
-                    continue;
+                if (!controller_status)
+                    return false;
 
-                __controller_type = __this_xgc.id.toLowerCase().indexOf('gamepad');
-
-                // Get states
-                if (__controller_type >= 0)
+                for (__this_xgc of navigator.getGamepads())
                 {
-                    xgc_config.gamepad.LB = __this_xgc.buttons[4].pressed;
-                    xgc_config.gamepad.RB = __this_xgc.buttons[5].pressed;
-                    xgc_config.gamepad.LT = __this_xgc.buttons[6].pressed;
-                    xgc_config.gamepad.RT = __this_xgc.buttons[7].pressed;
-                    xgc_config.gamepad.Back = __this_xgc.buttons[8].pressed;
-                    xgc_config.gamepad.Start = __this_xgc.buttons[9].pressed;
-                    xgc_config.gamepad.D_Pad_Up = __this_xgc.buttons[12].pressed;
-                    xgc_config.gamepad.D_Pad_Down = __this_xgc.buttons[13].pressed;
-                    xgc_config.gamepad.D_Pad_Left = __this_xgc.buttons[14].pressed;
-                    xgc_config.gamepad.D_Pad_Right = __this_xgc.buttons[15].pressed;
-                    xgc_config.gamepad.Left_Stick_Button = __this_xgc.buttons[10].pressed;
-                    xgc_config.gamepad.Right_Stick_Button = __this_xgc.buttons[11].pressed;
-                    xgc_config.gamepad.A = __this_xgc.buttons[0].pressed;
-                    xgc_config.gamepad.B = __this_xgc.buttons[1].pressed;
-                    xgc_config.gamepad.X = __this_xgc.buttons[2].pressed;
-                    xgc_config.gamepad.Y = __this_xgc.buttons[3].pressed;
-                    xgc_config.gamepad.Left_Joystick_X = Math.round(__this_xgc.axes[0] * 100);
-                    xgc_config.gamepad.Left_Joystick_Y = -Math.round(__this_xgc.axes[1] * 100);
-                    xgc_config.gamepad.Right_Joystick_X = Math.round(__this_xgc.axes[2] * 100);
-                    xgc_config.gamepad.Right_Joystick_Y = -Math.round(__this_xgc.axes[3] * 100);
-                }
-                else
-                {
-                    // TODO:...
-                }
-            }
-        }, 25);
+                    if (!__this_xgc)
+                        continue;
 
-        return true;
+                    __controller_type = __this_xgc.id.toLowerCase().indexOf('gamepad');
+
+                    // Get states
+                    if (__controller_type >= 0)
+                    {
+                        xgc_config.gamepad.LB = __this_xgc.buttons[4].pressed;
+                        xgc_config.gamepad.RB = __this_xgc.buttons[5].pressed;
+                        xgc_config.gamepad.LT = __this_xgc.buttons[6].pressed;
+                        xgc_config.gamepad.RT = __this_xgc.buttons[7].pressed;
+                        xgc_config.gamepad.Back = __this_xgc.buttons[8].pressed;
+                        xgc_config.gamepad.Start = __this_xgc.buttons[9].pressed;
+                        xgc_config.gamepad.D_Pad_Up = __this_xgc.buttons[12].pressed;
+                        xgc_config.gamepad.D_Pad_Down = __this_xgc.buttons[13].pressed;
+                        xgc_config.gamepad.D_Pad_Left = __this_xgc.buttons[14].pressed;
+                        xgc_config.gamepad.D_Pad_Right = __this_xgc.buttons[15].pressed;
+                        xgc_config.gamepad.Left_Stick_Button = __this_xgc.buttons[10].pressed;
+                        xgc_config.gamepad.Right_Stick_Button = __this_xgc.buttons[11].pressed;
+                        xgc_config.gamepad.A = __this_xgc.buttons[0].pressed;
+                        xgc_config.gamepad.B = __this_xgc.buttons[1].pressed;
+                        xgc_config.gamepad.X = __this_xgc.buttons[2].pressed;
+                        xgc_config.gamepad.Y = __this_xgc.buttons[3].pressed;
+                        xgc_config.gamepad.Left_Joystick_X = Math.round(__this_xgc.axes[0] * 100);
+                        xgc_config.gamepad.Left_Joystick_Y = -Math.round(__this_xgc.axes[1] * 100);
+                        xgc_config.gamepad.Right_Joystick_X = Math.round(__this_xgc.axes[2] * 100);
+                        xgc_config.gamepad.Right_Joystick_Y = -Math.round(__this_xgc.axes[3] * 100);
+                    }
+                    else
+                    {
+                        // TODO:...
+                    }
+
+                    if (is_log)
+                        frog('XGC', '[#] Log [#]', xgc_config);
+                }
+            }, 25);
+
+            return true;
+        };
+
+        this.abort_scan_controller = function()
+        {
+            clearInterval(scan_interval);
+
+            is_controller_connected = false;
+
+            return true;
+        };
     }
 
-    function abort_scan_controller()
+    this.data = function()
     {
-        clearInterval(scan_interval);
+        if (!is_init || !is_controller_connected)
+            return false;
 
-        is_controller_connected = false;
+        return xgc_config;
+    };
 
-        return true;
-    }
-
-    function init()
+    this.init = function(log = false)
     {
+        if (utils_sys.validation.misc.is_undefined(log) || !utils_sys.validation.misc.is_bool(log))
+            return false;
+
         var __handler = null;
 
-        __handler = function(event) { scan_controller(event.gamepad.connected); };
+        __handler = function(event) { utils_int.scan_controller(event.gamepad.connected); };
         morpheus.run('xgc', 'controller', 'gamepadconnected', __handler);
 
-        __handler = function() { abort_scan_controller(); };
+        __handler = function() { utils_int.abort_scan_controller(); };
         morpheus.run('xgc', 'controller', 'gamepaddisconnected', __handler);
-    }
+
+        if (log)
+            is_log = true;
+
+        is_init = true;
+    };
 
     this.cosmos = function(cosmos_object)
     {
@@ -199,15 +223,16 @@ function xgc()
 
         morpheus = matrix.get('morpheus');
 
-        init();
-
         return true;
     };
 
-    var cosmos = null,
-        morpheus = null,
+    var is_init = false,
+        is_log = false,
         is_controller_connected = false,
+        cosmos = null,
+        morpheus = null,
         scan_interval = null,
         utils_sys = new vulcan(),
-        xgc_config = new game_controller_config();
+        xgc_config = new game_controller_config(),
+        utils_int = new utilities();
 }

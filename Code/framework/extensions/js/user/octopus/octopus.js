@@ -1,5 +1,5 @@
 /*
-    GreyOS - Octopus (Version: 1.2)
+    GreyOS - Octopus (Version: 1.3)
 
     File name: octopus.js
     Description: This file contains the Octopus - Devices management service module.
@@ -44,7 +44,7 @@ function octopus()
                 __notification_msg_object = utils_sys.objects.by_id(octopus_id + '_message'),
                 __sys_theme = chameleon.get();
 
-            __notification_msg_object.innerHTML = 'New device ' + status + '!';
+            __notification_msg_object.innerHTML = 'Device: ' + status + '!';
             __notification_object.style.display = 'block';
 
             parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/pong.wav');
@@ -59,15 +59,20 @@ function octopus()
 
         function scan_new_devices(devices)
         {
-            var __device_exists = false,
-                __status = null;
+            var __device = null,
+                __status = null,
+                __device_exists = false;
 
-            devices.forEach(function(device)
+            for (__device in devices)
             {
                 for (var i = 0; i < usb_devices.num; i++)
                 {
-                    if (device.label === usb_devices.all[i])
+                    if (__device.label === usb_devices.all[i])
+                    {
                         __device_exists = true;
+
+                        break;
+                    }
                 }
 
                 if (__device_exists === false)
@@ -79,15 +84,15 @@ function octopus()
                     usb_devices.num++;
 
                     if (usb_devices.num === devices.length)
-                        __status = 'connected';
+                        __status = 'Connected';
                     else
-                        __status = 'disconnected';
+                        __status = 'Disconnected';
 
                     show_notification(__status);
 
                     return true;
                 }
-            });
+            }
 
             return false;
         }
@@ -121,6 +126,23 @@ function octopus()
             if (is_service_active === true)
                 return false;
 
+            var __constraints =
+            {
+                video:
+                {
+                    width: 1920,
+                    height: 1080,
+                    frameRate: 30,
+                },
+                audio:
+                {
+                    sampleRate: 44100,
+                    sampleSize: 16,
+                    volume: 0.30,
+                }
+            };
+
+            //navigator.mediaDevices.getUserMedia(__constraints).then(() => { device_manager(); });
             navigator.mediaDevices.ondevicechange = function() { device_manager(); };
 
             is_service_active = true;

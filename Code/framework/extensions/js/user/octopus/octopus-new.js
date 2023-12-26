@@ -1,5 +1,5 @@
 /*
-    GreyOS - Octopus (Version: 2.2)
+    GreyOS - Octopus (Version: 2.0)
 
     File name: octopus-new.js
     Description: This file contains the Octopus - Devices management service module.
@@ -14,7 +14,7 @@ function octopus()
 {
     var self = this;
 
-    this.init = function(any)
+    this.init = function(any, callback = null)
     {
         var result = new_task.create('/framework/extensions/js/user/' + self.constructor.name + '/task.js');
 
@@ -24,7 +24,7 @@ function octopus()
         return new_task.run({ "action" : "init", "arguments" : any }, 
                             () => 
                             {
-                                // Callback
+                                callback.call();
                             });
     };
 

@@ -11586,7 +11586,7 @@ function octopus()
  var __notification_object = utils_sys.objects.by_id(octopus_id + '_notification'),
  __notification_msg_object = utils_sys.objects.by_id(octopus_id + '_message'),
  __sys_theme = chameleon.get();
- __notification_msg_object.innerHTML = 'New device ' + status + '!';
+ __notification_msg_object.innerHTML = 'Device: ' + status + '!';
  __notification_object.style.display = 'block';
  parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/pong.wav');
  setTimeout(function()
@@ -11597,14 +11597,18 @@ function octopus()
  }
  function scan_new_devices(devices)
  {
- var __device_exists = false,
- __status = null;
- devices.forEach(function(device)
+ var __device = null,
+ __status = null,
+ __device_exists = false;
+ for (__device in devices)
  {
  for (var i = 0; i < usb_devices.num; i++)
  {
- if (device.label === usb_devices.all[i])
+ if (__device.label === usb_devices.all[i])
+ {
  __device_exists = true;
+ break;
+ }
  }
  if (__device_exists === false)
  {
@@ -11613,13 +11617,13 @@ function octopus()
  usb_devices[direction][type].push(device.label);
  usb_devices.num++;
  if (usb_devices.num === devices.length)
- __status = 'connected';
+ __status = 'Connected';
  else
- __status = 'disconnected';
+ __status = 'Disconnected';
  show_notification(__status);
  return true;
  }
- });
+ }
  return false;
  }
  function device_manager()
@@ -11645,6 +11649,21 @@ function octopus()
  {
  if (is_service_active === true)
  return false;
+ var __constraints =
+ {
+ video:
+ {
+ width: 1920,
+ height: 1080,
+ frameRate: 30,
+ },
+ audio:
+ {
+ sampleRate: 44100,
+ sampleSize: 16,
+ volume: 0.30,
+ }
+ };
  navigator.mediaDevices.ondevicechange = function() { device_manager(); };
  is_service_active = true;
  return true;
@@ -12507,7 +12526,10 @@ function xgc()
  this.gamepad = new gamepad_model();
  this.joystick = new joystick_model();
  }
- function scan_controller(controller_status)
+ function utilities()
+ {
+ var me = this;
+ this.scan_controller = function(controller_status)
  {
  var __this_xgc = null,
  __controller_type = null;
@@ -12547,24 +12569,38 @@ function xgc()
  else
  {
  }
+ if (is_log)
+ frog('XGC', '[#] Log [#]', xgc_config);
  }
  }, 25);
  return true;
- }
- function abort_scan_controller()
+ };
+ this.abort_scan_controller = function()
  {
  clearInterval(scan_interval);
  is_controller_connected = false;
  return true;
+ };
  }
- function init()
+ this.data = function()
  {
+ if (!is_init || !is_controller_connected)
+ return false;
+ return xgc_config;
+ };
+ this.init = function(log = false)
+ {
+ if (utils_sys.validation.misc.is_undefined(log) || !utils_sys.validation.misc.is_bool(log))
+ return false;
  var __handler = null;
- __handler = function(event) { scan_controller(event.gamepad.connected); };
+ __handler = function(event) { utils_int.scan_controller(event.gamepad.connected); };
  morpheus.run('xgc', 'controller', 'gamepadconnected', __handler);
- __handler = function() { abort_scan_controller(); };
+ __handler = function() { utils_int.abort_scan_controller(); };
  morpheus.run('xgc', 'controller', 'gamepaddisconnected', __handler);
- }
+ if (log)
+ is_log = true;
+ is_init = true;
+ };
  this.cosmos = function(cosmos_object)
  {
  if (utils_sys.validation.misc.is_undefined(cosmos_object))
@@ -12572,15 +12608,17 @@ function xgc()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  morpheus = matrix.get('morpheus');
- init();
  return true;
  };
- var cosmos = null,
- morpheus = null,
+ var is_init = false,
+ is_log = false,
  is_controller_connected = false,
+ cosmos = null,
+ morpheus = null,
  scan_interval = null,
  utils_sys = new vulcan(),
- xgc_config = new game_controller_config();
+ xgc_config = new game_controller_config(),
+ utils_int = new utilities();
 }
 function infinity()
 {
