@@ -3,6 +3,7 @@
 
     File name: yoda.js (Version: 1.0)
     Description: This file contains the Yoda extension.
+    Dependencies: Vulcan.
 
     Coded by George Delaportas (G0D)
     Copyright (C) 2023

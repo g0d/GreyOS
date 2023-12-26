@@ -4897,7 +4897,8 @@ function bee()
 
         is_init = true;
 
-        if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id) || !self.settings.general.type(type))
+        if (utils_sys.validation.misc.is_undefined(bee_id) || utils_sys.validation.misc.is_undefined(type) || 
+            !self.settings.general.id(bee_id) || !self.settings.general.type(type))
             return false;
 
         my_bee_id = self.settings.general.id();

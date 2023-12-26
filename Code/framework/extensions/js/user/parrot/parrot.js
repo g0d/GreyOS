@@ -1,11 +1,11 @@
 /*
-    GreyOS - Parrot (Version: 1.0)
+    GreyOS - Parrot (Version: 1.1)
 
     File name: parrot.js
     Description: This file contains the Parrot - Sound service module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -373,12 +373,12 @@ function parrot()
         return audio.set();
     };
 
-    this.play = function(sound_file, list = false, replay = false)
+    this.play = function(context, sound_file, list = false, replay = false)
     {
         if (is_init === false)
             return false;
 
-        return audio.play(sound_file, list, replay);
+        return audio.play(context, sound_file, list, replay);
     };
 
     this.pause = function()

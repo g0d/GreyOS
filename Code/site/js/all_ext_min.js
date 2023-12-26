@@ -12336,11 +12336,11 @@ function parrot()
  return false;
  return audio.set();
  };
- this.play = function(sound_file, list = false, replay = false)
+ this.play = function(context, sound_file, list = false, replay = false)
  {
  if (is_init === false)
  return false;
- return audio.play(sound_file, list, replay);
+ return audio.play(context, sound_file, list, replay);
  };
  this.pause = function()
  {
@@ -16831,7 +16831,8 @@ function bee()
  if (is_init === true)
  return false;
  is_init = true;
- if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id) || !self.settings.general.type(type))
+ if (utils_sys.validation.misc.is_undefined(bee_id) || utils_sys.validation.misc.is_undefined(type) ||
+ !self.settings.general.id(bee_id) || !self.settings.general.type(type))
  return false;
  my_bee_id = self.settings.general.id();
  self.gui.size.max.width(swarm.settings.right());
