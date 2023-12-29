@@ -1,5 +1,5 @@
 /*
-    GreyOS - Scrollbar (Version: 1.2)
+    GreyOS - Scrollbar (Version: 1.3)
 
     File name: scrollbar.js
     Description: This file contains the Scrollbar development module.
@@ -318,6 +318,7 @@ function scrollbar()
 
     var is_init = false,
         cosmos = null,
+        matrix = null,
         morpheus = null,
         utils_sys = new vulcan(),
         config = new config_model(),

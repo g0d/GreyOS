@@ -195,6 +195,12 @@ function xgc()
 
     this.init = function(log = false)
     {
+        if (utils_sys.validation.misc.is_nothing(cosmos))
+            return false;
+
+        if (is_init === true)
+            return false;
+
         if (utils_sys.validation.misc.is_undefined(log) || !utils_sys.validation.misc.is_bool(log))
             return false;
 
@@ -210,6 +216,8 @@ function xgc()
             is_log = true;
 
         is_init = true;
+
+        return true;
     };
 
     this.cosmos = function(cosmos_object)
@@ -230,6 +238,7 @@ function xgc()
         is_log = false,
         is_controller_connected = false,
         cosmos = null,
+        matrix = null,
         morpheus = null,
         scan_interval = null,
         utils_sys = new vulcan(),
