@@ -8572,7 +8572,7 @@ function krator()
  </button>\
  </div>\
  <div class="control_item">\
- <a id="register_link" href="#">No account? Register!</a>\
+ <div id="register_new_account">No account? Register!</div>\
  </div>\
  </div>\
  </div>\
@@ -8608,7 +8608,7 @@ function krator()
  var __login_username = utils_sys.objects.by_id('login_username_text'),
  __login_password = utils_sys.objects.by_id('login_password_text'),
  __login_button = utils_sys.objects.by_id('login_button'),
- __register_link = utils_sys.objects.by_id('register_link'),
+ __register_new_account = utils_sys.objects.by_id('register_new_account'),
  __register_username = utils_sys.objects.by_id('register_username_text'),
  __register_password = utils_sys.objects.by_id('register_password_text'),
  __register_password_confirm = utils_sys.objects.by_id('register_password_confirm_text'),
@@ -8630,7 +8630,7 @@ function krator()
  else
  krator_bee.gui.actions.casement.deploy(event);
  };
- morpheus.run(config.id, 'mouse', 'mousedown', __handler, __register_link);
+ morpheus.run(config.id, 'mouse', 'click', __handler, __register_new_account);
  __handler = function(event)
  {
  __args_array = [__login_username, __login_password, __login_button];
@@ -8740,6 +8740,11 @@ function krator()
  if (!utils_sys.validation.utilities.is_email(username_object.value))
  {
  msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
+ return;
+ }
+ if (password_object.value.length === 0)
+ {
+ msg_win.show(os_name, 'Please enter a password!', () => { enable_controls(); });
  return;
  }
  if (username_object.value.length < 3 || password_object.value.length < 8)
@@ -9423,7 +9428,9 @@ function user_profile()
  {
  utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
  utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
- if (user_profile_data.wallpaper !== '')
+ if (user_profile_data.wallpaper === '')
+ document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.jpg)';
+ else
  document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
  }
  else

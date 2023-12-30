@@ -5,7 +5,7 @@
     "content_fetcher"           :       "core",
     "heartbeat"                 :       "core",
     "jap"                       :       "core",
-    "yoda"              		:   	"core",
+    "yoda"                      :   	"core",
     "key_manager"               :       "core",
     "msgbox"                    :       "core",
     "pythia"                    :       "core",

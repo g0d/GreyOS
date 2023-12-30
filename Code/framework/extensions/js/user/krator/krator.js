@@ -1,5 +1,5 @@
 /*
-    GreyOS - Krator :: Login & registration form (Version: 1.4)
+    GreyOS - Krator :: Login & registration form (Version: 1.5)
 
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
@@ -67,7 +67,7 @@ function krator()
                                             </button>\
                                         </div>\
                                         <div class="control_item">\
-                                            <a id="register_link" href="#">No account? Register!</a>\
+                                            <div id="register_new_account">No account? Register!</div>\
                                         </div>\
                                     </div>\
                                 </div>\
@@ -107,7 +107,7 @@ function krator()
             var __login_username = utils_sys.objects.by_id('login_username_text'),
                 __login_password = utils_sys.objects.by_id('login_password_text'),
                 __login_button = utils_sys.objects.by_id('login_button'),
-                __register_link =  utils_sys.objects.by_id('register_link'),
+                __register_new_account =  utils_sys.objects.by_id('register_new_account'),
                 __register_username = utils_sys.objects.by_id('register_username_text'),
                 __register_password = utils_sys.objects.by_id('register_password_text'),
                 __register_password_confirm = utils_sys.objects.by_id('register_password_confirm_text'),
@@ -132,7 +132,7 @@ function krator()
                 else
                     krator_bee.gui.actions.casement.deploy(event);
             };
-            morpheus.run(config.id, 'mouse', 'mousedown', __handler, __register_link);
+            morpheus.run(config.id, 'mouse', 'click', __handler, __register_new_account);
 
             __handler = function(event)
             {
@@ -275,28 +275,35 @@ function krator()
             if (!utils_sys.validation.utilities.is_email(username_object.value))
             {
                 msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
+
+                return;
+            }
+
+            if (password_object.value.length === 0)
+            {
+                msg_win.show(os_name, 'Please enter a password!', () => { enable_controls(); });
     
                 return;
             }
-    
+
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
                 msg_win.show(os_name, 'Please choose more complex credentials!', () => { enable_controls(); });
-    
+
                 return;
             }
-    
+
             if (password_object.value !== password_comfirm_object.value)
             {
                 msg_win.show(os_name, 'Password confirmation failed!', () => { enable_controls(); });
-    
+
                 return;
             }
 
             var data = 'gate=register&mode=reg&username=' + username_object.value + 
                        '&password=' + password_object.value + 
                        '&confirm=' + password_comfirm_object.value;
-    
+
             ajax_factory(data, function()
                                {
                                     msg_win.show(os_name, 'Registration succeeded!');

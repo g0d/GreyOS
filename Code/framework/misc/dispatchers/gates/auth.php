@@ -6,7 +6,7 @@
 		Description: This file contains the authentication gate (AJAX).
 		
 		Coded by George Delaportas (G0D)
-		Copyright (C) 2019
+		Copyright (C) 2019 - 2024
 		Open Software License (OSL 3.0)
 	*/
 
@@ -44,14 +44,18 @@
 	}
 	else if ($_POST['mode'] === 'logout') 							// Logout
 		logout();
-	// else if ($_POST['mode'] === 'register') 						// Register
-	// 	register();
+	else if ($_POST['mode'] === 'register') 						// Register
+		register();
 	else if ($_POST['mode'] === 'status') 							// Status
 		status();
 	else if ($_POST['mode'] === 'details')							// User details
 		details();
 	else
+	{
 		echo '-1';
+
+		return;
+	}
 
 	// Login
 	function login($username, $password)
@@ -67,18 +71,41 @@
 
 		foreach ($all_users as $credentials)
 		{
-			if ($credentials['username'] === $username && $credentials['password'] === $password)
+			if ($credentials['username'] === $username && $credentials['password'] === md5($password))
 			{
+				$last_activity = time();
+
 				session_regenerate_id(true);
 
+				$user_profile = fetch_profile($credentials['username']);
+
+				if (!$user_profile)
+				{
+					echo '-1';
+
+					return false;
+				}
+
+				$user_profile['security']['last_ip'] = $_SERVER['REMOTE_ADDR'];
+				$user_profile['security']['last_login'] = $last_activity;
+
+				$result = update_profile($credentials['username'], $user_profile);
+
+				if (!$result)
+				{
+					echo '-1';
+
+					return false;
+				}
+
 				UTIL::Set_Session_Variable('auth', array('login' => 1,
-														 'user' => array('profile' => $credentials['profile'],
+														 'user' => array('profile' => $user_profile['profile'],
 														 				 'email' => $username,
-																		 'role' => $credentials['role'],
+																		 'role' => $user_profile['role'],
 																		 'ip' => $_SERVER['REMOTE_ADDR'],
 																		 'agent' => $_SERVER['HTTP_USER_AGENT'],
-																		 'wallpaper' => $credentials['wallpaper']),
-														 'last_activity' => time()));
+																		 'wallpaper' => $user_profile['ui']['wallpaper']),
+														 'last_activity' => $last_activity));
 
 				echo '1';
 
@@ -111,16 +138,39 @@
 		}
 		else
 		{
+			$last_activity = time();
+
 			session_regenerate_id(true);
 
+			$user_profile = fetch_profile($credentials['username']);
+
+			if (!$user_profile)
+			{
+				echo '-1';
+
+				return false;
+			}
+
+			$user_profile['security']['last_ip'] = $_SERVER['REMOTE_ADDR'];
+			$user_profile['security']['last_login'] = $last_activity;
+
+			$result = update_profile($credentials['username'], $user_profile);
+
+			if (!$result)
+			{
+				echo '-1';
+
+				return false;
+			}
+
 			UTIL::Set_Session_Variable('auth', array('login' => 1,
-													 'user' => array('profile' => $credentials['profile'],
+													 'user' => array('profile' => $user_profile['profile'],
 													 				 'email' => $username,
-																	 'role' => $credentials['role'],
+																	 'role' => $user_profile['role'],
 																	 'ip' => $_SERVER['REMOTE_ADDR'],
 																	 'agent' => $_SERVER['HTTP_USER_AGENT'],
-																	 'wallpaper' => $credentials['wallpaper']),
-													 'last_activity' => time()));
+																	 'wallpaper' => $user_profile['ui']['wallpaper']),
+													 'last_activity' => $last_activity));
 
 			echo '1';
 		}
@@ -145,23 +195,14 @@
 		clear_session();
 
 		return true;
+	}
 
-		// $secure_query = 'UPDATE `users` 
-		// 				 SET `enabled` = 0 
-		// 				 WHERE `username` = "' . $user_settings['user']['name'] . '"';
+	// Register
+	function register()
+	{
+		echo '1';
 
-		// $result = DB::Exec_SQL_Command($secure_query);
-
-		// if (!empty($result))
-		// {
-		// 	echo '1';
-
-		// 	clear_session();
-		// }
-		// else
-		// 	echo '0';
-
-		// return true;
+		return true;
 	}
 
 	function status()
@@ -207,13 +248,40 @@
 
 	function fetch_credentials()
 	{
-		$path = UTIL::Absolute_Path('framework/config/users.cfg');
-		$data = file_get_contents($path);
+		$file_path = UTIL::Absolute_Path('framework/config/users.cfg');
+		$data = file_get_contents($file_path);
 		$result = json_decode($data, true);
 
 		if (json_last_error() !== JSON_ERROR_NONE)
 			return false;
 
 		return $result;
+	}
+
+	function fetch_profile($email)
+	{
+		$username = substr($email, 0, strpos($email, '@'));
+		$file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
+		$data = file_get_contents($file_path);
+		$result = json_decode($data, true);
+
+		if (json_last_error() !== JSON_ERROR_NONE)
+			return false;
+
+		return $result;
+	}
+
+	function update_profile($email, $new_settings)
+	{
+		$username = substr($email, 0, strpos($email, '@'));
+		$result = json_encode($new_settings);
+
+		if (json_last_error() !== JSON_ERROR_NONE)
+			return false;
+
+		$file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
+		file_put_contents($file_path, $result);
+
+		return true;
 	}
 ?>

@@ -64,7 +64,8 @@
     margin-top: 5px;
 }
 
-#register_link
+#register_new_account
 {
+    cursor: pointer;
     color: #c9ff72;
 }

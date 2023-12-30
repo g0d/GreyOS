@@ -1,4 +1,4 @@
-# HTACCESS configuration file
+# micro-MVC :: HTACCESS configuration file
 # Copyright (C) 2016 - 2023
 # Open Software License (OSL 3.0)
 
@@ -6,9 +6,9 @@ Options All -Indexes
 Options +FollowSymLinks
 
 IndexIgnore *
-DirectorySlash on
+DirectorySlash On
 DirectoryIndex index.php
-RewriteEngine on
+RewriteEngine On
 RewriteBase /
 
 #RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]
@@ -40,42 +40,42 @@ AddType application/x-font-woff .woff
   #Header set Content-Security-Policy "script-src * 'self' 'unsafe-inline' 'unsafe-eval';"
 
   # Enable X-FRAME protection
-  Header always set X-Frame-Options SAMEORIGIN
+  Header Always Set X-Frame-Options SAMEORIGIN
 
   # Enable XSS protection
-  Header set X-XSS-Protection "1; mode=block"
+  Header Set X-XSS-Protection "1; mode=block"
 
   # !!! Enable Cookie protection (Only HTTPS) !!!
-  #Header set Set-Cookie HttpOnly;Secure
+  #Header Set Set-Cookie HttpOnly;Secure
 
   # Support varying encoding for compressed served files (GZip)
-  <FilesMatch ".(js|css|xml|html?|gz)$">
-    Header append Vary: Accept-Encoding
+  <FilesMatch ".(js|css|xml|html|gz)$">
+    Header Append Vary: Accept-Encoding
   </FilesMatch>
 
   # Expire multimedia (1 day)
   <filesMatch "\.(ico|jpe?g|png|gif|mp4|webm)$">
-    Header set Cache-Control "max-age=86400, public"
+    Header Set Cache-Control "max-age=86400, public"
   </filesMatch>
 
   # Enable CORS for web fonts
 	<FilesMatch "\.(ttf|ttc|otf|eot|woff|svg)$">
-		Header add Access-Control-Allow-Origin "*"
+		Header Add Access-Control-Allow-Origin "*"
 	</FilesMatch>
 
   # Expire CSS (1 day)
   <filesMatch "\.(css)$">
-    Header set Cache-Control "max-age=86400, public"
+    Header Set Cache-Control "max-age=86400, public"
   </filesMatch>
 
   # Expire JS (1 day)
   <filesMatch "\.(js)$">
-    Header set Cache-Control "max-age=86400, private"
+    Header Set Cache-Control "max-age=86400, private"
   </filesMatch>
 
-  # Expire HTM(L) & PHP (1 day)
-  <filesMatch "\.(html?|php)$">
-    Header set Cache-Control "max-age=86400, private, must-revalidate"
+  # Expire HTML & PHTML (1 day)
+  <filesMatch "\.(html|phtml)$">
+    Header Set Cache-Control "max-age=86400, private, must-revalidate"
   </filesMatch>
 </ifModule>
 
@@ -101,7 +101,7 @@ AddType application/x-font-woff .woff
 # Enable compression of files
 <ifModule mod_deflate.c>
   # Common files
-  <filesMatch "\.(php|html?|js|css)$">
+  <filesMatch "\.(html|phtml|js|css)$">
     SetOutputFilter DEFLATE
   </filesMatch>
 
@@ -124,16 +124,16 @@ AddType application/x-font-woff .woff
   php_value short_open_tag 1
 </IfModule>
 
-# Prevent viewing of phtml files
+# Prevent viewing of certain files
 <Files ~ "\.(phtml|cfg|log)$">
-    order allow,deny
-    deny from all
+    Order Allow,Deny
+    Deny From All
 </Files>
 
 # Prevent viewing of .htaccess
 <Files .htaccess>
-    order allow,deny
-    deny from all
+    Order Allow,Deny
+    Deny From All
 </Files>
 
 # ----- End -----

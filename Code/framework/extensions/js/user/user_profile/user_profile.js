@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 1.5)
+    GreyOS - User Profile (Version: 1.6)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -81,7 +81,9 @@ function user_profile()
                                         utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
                                         utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
 
-                                        if (user_profile_data.wallpaper !== '')
+                                        if (user_profile_data.wallpaper === '')
+                                            document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.jpg)';
+                                        else
                                             document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
                                     }
                                     else
