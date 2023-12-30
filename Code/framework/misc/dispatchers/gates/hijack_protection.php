@@ -6,7 +6,7 @@
 		Description: This file contains the hijack protection gate (AJAX).
 		
 		Coded by George Delaportas (G0D)
-		Copyright (C) 2019
+		Copyright (C) 2019 - 2023
 		Open Software License (OSL 3.0)
 	*/
 
@@ -15,9 +15,9 @@
         exit();
 
 	// Load current authentication data
-	$user_settings = UTIL::Get_Session_Variable('auth');
+	$user_profile = UTIL::Get_Session_Variable('auth');
 
-	if (empty($user_settings))
+	if (empty($user_profile))
 	{
 		echo '-1';
 
@@ -38,9 +38,9 @@
 	// On normal callback function
 	function __on_normal()
 	{
-		$user_settings['user']['last_activity'] = time();
+		$user_profile['security']['last_activity'] = time();
 
-		UTIL::Set_Session_Variable('auth', $user_settings);
+		UTIL::Set_Session_Variable('auth', $user_profile);
 	}
 
 	// Setup callback parameters for session handling
@@ -48,8 +48,8 @@
 	$on_normal_params = array('__on_normal');
 
 	// Run Anti-Hijack and block attackers
-	if (Anti_Hijack($user_settings['user']['ip'], $user_settings['user']['agent'], 
-					$user_settings['user']['last_activity'], 3600, $on_attack_params, $on_normal_params))
+	if (Anti_Hijack($user_profile['security']['ip'], $user_profile['security']['agent'], 
+					$user_profile['security']['last_activity'], 3600, $on_attack_params, $on_normal_params))
 	{
 		echo '0';
 

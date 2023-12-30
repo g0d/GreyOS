@@ -97,7 +97,7 @@ function i_youdj()
         i_youdj_bee.gui.position.left(250);
         i_youdj_bee.gui.position.top(50);
         i_youdj_bee.gui.size.width(1120);
-        i_youdj_bee.gui.size.height(900);
+        i_youdj_bee.gui.size.height(840);
         i_youdj_bee.gui.size.min.width(900);
         i_youdj_bee.gui.size.min.height(600);
         i_youdj_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

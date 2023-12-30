@@ -9104,14 +9104,16 @@ function dock()
  {
  var __app_id = null,
  __position = null,
+ __system = null,
  __title = null
  __dock = utils_sys.objects.by_class('favorites');
  for (var __dock_app of __dock)
  {
  __app_id = __dock_app.getAttribute('id').split('app_')[1],
  __position = __dock_app.getAttribute('data-position'),
+ __system = __dock_app.getAttribute('data-system'),
  __title = __dock_app.getAttribute('title');
- config.dock_array.push({ "app_id" : __app_id, "position" : __position, "title" : __title });
+ config.dock_array.push({ "app_id" : __app_id, "position" : __position, "system" : __system, "title" : __title });
  }
  return true;
  }
@@ -9131,8 +9133,8 @@ function dock()
  var tmp = config.dock_array[position_one];
  config.dock_array[position_one] = config.dock_array[position_two];
  config.dock_array[position_two] = tmp;
- config.dock_array[position_one]['position'] = position_one;
- config.dock_array[position_two]['position'] = position_two;
+ config.dock_array[position_one]['position'] = position_one + 1;
+ config.dock_array[position_two]['position'] = position_two + 1;
  return true;
  }
  function open_app(dock_app)
@@ -9250,7 +9252,7 @@ function dock()
  event.target.setAttribute('data-position', __position_one);
  __dock_div.insertBefore(__app_to_move, __app_to_replace.nextSibling);
  __dock_div.insertBefore(__app_to_replace, __app_to_move_next);
- update_dock_array(__position_one, __position_two);
+ update_dock_array(__position_one - 1, __position_two - 1);
  me.save_dock();
  }
  };
@@ -9420,10 +9422,10 @@ function user_profile()
  var __data = 'gate=auth&mode=details';
  ajax_factory(__data, function(result)
  {
- var __user_details = JSON.parse(result);
- user_profile_data.full_name = __user_details.user.profile;
- user_profile_data.email = __user_details.user.email;
- user_profile_data.wallpaper = __user_details.user.wallpaper;
+ var __auth_details = JSON.parse(result);
+ user_profile_data.full_name = __auth_details.profile;
+ user_profile_data.email = __auth_details.email;
+ user_profile_data.wallpaper = __auth_details.ui.wallpaper;
  if (print === true)
  {
  utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;

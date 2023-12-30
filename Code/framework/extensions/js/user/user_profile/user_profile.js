@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 1.6)
+    GreyOS - User Profile (Version: 1.7)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -70,11 +70,11 @@ function user_profile()
 
             ajax_factory(__data, function(result)
                                  {
-                                    var __user_details = JSON.parse(result);
+                                    var __auth_details = JSON.parse(result);
 
-                                    user_profile_data.full_name = __user_details.user.profile;
-                                    user_profile_data.email = __user_details.user.email;
-                                    user_profile_data.wallpaper = __user_details.user.wallpaper;
+                                    user_profile_data.full_name = __auth_details.profile;
+                                    user_profile_data.email = __auth_details.email;
+                                    user_profile_data.wallpaper = __auth_details.ui.wallpaper;
 
                                     if (print === true)
                                     {

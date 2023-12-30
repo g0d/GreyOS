@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 1.8)
+    GreyOS - Dock (Version: 1.9)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -72,6 +72,7 @@ function dock()
         {
             var __app_id = null,
                 __position = null,
+                __system = null,
                 __title = null
                 __dock = utils_sys.objects.by_class('favorites');
 
@@ -79,9 +80,10 @@ function dock()
             {
                 __app_id = __dock_app.getAttribute('id').split('app_')[1],
                 __position = __dock_app.getAttribute('data-position'),
+                __system = __dock_app.getAttribute('data-system'),
                 __title = __dock_app.getAttribute('title');
 
-                config.dock_array.push({ "app_id" : __app_id, "position" : __position, "title" : __title });
+                config.dock_array.push({ "app_id" : __app_id, "position" : __position, "system" : __system, "title" : __title });
             }
 
             return true;
@@ -109,8 +111,8 @@ function dock()
 
             config.dock_array[position_one] = config.dock_array[position_two];
             config.dock_array[position_two] = tmp;
-            config.dock_array[position_one]['position'] = position_one;
-            config.dock_array[position_two]['position'] = position_two;
+            config.dock_array[position_one]['position'] = position_one + 1;
+            config.dock_array[position_two]['position'] = position_two + 1;
 
             return true;
         }
@@ -264,7 +266,7 @@ function dock()
                                     __dock_div.insertBefore(__app_to_move, __app_to_replace.nextSibling);
                                     __dock_div.insertBefore(__app_to_replace, __app_to_move_next);
 
-                                    update_dock_array(__position_one, __position_two);
+                                    update_dock_array(__position_one - 1, __position_two - 1);
 
                                     me.save_dock();
                                 }

@@ -16,26 +16,48 @@
 
     if (isset($_POST))
     {
-        $user_settings = UTIL::Get_Session_Variable('auth');
-        $username = substr($user_settings['user']['email'], 0, strpos($user_settings['user']['email'], '@'));
+        $user_profile = UTIL::Get_Session_Variable('auth');
+        $username = substr($user_profile['email'], 0, strpos($user_profile['email'], '@'));
+        $role = $user_profile['role'];
+        $user_system_apps = $user_profile['system_apps'];
+        $user_apps = $user_profile['user_programs']['apps'];
 
         if ($_POST['action'] === 'load')
         {
-            if ($username === 'admin')
-                $apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/default_apps.json')));
-            else
-                $apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/' . $username . '_apps.json')));
-
+            $all_system_apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/all_system_apps.json')));
+            $index = 1;
             $html = null;
-            $apps_length = count($apps);
 
-            for ($i = 0; $i < $apps_length; $i++)
+            foreach ($user_system_apps as $allowed_app)
             {
-                $html .= '<div id="app_' . $apps[$i]->app_id . '" 
+                foreach ($all_system_apps as $app)
+                {
+                    if ($allowed_app === $app->app_id)
+                    {
+                        $html .= '<div id="app_' . $app->app_id . '" 
+                                       draggable="true" 
+                                       data-position="' . $index . '" 
+                                       data-system="' . $app->system . '" 
+                                       class="favorites" 
+                                       title="' . $app->title . '"></div>';
+
+                        $index++;
+                    }
+                }
+            }
+
+            $index = 1;
+
+            foreach ($user_apps as $app)
+            {
+                $html .= '<div id="app_' . $app->app_id . '" 
                                draggable="true" 
-                               data-position="' . $apps[$i]->position . '" 
+                               data-position="' . $index . '" 
+                               data-system="' . $app->system . '" 
                                class="favorites" 
-                               title="' . $apps[$i]->title . '"></div>';
+                               title="' . $app->title . '"></div>';
+
+                $index++;
             }
 
             echo $html;
@@ -44,17 +66,44 @@
         {
             if (isset($_POST['apps']))
             {
-                if ($username === 'admin')
-                    $apps_json_db = fopen(UTIL::Absolute_Path('framework/misc/data/default_apps.json'), 'w');
-                else
-                    $apps_json_db = fopen(UTIL::Absolute_Path('framework/misc/data/' . $username . '_apps.json'), 'w');
-                fwrite($apps_json_db, $_POST['apps']);
-                fclose($apps_json_db);
+                $dock_apps = json_decode($_POST['apps'], true);
 
-                echo true;
+                if (json_last_error() !== JSON_ERROR_NONE)
+                    return false;
+
+                $position = 1;
+                $dock_system_apps = [];
+                $dock_user_apps = [];
+
+                foreach ($dock_apps as $app)
+                {
+                    $app['position'] = strval($position);
+
+                    if ($app['system'])
+                        array_push($dock_system_apps, $app['app_id']);
+                    else
+                        array_push($dock_user_apps, $app['app_id']);
+
+                    $position++;
+                }
+
+                if (!empty($dock_system_apps))
+                    $user_profile['system_apps'] = $dock_system_apps;
+
+                if (!empty($dock_user_apps))
+                    $user_profile['user_programs']['apps'] = $dock_user_apps;
+
+                UTIL::Set_Session_Variable('auth', $user_profile);
+
+                $file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
+                file_put_contents($file_path, json_encode($user_profile));
+
+                echo '1';
             }
             else
-                echo false;
+                echo '0';
         }
+        else
+            echo '-1';
     }
 ?>

@@ -86,8 +86,10 @@
 					return false;
 				}
 
-				$user_profile['security']['last_ip'] = $_SERVER['REMOTE_ADDR'];
-				$user_profile['security']['last_login'] = $last_activity;
+				$user_profile['online'] = true;
+				$user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
+				$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
+				$user_profile['security']['last_activity'] = $last_activity;
 
 				$result = update_profile($credentials['username'], $user_profile);
 
@@ -98,14 +100,7 @@
 					return false;
 				}
 
-				UTIL::Set_Session_Variable('auth', array('login' => 1,
-														 'user' => array('profile' => $user_profile['profile'],
-														 				 'email' => $username,
-																		 'role' => $user_profile['role'],
-																		 'ip' => $_SERVER['REMOTE_ADDR'],
-																		 'agent' => $_SERVER['HTTP_USER_AGENT'],
-																		 'wallpaper' => $user_profile['ui']['wallpaper']),
-														 'last_activity' => $last_activity));
+				UTIL::Set_Session_Variable('auth', $user_profile);
 
 				echo '1';
 
@@ -151,8 +146,10 @@
 				return false;
 			}
 
-			$user_profile['security']['last_ip'] = $_SERVER['REMOTE_ADDR'];
-			$user_profile['security']['last_login'] = $last_activity;
+			$user_profile['online'] = true;
+			$user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
+			$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
+			$user_profile['security']['last_activity'] = $last_activity;
 
 			$result = update_profile($credentials['username'], $user_profile);
 
@@ -163,14 +160,7 @@
 				return false;
 			}
 
-			UTIL::Set_Session_Variable('auth', array('login' => 1,
-													 'user' => array('profile' => $user_profile['profile'],
-													 				 'email' => $username,
-																	 'role' => $user_profile['role'],
-																	 'ip' => $_SERVER['REMOTE_ADDR'],
-																	 'agent' => $_SERVER['HTTP_USER_AGENT'],
-																	 'wallpaper' => $user_profile['ui']['wallpaper']),
-													 'last_activity' => $last_activity));
+			UTIL::Set_Session_Variable('auth', $user_profile);
 
 			echo '1';
 		}
@@ -181,9 +171,9 @@
 	// Logout
 	function logout()
 	{
-		$user_settings = UTIL::Get_Session_Variable('auth');
+		$user_profile = UTIL::Get_Session_Variable('auth');
 
-		if (empty($user_settings))
+		if (empty($user_profile))
 		{
 			echo '-1';
 
@@ -207,9 +197,9 @@
 
 	function status()
 	{
-		$user_settings = UTIL::Get_Session_Variable('auth');
+		$user_profile = UTIL::Get_Session_Variable('auth');
 
-		if (empty($user_settings))
+		if (empty($user_profile))
 		{
 			echo '0';
 
@@ -223,16 +213,16 @@
 
 	function details()
 	{
-		$user_settings = UTIL::Get_Session_Variable('auth');
+		$user_profile = UTIL::Get_Session_Variable('auth');
 
-		if (empty($user_settings))
+		if (empty($user_profile))
 		{
 			echo '0';
 
 			return false;
 		}
 
-		echo json_encode($user_settings);
+		echo json_encode($user_profile);
 
 		return true;
 	}
@@ -271,16 +261,16 @@
 		return $result;
 	}
 
-	function update_profile($email, $new_settings)
+	function update_profile($email, $new_profile)
 	{
 		$username = substr($email, 0, strpos($email, '@'));
-		$result = json_encode($new_settings);
+		$new_json_profile = json_encode($new_profile);
 
 		if (json_last_error() !== JSON_ERROR_NONE)
 			return false;
 
 		$file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
-		file_put_contents($file_path, $result);
+		file_put_contents($file_path, $new_json_profile);
 
 		return true;
 	}
