@@ -27,7 +27,7 @@ function coyote()
                                 "hide_cursor"   :   true,
                                 "dark"          :   true,
                                 "search_engine" :   "google",
-                                "tag"           :   "greyos",
+                                "tag"           :   "greyos_" + Date.now(),
                                 "region"        :   "EU",
                                 "width"         :   1920,
                                 "height"        :   1080,

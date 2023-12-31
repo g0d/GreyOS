@@ -2,7 +2,7 @@
     /*
         GreyOS - Teal Mail (Version: 1.2)
 
-        File name: teal_mail.php 
+        File name: teal_mail.php
         Description: This file contains the Teal Mail extension.
 
 		Coded by George Delaportas (G0D)
