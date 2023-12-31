@@ -1,5 +1,5 @@
 /*
-    GreyOS - Krator :: Login & registration form (Version: 1.5)
+    GreyOS - Krator :: Login & registration form (Version: 1.6)
 
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
@@ -216,7 +216,7 @@ function krator()
 
             disable_controls();
 
-            if (!utils_sys.validation.utilities.is_email(username_object.value))
+            if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
             {
                 msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
 
@@ -272,7 +272,7 @@ function krator()
 
             disable_controls();
 
-            if (!utils_sys.validation.utilities.is_email(username_object.value))
+            if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
             {
                 msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
 
@@ -300,21 +300,22 @@ function krator()
                 return;
             }
 
-            var data = 'gate=register&mode=reg&username=' + username_object.value + 
-                       '&password=' + password_object.value + 
-                       '&confirm=' + password_comfirm_object.value;
+            var data = 'gate=register&mode=reg&username=' + username_object.value.trim() + '&password=' + password_object.value;
 
-            ajax_factory(data, function()
+            ajax_factory(data, function(result)
                                {
-                                    msg_win.show(os_name, 'Registration succeeded!');
+                                    if (result === '9')
+                                        msg_win.show(os_name, 'This account already exists!', () => { enable_controls(); });
+                                    else
+                                        msg_win.show(os_name, 'Registration succeeded!', () => { is_login_ok = true; close_krator(); });
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Registration failed!');
+                                    msg_win.show(os_name, 'Registration failed!', () => { enable_controls(); });
                                },
                                function()
                                {
-                                    enable_controls();
+                                    // Nothing...
                                });
         };
 

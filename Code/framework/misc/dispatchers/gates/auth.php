@@ -38,14 +38,16 @@
 	if ($_POST['mode'] === 'login')									// Login
 	{
 		if (!empty($_POST['username']) && !empty($_POST['password']))
-			login($_POST['username'], $_POST['password']);
+			login(trim($_POST['username']), $_POST['password']);
 		else
-			echo '-1';
+		{
+			echo '0';
+
+			return;
+		}
 	}
 	else if ($_POST['mode'] === 'logout') 							// Logout
 		logout();
-	else if ($_POST['mode'] === 'register') 						// Register
-		register();
 	else if ($_POST['mode'] === 'status') 							// Status
 		status();
 	else if ($_POST['mode'] === 'details')							// User details
@@ -73,34 +75,14 @@
 		{
 			if ($credentials['username'] === $username && $credentials['password'] === md5($password))
 			{
-				$last_activity = time();
-
-				session_regenerate_id(true);
-
-				$user_profile = fetch_profile($credentials['username']);
-
-				if (!$user_profile)
-				{
-					echo '-1';
-
-					return false;
-				}
-
-				$user_profile['online'] = true;
-				$user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
-				$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
-				$user_profile['security']['last_activity'] = $last_activity;
-
-				$result = update_profile($user_profile);
+				$result = synchronize_profile($credentials['username']);
 
 				if (!$result)
 				{
-					echo '-1';
+					echo '0';
 
 					return false;
 				}
-
-				UTIL::Set_Session_Variable('auth', $user_profile);
 
 				echo '1';
 
@@ -133,34 +115,14 @@
 		}
 		else
 		{
-			$last_activity = time();
-
-			session_regenerate_id(true);
-
-			$user_profile = fetch_profile($credentials['username']);
-
-			if (!$user_profile)
-			{
-				echo '-1';
-
-				return false;
-			}
-
-			$user_profile['online'] = true;
-			$user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
-			$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
-			$user_profile['security']['last_activity'] = $last_activity;
-
-			$result = update_profile($user_profile);
+			$result = synchronize_profile($username);
 
 			if (!$result)
 			{
-				echo '-1';
+				echo '0';
 
 				return false;
 			}
-
-			UTIL::Set_Session_Variable('auth', $user_profile);
 
 			echo '1';
 		}
@@ -186,7 +148,7 @@
 
 		if (!$result)
 		{
-			echo '-1';
+			echo '0';
 
 			return false;
 		}
@@ -194,14 +156,6 @@
 		echo '1';
 
 		clear_session();
-
-		return true;
-	}
-
-	// Register
-	function register()
-	{
-		echo '1';
 
 		return true;
 	}
@@ -259,6 +213,30 @@
 		return $result;
 	}
 
+	function synchronize_profile($email)
+	{
+		session_regenerate_id(true);
+
+		$user_profile = fetch_profile($email);
+
+		if (!$user_profile)
+			return false;
+
+		$user_profile['online'] = true;
+		$user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
+		$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
+		$user_profile['security']['last_activity'] = time();
+
+		$result = update_profile($user_profile);
+
+		if (!$result)
+			return false;
+
+		UTIL::Set_Session_Variable('auth', $user_profile);
+
+		return true;
+	}
+	
 	function fetch_profile($email)
 	{
 		$username = substr($email, 0, strpos($email, '@'));

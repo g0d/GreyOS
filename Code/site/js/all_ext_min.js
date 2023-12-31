@@ -8694,7 +8694,7 @@ function krator()
  msg_win = new msgbox();
  msg_win.init('desktop');
  disable_controls();
- if (!utils_sys.validation.utilities.is_email(username_object.value))
+ if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
  {
  msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
  return;
@@ -8737,7 +8737,7 @@ function krator()
  msg_win = new msgbox();
  msg_win.init('desktop');
  disable_controls();
- if (!utils_sys.validation.utilities.is_email(username_object.value))
+ if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
  {
  msg_win.show(os_name, 'The email format is invalid!', () => { enable_controls(); });
  return;
@@ -8757,20 +8757,20 @@ function krator()
  msg_win.show(os_name, 'Password confirmation failed!', () => { enable_controls(); });
  return;
  }
- var data = 'gate=register&mode=reg&username=' + username_object.value +
- '&password=' + password_object.value +
- '&confirm=' + password_comfirm_object.value;
- ajax_factory(data, function()
+ var data = 'gate=register&mode=reg&username=' + username_object.value.trim() + '&password=' + password_object.value;
+ ajax_factory(data, function(result)
  {
- msg_win.show(os_name, 'Registration succeeded!');
+ if (result === '9')
+ msg_win.show(os_name, 'This account already exists!', () => { enable_controls(); });
+ else
+ msg_win.show(os_name, 'Registration succeeded!', () => { is_login_ok = true; close_krator(); });
  },
  function()
  {
- msg_win.show(os_name, 'Registration failed!');
+ msg_win.show(os_name, 'Registration failed!', () => { enable_controls(); });
  },
  function()
  {
- enable_controls();
  });
  };
  this.load_desktop_ui = function(script)
