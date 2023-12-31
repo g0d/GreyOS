@@ -72,8 +72,14 @@
         "title": "iMarioJS :: 3rd-party integrated Mario game. Click me!"
     },
     {
-        "app_id": "i_webgl_preview",
+        "app_id": "i_swooop",
         "position": "13",
+        "system": true,
+        "title": "iSwooop :: 3rd-party integrated flight game. Click me!"
+    },
+    {
+        "app_id": "i_webgl_preview",
+        "position": "14",
         "system": true,
         "title": "iWebGL (Preview) :: 3rd-party integrated showcase. Click me!"
     }

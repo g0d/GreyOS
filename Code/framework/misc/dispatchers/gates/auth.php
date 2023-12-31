@@ -91,7 +91,7 @@
 				$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
 				$user_profile['security']['last_activity'] = $last_activity;
 
-				$result = update_profile($credentials['username'], $user_profile);
+				$result = update_profile($user_profile);
 
 				if (!$result)
 				{
@@ -151,7 +151,7 @@
 			$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
 			$user_profile['security']['last_activity'] = $last_activity;
 
-			$result = update_profile($credentials['username'], $user_profile);
+			$result = update_profile($user_profile);
 
 			if (!$result)
 			{
@@ -174,6 +174,17 @@
 		$user_profile = UTIL::Get_Session_Variable('auth');
 
 		if (empty($user_profile))
+		{
+			echo '-1';
+
+			return false;
+		}
+
+		$user_profile['online'] = false;
+
+		$result = update_profile($user_profile);
+
+		if (!$result)
 		{
 			echo '-1';
 
@@ -261,8 +272,9 @@
 		return $result;
 	}
 
-	function update_profile($email, $new_profile)
+	function update_profile($new_profile)
 	{
+		$email = $new_profile['email'];
 		$username = substr($email, 0, strpos($email, '@'));
 		$new_json_profile = json_encode($new_profile);
 

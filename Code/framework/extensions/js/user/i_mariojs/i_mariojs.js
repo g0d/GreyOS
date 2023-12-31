@@ -99,7 +99,7 @@ function i_mariojs()
 
         i_mariojs_bee.init(config.id, 2);
         i_mariojs_bee.settings.data.window.labels.title('iMarioJS (Integrated Online Game)');
-        i_mariojs_bee.settings.data.window.labels.status_bar('Frag the hell out of them all!');
+        i_mariojs_bee.settings.data.window.labels.status_bar('Get \'em Mario!');
         i_mariojs_bee.settings.general.single_instance(true);
         i_mariojs_bee.settings.actions.can_edit_title(false);
         i_mariojs_bee.settings.actions.can_use_menu(false);

@@ -81,14 +81,15 @@
     "i_linkedin"                :       "user",
     "i_youtube"                 :       "user",
     "i_bassoon"                 :       "user",
-    "i_quakejs"                 :       "user",
-    "i_minecraft"               :       "user",
-    "i_mariojs"                 :       "user",
     "i_youdj"                   :       "user",
     "i_audiomass"               :       "user",
     "i_soundtrap"               :       "user",
     "i_ampedstudio"             :       "user",
     "i_vectorink"               :       "user",
     "i_ganttio"                 :       "user",
+    "i_quakejs"                 :       "user",
+    "i_minecraft"               :       "user",
+    "i_mariojs"                 :       "user",
+    "i_swooop"                  :       "user",
     "i_webgl_preview"           :       "user"
 }

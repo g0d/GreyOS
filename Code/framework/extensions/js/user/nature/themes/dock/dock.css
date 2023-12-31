@@ -484,6 +484,36 @@
     background-image: url('pix/favorites/inactive/icon_games.png') !important;
 }
 
+#app_i_swooop
+{
+    background-image: url('pix/favorites/inactive/icon_games.png');
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+#app_i_swooop:hover
+{
+    background-image: url('pix/favorites/hover/icon_games.png') !important;
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.app_i_swooop_on
+{
+    background-image: url('pix/favorites/active/icon_games.png') !important;
+}
+
+.app_i_swooop_off
+{
+    background-image: url('pix/favorites/inactive/icon_games.png') !important;
+}
+
 #app_i_youdj
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
