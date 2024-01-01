@@ -85,7 +85,7 @@ function trinity()
         trinity_bee = dev_box.get('bee');
 
         // Declare bee's settings
-        trinity_bee.init(config.id, 2);
+        trinity_bee.init(config.id);
         trinity_bee.settings.data.window.labels.title('Trinity :: Tasks Management');
         trinity_bee.settings.data.window.labels.status_bar('Ready');
         trinity_bee.settings.general.single_instance(true);

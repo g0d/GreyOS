@@ -88,10 +88,11 @@ function i_ampedstudio()
 
         infinity.init();
 
-        i_ampedstudio_bee.init(config.id, 1);
+        i_ampedstudio_bee.init(config.id);
         i_ampedstudio_bee.settings.data.window.labels.title('iAmpedStudio - DAW');
         i_ampedstudio_bee.settings.data.window.labels.status_bar('Ready');
         i_ampedstudio_bee.settings.general.single_instance(true);
+        i_ampedstudio_bee.settings.general.resizable(true);
         i_ampedstudio_bee.settings.actions.can_edit_title(false);
         i_ampedstudio_bee.settings.actions.can_use_menu(false);
         i_ampedstudio_bee.gui.position.left(80);

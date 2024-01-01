@@ -97,7 +97,7 @@ function i_mariojs()
 
         infinity.init();
 
-        i_mariojs_bee.init(config.id, 2);
+        i_mariojs_bee.init(config.id);
         i_mariojs_bee.settings.data.window.labels.title('iMarioJS (Integrated Online Game)');
         i_mariojs_bee.settings.data.window.labels.status_bar('Get \'em Mario!');
         i_mariojs_bee.settings.general.single_instance(true);

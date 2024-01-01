@@ -5,7 +5,7 @@
     Description: This file contains the Hive - Bees stack bar module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -676,7 +676,7 @@ function hive()
                 __ctrl_bar_close_class = null,
                 __handler = null;
 
-            if (__bee_object.settings.general.type() === 1)
+            if (__bee_object.settings.general.resizable() === true)
             {
                 __ctrl_bar_class = 'ctrl_bar box_ctrl_bar ' + bee_id + '_ctrl_bar box_ctrl_border';
                 __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';

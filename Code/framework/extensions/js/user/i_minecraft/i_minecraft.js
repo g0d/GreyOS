@@ -97,7 +97,7 @@ function i_minecraft()
 
         infinity.init();
 
-        i_minecraft_bee.init(config.id, 2);
+        i_minecraft_bee.init(config.id);
         i_minecraft_bee.settings.data.window.labels.title('iMinecraft (Integrated Online Multiplayer Game)');
         i_minecraft_bee.settings.data.window.labels.status_bar('Build new worlds!');
         i_minecraft_bee.settings.general.single_instance(true);

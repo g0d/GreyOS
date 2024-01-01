@@ -88,10 +88,11 @@ function i_ganttio()
 
         infinity.init();
 
-        i_ganttio_bee.init(config.id, 1);
+        i_ganttio_bee.init(config.id);
         i_ganttio_bee.settings.data.window.labels.title('iGanttIO');
         i_ganttio_bee.settings.data.window.labels.status_bar('Online Gantt diagrams the easy way!');
         i_ganttio_bee.settings.general.single_instance(true);
+        i_ganttio_bee.settings.general.resizable(true);
         i_ganttio_bee.settings.actions.can_edit_title(false);
         i_ganttio_bee.settings.actions.can_use_menu(false);
         i_ganttio_bee.gui.position.left(250);

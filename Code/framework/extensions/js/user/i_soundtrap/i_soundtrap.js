@@ -88,10 +88,11 @@ function i_soundtrap()
 
         infinity.init();
 
-        i_soundtrap_bee.init(config.id, 1);
+        i_soundtrap_bee.init(config.id);
         i_soundtrap_bee.settings.data.window.labels.title('iSoundTrap - DAW');
         i_soundtrap_bee.settings.data.window.labels.status_bar('Ready');
         i_soundtrap_bee.settings.general.single_instance(true);
+        i_soundtrap_bee.settings.general.resizable(true);
         i_soundtrap_bee.settings.actions.can_edit_title(false);
         i_soundtrap_bee.settings.actions.can_use_menu(false);
         i_soundtrap_bee.gui.position.left(120);

@@ -88,10 +88,11 @@ function i_vectorink()
 
         infinity.init();
 
-        i_vectorink_bee.init(config.id, 1);
+        i_vectorink_bee.init(config.id);
         i_vectorink_bee.settings.data.window.labels.title('iVectorInk');
         i_vectorink_bee.settings.data.window.labels.status_bar('Online vector graphics design studio!');
         i_vectorink_bee.settings.general.single_instance(true);
+        i_vectorink_bee.settings.general.resizable(true);
         i_vectorink_bee.settings.actions.can_edit_title(false);
         i_vectorink_bee.settings.actions.can_use_menu(false);
         i_vectorink_bee.gui.position.left(250);

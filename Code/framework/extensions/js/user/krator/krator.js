@@ -361,7 +361,7 @@ function krator()
         nature.apply('new');
 
         // Declare bee's settings
-        krator_bee.init(config.id, 2);
+        krator_bee.init(config.id);
         krator_bee.settings.data.window.labels.title('Krator :: Login & Registration');
         krator_bee.settings.data.window.labels.status_bar(os_name + ' - Login/Registration');
         krator_bee.settings.actions.can_edit_title(false);

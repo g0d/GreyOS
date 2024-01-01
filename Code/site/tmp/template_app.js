@@ -130,13 +130,14 @@ function template_app()
         infinity.init(); // It is a good practice to initialize the "infinity" service to show a loading progress indicator
 
         // Declare bee's settings
-        template_app_bee.init(config.id, 1); // The second option sets window's type (0: Fixed, 1: Resizable)
+        template_app_bee.init(config.id);
         template_app_bee.settings.data.window.labels.title('Template App');
         template_app_bee.settings.data.window.labels.status_bar('Ready');
         template_app_bee.settings.data.casement.labels.title('Tools');
         template_app_bee.settings.data.casement.labels.status('Stuff...');
-        template_app_bee.settings.general.casement_width(50);
         template_app_bee.settings.general.allowed_instances(1);
+        template_app_bee.settings.general.resizable(true);
+        template_app_bee.settings.general.casement_width(50);
         template_app_bee.gui.position.left(70);
         template_app_bee.gui.position.top(10);
         template_app_bee.gui.size.width(1024);

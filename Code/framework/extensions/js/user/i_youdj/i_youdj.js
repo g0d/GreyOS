@@ -88,10 +88,11 @@ function i_youdj()
 
         infinity.init();
 
-        i_youdj_bee.init(config.id, 1);
+        i_youdj_bee.init(config.id);
         i_youdj_bee.settings.data.window.labels.title('iYouDJ');
         i_youdj_bee.settings.data.window.labels.status_bar('Let\'s party!');
         i_youdj_bee.settings.general.single_instance(true);
+        i_youdj_bee.settings.general.resizable(true);
         i_youdj_bee.settings.actions.can_edit_title(false);
         i_youdj_bee.settings.actions.can_use_menu(false);
         i_youdj_bee.gui.position.left(250);

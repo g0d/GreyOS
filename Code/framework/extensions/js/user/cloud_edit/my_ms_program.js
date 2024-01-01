@@ -14,8 +14,9 @@ function gui()
     ms_app.main.set_status('APP ID: ' + ms_app.get_system_id());
 }
 
-ms_app.init('Hello World', true);                   // Resizable: true / Fixed: false
+ms_app.init('Hello World');                         // Initialize app with a name
 ms_app.main.set_title('My Meta-Script App');        // Set title
+ms_app.settings.resizable(true);                    // Make the app resizable
 ms_app.settings.use_resize_tooltip(true);           // Use resize tooltip
 ms_app.position.left(80);                           // Set initial left position
 ms_app.position.top(30);                            // Set initial top position

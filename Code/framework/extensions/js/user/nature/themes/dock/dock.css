@@ -5,7 +5,7 @@
     Description: This file contains the Dock theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -34,6 +34,20 @@
     float: left;
     margin-right: 20px;
     cursor: pointer;
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+.favorites:hover
+{
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
 }
 
 .dock_replace
@@ -66,21 +80,11 @@
 #app_rooster
 {
     background-image: url('pix/favorites/inactive/icon_clock.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_rooster:hover
 {
     background-image: url('pix/favorites/hover/icon_clock.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_rooster_on
@@ -96,22 +100,11 @@
 #app_greyos_cloud
 {
     background-image: url('pix/favorites/inactive/icon_cloud.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_greyos_cloud:hover
 {
     background-image: url('pix/favorites/hover/icon_cloud.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
-
 }
 
 .app_greyos_cloud_on
@@ -127,21 +120,11 @@
 #app_coyote
 {
     background-image: url('pix/favorites/inactive/icon_coyote.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_coyote:hover
 {
     background-image: url('pix/favorites/hover/icon_coyote.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_coyote_on
@@ -157,21 +140,11 @@
 #app_greyos_mail
 {
     background-image: url('pix/favorites/inactive/icon_email.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_greyos_mail:hover
 {
     background-image: url('pix/favorites/hover/icon_email.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_greyos_mail_on
@@ -187,21 +160,11 @@
 #app_i_youtube
 {
     background-image: url('pix/favorites/inactive/icon_youtube.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_i_youtube:hover
 {
     background-image: url('pix/favorites/hover/icon_youtube.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_i_youtube_on
@@ -217,21 +180,11 @@
 #app_i_fb
 {
     background-image: url('pix/favorites/inactive/icon_facebook.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_i_fb:hover
 {
     background-image: url('pix/favorites/hover/icon_facebook.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_i_fb_on
@@ -247,21 +200,11 @@
 #app_twitter
 {
     background-image: url('pix/favorites/inactive/icon_twitter.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_twitter:hover
 {
     background-image: url('pix/favorites/hover/icon_twitter.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_twitter_on
@@ -277,21 +220,11 @@
 #app_i_linkedin
 {
     background-image: url('pix/favorites/inactive/icon_linkedin.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_i_linkedin:hover
 {
     background-image: url('pix/favorites/hover/icon_linkedin.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_i_linkedin_on
@@ -307,21 +240,11 @@
 #app_radio_dude
 {
     background-image: url('pix/favorites/inactive/icon_radio.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_radio_dude:hover
 {
     background-image: url('pix/favorites/hover/icon_radio.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_radio_dude_on
@@ -337,21 +260,11 @@
 #app_cloud_edit
 {
     background-image: url('pix/favorites/inactive/icon_cloud_edit.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_cloud_edit:hover
 {
     background-image: url('pix/favorites/hover/icon_cloud_edit.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_cloud_edit_on
@@ -367,21 +280,11 @@
 #app_i_bassoon
 {
     background-image: url('pix/favorites/inactive/icon_daw.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_i_bassoon:hover
 {
     background-image: url('pix/favorites/hover/icon_daw.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
 }
 
 .app_i_bassoon_on
@@ -397,21 +300,12 @@
 #app_i_quakejs
 {
     background-image: url('pix/favorites/inactive/icon_games.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
 }
 
 #app_i_quakejs:hover
 {
     background-image: url('pix/favorites/hover/icon_games.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_quakejs_on
@@ -427,21 +321,13 @@
 #app_i_minecraft
 {
     background-image: url('pix/favorites/inactive/icon_games.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_minecraft:hover
 {
     background-image: url('pix/favorites/hover/icon_games.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_minecraft_on
@@ -457,21 +343,13 @@
 #app_i_mariojs
 {
     background-image: url('pix/favorites/inactive/icon_games.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_mariojs:hover
 {
     background-image: url('pix/favorites/hover/icon_games.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_mariojs_on
@@ -487,21 +365,13 @@
 #app_i_swooop
 {
     background-image: url('pix/favorites/inactive/icon_games.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_swooop:hover
 {
     background-image: url('pix/favorites/hover/icon_games.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_swooop_on
@@ -517,21 +387,13 @@
 #app_i_youdj
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_youdj:hover
 {
     background-image: url('pix/favorites/hover/icon_app.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_youdj_on
@@ -547,21 +409,13 @@
 #app_i_audiomass
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_audiomass:hover
 {
     background-image: url('pix/favorites/hover/icon_app.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_audiomass_on
@@ -577,21 +431,13 @@
 #app_i_soundtrap
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_soundtrap:hover
 {
     background-image: url('pix/favorites/hover/icon_app.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_soundtrap_on
@@ -607,21 +453,13 @@
 #app_i_ampedstudio
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_ampedstudio:hover
 {
     background-image: url('pix/favorites/hover/icon_app.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_ampedstudio_on
@@ -637,21 +475,13 @@
 #app_i_vectorink
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_vectorink:hover
 {
     background-image: url('pix/favorites/hover/icon_app.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_vectorink_on
@@ -667,21 +497,13 @@
 #app_i_ganttio
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_ganttio:hover
 {
     background-image: url('pix/favorites/hover/icon_app.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_ganttio_on
@@ -697,21 +519,13 @@
 #app_i_webgl_preview
 {
     background-image: url('pix/favorites/inactive/icon_star.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_i_webgl_preview:hover
 {
     background-image: url('pix/favorites/hover/icon_star.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_i_webgl_preview_on
@@ -727,21 +541,13 @@
 #app_games
 {
     background-image: url('pix/favorites/inactive/icon_games.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_games:hover
 {
     background-image: url('pix/favorites/hover/icon_games.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_games_on
@@ -757,21 +563,13 @@
 #app_map_fuzion
 {
     background-image: url('pix/favorites/inactive/icon_maps.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_map_fuzion:hover
 {
     background-image: url('pix/favorites/hover/icon_maps.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_map_fuzion_on
@@ -787,21 +585,13 @@
 #app_greyos_talk
 {
     background-image: url('pix/favorites/inactive/icon_chat.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_greyos_talk:hover
 {
     background-image: url('pix/favorites/hover/icon_chat.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_greyos_talk_on
@@ -822,21 +612,13 @@
 #app_bookmarks
 {
     background-image: url('pix/favorites/inactive/icon_star.png');
-	-webkit-transition: background-image 0.1s ease-out;
-	-moz-transition: background-image 0.1s ease-out;
-	-ms-transition: background-image 0.1s ease-out;
-	-o-transition: background-image 0.1s ease-out;
-	transition: background-image 0.1s ease-out;
+
 }
 
 #app_bookmarks:hover
 {
     background-image: url('pix/favorites/hover/icon_star.png') !important;
-	-webkit-transition: background-image 0.1s ease-in;
-	-moz-transition: background-image 0.1s ease-in;
-	-ms-transition: background-image 0.1s ease-in;
-	-o-transition: background-image 0.1s ease-in;
-	transition: background-image 0.1s ease-in;
+
 }
 
 .app_bookmarks_on

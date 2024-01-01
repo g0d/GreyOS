@@ -5,7 +5,7 @@
     Description: This file contains the Cloud Edit - Code editor application.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -265,7 +265,7 @@ function cloud_edit()
         infinity.init();
 
         // Declare bee's settings
-        cloud_edit_bee.init(config.id, 2);
+        cloud_edit_bee.init(config.id);
         cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
         cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
         cloud_edit_bee.settings.data.window.content(config.content);

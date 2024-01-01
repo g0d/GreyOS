@@ -5,7 +5,7 @@
     Description: This file contains the Coyote - Browser application.
 
     Coded by George Delaportas (G0D) and John Inglessis (negle)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -55,11 +55,7 @@ function coyote()
 
             __all_tabs_promise.then((result) =>
             {
-                result.forEach(element => 
-                {
-                    hb_manager.tabs.remove(element.id);
-                });
-                
+                result.forEach(element => { hb_manager.tabs.remove(element.id); });
             });
         };
 
@@ -108,7 +104,7 @@ function coyote()
             me.draw_normal();
             me.draw_full_screen_layer();
             me.attach_events('normal_to_fullscreen');
-            me.init_hyberbeam(config.pages[0], () => { hb_manager.resize(1006, 575); });
+            me.init_hyberbeam(config.pages[0], () => { hb_manager.resize(1006, 565); });
 
             return true;
         };
@@ -167,7 +163,7 @@ function coyote()
             browser_frame_width = (coyote_bee.status.gui.size.width() - 18);
             browser_frame.style.width = browser_frame_width + 'px';
 
-            browser_frame_height = (coyote_bee.status.gui.size.height() - 145);
+            browser_frame_height = (coyote_bee.status.gui.size.height() - 155);
             browser_frame.style.height = browser_frame_height + 'px';
         };
 
@@ -243,7 +239,7 @@ function coyote()
 
                 is_browser_loading = false;
 
-                setTimeout(function() { infinity.end(); }, 500);
+                setTimeout(function() { infinity.end(); }, 8000);
             };
             config.ajax_config.on_timeout = () => { };
             config.ajax_config.on_fail = () => { };
@@ -440,7 +436,7 @@ function coyote()
                 browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');
                 browser_frame.style.margin = '';
                 browser_frame.style.width = (coyote_bee.status.gui.size.width() - 18) + 'px';
-                browser_frame.style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
+                browser_frame.style.height = (coyote_bee.status.gui.size.height() - 155) + 'px';
 
                 config.is_full_screen = false;
             }
@@ -504,11 +500,12 @@ function coyote()
         infinity.init();
 
         // Declare bee's settings
-        coyote_bee.init(config.id, 1);
+        coyote_bee.init(config.id);
         coyote_bee.settings.data.window.labels.title('Coyote');
         coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
         coyote_bee.settings.data.casement.labels.title('Tools');
         coyote_bee.settings.data.casement.labels.status('Feel the power of meta-integration.');
+        coyote_bee.settings.general.resizable(true);
         coyote_bee.settings.general.casement_width(50);
         coyote_bee.settings.general.allowed_instances(1);
         coyote_bee.gui.position.left(70);

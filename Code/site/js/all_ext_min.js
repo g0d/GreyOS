@@ -7847,7 +7847,7 @@ function hive()
  __ctrl_bar_title_class = null,
  __ctrl_bar_close_class = null,
  __handler = null;
- if (__bee_object.settings.general.type() === 1)
+ if (__bee_object.settings.general.resizable() === true)
  {
  __ctrl_bar_class = 'ctrl_bar box_ctrl_bar ' + bee_id + '_ctrl_bar box_ctrl_border';
  __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';
@@ -8474,7 +8474,7 @@ function trinity()
  nature.apply('new');
  infinity.init();
  trinity_bee = dev_box.get('bee');
- trinity_bee.init(config.id, 2);
+ trinity_bee.init(config.id);
  trinity_bee.settings.data.window.labels.title('Trinity :: Tasks Management');
  trinity_bee.settings.data.window.labels.status_bar('Ready');
  trinity_bee.settings.general.single_instance(true);
@@ -8801,7 +8801,7 @@ function krator()
  config.id = 'krator';
  nature.theme([config.id]);
  nature.apply('new');
- krator_bee.init(config.id, 2);
+ krator_bee.init(config.id);
  krator_bee.settings.data.window.labels.title('Krator :: Login & Registration');
  krator_bee.settings.data.window.labels.status_bar(os_name + ' - Login/Registration');
  krator_bee.settings.actions.can_edit_title(false);
@@ -10842,6 +10842,24 @@ function meta_script()
  }
  function settings()
  {
+ this.single_instance = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.single_instance(val);
+ };
+ this.resizable = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.resizable(val);
+ };
+ this.casement_width = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.casement_width(val);
+ };
  this.status_bar_marquee = function(val)
  {
  if (__new_app === null)
@@ -10853,18 +10871,6 @@ function meta_script()
  if (__new_app === null)
  return false;
  return __new_app.settings.general.resize_tooltip(val);
- };
- this.casement_width = function(val)
- {
- if (__new_app === null)
- return false;
- return __new_app.settings.general.casement_width(val);
- };
- this.single_instance = function(val)
- {
- if (__new_app === null)
- return false;
- return __new_app.settings.general.single_instance(val);
  };
  }
  this.get_app_id = function()
@@ -10945,18 +10951,12 @@ function meta_script()
  __is_run = true;
  return __result;
  };
- this.init = function(app_id, resizable = true)
+ this.init = function(app_id)
  {
  if (__is_init === true)
  return false;
- if (!utils_sys.validation.misc.is_bool(resizable))
- return false;
- var __type = 1,
- __result = null;
- if (resizable === false)
- __type = 2;
  __new_app = dev_box.get('bee');
- __result = __new_app.init(app_id, __type);
+ __result = __new_app.init(app_id);
  if (__result === true)
  __is_init = true;
  return __result;
@@ -13437,12 +13437,12 @@ function bee()
  __marquee_class = '',
  __html = null;
  populate_ui_config();
- if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
  {
  ui_config.window.status_bar.ids.resize = ui_config.window.id + '_resize';
  ui_config.window.status_bar.classes.resize = 'resize ' + ui_config.window.status_bar.ids.resize;
  }
- if (__bee_settings.general.type() === 1)
+ if (__bee_settings.general.resizable() === true)
  {
  ui_config.window.control_bar.classes.container = 'ctrl_bar box_ctrl_bar ' + ui_config.window.control_bar.id;
  ui_config.window.control_bar.classes.title = 'title box_title ' + ui_config.window.control_bar.ids.title;
@@ -13510,7 +13510,7 @@ function bee()
  ' title="' + __bee_settings.data.hints.status_bar() + '">' +
  __bee_settings.data.window.labels.status_bar() + '</div>' +
  ' </div>';
- if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
  {
  __html += ' <div id="' + ui_config.window.status_bar.ids.resize + '" class="' + ui_config.window.status_bar.classes.resize + '"' +
  ' title="' + __bee_settings.data.hints.resize() + '"></div>';
@@ -13557,11 +13557,11 @@ function bee()
  populate_ui_objects();
  ui_objects.window.control_bar.title.style.width = __bee_gui.size.width() - 100 + 'px';
  ui_objects.window.content.data.style.height = __bee_gui.size.height() - 88 + 'px';
- if (__bee_settings.general.type() === 2 && !__bee_settings.actions.can_resize.widget())
+ if (__bee_settings.general.resizable() === false && !__bee_settings.actions.can_resize.widget())
  ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 22 + 'px';
  else
  ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 50 + 'px';
- if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
  {
  ui_objects.window.status_bar.resize.style.width = 19 + 'px';
  ui_objects.window.status_bar.resize.style.height = 19 + 'px';
@@ -13647,7 +13647,7 @@ function bee()
  __handler = function(event) { event.preventDefault(); };
  morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.content.data);
  }
- if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+ if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
  {
  __handler = function(event)
  {
@@ -13721,7 +13721,7 @@ function bee()
  __handler = null;
  morpheus.delete(my_bee_id, 'keydown', __title_edit_box);
  __ctrl_bar.removeChild(__title_edit_box);
- if (self.settings.general.type() === 2)
+ if (self.settings.general.resizable() === false)
  __win_type_class_title = 'widget_title';
  else
  __win_type_class_title = 'box_title';
@@ -13793,7 +13793,7 @@ function bee()
  __handler = null;
  __ctrl_bar.removeChild(__old_title);
  __ctrl_bar.removeChild(__pencil);
- if (self.settings.general.type() === 2)
+ if (self.settings.general.resizable() === false)
  __win_type_class_title = 'widget_title';
  else
  __win_type_class_title = 'box_title';
@@ -14178,11 +14178,11 @@ function bee()
  {
  var __app_id = null,
  __system_app_id = null,
- __app_type = 0,
  __desktop_id = 0,
  __single_instance = false,
  __allowed_instances = 0,
  __status_bar_marquee = false,
+ __resizable = false,
  __resize_tooltip = false,
  __backtrace = false,
  __casement_width = 100;
@@ -14209,17 +14209,17 @@ function bee()
  bee_statuses.id_changed(false);
  return true;
  };
- this.type = function(val)
+ this.resizable = function(val)
  {
  if (is_init === false)
  return false;
  if (utils_sys.validation.misc.is_undefined(val))
- return __app_type;
+ return __resizable;
  if (bee_statuses.running())
  return false;
- if (!utils_sys.validation.numerics.is_integer(val) || val < 1 || val > 2)
+ if (!utils_sys.validation.misc.is_bool(val))
  return false;
- __app_type = val;
+ __resizable = val;
  bee_statuses.type_changed(true);
  morpheus.execute(my_bee_id, 'system', 'type_changed');
  bee_statuses.type_changed(false);
@@ -16879,15 +16879,14 @@ function bee()
  utils_int.log('Run', 'OK');
  return true;
  };
- this.init = function(bee_id, type)
+ this.init = function(bee_id)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
  if (is_init === true)
  return false;
  is_init = true;
- if (utils_sys.validation.misc.is_undefined(bee_id) || utils_sys.validation.misc.is_undefined(type) ||
- !self.settings.general.id(bee_id) || !self.settings.general.type(type))
+ if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id))
  return false;
  my_bee_id = self.settings.general.id();
  self.gui.size.max.width(swarm.settings.right());
@@ -17128,10 +17127,7 @@ function coyote()
  var __all_tabs_promise = hb_manager.tabs.query({ active: true, title : "New Tab" });
  __all_tabs_promise.then((result) =>
  {
- result.forEach(element =>
- {
- hb_manager.tabs.remove(element.id);
- });
+ result.forEach(element => { hb_manager.tabs.remove(element.id); });
  });
  };
  this.update_controls_delegate = function(tab_id, change_info, tab)
@@ -17167,7 +17163,7 @@ function coyote()
  me.draw_normal();
  me.draw_full_screen_layer();
  me.attach_events('normal_to_fullscreen');
- me.init_hyberbeam(config.pages[0], () => { hb_manager.resize(1006, 575); });
+ me.init_hyberbeam(config.pages[0], () => { hb_manager.resize(1006, 565); });
  return true;
  };
  this.draw_normal = function()
@@ -17215,7 +17211,7 @@ function coyote()
  (coyote_bee.status.gui.size.width() - 185) + 'px';
  browser_frame_width = (coyote_bee.status.gui.size.width() - 18);
  browser_frame.style.width = browser_frame_width + 'px';
- browser_frame_height = (coyote_bee.status.gui.size.height() - 145);
+ browser_frame_height = (coyote_bee.status.gui.size.height() - 155);
  browser_frame.style.height = browser_frame_height + 'px';
  };
  this.attach_events = function(mode)
@@ -17259,7 +17255,7 @@ function coyote()
  if (callback !== undefined)
  callback.call(this);
  is_browser_loading = false;
- setTimeout(function() { infinity.end(); }, 500);
+ setTimeout(function() { infinity.end(); }, 8000);
  };
  config.ajax_config.on_timeout = () => { };
  config.ajax_config.on_fail = () => { };
@@ -17402,7 +17398,7 @@ function coyote()
  browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');
  browser_frame.style.margin = '';
  browser_frame.style.width = (coyote_bee.status.gui.size.width() - 18) + 'px';
- browser_frame.style.height = (coyote_bee.status.gui.size.height() - 145) + 'px';
+ browser_frame.style.height = (coyote_bee.status.gui.size.height() - 155) + 'px';
  config.is_full_screen = false;
  }
  hb_manager.destroy();
@@ -17446,11 +17442,12 @@ function coyote()
  nature.theme([config.id]);
  nature.apply('new');
  infinity.init();
- coyote_bee.init(config.id, 1);
+ coyote_bee.init(config.id);
  coyote_bee.settings.data.window.labels.title('Coyote');
  coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
  coyote_bee.settings.data.casement.labels.title('Tools');
  coyote_bee.settings.data.casement.labels.status('Feel the power of meta-integration.');
+ coyote_bee.settings.general.resizable(true);
  coyote_bee.settings.general.casement_width(50);
  coyote_bee.settings.general.allowed_instances(1);
  coyote_bee.gui.position.left(70);
@@ -17726,7 +17723,7 @@ function cloud_edit()
  nature.theme([config.id]);
  nature.apply('new');
  infinity.init();
- cloud_edit_bee.init(config.id, 2);
+ cloud_edit_bee.init(config.id);
  cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
  cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
  cloud_edit_bee.settings.data.window.content(config.content);
@@ -17886,7 +17883,7 @@ function radio_dude()
  nature.apply('new');
  infinity.init();
  radio_dude_bee = dev_box.get('bee');
- radio_dude_bee.init(config.id, 2);
+ radio_dude_bee.init(config.id);
  radio_dude_bee.settings.data.window.labels.title('Radio Dude');
  radio_dude_bee.settings.data.window.labels.status_bar('Music babe... [ M U S I C ]');
  radio_dude_bee.settings.data.casement.labels.title('Weather');

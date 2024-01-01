@@ -88,10 +88,11 @@ function i_audiomass()
 
         infinity.init();
 
-        i_audiomass_bee.init(config.id, 1);
+        i_audiomass_bee.init(config.id);
         i_audiomass_bee.settings.data.window.labels.title('iAudioMass');
         i_audiomass_bee.settings.data.window.labels.status_bar('Online audio editor!');
         i_audiomass_bee.settings.general.single_instance(true);
+        i_audiomass_bee.settings.general.resizable(true);
         i_audiomass_bee.settings.actions.can_edit_title(false);
         i_audiomass_bee.settings.actions.can_use_menu(false);
         i_audiomass_bee.gui.position.left(250);

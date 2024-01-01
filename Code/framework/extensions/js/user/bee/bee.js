@@ -1,11 +1,11 @@
 /*
-    GreyOS - Bee (Version: 4.8)
+    GreyOS - Bee (Version: 4.9)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -374,13 +374,13 @@ function bee()
 
             populate_ui_config();
 
-            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+            if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
             {
                 ui_config.window.status_bar.ids.resize = ui_config.window.id + '_resize';
                 ui_config.window.status_bar.classes.resize = 'resize ' + ui_config.window.status_bar.ids.resize;
             }
 
-            if (__bee_settings.general.type() === 1)
+            if (__bee_settings.general.resizable() === true)
             {
                 ui_config.window.control_bar.classes.container = 'ctrl_bar box_ctrl_bar ' + ui_config.window.control_bar.id;
                 ui_config.window.control_bar.classes.title = 'title box_title ' + ui_config.window.control_bar.ids.title;
@@ -457,7 +457,7 @@ function bee()
                                 __bee_settings.data.window.labels.status_bar() + '</div>' + 
                       '    </div>';
 
-            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+            if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
             {
                 __html += '    <div id="' + ui_config.window.status_bar.ids.resize + '" class="' + ui_config.window.status_bar.classes.resize + '"' + 
                           '         title="' + __bee_settings.data.hints.resize() + '"></div>';
@@ -522,12 +522,12 @@ function bee()
             ui_objects.window.control_bar.title.style.width = __bee_gui.size.width() - 100 + 'px';
             ui_objects.window.content.data.style.height = __bee_gui.size.height() - 88 + 'px';
 
-            if (__bee_settings.general.type() === 2 && !__bee_settings.actions.can_resize.widget())
+            if (__bee_settings.general.resizable() === false && !__bee_settings.actions.can_resize.widget())
                 ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 22 + 'px';
             else
                 ui_objects.window.status_bar.message.style.width = __bee_gui.size.width() - 50 + 'px';
 
-            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+            if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
             {
                 ui_objects.window.status_bar.resize.style.width = 19 + 'px';
                 ui_objects.window.status_bar.resize.style.height = 19 + 'px';
@@ -644,7 +644,7 @@ function bee()
                 morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.content.data);
             }
 
-            if (__bee_settings.general.type() === 1 || __bee_settings.actions.can_resize.widget())
+            if (__bee_settings.general.resizable() === true || __bee_settings.actions.can_resize.widget())
             {
                 __handler = function(event)
                             {
@@ -741,7 +741,7 @@ function bee()
 
             __ctrl_bar.removeChild(__title_edit_box);
 
-            if (self.settings.general.type() === 2)
+            if (self.settings.general.resizable() === false)
                 __win_type_class_title = 'widget_title';
             else
                 __win_type_class_title = 'box_title';
@@ -841,7 +841,7 @@ function bee()
             __ctrl_bar.removeChild(__old_title);
             __ctrl_bar.removeChild(__pencil);
 
-            if (self.settings.general.type() === 2)
+            if (self.settings.general.resizable() === false)
                 __win_type_class_title = 'widget_title';
             else
                 __win_type_class_title = 'box_title';
@@ -1328,11 +1328,11 @@ function bee()
         {
             var __app_id = null,
                 __system_app_id = null,
-                __app_type = 0,
                 __desktop_id = 0,
                 __single_instance = false,
                 __allowed_instances = 0,
                 __status_bar_marquee = false,
+                __resizable = false,
                 __resize_tooltip = false,
                 __backtrace = false,
                 __casement_width = 100;
@@ -1371,21 +1371,21 @@ function bee()
                 return true;
             };
 
-            this.type = function(val)
+            this.resizable = function(val)
             {
                 if (is_init === false)
                     return false;
 
                 if (utils_sys.validation.misc.is_undefined(val))
-                    return __app_type;
+                    return __resizable;
 
                 if (bee_statuses.running())
                     return false;
 
-                if (!utils_sys.validation.numerics.is_integer(val) || val < 1 || val > 2)
+                if (!utils_sys.validation.misc.is_bool(val))
                     return false;
 
-                __app_type = val;
+                __resizable = val;
 
                 bee_statuses.type_changed(true);
 
@@ -4887,7 +4887,7 @@ function bee()
         return true;
     };
 
-    this.init = function(bee_id, type)
+    this.init = function(bee_id)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
@@ -4897,8 +4897,7 @@ function bee()
 
         is_init = true;
 
-        if (utils_sys.validation.misc.is_undefined(bee_id) || utils_sys.validation.misc.is_undefined(type) || 
-            !self.settings.general.id(bee_id) || !self.settings.general.type(type))
+        if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id))
             return false;
 
         my_bee_id = self.settings.general.id();

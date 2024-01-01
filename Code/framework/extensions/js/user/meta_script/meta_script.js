@@ -1,11 +1,11 @@
 /*
-    GreyOS - Meta-Script (Version: 1.6)
+    GreyOS - Meta-Script (Version: 1.1)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2022
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -597,6 +597,30 @@ function meta_script()
 
             function settings()
             {
+                this.single_instance = function(val)
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.settings.general.single_instance(val);
+                };
+
+                this.resizable = function(val)
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.settings.general.resizable(val);
+                };
+
+                this.casement_width = function(val)
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.settings.general.casement_width(val);
+                };
+
                 this.status_bar_marquee = function(val)
                 {
                     if (__new_app === null)
@@ -612,22 +636,6 @@ function meta_script()
 
                     return __new_app.settings.general.resize_tooltip(val);
                 };
-
-                this.casement_width = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.casement_width(val);
-                };
-
-                this.single_instance = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.single_instance(val);
-                };    
             }
 
             this.get_app_id = function()
@@ -741,23 +749,14 @@ function meta_script()
                 return __result;
             };
 
-            this.init = function(app_id, resizable = true)
+            this.init = function(app_id)
             {
                 if (__is_init === true)
                     return false;
 
-                if (!utils_sys.validation.misc.is_bool(resizable))
-                    return false;
-
-                var __type = 1,
-                    __result = null;
-
-                if (resizable === false)
-                    __type = 2;
-
                 __new_app = dev_box.get('bee');
 
-                __result = __new_app.init(app_id, __type);
+                __result = __new_app.init(app_id);
 
                 if (__result === true)
                     __is_init = true;
