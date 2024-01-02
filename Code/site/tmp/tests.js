@@ -2,6 +2,10 @@
     Tests for current libs and future additions
 */
 
+console.log(navigator.onLine);
+console.log(navigator.languages);
+console.log(navigator.userAgentData);
+
 var tk = new task();
 tk.create('/framework/extensions/js/user/task/worker.js');
 tk.message.receive((x) => { console.log(x.data); });
@@ -30,10 +34,10 @@ setInterval(function()
     // console.log('SIZE LIMIT: ', window.performance.memory.jsHeapSizeLimit / 1073741824, ' GiB');
     // console.log('TOTAL ALLOCATED: ', window.performance.memory.totalJSHeapSize / 1048576, ' MiB');
     // console.log('AVAILABLE: ', 32, ' MiB');
-    // console.log('USED: ', Math.floor(window.performance.memory.usedJSHeapSize / 1048576), ' MiB');
-    // console.log('FREE: ', (window.performance.memory.totalJSHeapSize - 
-    //                       window.performance.memory.usedJSHeapSize) / 1048576, ' MiB');
-    console.log('MEMORY USE: ', Math.floor(((window.performance.memory.usedJSHeapSize / 1048576) / 32) * 100), '%');
+    console.log('USED: ', Math.floor(window.performance.memory.usedJSHeapSize / 1048576), ' MiB');
+    console.log('FREE: ', (window.performance.memory.totalJSHeapSize - 
+                           window.performance.memory.usedJSHeapSize) / 1048576, ' MiB');
+    //console.log('MEMORY USE: ', Math.floor(((window.performance.memory.usedJSHeapSize / 1048576) / 32) * 100), '%');
 }, 15000)
 
 
@@ -106,6 +110,7 @@ navigator.usb.getDevices()
 navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
 navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
 
+// HID API - https://developer.mozilla.org/en-US/docs/Web/API/HID
 // Bluetooth API - https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API (Bismuth)
 // Battery API - https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API (Volta)
 // Barcode - https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API (we will see...)

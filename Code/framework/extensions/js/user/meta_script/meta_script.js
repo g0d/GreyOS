@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.1)
+    GreyOS - Meta-Script (Version: 1.2)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -314,6 +314,244 @@ function meta_script()
 
                 this.min = new min();
                 this.max = new max();
+            }
+
+            function fx()
+            {
+                function enabled()
+                {
+                    function fade()
+                    {
+                        this.into = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.into(val);
+                        };
+
+                        this.out = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.out(val);
+                        };
+                    }
+
+                    this.all = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.fx.enabled.all(val);
+                    };
+
+                    this.opacity = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.fx.enabled.opacity(val);
+                    };
+
+                    this.fade = new fade();
+                }
+
+                function opacity()
+                {
+                    function settings()
+                    {
+                        this.get = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+    
+                            return __new_app.gui.fx.opacity.settings.get();
+                        };
+
+                        this.set = function(val)
+                        {
+                            if (__new_app === null)
+                                return false;
+    
+                            return __new_app.gui.fx.opacity.settings.set(val);
+                        };
+                    }
+
+                    this.apply = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.fx.opacity.apply();
+                    };
+
+                    this.reset = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.fx.opacity.reset();
+                    };
+
+                    this.settings = new settings();
+                }
+
+                function fade()
+                {
+                    function settings()
+                    {
+                        this.batch = function(type, step, speed, delay)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.fade.settings.batch(type, step, speed, delay);
+                        };
+
+                        function into()
+                        {
+                            function get()
+                            {
+                                this.from = function(option, index)
+                                {
+                                    if (__new_app === null)
+                                        return false;
+
+                                    return __new_app.gui.fx.fade.settings.into.get.from(option, index);
+                                };
+
+                                this.last = function(option)
+                                {
+                                    if (__new_app === null)
+                                        return false;
+
+                                    return __new_app.gui.fx.fade.settings.into.get.last(option);
+                                };
+                            }
+
+                            this.set = function(step, speed, delay)
+                            {
+                                if (__new_app === null)
+                                    return false;
+
+                                return __new_app.gui.fx.fade.settings.into.set(step, speed, delay);
+                            };
+
+                            this.get = new get();
+                        }
+
+                        function out()
+                        {
+                            function get()
+                            {
+                                this.from = function(option, index)
+                                {
+                                    if (__new_app === null)
+                                        return false;
+
+                                    return __new_app.gui.fx.fade.settings.out.get.from(option, index);
+                                };
+
+                                this.last = function(option)
+                                {
+                                    if (__new_app === null)
+                                        return false;
+
+                                    return __new_app.gui.fx.fade.settings.out.get.last(option);
+                                };
+                            }
+
+                            this.set = function(step, speed, delay)
+                            {
+                                if (__new_app === null)
+                                    return false;
+
+                                return __new_app.gui.fx.fade.settings.out.set(step, speed, delay);
+                            };
+
+                            this.get = new get();
+                        }
+
+                        this.into = new into();
+                        this.out = new out();
+                    }
+
+                    this.batch = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.fx.fade.batch();
+                    };
+
+                    this.into = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.fx.fade.into();
+                    };
+
+                    this.out = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.fx.fade.out();
+                    };
+
+                    this.settings = new settings();
+                }
+
+                this.enabled = new enabled();
+                this.opacity = new opacity();
+                this.fade = new fade();
+            }
+
+            function css()
+            {
+                function style()
+                {
+                    this.get = function(context, sub_context, option)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.css.style.get(context, sub_context, option);
+                    };
+
+                    this.set = function(context, sub_context, option, val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.css.style.set(context, sub_context, option, val);
+                    };
+                }
+
+                function class_name()
+                {
+                    this.get = function(context, sub_context)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.css.style.get(context, sub_context);
+                    };
+
+                    this.set = function(context, sub_context, val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.css.style.set(context, sub_context, val);
+                    };
+                }
+
+                this.style = new style();
+                this.class_name = new class_name();
             }
 
             function can()
@@ -717,9 +955,7 @@ function meta_script()
                 if (__new_app === null)
                     return false;
 
-                // TODO: Get source code written by programmer
-
-                return null;
+                return program_config.meta_caller.source();
             };
 
             this.run = function(parent_app_id = null, headless = false)
@@ -769,6 +1005,8 @@ function meta_script()
             this.casement = new casement();
             this.position = new position();
             this.size = new size();
+            this.fx = new fx();
+            this.css = new css();
             this.can = new can();
             this.status = new status();
             this.settings = new settings();
@@ -837,13 +1075,21 @@ function meta_script()
                 return __new_svc.unregister(program_config.model.name);
             };
 
+            this.reflection = function()
+            {
+                if (__new_svc === null)
+                    return false;
+
+                return program_config.meta_caller.source();
+            };
+
             this.run = function()
             {
                 if (__new_svc === null || __is_run === true)
                     return false;
 
                 me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
-                me.on('unregister', function() { /*program_config.meta_caller.reset();*/ });
+                //me.on('unregister', function() { program_config.meta_caller.reset(); });
 
                 matrix.unregister(program_config.model.name);
 

@@ -33,9 +33,14 @@ function cloud_edit()
     {
         this.telemetry = function(prog_id)
         {
-            var program_id = prog_id;
+            var program_id = prog_id; // Do something with telemetry in the future...
 
             return true;
+        };
+
+        this.source = function()
+        {
+            return config.ce.editor.getValue();
         };
 
         this.reset = function()
@@ -53,9 +58,6 @@ function cloud_edit()
             var __code = null;
 
             if (utils_sys.validation.misc.is_undefined(event_object))
-                return false;
-
-            if (event_object.buttons !== 1)
                 return false;
 
             if (program_is_running === true)
@@ -123,10 +125,6 @@ function cloud_edit()
             if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
-            if (event_object.buttons !== 1)
-                return false;
-
-            console.log('Deploying...');
             // TODO:...
 
             return true;
@@ -204,10 +202,10 @@ function cloud_edit()
             var __handler = null;
 
             __handler = function(event) { run_code(event); };
-            morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.exec_button);
+            morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.exec_button);
 
             __handler = function(event) { deploy(event); };
-            morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.deploy_button);
+            morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.deploy_button);
 
             return true;
         };

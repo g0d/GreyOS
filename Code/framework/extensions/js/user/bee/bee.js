@@ -3038,6 +3038,35 @@ function bee()
                     this.fade_out_enabled = false;
                 }
 
+                function fade()
+                {
+                    function validate(fx, val)
+                    {
+                        if (is_init === false)
+                            return false;
+
+                        if (utils_sys.validation.misc.is_undefined(val))
+                            return __fade_settings[fx];
+
+                        if (!utils_sys.validation.misc.is_bool(val))
+                            return false;
+
+                        __fade_settings[fx] = val;
+
+                        return true;
+                    }
+
+                    this.into = function(val)
+                    {
+                        return validate('fade_in_enabled', val);
+                    };
+
+                    this.out = function(val)
+                    {
+                        return validate('fade_out_enabled', val);
+                    };
+                }
+
                 this.all = function(val)
                 {
                     if (is_init === false)
@@ -3077,35 +3106,6 @@ function bee()
 
                     return true;
                 };
-
-                function fade()
-                {
-                    function validate(fx, val)
-                    {
-                        if (is_init === false)
-                            return false;
-
-                        if (utils_sys.validation.misc.is_undefined(val))
-                            return __fade_settings[fx];
-
-                        if (!utils_sys.validation.misc.is_bool(val))
-                            return false;
-
-                        __fade_settings[fx] = val;
-
-                        return true;
-                    }
-
-                    this.into = function(val)
-                    {
-                        return validate('fade_in_enabled', val);
-                    };
-
-                    this.out = function(val)
-                    {
-                        return validate('fade_out_enabled', val);
-                    };
-                }
 
                 var __fade_settings = new fade_settings_object();
 

@@ -10628,6 +10628,192 @@ function meta_script()
  this.min = new min();
  this.max = new max();
  }
+ function fx()
+ {
+ function enabled()
+ {
+ function fade()
+ {
+ this.into = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.into(val);
+ };
+ this.out = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.out(val);
+ };
+ }
+ this.all = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.enabled.all(val);
+ };
+ this.opacity = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.enabled.opacity(val);
+ };
+ this.fade = new fade();
+ }
+ function opacity()
+ {
+ function settings()
+ {
+ this.get = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.opacity.settings.get();
+ };
+ this.set = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.opacity.settings.set(val);
+ };
+ }
+ this.apply = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.opacity.apply();
+ };
+ this.reset = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.opacity.reset();
+ };
+ this.settings = new settings();
+ }
+ function fade()
+ {
+ function settings()
+ {
+ this.batch = function(type, step, speed, delay)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.settings.batch(type, step, speed, delay);
+ };
+ function into()
+ {
+ function get()
+ {
+ this.from = function(option, index)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.settings.into.get.from(option, index);
+ };
+ this.last = function(option)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.settings.into.get.last(option);
+ };
+ }
+ this.set = function(step, speed, delay)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.settings.into.set(step, speed, delay);
+ };
+ this.get = new get();
+ }
+ function out()
+ {
+ function get()
+ {
+ this.from = function(option, index)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.settings.out.get.from(option, index);
+ };
+ this.last = function(option)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.settings.out.get.last(option);
+ };
+ }
+ this.set = function(step, speed, delay)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.settings.out.set(step, speed, delay);
+ };
+ this.get = new get();
+ }
+ this.into = new into();
+ this.out = new out();
+ }
+ this.batch = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.batch();
+ };
+ this.into = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.into();
+ };
+ this.out = function()
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.fx.fade.out();
+ };
+ this.settings = new settings();
+ }
+ this.enabled = new enabled();
+ this.opacity = new opacity();
+ this.fade = new fade();
+ }
+ function css()
+ {
+ function style()
+ {
+ this.get = function(context, sub_context, option)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.css.style.get(context, sub_context, option);
+ };
+ this.set = function(context, sub_context, option, val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.css.style.set(context, sub_context, option, val);
+ };
+ }
+ function class_name()
+ {
+ this.get = function(context, sub_context)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.css.style.get(context, sub_context);
+ };
+ this.set = function(context, sub_context, val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.gui.css.style.set(context, sub_context, val);
+ };
+ }
+ this.style = new style();
+ this.class_name = new class_name();
+ }
  function can()
  {
  this.open = function(val)
@@ -10932,7 +11118,7 @@ function meta_script()
  {
  if (__new_app === null)
  return false;
- return null;
+ return program_config.meta_caller.source();
  };
  this.run = function(parent_app_id = null, headless = false)
  {
@@ -10966,6 +11152,8 @@ function meta_script()
  this.casement = new casement();
  this.position = new position();
  this.size = new size();
+ this.fx = new fx();
+ this.css = new css();
  this.can = new can();
  this.status = new status();
  this.settings = new settings();
@@ -11016,12 +11204,17 @@ function meta_script()
  __is_run = false;
  return __new_svc.unregister(program_config.model.name);
  };
+ this.reflection = function()
+ {
+ if (__new_svc === null)
+ return false;
+ return program_config.meta_caller.source();
+ };
  this.run = function()
  {
  if (__new_svc === null || __is_run === true)
  return false;
  me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
- me.on('unregister', function() { });
  matrix.unregister(program_config.model.name);
  var __result = __new_svc.register(program_config.model);
  if (__result === true)
@@ -15463,6 +15656,28 @@ function bee()
  this.fade_in_enabled = false;
  this.fade_out_enabled = false;
  }
+ function fade()
+ {
+ function validate(fx, val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __fade_settings[fx];
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ __fade_settings[fx] = val;
+ return true;
+ }
+ this.into = function(val)
+ {
+ return validate('fade_in_enabled', val);
+ };
+ this.out = function(val)
+ {
+ return validate('fade_out_enabled', val);
+ };
+ }
  this.all = function(val)
  {
  if (is_init === false)
@@ -15493,28 +15708,6 @@ function bee()
  __opacity_enabled = val;
  return true;
  };
- function fade()
- {
- function validate(fx, val)
- {
- if (is_init === false)
- return false;
- if (utils_sys.validation.misc.is_undefined(val))
- return __fade_settings[fx];
- if (!utils_sys.validation.misc.is_bool(val))
- return false;
- __fade_settings[fx] = val;
- return true;
- }
- this.into = function(val)
- {
- return validate('fade_in_enabled', val);
- };
- this.out = function(val)
- {
- return validate('fade_out_enabled', val);
- };
- }
  var __fade_settings = new fade_settings_object();
  this.fade = new fade();
  }
@@ -17554,8 +17747,12 @@ function cloud_edit()
  {
  this.telemetry = function(prog_id)
  {
- var program_id = prog_id;
+ var program_id = prog_id; // Do something with telemetry in the future...
  return true;
+ };
+ this.source = function()
+ {
+ return config.ce.editor.getValue();
  };
  this.reset = function()
  {
@@ -17569,8 +17766,6 @@ function cloud_edit()
  {
  var __code = null;
  if (utils_sys.validation.misc.is_undefined(event_object))
- return false;
- if (event_object.buttons !== 1)
  return false;
  if (program_is_running === true)
  return utils_int.reset();
@@ -17622,9 +17817,6 @@ function cloud_edit()
  {
  if (utils_sys.validation.misc.is_undefined(event_object))
  return false;
- if (event_object.buttons !== 1)
- return false;
- console.log('Deploying...');
  return true;
  }
  this.gui_init = function()
@@ -17682,9 +17874,9 @@ function cloud_edit()
  {
  var __handler = null;
  __handler = function(event) { run_code(event); };
- morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.exec_button);
+ morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.exec_button);
  __handler = function(event) { deploy(event); };
- morpheus.run(config.ce.exec_button.id, 'mouse', 'mousedown', __handler, config.ce.deploy_button);
+ morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.deploy_button);
  return true;
  };
  this.reset = function()
