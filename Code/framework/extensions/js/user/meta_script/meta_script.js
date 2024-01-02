@@ -322,20 +322,20 @@ function meta_script()
                 {
                     function fade()
                     {
-                        this.into = function()
+                        this.into = function(val)
                         {
                             if (__new_app === null)
                                 return false;
 
-                            return __new_app.gui.fx.into(val);
+                            return __new_app.gui.fx.fade.into(val);
                         };
 
-                        this.out = function()
+                        this.out = function(val)
                         {
                             if (__new_app === null)
                                 return false;
 
-                            return __new_app.gui.fx.out(val);
+                            return __new_app.gui.fx.fade.out(val);
                         };
                     }
 
