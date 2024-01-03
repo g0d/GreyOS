@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.2)
+    GreyOS - Meta-Script (Version: 1.4)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -29,6 +29,147 @@ function meta_script()
         this.svcs = [];
     }
 
+    function os()
+    {
+        this.info = function()
+        {
+            return xenon;
+        };
+
+        this.date_time = function()
+        {
+            return tik_tok;
+        };
+
+        this.sound = function()
+        {
+            return parrot;
+        };
+
+        this.usb = function()
+        {
+            return octopus;
+        };
+
+        this.timer = function()
+        {
+            return precise_timer;
+        };
+
+        this.tasks = function()
+        {
+            return owl;
+        };
+
+        this.fs = function()
+        {
+            return teal_fs;
+        };
+
+        this.utilities = function()
+        {
+            return utils_sys;
+        };
+
+        this.ajax = function()
+        {
+            return ajax;
+        };
+
+        this.settings_validator = function()
+        {
+            return config_parser;
+        };
+
+        this.reboot = function()
+        {
+            // TODO: Inform user and check for his/her prompt
+
+            cc_reload.init();
+
+            return true;
+        };
+
+        this.logout = function()
+        {
+            // TODO: Inform user and check for his/her prompt
+
+            return user_profile.logout();
+        };
+    }
+
+    function system()
+    {
+        function ui()
+        {
+            this.themes = function()
+            {
+                return nature;
+            };
+
+            this.progress = function()
+            {
+                return infinity;
+            };
+
+            this.message_box = function()
+            {
+                return msg_box;
+            };
+        }
+
+        function profile()
+        {
+            this.messages = function()
+            {
+                // TODO:...
+
+                return true;
+            };
+
+            this.alerts = function()
+            {
+                // TODO:...
+
+                return true;
+            };
+
+            this.calendar = function()
+            {
+                // TODO:...
+
+                return true;
+            };
+
+            this.settings = function()
+            {
+                // TODO:...
+
+                return true;
+            };
+        }
+
+        this.apps = function()
+        {
+            return app_box;
+        };
+
+        this.services = function()
+        {
+            return matrix;
+        };
+
+        this.notifications = function(notification_config)
+        {
+            // TODO:...
+
+            return true;
+        };
+
+        this.ui = new ui();
+        this.profile = new profile();
+    }
+
     function interface()
     {
         this.desktops = function()
@@ -52,80 +193,37 @@ function meta_script()
         };
     }
 
-    function system()
+    function program()
     {
-        function profile()
+        this.start = function(program_model, meta_caller)
         {
-            this.messages = function()
-            {
-                return true;
-            };
+            if (!utils_sys.validation.misc.is_function(program_model) || 
+                !utils_sys.validation.misc.is_object(meta_caller))
+                return false;
 
-            this.alerts = function()
-            {
-                return true;
-            };
+            program_config.model = program_model;
+            program_config.meta_caller = meta_caller;
 
-            this.calendar = function()
-            {
-                return true;
-            };
-        }
+            is_program_loaded = true;
 
-        function os()
-        {
-            this.info = function()
-            {
-                return xenon;
-            };
-
-            this.date_time = function()
-            {
-                return tik_tok;
-            };
-
-            this.tasks = function()
-            {
-                return owl;
-            };
-
-            this.fs = function()
-            {
-                return teal_fs;
-            };
-
-            this.reboot = function()
-            {
-                cc_reload.init();
-
-                return true;
-            };
-
-            this.logout = function()
-            {
-                user_profile.logout();
-
-                return true;
-            };
-        }
-
-        this.apps = function()
-        {
-            return app_box;
-        };
-
-        this.services = function()
-        {
-            return matrix;
-        };
-
-        this.notifications = function(notification_config)
-        {
             return true;
         };
 
-        this.profile = new profile();
-        this.os = new os();
+        this.end = function()
+        {
+            if (is_program_loaded === false)
+                return false;
+
+            for (var i = 0; i < program_config.apps.length; i++)
+                program_config.apps[i].close(null);
+
+            for (var i = 0; i < program_config.svcs.length; i++)
+                program_config.svcs[i].terminate();
+
+            is_program_loaded = false;
+
+            return true;
+        };
     }
 
     this.app = function()
@@ -1128,39 +1226,6 @@ function meta_script()
         return program_config.svcs[global_svc_index];
     };
 
-    function program()
-    {
-        this.start = function(program_model, meta_caller)
-        {
-            if (!utils_sys.validation.misc.is_function(program_model) || 
-                !utils_sys.validation.misc.is_object(meta_caller))
-                return false;
-
-            program_config.model = program_model;
-            program_config.meta_caller = meta_caller;
-
-            is_program_loaded = true;
-
-            return true;
-        };
-
-        this.end = function()
-        {
-            if (is_program_loaded === false)
-                return false;
-
-            for (var i = 0; i < program_config.apps.length; i++)
-                program_config.apps[i].close(null);
-
-            for (var i = 0; i < program_config.svcs.length; i++)
-                program_config.svcs[i].terminate();
-
-            is_program_loaded = false;
-
-            return true;
-        };
-    }
-
     this.cosmos = function(cosmos_object)
     {
         if (utils_sys.validation.misc.is_undefined(cosmos_object))
@@ -1178,6 +1243,7 @@ function meta_script()
         forest = matrix.get('forest');
         dock = matrix.get('dock');
         user_profile = matrix.get('user_profile');
+        nature = matrix.get('nature');
         tik_tok = matrix.get('tik_tok');
         parrot = matrix.get('parrot');
         octopus = matrix.get('octopus');
@@ -1202,6 +1268,7 @@ function meta_script()
         forest = null,
         dock = null,
         user_profile = null,
+        nature = null,
         tik_tok = null,
         parrot = null,
         octopus = null,
@@ -1210,12 +1277,16 @@ function meta_script()
         teal_fs = null,
         infinity = null,
         utils_sys = new vulcan(),
+        precise_timer = new stopwatch(),
         config_parser = new jap(),
+        ajax = new taurus(),
+        msg_box = new msgbox(),
         cc_reload = new f5(),
         config_models = new config_models(),
         program_config = new program_config_model();
 
-    this.interface = new interface();
+    this.os = new os();
     this.system = new system();
+    this.interface = new interface();
     this.program = new program();
 }

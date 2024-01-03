@@ -422,7 +422,8 @@ function hive()
                 var __this_hive_bee = colony.get(__active_bee_id);
 
                 if (utils_sys.objects.by_id(__active_bee_id) === null)
-                {console.error('{ *** [ ! ( ^ ) ! ] *** }');
+                {
+                    console.error('{ *** [ ! ( ^ ) ! ] *** }');
                 /*
                 if (__this_hive_bee === false)
                         return false;

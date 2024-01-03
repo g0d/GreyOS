@@ -1089,7 +1089,7 @@ function sensei(title, message)
  if ((!utils.validation.misc.is_invalid(title) && !utils.validation.alpha.is_string(title)) ||
  (!utils.validation.misc.is_invalid(message) && !utils.validation.alpha.is_string(message)))
  return false;
- for (__index = 0; __index < title.length - 2; __index++)
+ for (__index = 0; __index < title.length; __index++)
  __stars += '*';
  console.log('-------------------------- ' + title + ' --------------------------');
  console.log(message);
@@ -7705,7 +7705,8 @@ function hive()
  {
  var __this_hive_bee = colony.get(__active_bee_id);
  if (utils_sys.objects.by_id(__active_bee_id) === null)
- {console.error('{ *** [ ! ( ^ ) ! ] *** }');
+ {
+ console.error('{ *** [ ! ( ^ ) ! ] *** }');
  }
  utils_sys.objects.by_id(__active_bee_id).style.display = 'block';
  utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
@@ -10401,6 +10402,109 @@ function meta_script()
  this.apps = [];
  this.svcs = [];
  }
+ function os()
+ {
+ this.info = function()
+ {
+ return xenon;
+ };
+ this.date_time = function()
+ {
+ return tik_tok;
+ };
+ this.sound = function()
+ {
+ return parrot;
+ };
+ this.usb = function()
+ {
+ return octopus;
+ };
+ this.timer = function()
+ {
+ return precise_timer;
+ };
+ this.tasks = function()
+ {
+ return owl;
+ };
+ this.fs = function()
+ {
+ return teal_fs;
+ };
+ this.utilities = function()
+ {
+ return utils_sys;
+ };
+ this.ajax = function()
+ {
+ return ajax;
+ };
+ this.settings_validator = function()
+ {
+ return config_parser;
+ };
+ this.reboot = function()
+ {
+ cc_reload.init();
+ return true;
+ };
+ this.logout = function()
+ {
+ return user_profile.logout();
+ };
+ }
+ function system()
+ {
+ function ui()
+ {
+ this.themes = function()
+ {
+ return nature;
+ };
+ this.progress = function()
+ {
+ return infinity;
+ };
+ this.message_box = function()
+ {
+ return msg_box;
+ };
+ }
+ function profile()
+ {
+ this.messages = function()
+ {
+ return true;
+ };
+ this.alerts = function()
+ {
+ return true;
+ };
+ this.calendar = function()
+ {
+ return true;
+ };
+ this.settings = function()
+ {
+ return true;
+ };
+ }
+ this.apps = function()
+ {
+ return app_box;
+ };
+ this.services = function()
+ {
+ return matrix;
+ };
+ this.notifications = function(notification_config)
+ {
+ return true;
+ };
+ this.ui = new ui();
+ this.profile = new profile();
+ }
  function interface()
  {
  this.desktops = function()
@@ -10420,66 +10524,29 @@ function meta_script()
  return super_tray;
  };
  }
- function system()
+ function program()
  {
- function profile()
+ this.start = function(program_model, meta_caller)
  {
- this.messages = function()
- {
+ if (!utils_sys.validation.misc.is_function(program_model) ||
+ !utils_sys.validation.misc.is_object(meta_caller))
+ return false;
+ program_config.model = program_model;
+ program_config.meta_caller = meta_caller;
+ is_program_loaded = true;
  return true;
  };
- this.alerts = function()
+ this.end = function()
  {
+ if (is_program_loaded === false)
+ return false;
+ for (var i = 0; i < program_config.apps.length; i++)
+ program_config.apps[i].close(null);
+ for (var i = 0; i < program_config.svcs.length; i++)
+ program_config.svcs[i].terminate();
+ is_program_loaded = false;
  return true;
  };
- this.calendar = function()
- {
- return true;
- };
- }
- function os()
- {
- this.info = function()
- {
- return xenon;
- };
- this.date_time = function()
- {
- return tik_tok;
- };
- this.tasks = function()
- {
- return owl;
- };
- this.fs = function()
- {
- return teal_fs;
- };
- this.reboot = function()
- {
- cc_reload.init();
- return true;
- };
- this.logout = function()
- {
- user_profile.logout();
- return true;
- };
- }
- this.apps = function()
- {
- return app_box;
- };
- this.services = function()
- {
- return matrix;
- };
- this.notifications = function(notification_config)
- {
- return true;
- };
- this.profile = new profile();
- this.os = new os();
  }
  this.app = function()
  {
@@ -10634,17 +10701,17 @@ function meta_script()
  {
  function fade()
  {
- this.into = function()
+ this.into = function(val)
  {
  if (__new_app === null)
  return false;
- return __new_app.gui.fx.into(val);
+ return __new_app.gui.fx.fade.into(val);
  };
- this.out = function()
+ this.out = function(val)
  {
  if (__new_app === null)
  return false;
- return __new_app.gui.fx.out(val);
+ return __new_app.gui.fx.fade.out(val);
  };
  }
  this.all = function(val)
@@ -11239,30 +11306,6 @@ function meta_script()
  program_config.svcs.push(new svc_api_model());
  return program_config.svcs[global_svc_index];
  };
- function program()
- {
- this.start = function(program_model, meta_caller)
- {
- if (!utils_sys.validation.misc.is_function(program_model) ||
- !utils_sys.validation.misc.is_object(meta_caller))
- return false;
- program_config.model = program_model;
- program_config.meta_caller = meta_caller;
- is_program_loaded = true;
- return true;
- };
- this.end = function()
- {
- if (is_program_loaded === false)
- return false;
- for (var i = 0; i < program_config.apps.length; i++)
- program_config.apps[i].close(null);
- for (var i = 0; i < program_config.svcs.length; i++)
- program_config.svcs[i].terminate();
- is_program_loaded = false;
- return true;
- };
- }
  this.cosmos = function(cosmos_object)
  {
  if (utils_sys.validation.misc.is_undefined(cosmos_object))
@@ -11277,6 +11320,7 @@ function meta_script()
  forest = matrix.get('forest');
  dock = matrix.get('dock');
  user_profile = matrix.get('user_profile');
+ nature = matrix.get('nature');
  tik_tok = matrix.get('tik_tok');
  parrot = matrix.get('parrot');
  octopus = matrix.get('octopus');
@@ -11299,6 +11343,7 @@ function meta_script()
  forest = null,
  dock = null,
  user_profile = null,
+ nature = null,
  tik_tok = null,
  parrot = null,
  octopus = null,
@@ -11307,12 +11352,16 @@ function meta_script()
  teal_fs = null,
  infinity = null,
  utils_sys = new vulcan(),
+ precise_timer = new stopwatch(),
  config_parser = new jap(),
+ ajax = new taurus(),
+ msg_box = new msgbox(),
  cc_reload = new f5(),
  config_models = new config_models(),
  program_config = new program_config_model();
- this.interface = new interface();
+ this.os = new os();
  this.system = new system();
+ this.interface = new interface();
  this.program = new program();
 }
 function executor()
@@ -13902,7 +13951,7 @@ function bee()
  }
  return true;
  }
- function update_win_title()
+ function alter_win_title(text_value = null)
  {
  var __ctrl_bar = ui_objects.window.control_bar.ui,
  __title_edit_box = utils_sys.objects.by_id(my_bee_id + '_title_edit_box'),
@@ -13922,7 +13971,10 @@ function bee()
  __title_div.setAttribute('class', 'title ' + __win_type_class_title);
  __title_div.setAttribute('style', 'width: ' + __title_width + 'px');
  __title_div.setAttribute('title', self.settings.data.hints.title());
+ if (text_value === null)
  __title_div.innerHTML = __new_title;
+ else
+ __title_div.innerHTML = text_value;
  __pencil_div.setAttribute('id', ui_config.window.control_bar.ids.pencil);
  __pencil_div.setAttribute('class', 'pencil');
  __pencil_div.setAttribute('title', self.settings.data.hints.pencil());
@@ -13937,6 +13989,7 @@ function bee()
  morpheus.execute(my_bee_id, 'system', 'active');
  };
  morpheus.run(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.pencil);
+ if (text_value === null)
  self.settings.data.window.labels.title(__new_title);
  bee_statuses.title_on_edit(false);
  return true;
@@ -14000,7 +14053,9 @@ function bee()
  if (!bee_statuses.active())
  return false;
  if (self.gui.keys.get(event) === key_control.keys.ENTER)
- update_win_title();
+ alter_win_title();
+ else if (self.gui.keys.get(event) === key_control.keys.ESCAPE)
+ alter_win_title(self.settings.data.window.labels.title());
  };
  morpheus.run(my_bee_id, 'key', 'keydown', __handler, __title_edit_box);
  bee_statuses.title_on_edit(true);
@@ -15685,8 +15740,11 @@ function bee()
  if (utils_sys.validation.misc.is_undefined(val))
  {
  if (__opacity_enabled === true &&
- __fade_settings.fade_in_enabled === true && __fade_settings.fade_out_enabled === true)
+ __fade_settings.fade_in_enabled === true &&
+ __fade_settings.fade_out_enabled === true)
+ {
  return true;
+ }
  else
  return false;
  }

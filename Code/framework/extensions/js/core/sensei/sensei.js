@@ -6,7 +6,7 @@
     Dependencies: Vulcan.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2017
+    Copyright (C) 2017 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -21,7 +21,7 @@ function sensei(title, message)
         (!utils.validation.misc.is_invalid(message) && !utils.validation.alpha.is_string(message)))
         return false;
 
-    for (__index = 0; __index < title.length - 2; __index++)
+    for (__index = 0; __index < title.length; __index++)
         __stars += '*';
 
     console.log('-------------------------- ' + title + ' --------------------------');

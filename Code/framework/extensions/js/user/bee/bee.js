@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 4.9)
+    GreyOS - Bee (Version: 5.0)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -726,7 +726,7 @@ function bee()
             return true;
         }
 
-        function update_win_title()
+        function alter_win_title(text_value = null)
         {
             var __ctrl_bar = ui_objects.window.control_bar.ui,
                 __title_edit_box = utils_sys.objects.by_id(my_bee_id + '_title_edit_box'),
@@ -751,7 +751,10 @@ function bee()
             __title_div.setAttribute('style', 'width: ' + __title_width + 'px');
             __title_div.setAttribute('title', self.settings.data.hints.title());
 
-            __title_div.innerHTML = __new_title;
+            if (text_value === null)
+                __title_div.innerHTML = __new_title;
+            else
+                __title_div.innerHTML = text_value;
 
             __pencil_div.setAttribute('id', ui_config.window.control_bar.ids.pencil);
             __pencil_div.setAttribute('class', 'pencil');
@@ -773,7 +776,8 @@ function bee()
                         };
             morpheus.run(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.pencil);
 
-            self.settings.data.window.labels.title(__new_title);
+            if (text_value === null)
+                self.settings.data.window.labels.title(__new_title);
 
             bee_statuses.title_on_edit(false);
 
@@ -859,7 +863,9 @@ function bee()
                                 return false;
 
                             if (self.gui.keys.get(event) === key_control.keys.ENTER)
-                                update_win_title();
+                                alter_win_title();
+                            else if (self.gui.keys.get(event) === key_control.keys.ESCAPE)
+                                alter_win_title(self.settings.data.window.labels.title());
                         };
             morpheus.run(my_bee_id, 'key', 'keydown', __handler, __title_edit_box);
 
@@ -3075,8 +3081,11 @@ function bee()
                     if (utils_sys.validation.misc.is_undefined(val))
                     {
                         if (__opacity_enabled === true && 
-                            __fade_settings.fade_in_enabled === true && __fade_settings.fade_out_enabled === true)
+                            __fade_settings.fade_in_enabled === true && 
+                            __fade_settings.fade_out_enabled === true)
+                        {
                             return true;
+                        }
                         else
                             return false;
                     }
