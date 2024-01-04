@@ -3083,9 +3083,7 @@ function bee()
                         if (__opacity_enabled === true && 
                             __fade_settings.fade_in_enabled === true && 
                             __fade_settings.fade_out_enabled === true)
-                        {
                             return true;
-                        }
                         else
                             return false;
                     }
@@ -3939,7 +3937,14 @@ function bee()
                     me.actions.casement.hide(event_object, 
                     function()
                     {
-                        morpheus.execute(my_bee_id, 'gui', 'close');
+                        try
+                        {
+                            morpheus.execute(my_bee_id, 'gui', 'close');
+                        }
+                        catch
+                        {
+                            // Do nothing...
+                        }
 
                         if (utils_int.animating_events.in_progress())
                             setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());

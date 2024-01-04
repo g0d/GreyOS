@@ -28,6 +28,6 @@ Hot News: As of March 1st 2021, GreyOS is the basis of VeNUS, the COP of PROBOTE
 Enjoy!
 
 George Delaportas (G0D/ViR4X)  
-Copyright (C) 2015 - 2023 GreyOS  
+Copyright (C) 2014 - 2024 GreyOS  
 Open Software License (OSL 3.0)  
 Supported by [PROBOTEK](https://probotek.eu/)

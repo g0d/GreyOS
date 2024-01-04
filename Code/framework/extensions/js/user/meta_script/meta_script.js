@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.4)
+    GreyOS - Meta-Script (Version: 1.5)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -66,6 +66,11 @@ function meta_script()
             return teal_fs;
         };
 
+        this.gaming_contollers = function()
+        {
+            return xgc;
+        };
+
         this.utilities = function()
         {
             return utils_sys;
@@ -79,6 +84,13 @@ function meta_script()
         this.settings_validator = function()
         {
             return config_parser;
+        };
+
+        this.run = function(program)
+        {
+            // TODO:...
+
+            return (program);
         };
 
         this.reboot = function()
@@ -214,15 +226,43 @@ function meta_script()
             if (is_program_loaded === false)
                 return false;
 
-            for (var i = 0; i < program_config.apps.length; i++)
+            var i = 0,
+                __apps_num = program_config.apps.length,
+                __svcs_num = program_config.svcs.length;
+
+            for (i = 0; i < __apps_num; i++)
                 program_config.apps[i].close(null);
 
-            for (var i = 0; i < program_config.svcs.length; i++)
+            for (i = 0; i < __svcs_num; i++)
                 program_config.svcs[i].terminate();
+
+            program_config.apps = [];
+            program_config.svcs = [];
+
+            global_app_index = -1;
+            global_svc_index = -1;
+
+            uniplex.clear(program_config.model.name);
 
             is_program_loaded = false;
 
             return true;
+        };
+
+        this.expose_api = function(public_calls_array)
+        {
+            var __public_api_calls_config = 
+            {
+                "program_id"    :   program_config.model.name,
+                "calls"         :   public_calls_array
+            };
+
+            return uniplex.expose(__public_api_calls_config);
+        };
+
+        this.list_api = function()
+        {
+            return uniplex.list();
         };
     }
 
@@ -1137,12 +1177,12 @@ function meta_script()
                 return __new_svc.get_config();
             };
 
-            this.set = function(name, body)
+            this.set = function(func_name, body)
             {
                 if (__new_svc === null)
                     return false;
 
-                return __new_svc.set_function(name, body);
+                return __new_svc.set_function(func_name, body);
             };
 
             this.execute = function(func_name, func_args = [])
@@ -1248,7 +1288,9 @@ function meta_script()
         parrot = matrix.get('parrot');
         octopus = matrix.get('octopus');
         super_tray = matrix.get('super_tray');
+        xgc = matrix.get('xgc');
         owl = matrix.get('owl');
+        uniplex = matrix.get('uniplex');
         teal_fs = matrix.get('teal_fs');
         infinity = dev_box.get('infinity');
 
@@ -1273,7 +1315,9 @@ function meta_script()
         parrot = null,
         octopus = null,
         super_tray = null,
+        xgc = null,
         owl = null,
+        uniplex = null,
         teal_fs = null,
         infinity = null,
         utils_sys = new vulcan(),

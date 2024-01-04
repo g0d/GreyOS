@@ -6069,7 +6069,7 @@ function owl()
 {
  var self = this;
  var process_status = ['RUN', 'END', 'FAIL'];
- function bee_collection_module()
+ function bee_collection_model()
  {
  function list()
  {
@@ -6085,7 +6085,7 @@ function owl()
  this.num = 0;
  this.list = new list();
  }
- function bat_collection_module()
+ function bat_collection_model()
  {
  function list()
  {
@@ -6292,7 +6292,7 @@ function owl()
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- bee_collection = new bee_collection_module();
+ bee_collection = new bee_collection_model();
  return true;
  };
  this.get = new get();
@@ -6332,7 +6332,7 @@ function owl()
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- bat_collection = new bat_collection_module();
+ bat_collection = new bat_collection_model();
  return true;
  };
  this.get = new get();
@@ -6341,8 +6341,8 @@ function owl()
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- bee_collection = new bee_collection_module();
- bat_collection = new bat_collection_module();
+ bee_collection = new bee_collection_model();
+ bat_collection = new bat_collection_model();
  return true;
  };
  this.applications = new apps();
@@ -6400,10 +6400,73 @@ function owl()
  colony = null,
  roost = null,
  utils_sys = new vulcan(),
- bee_collection = new bee_collection_module(),
- bat_collection = new bat_collection_module(),
+ bee_collection = new bee_collection_model(),
+ bat_collection = new bat_collection_model(),
  utils_int = new utilities();
  this.status = new status();
+}
+function uniplex()
+{
+ var self = this;
+ function programs_collection_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ this.expose = function(api_calls_config)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_object(api_calls_config) ||
+ !api_calls_config.hasOwnProperty('program_id') ||
+ !api_calls_config.hasOwnProperty('calls'))
+ return false;
+ programs_collection.num += 1;
+ programs_collection.list.push(api_calls_config);
+ return true;
+ };
+ this.num = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return programs_collection.num;
+ };
+ this.list = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return programs_collection.list;
+ };
+ this.clear = function(program_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_nothing(program_id))
+ return false;
+ var __index = 0,
+ __api_call = null;
+ for (__api_call of programs_collection.list)
+ {
+ if (__api_call.program_id === program_id)
+ {
+ programs_collection.num -= 1;
+ programs_collection.list.splice(__index, 1);
+ return true;
+ }
+ __index++;
+ }
+ return false;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var cosmos = null,
+ utils_sys = new vulcan(),
+ programs_collection = new programs_collection_model();
 }
 function forest()
 {
@@ -10329,7 +10392,7 @@ function meta_program_config()
  var meta_script = program_config.script;
  if (meta_script.indexOf('navigator') >= 0 || meta_script.indexOf('window') >= 0 ||
  meta_script.indexOf('document') >= 0 || meta_script.indexOf('location') >= 0 ||
- meta_script.indexOf('eval') >= 0)
+ meta_script.indexOf('eval') >= 0 || meta_script.indexOf('this') >= 0)
  return false;
  if (program_config.type === 'app')
  {
@@ -10432,6 +10495,10 @@ function meta_script()
  {
  return teal_fs;
  };
+ this.gaming_contollers = function()
+ {
+ return xgc;
+ };
  this.utilities = function()
  {
  return utils_sys;
@@ -10443,6 +10510,10 @@ function meta_script()
  this.settings_validator = function()
  {
  return config_parser;
+ };
+ this.run = function(program)
+ {
+ return (program);
  };
  this.reboot = function()
  {
@@ -10540,12 +10611,33 @@ function meta_script()
  {
  if (is_program_loaded === false)
  return false;
- for (var i = 0; i < program_config.apps.length; i++)
+ var i = 0,
+ __apps_num = program_config.apps.length,
+ __svcs_num = program_config.svcs.length;
+ for (i = 0; i < __apps_num; i++)
  program_config.apps[i].close(null);
- for (var i = 0; i < program_config.svcs.length; i++)
+ for (i = 0; i < __svcs_num; i++)
  program_config.svcs[i].terminate();
+ program_config.apps = [];
+ program_config.svcs = [];
+ global_app_index = -1;
+ global_svc_index = -1;
+ uniplex.clear(program_config.model.name);
  is_program_loaded = false;
  return true;
+ };
+ this.expose_api = function(public_calls_array)
+ {
+ var __public_api_calls_config =
+ {
+ "program_id" : program_config.model.name,
+ "calls" : public_calls_array
+ };
+ return uniplex.expose(__public_api_calls_config);
+ };
+ this.list_api = function()
+ {
+ return uniplex.list();
  };
  }
  this.app = function()
@@ -11245,11 +11337,11 @@ function meta_script()
  return false;
  return __new_svc.get_config();
  };
- this.set = function(name, body)
+ this.set = function(func_name, body)
  {
  if (__new_svc === null)
  return false;
- return __new_svc.set_function(name, body);
+ return __new_svc.set_function(func_name, body);
  };
  this.execute = function(func_name, func_args = [])
  {
@@ -11325,7 +11417,9 @@ function meta_script()
  parrot = matrix.get('parrot');
  octopus = matrix.get('octopus');
  super_tray = matrix.get('super_tray');
+ xgc = matrix.get('xgc');
  owl = matrix.get('owl');
+ uniplex = matrix.get('uniplex');
  teal_fs = matrix.get('teal_fs');
  infinity = dev_box.get('infinity');
  return true;
@@ -11348,7 +11442,9 @@ function meta_script()
  parrot = null,
  octopus = null,
  super_tray = null,
+ xgc = null,
  owl = null,
+ uniplex = null,
  teal_fs = null,
  infinity = null,
  utils_sys = new vulcan(),
@@ -11402,7 +11498,7 @@ function executor()
  return false;
  if (is_program_loaded === true)
  return false;
- program = new_program;
+ program = new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
  is_program_loaded = true;
  return true;
  };
@@ -11412,10 +11508,12 @@ function executor()
  return false;
  if (program.indexOf('navigator') >= 0 || program.indexOf('window') >= 0 ||
  program.indexOf('document') >= 0 || program.indexOf('location') >= 0 ||
- program.indexOf('eval') >= 0)
+ program.indexOf('eval') >= 0 || program.indexOf('this') >= 0)
  {
  error_details.code = self.error.codes.INVALID;
- error_details.message = 'Invalid commands detected!';
+ error_details.message = 'Invalid keywords detected!\n\n' +
+ 'The following are not allowed:\n' +
+ '{ "navigator", "window", "document", "location", "eval", "this" }\n';
  return error_details.code;
  }
  var __dynamic_program_model = null,
@@ -11424,8 +11522,8 @@ function executor()
  __random_program_id = 'user_program_' + random.generate();
  __dynamic_program_model = new Function('return function ' + __random_program_id + '()\
  {\
- this.cosmos = function(cosmos_object) { return true; };\
- this.main = function(meta_script) { return eval(program); };\
+ this.cosmos = (cosmos_object) => { return true; };\
+ this.main = (meta_script) => { return eval(program); };\
  }')();
  try
  {
@@ -15742,9 +15840,7 @@ function bee()
  if (__opacity_enabled === true &&
  __fade_settings.fade_in_enabled === true &&
  __fade_settings.fade_out_enabled === true)
- {
  return true;
- }
  else
  return false;
  }
@@ -16381,7 +16477,13 @@ function bee()
  me.actions.casement.hide(event_object,
  function()
  {
+ try
+ {
  morpheus.execute(my_bee_id, 'gui', 'close');
+ }
+ catch
+ {
+ }
  if (utils_int.animating_events.in_progress())
  setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());
  else

@@ -41,6 +41,7 @@
     "roost"                     :       "user",
     "xenon"                     :       "user",
     "owl"                       :       "user",
+    "uniplex"                   :       "user",
     "forest"                    :       "user",
     "swarm"                     :       "user",
     "hive"                      :       "user",

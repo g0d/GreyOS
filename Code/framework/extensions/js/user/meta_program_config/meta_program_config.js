@@ -5,7 +5,7 @@
     Description: This file contains the Meta-Program Config validator development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2022
+    Copyright © 2022 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -22,7 +22,7 @@ function meta_program_config()
 
             if (meta_script.indexOf('navigator') >= 0 || meta_script.indexOf('window') >= 0 || 
                 meta_script.indexOf('document') >= 0 || meta_script.indexOf('location') >= 0 || 
-                meta_script.indexOf('eval') >= 0)
+                meta_script.indexOf('eval') >= 0 || meta_script.indexOf('this') >= 0)
                 return false;
 
             if (program_config.type === 'app')

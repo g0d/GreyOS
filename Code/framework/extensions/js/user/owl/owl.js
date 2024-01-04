@@ -1,11 +1,11 @@
 /*
-    GreyOS - Owl (Version: 2.4)
+    GreyOS - Owl (Version: 2.5)
 
     File name: owl.js
     Description: This file contains the Owl - Process (Bee & Bat) tracer & status logger module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -15,7 +15,7 @@ function owl()
     var self = this;
     var process_status = ['RUN', 'END', 'FAIL'];
 
-    function bee_collection_module()
+    function bee_collection_model()
     {
         function list()
         {
@@ -34,7 +34,7 @@ function owl()
         this.list = new list();
     }
 
-    function bat_collection_module()
+    function bat_collection_model()
     {
         function list()
         {
@@ -296,7 +296,7 @@ function owl()
                 if (utils_sys.validation.misc.is_nothing(cosmos))
                     return false;
 
-                bee_collection = new bee_collection_module();
+                bee_collection = new bee_collection_model();
 
                 return true;
             };
@@ -349,7 +349,7 @@ function owl()
                 if (utils_sys.validation.misc.is_nothing(cosmos))
                     return false;
 
-                bat_collection = new bat_collection_module();
+                bat_collection = new bat_collection_model();
 
                 return true;
             };
@@ -362,8 +362,8 @@ function owl()
             if (utils_sys.validation.misc.is_nothing(cosmos))
                 return false;
 
-            bee_collection = new bee_collection_module();
-            bat_collection = new bat_collection_module();
+            bee_collection = new bee_collection_model();
+            bat_collection = new bat_collection_model();
 
             return true;
         };
@@ -441,8 +441,8 @@ function owl()
         colony = null,
         roost = null,
         utils_sys = new vulcan(),
-        bee_collection = new bee_collection_module(),
-        bat_collection = new bat_collection_module(),
+        bee_collection = new bee_collection_model(),
+        bat_collection = new bat_collection_model(),
         utils_int = new utilities();
 
     this.status = new status();

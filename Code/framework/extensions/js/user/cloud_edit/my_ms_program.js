@@ -4,7 +4,7 @@
 var ms_app = meta_script.app(),
     ms_svc = meta_script.service();
 
-// Meta-Caller API (automatically exposed in this context) is your bridge with Cloud Edit
+// Meta-Caller API (automatically exposed in the context) is your bridge with Cloud Edit
 var mc = meta_caller;
 
 // Helping delegate function example
@@ -28,7 +28,7 @@ ms_app.run();                                       // Run your app
 
 ms_svc.init('Example', 'default');                  // Initialize service name with default icon
 ms_svc.set('function_name',                         // Set function name and body
-           function(func_args)                      // Array of arguments
+           (func_args) =>                           // Array of arguments
            {
                console.log(func_args);              // Example action
            });

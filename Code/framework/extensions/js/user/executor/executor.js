@@ -1,11 +1,11 @@
 /*
-    GreyOS - Executor (Version: 1.0)
+    GreyOS - Executor (Version: 1.2)
 
     File name: executor.js
     Description: This file contains the Executor - User-level program execution development module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2022
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -57,7 +57,7 @@ function executor()
         if (is_program_loaded === true)
             return false;
 
-        program = new_program;
+        program = new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
 
         is_program_loaded = true;
 
@@ -71,10 +71,12 @@ function executor()
 
         if (program.indexOf('navigator') >= 0 || program.indexOf('window') >= 0 || 
             program.indexOf('document') >= 0 || program.indexOf('location') >= 0 || 
-            program.indexOf('eval') >= 0)
+            program.indexOf('eval') >= 0 || program.indexOf('this') >= 0)
         {
             error_details.code = self.error.codes.INVALID;
-            error_details.message = 'Invalid commands detected!';
+            error_details.message = 'Invalid keywords detected!\n\n' + 
+                                    'The following are not allowed:\n' + 
+                                    '{ "navigator", "window", "document", "location", "eval", "this" }\n';
 
             return error_details.code;
         }
@@ -87,8 +89,8 @@ function executor()
 
         __dynamic_program_model = new Function('return function ' + __random_program_id + '()\
         {\
-            this.cosmos = function(cosmos_object) { return true; };\
-            this.main = function(meta_script) { return eval(program); };\
+            this.cosmos = (cosmos_object) => { return true; };\
+            this.main = (meta_script) => { return eval(program); };\
         }')();
 
         try
