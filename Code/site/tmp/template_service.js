@@ -3,6 +3,7 @@
 
     File name: template_service.js
     Description: This file contains the Template Service - Template service module.
+    Notes: Low Level API
 
     Coded by [Name Surname]
     Copyright © [Year]

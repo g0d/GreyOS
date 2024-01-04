@@ -251,13 +251,25 @@ function meta_script()
 
         this.expose_api = function(public_calls_array)
         {
-            var __public_api_calls_config = 
-            {
-                "program_id"    :   program_config.model.name,
-                "calls"         :   public_calls_array
-            };
+            if (!utils_sys.validation.misc.is_array(public_calls_array))
+                    return false;
 
-            return uniplex.expose(__public_api_calls_config);
+            var __public_call = null,
+                __public_api_calls_config = 
+                {
+                    "program_id"    :   program_config.model.name,
+                    "calls"         :   []
+                };
+
+            for (__public_call of public_calls_array)
+            {
+                __public_api_calls_config.calls.push(__public_call);
+
+                if (!uniplex.expose(__public_api_calls_config))
+                    return false;
+            }
+
+            return true;
         };
 
         this.list_api = function()

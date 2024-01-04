@@ -27,7 +27,9 @@ function uniplex()
 
         if (!utils_sys.validation.misc.is_object(api_calls_config) || 
             !api_calls_config.hasOwnProperty('program_id') || 
-            !api_calls_config.hasOwnProperty('calls'))
+            !utils_sys.validation.alpha.is_string(api_calls_config.program_id) || 
+            !api_calls_config.hasOwnProperty('calls') || 
+            !utils_sys.validation.misc.is_array(api_calls_config.calls))
             return false;
 
         programs_collection.num += 1;

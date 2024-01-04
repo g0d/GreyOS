@@ -3,6 +3,7 @@
 
     File name: template_app.js
     Description: This file contains the Template App - Template application.
+    Notes: Low Level API
 
     Coded by [Name Surname]
     Copyright © [Year]
