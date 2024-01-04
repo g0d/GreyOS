@@ -17918,7 +17918,7 @@ function cloud_edit()
  {
  this.telemetry = function(prog_id)
  {
- var program_id = prog_id; // Do something with telemetry in the future...
+ var dynamic_program_id = prog_id;
  return true;
  };
  this.source = function()
@@ -17988,6 +17988,18 @@ function cloud_edit()
  {
  if (utils_sys.validation.misc.is_undefined(event_object))
  return false;
+ var __program_name = 'new_app',
+ __source_code = encodeURIComponent(config.ce.editor.getValue()),
+ __ajax_config = {
+ "type" : "request",
+ "method" : "post",
+ "url" : "/",
+ "data" : "gate=deploy_program&program_name=" + __program_name +
+ "&program_source=" + __source_code,
+ "ajax_mode" : "asynchronous",
+ "on_success" : (result) => { console.warn(result); }
+ };
+ ajax.run(__ajax_config);
  return true;
  }
  this.gui_init = function()
@@ -18143,7 +18155,8 @@ function cloud_edit()
  config = new config_model(),
  ce_api = new ce_program_api(),
  utils_int = new utilities(),
- utils_sys = new vulcan();
+ utils_sys = new vulcan(),
+ ajax = new taurus();
 }
 function radio_dude()
 {

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cloud Edit (Version: 2.2)
+    GreyOS - Cloud Edit (Version: 2.3)
 
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
@@ -33,7 +33,9 @@ function cloud_edit()
     {
         this.telemetry = function(prog_id)
         {
-            var program_id = prog_id; // Do something with telemetry in the future...
+            var dynamic_program_id = prog_id;
+
+            // Do something with telemetry in the future...
 
             return true;
         };
@@ -125,7 +127,21 @@ function cloud_edit()
             if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
-            // TODO:...
+            // TODO: Work Box with input window to enter a program name
+
+            var __program_name = 'new_app',
+                __source_code = encodeURIComponent(config.ce.editor.getValue()),
+                __ajax_config = {
+                                    "type"          :   "request",
+                                    "method"        :   "post",
+                                    "url"           :   "/",
+                                    "data"          :   "gate=deploy_program&program_name=" + __program_name + 
+                                                        "&program_source=" + __source_code,
+                                    "ajax_mode"     :   "asynchronous",
+                                    "on_success"    :   (result) => { console.warn(result); }
+                                };
+
+            ajax.run(__ajax_config);
 
             return true;
         }
@@ -328,5 +344,6 @@ function cloud_edit()
         config = new config_model(),
         ce_api = new ce_program_api(),
         utils_int = new utilities(),
-        utils_sys = new vulcan();
+        utils_sys = new vulcan(),
+        ajax = new taurus();
 }

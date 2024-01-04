@@ -2,7 +2,7 @@
 
 var ms_svc = meta_script.service();                     // Meta-Script API is exposed in this context by design
 
-/* OPTION 1 APP :: Use the code below to build a service that calls a 3rd service API and interact with... */
+/* OPTION 1 SVC :: Use the code below to build a service that calls a 3rd service API and interact with... */
 var all_api = meta_script.program.list_api(),           // List all public API calls from running programs
     public_api_call = null;
 
@@ -14,7 +14,7 @@ if (all_api.length > 0)                                 // Check for available p
 }
 /* -------------------------------------------------------------------------------------------------------- */
 
-/* OPTION 2 APP :: Use the code below to build a service with a public API call for any service to interact */
+/* OPTION 2 SVC :: Use the code below to build a service with a public API call for any service to interact */
 function alter_content(text)                            // Alter the content of the main window
 {
     console.log(text);

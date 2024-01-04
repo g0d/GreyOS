@@ -142,6 +142,8 @@
 			return false;
 		}
 
+		$user_profile = fetch_profile($user_profile['email']);
+
 		$user_profile['online'] = false;
 
 		$result = update_profile($user_profile);

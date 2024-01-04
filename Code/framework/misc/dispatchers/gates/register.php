@@ -248,8 +248,8 @@
 		mkdir($dir_path . '/' . $username . '/disk/Video', 0700);
 		mkdir($dir_path . '/' . $username . '/disk/Other', 0700);
 		mkdir($dir_path . '/' . $username . '/programs', 0700);
-		mkdir($dir_path . '/' . $username . '/programs/apps', 0700);
-		mkdir($dir_path . '/' . $username . '/programs/services', 0700);
+		mkdir($dir_path . '/' . $username . '/programs/run', 0700);
+		mkdir($dir_path . '/' . $username . '/programs/source', 0700);
 
 		$new_user_profile['email'] = $email;
 		$new_user_profile['online'] = true;
