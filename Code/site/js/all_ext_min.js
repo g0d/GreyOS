@@ -3091,7 +3091,7 @@ function armadillo()
  var __this_name = null;
  for (__this_name in db_array)
  {
- if (__this_name == name)
+ if (__this_name === name)
  return true;
  }
  return false;
@@ -3151,7 +3151,7 @@ function armadillo()
  __records_length = __this_db.length;
  for (__index = 0; __index < __records_length; __index++)
  {
- if (__this_db[__index].id == values[0])
+ if (__this_db[__index].id === values[0])
  return exec_code.call(this, [__index, __this_db, values[1]]);
  }
  return false;

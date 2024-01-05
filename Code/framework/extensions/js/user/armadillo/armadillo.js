@@ -6,7 +6,7 @@
 	Dependencies: Vulcan, Pythia and Sensei.
 
 	Coded by George Delaportas (G0D)
-    Copyright (C) 2017 - 2022
+    Copyright (C) 2017 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -63,7 +63,7 @@ function armadillo()
 
 			for (__this_name in db_array)
 			{
-				if (__this_name == name)
+				if (__this_name === name)
 					return true;
 			}
 
@@ -144,7 +144,7 @@ function armadillo()
 
 			for (__index = 0; __index < __records_length; __index++)
 			{
-				if (__this_db[__index].id == values[0])
+				if (__this_db[__index].id === values[0])
 					return exec_code.call(this, [__index, __this_db, values[1]]);
 			}
 
