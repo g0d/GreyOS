@@ -19,6 +19,7 @@ function cloud_edit()
         function ce_model()
         {
             this.editor = null;
+            this.extra_button = null;
             this.exec_button = null;
             this.deploy_button = null;
             this.status_label = null;
@@ -35,7 +36,7 @@ function cloud_edit()
         {
             var dynamic_program_id = prog_id;
 
-            // Do something with telemetry in the future...
+            // TODO: Use the telemetry for future features...
 
             return true;
         };
@@ -107,6 +108,7 @@ function cloud_edit()
                     frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
                 }
 
+                config.ce.deploy_button.style.color = '';
                 config.ce.deploy_button.style.backgroundColor = '#97ad9c';
                 config.ce.deploy_button.disabled = true;
 
@@ -117,29 +119,45 @@ function cloud_edit()
             config.ce.exec_button.value = 'Stop';
             config.ce.exec_button.classList.add('ce_stop');
 
+            config.ce.deploy_button.style.color = '';
+            config.ce.deploy_button.style.backgroundColor = '#97ad9c';
+            config.ce.deploy_button.disabled = true;
+
             program_is_running = true;
 
             return true;
         }
 
-        function deploy(event_object)
+        function side_panel(event_object)
+        {
+            if (cloud_edit_bee.status.gui.casement_deployed())
+                cloud_edit_bee.gui.actions.casement.hide(event_object);
+            else
+                cloud_edit_bee.gui.actions.casement.deploy(event_object);
+        }
+
+        function deploy_program(event_object)
         {
             if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
-            // TODO: Work Box with input window to enter a program name
-
             var __program_name = 'new_app',
                 __source_code = encodeURIComponent(config.ce.editor.getValue()),
+                __replace = false,
                 __ajax_config = {
                                     "type"          :   "request",
                                     "method"        :   "post",
                                     "url"           :   "/",
                                     "data"          :   "gate=deploy_program&program_name=" + __program_name + 
-                                                        "&program_source=" + __source_code,
+                                                        "&program_source=" + __source_code + '&replace=' + __replace,
                                     "ajax_mode"     :   "asynchronous",
                                     "on_success"    :   (result) => { console.warn(result); }
                                 };
+
+            msg_win = new msgbox();
+
+            msg_win.init('desktop');
+            //msg_win.show(os_name, 'This program name already exists!', () => {  });
 
             ajax.run(__ajax_config);
 
@@ -166,16 +184,24 @@ function cloud_edit()
         {
             var dynamic_elements = document.createElement('span');
 
+            config.ce.extra_button = document.createElement('input');
+            config.ce.extra_button.id = 'ce_extra';
+            config.ce.extra_button.type = 'button';
+            config.ce.extra_button.value = '>>';
+            config.ce.extra_button.title = 'Show / hide side panel';
+
             config.ce.exec_button = document.createElement('input');
             config.ce.exec_button.id = 'ce_run_stop';
             config.ce.exec_button.type = 'button';
             config.ce.exec_button.value = 'Run';
+            config.ce.exec_button.title = 'Run program';
 
             config.ce.deploy_button = document.createElement('input');
             config.ce.deploy_button.id = 'ce_deploy';
             config.ce.deploy_button.type = 'button';
             config.ce.deploy_button.style.backgroundColor = '#97ad9c';
             config.ce.deploy_button.value = 'Deploy';
+            config.ce.deploy_button.title = 'Deploy program to AGORA marketplace';
             config.ce.deploy_button.disabled = true;
 
             config.ce.status_label = document.createElement('span');
@@ -185,6 +211,9 @@ function cloud_edit()
             dynamic_elements.append(config.ce.status_label);
             dynamic_elements.append(config.ce.deploy_button);
             dynamic_elements.append(config.ce.exec_button);
+            dynamic_elements.append(config.ce.extra_button);
+
+            // TODO: Create log & programs list in casement...
 
             utils_sys.objects.by_id(cloud_edit_bee.settings.general.id() + '_status_bar_msg').append(dynamic_elements);
 
@@ -217,11 +246,14 @@ function cloud_edit()
         {
             var __handler = null;
 
+            __handler = function(event) { side_panel(event); };
+            morpheus.run(config.ce.extra_button.id, 'mouse', 'click', __handler, config.ce.extra_button);
+
             __handler = function(event) { run_code(event); };
             morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.exec_button);
 
-            __handler = function(event) { deploy(event); };
-            morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.deploy_button);
+            __handler = function(event) { deploy_program(event); };
+            morpheus.run(config.ce.deploy_button.id, 'mouse', 'click', __handler, config.ce.deploy_button);
 
             return true;
         };
@@ -234,6 +266,7 @@ function cloud_edit()
             config.ce.exec_button.value = 'Run';
             config.ce.exec_button.classList.remove('ce_stop');
 
+            config.ce.deploy_button.style.color = '#ffffff';
             config.ce.deploy_button.style.backgroundColor = '#08d43b';
             config.ce.deploy_button.disabled = false;
 
@@ -268,10 +301,13 @@ function cloud_edit()
 
         is_init = true;
 
+        os_name = xenon.load('os_name');
+
         cloud_edit_bee = dev_box.get('bee');
 
         config.id = 'cloud_edit';
-        config.content = `// Welcome to Cloud Edit!\n// Please load the test template from https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
+        config.content = `// Welcome to Cloud Edit!\n// Please load the test template from \
+                          https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
 
         nature.theme([config.id]);
         nature.apply('new');
@@ -283,9 +319,11 @@ function cloud_edit()
         cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
         cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
         cloud_edit_bee.settings.data.window.content(config.content);
-        cloud_edit_bee.settings.data.hints.icon('Cloud Edit is cool!');
+        cloud_edit_bee.settings.data.casement.labels.title('Side Panel :: Utilities');
+        cloud_edit_bee.settings.data.casement.labels.status('Ready');
         cloud_edit_bee.settings.actions.can_edit_title(false);
         cloud_edit_bee.settings.general.allowed_instances(4);
+        cloud_edit_bee.settings.general.casement_width(40);
         cloud_edit_bee.gui.position.left(330);
         cloud_edit_bee.gui.position.top(80);
         cloud_edit_bee.gui.size.width(800);
@@ -300,11 +338,14 @@ function cloud_edit()
                                           cloud_edit_bee.gui.fx.opacity.apply();
                                       });
         cloud_edit_bee.on('dragged', function() { cloud_edit_bee.gui.fx.opacity.reset(); });
+        cloud_edit_bee.on('casement_deployed', function() { config.ce.extra_button.value = '<<'; });
+        cloud_edit_bee.on('casement_retracted', function() { config.ce.extra_button.value = '>>'; });
         cloud_edit_bee.on('close', function()
                                    {
                                        cloud_edit_bee.gui.fx.fade.out();
 
-                                       utils_int.reset();
+                                       executor.terminate();
+
                                        utils_int.destroy_editor();
                                    });
 
@@ -323,6 +364,7 @@ function cloud_edit()
         colony = cosmos.hub.access('colony');
 
         morpheus = matrix.get('morpheus');
+        xenon = matrix.get('xenon');
         nature = matrix.get('nature');
         infinity = dev_box.get('infinity');
         executor = dev_box.get('executor');
@@ -332,11 +374,13 @@ function cloud_edit()
 
     var is_init = false,
         program_is_running = false,
+        os_name = null,
         cosmos = null,
         matrix = null,
         dev_box = null,
         colony = null,
         morpheus = null,
+        xenon = null,
         executor = null,
         nature = null,
         infinity = null,
@@ -345,5 +389,6 @@ function cloud_edit()
         ce_api = new ce_program_api(),
         utils_int = new utilities(),
         utils_sys = new vulcan(),
-        ajax = new taurus();
+        ajax = new taurus(),
+        msg_win = new msgbox();
 }

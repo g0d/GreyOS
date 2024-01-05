@@ -228,6 +228,7 @@ function bee()
             this.touched = false;
             this.menu_activated = false;
             this.casement_deployed = false;
+            this.casement_retracted = false;
             this.resize_enabled = false;
             this.key_pressed = false;
             this.mouse_clicked = false;
@@ -1213,6 +1214,11 @@ function bee()
         this.casement_deployed = function(val)
         {
             return validate('casement_deployed', 'gui', val);
+        };
+
+        this.casement_retracted = function(val)
+        {
+            return validate('casement_retracted', 'gui', val);
         };
 
         this.resize_enabled = function(val)
@@ -2380,6 +2386,14 @@ function bee()
                     return false;
 
                 return bee_statuses.casement_deployed();
+            };
+
+            this.casement_retracted = function()
+            {
+                if (is_init === false)
+                    return false;
+
+                return bee_statuses.casement_retracted();
             };
 
             this.resize_enabled = function()
@@ -3678,10 +3692,13 @@ function bee()
                         function()
                         {
                             bee_statuses.casement_deployed(true);
+                            bee_statuses.casement_retracted(false);
 
                             __is_animating = false;
 
                             execute_commands(callback);
+
+                            morpheus.execute(my_bee_id, 'gui', 'casement_deployed');
                         });
 
                         return true;
@@ -3748,8 +3765,11 @@ function bee()
                             __is_animating = false;
 
                             bee_statuses.casement_deployed(false);
+                            bee_statuses.casement_retracted(true);
 
                             execute_commands(callback);
+
+                            morpheus.execute(my_bee_id, 'gui', 'casement_retracted');
                         });
                     }
 

@@ -15,7 +15,7 @@
         exit();
 
     // Check for missing arguments
-    if (empty($_POST['program_name']) || empty($_POST['program_source']))
+    if (empty($_POST['program_name']) || empty($_POST['program_source']) || is_set($_POST['replace']))
 	{
 		echo '-1';
 
@@ -28,6 +28,7 @@
 	$program_source = $_POST['program_source'];
 	$program_run = minify_source($program_source);
 	$program = array($program_name, $program_source, $program_run);
+	$replace = $_POST['replace'];
 
 	$user_profile = deploy_program($user_profile, $program);
 

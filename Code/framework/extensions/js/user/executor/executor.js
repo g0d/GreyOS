@@ -71,12 +71,13 @@ function executor()
 
         if (program.indexOf('navigator') >= 0 || program.indexOf('window') >= 0 || 
             program.indexOf('document') >= 0 || program.indexOf('location') >= 0 || 
-            program.indexOf('eval') >= 0 || program.indexOf('this') >= 0)
+            program.indexOf('alert') >= 0 || program.indexOf('eval') >= 0 || 
+            program.indexOf('this') >= 0)
         {
             error_details.code = self.error.codes.INVALID;
             error_details.message = 'Invalid keywords detected!\n\n' + 
                                     'The following are not allowed:\n' + 
-                                    '{ "navigator", "window", "document", "location", "eval", "this" }\n';
+                                    '{ "navigator", "window", "document", "location", "alert", "eval", "this" }\n';
 
             return error_details.code;
         }

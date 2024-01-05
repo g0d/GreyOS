@@ -66,7 +66,6 @@
     float: right;
     width: 66px;
     background-color: #08d43b;
-    color: white;
     border-radius: 6px;
     border-style: none;
     cursor: pointer;
@@ -78,6 +77,25 @@
 #ce_deploy:hover
 {
     background-color: #4bdb6f;
+}
+
+#ce_extra
+{
+    float: right;
+    width: 66px;
+    background-color: #08cdd4;
+    color: white;
+    border-radius: 6px;
+    border-style: none;
+    cursor: pointer;
+    height: 22px;
+    margin-top: -2px;
+    margin-right: 6px;
+}
+
+#ce_extra:hover
+{
+    background-color: #0bdde4;
 }
 
 #ce_status

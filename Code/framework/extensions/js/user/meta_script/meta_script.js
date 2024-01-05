@@ -128,6 +128,11 @@ function meta_script()
             {
                 return msg_box;
             };
+
+            this.work_box = function()
+            {
+                return work_box;
+            };
         }
 
         function profile()
@@ -1337,6 +1342,7 @@ function meta_script()
         config_parser = new jap(),
         ajax = new taurus(),
         msg_box = new msgbox(),
+        work_box = new workbox(),
         cc_reload = new f5(),
         config_models = new config_models(),
         program_config = new program_config_model();
