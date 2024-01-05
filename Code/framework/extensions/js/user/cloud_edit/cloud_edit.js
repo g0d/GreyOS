@@ -18,6 +18,7 @@ function cloud_edit()
     {
         function ce_model()
         {
+            this.program_name = 'new_app';
             this.editor = null;
             this.extra_button = null;
             this.exec_button = null;
@@ -108,9 +109,7 @@ function cloud_edit()
                     frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
                 }
 
-                config.ce.deploy_button.style.color = '';
-                config.ce.deploy_button.style.backgroundColor = '#97ad9c';
-                config.ce.deploy_button.disabled = true;
+                disable_deploy_button();
 
                 return executor.terminate();
             }
@@ -119,9 +118,7 @@ function cloud_edit()
             config.ce.exec_button.value = 'Stop';
             config.ce.exec_button.classList.add('ce_stop');
 
-            config.ce.deploy_button.style.color = '';
-            config.ce.deploy_button.style.backgroundColor = '#97ad9c';
-            config.ce.deploy_button.disabled = true;
+            disable_deploy_button();
 
             program_is_running = true;
 
@@ -136,32 +133,94 @@ function cloud_edit()
                 cloud_edit_bee.gui.actions.casement.deploy(event_object);
         }
 
-        function deploy_program(event_object)
+        function deploy_program()
         {
-            if (utils_sys.validation.misc.is_undefined(event_object))
-                return false;
+            function save_program()
+            {
+                config.ce.program_name = utils_sys.objects.by_id('input_prog_name').value;
 
-            var __program_name = 'new_app',
-                __source_code = encodeURIComponent(config.ce.editor.getValue()),
-                __replace = false,
+                __ajax_config.data += encodeURIComponent(config.ce.program_name);
+                __source_code = encodeURIComponent(config.ce.editor.getValue());
+
+                ajax.run(__ajax_config)
+            }
+
+            var __source_code = null,
+                __input_prog_name_object = null,
+                __handler = null,
                 __ajax_config = {
                                     "type"          :   "request",
                                     "method"        :   "post",
                                     "url"           :   "/",
-                                    "data"          :   "gate=deploy_program&program_name=" + __program_name + 
-                                                        "&program_source=" + __source_code + '&replace=' + __replace,
+                                    "data"          :   "gate=deploy_program&check_existing=1&program_name=",
                                     "ajax_mode"     :   "asynchronous",
-                                    "on_success"    :   (result) => { console.warn(result); }
+                                    "on_success"    :   (result) => 
+                                                        {
+                                                            msg_win = new msgbox();
+
+                                                            msg_win.init('desktop');
+
+                                                            if (result === '-1')
+                                                            {
+                                                                msg_win.show(os_name, 'An error has occurred!');
+
+                                                                return;
+                                                            }
+
+                                                            __ajax_config.data = "gate=deploy_program&program_name=" + config.ce.program_name + 
+                                                                                 "&program_source=" + __source_code;
+                                                            __ajax_config.on_success = (result) =>
+                                                                                       {
+                                                                                            if (result === '-1')
+                                                                                            {
+                                                                                                msg_win.show(os_name, 'An error has occurred. Program has not been saved!');
+
+                                                                                                return;
+                                                                                            }
+                                                                                       };
+
+                                                            if (result === '0')
+                                                                ajax.run(__ajax_config);
+                                                            else
+                                                            {
+                                                                msg_win.show(os_name, 'This program name already exists!<br>\
+                                                                                       Do you want to replace it with the current program?', 
+                                                                                       msg_win.types.TRIPLE_BUTTON, 
+                                                                                       [() => { ajax.run(__ajax_config); }, 
+                                                                                        () => { deploy_program(); },
+                                                                                        () => {  }]);
+                                                            }
+                                                        }
                                 };
 
             msg_win = new msgbox();
 
             msg_win.init('desktop');
-            //msg_win.show(os_name, 'This program name already exists!', () => {  });
+            msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
+                                   <input id="input_prog_name" class="ce_prog_name_input" value="new_app" placeholder="Enter program name...">', 
+                                   msg_win.types.SINGLE_BUTTON, [() => { save_program(); }]);
 
-            ajax.run(__ajax_config);
+            __input_prog_name_object = utils_sys.objects.by_id('input_prog_name');
+
+            __input_prog_name_object.focus();
+
+            __handler = function(event)
+            {
+                key_control.scan(event);
+
+                if (key_control.get() === key_control.keys.ENTER)
+                    save_program();
+            };
+            morpheus.run(__input_prog_name_object.id, 'key', 'keydown', __handler, __input_prog_name_object);
 
             return true;
+        }
+
+        function disable_deploy_button()
+        {
+            config.ce.deploy_button.style.color = '';
+            config.ce.deploy_button.style.backgroundColor = '#97ad9c';
+            config.ce.deploy_button.disabled = true;
         }
 
         this.gui_init = function()
@@ -236,10 +295,10 @@ function cloud_edit()
                                           fontSize: '14' 
                                         });
             config.ce.editor.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'}, 
-                                                      exec: function(this_editor) { this_editor.showSettingsMenu(); } 
-                                                    } ]);
+                                                      exec: function(this_editor) { this_editor.showSettingsMenu(); } } ]);
+            config.ce.editor.getSession().on('change', () => { disable_deploy_button(); });
 
-             return true;
+            return true;
         };
 
         this.attach_events = function()
@@ -252,7 +311,7 @@ function cloud_edit()
             __handler = function(event) { run_code(event); };
             morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.exec_button);
 
-            __handler = function(event) { deploy_program(event); };
+            __handler = function() { deploy_program(); };
             morpheus.run(config.ce.deploy_button.id, 'mouse', 'click', __handler, config.ce.deploy_button);
 
             return true;
@@ -389,6 +448,7 @@ function cloud_edit()
         ce_api = new ce_program_api(),
         utils_int = new utilities(),
         utils_sys = new vulcan(),
+        key_control = new key_manager(),
         ajax = new taurus(),
         msg_win = new msgbox();
 }

@@ -7,5 +7,5 @@
                  "eagle", "tik_tok", "meta_program_config", "meta_script", "executor", "morpheus", "panda", "octopus", 
                  "super_tray", "parrot", "uniplex", "xgc", "infinity", "scrollbar", "max_screen", "bee", "bat", "oz", 
                  "coyote", "radio_dude", "cloud_edit"],
-    "php"   :   ["splash"]
+    "php"   :   ["splash", "arkangel"]
 }

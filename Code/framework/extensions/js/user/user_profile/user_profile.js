@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 1.7)
+    GreyOS - User Profile (Version: 1.8)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.

@@ -14,6 +14,9 @@
     if (!defined('micro_mvc'))
         exit();
 
+	// Load helper extensions
+    UTIL::Load_Extension('arkangel', 'php');
+
 	// Check authentication mode (if invalid terminate)
 	if (empty($_POST['mode']))
 	{
@@ -62,7 +65,7 @@
 	// Login
 	function login($username, $password)
 	{
-		$all_users = fetch_credentials();
+		$all_users = ARKANGEL::Fetch_Credentials();
 
 		if (!$all_users)
 		{
@@ -75,7 +78,7 @@
 		{
 			if ($credentials['username'] === $username && $credentials['password'] === md5($password))
 			{
-				$result = synchronize_profile($credentials['username']);
+				$result = ARKANGEL::Synchronize_Profile($credentials['username']);
 
 				if (!$result)
 				{
@@ -115,7 +118,7 @@
 		}
 		else
 		{
-			$result = synchronize_profile($username);
+			$result = ARKANGEL::Synchronize_Profile($username);
 
 			if (!$result)
 			{
@@ -142,11 +145,11 @@
 			return false;
 		}
 
-		$user_profile = fetch_profile($user_profile['email']);
+		$user_profile = ARKANGEL::Fetch_Profile($user_profile['email']);
 
 		$user_profile['online'] = false;
 
-		$result = update_profile($user_profile);
+		$result = ARKANGEL::Update_Profile($user_profile);
 
 		if (!$result)
 		{
@@ -157,7 +160,7 @@
 
 		echo '1';
 
-		clear_session();
+		ARKANGEL::Clear_Session();
 
 		return true;
 	}
@@ -180,7 +183,7 @@
 
 	function details()
 	{
-		$user_profile = UTIL::Get_Session_Variable('auth');
+		$user_profile = ARKANGEL::Fetch_My_Profile();
 
 		if (empty($user_profile))
 		{
@@ -190,79 +193,6 @@
 		}
 
 		echo json_encode($user_profile);
-
-		return true;
-	}
-
-	function clear_session()
-	{
-		session_regenerate_id(true);
-
-		UTIL::Set_Session_Variable('auth', null);
-
-		return null;
-	}
-
-	function fetch_credentials()
-	{
-		$file_path = UTIL::Absolute_Path('framework/config/users.cfg');
-		$data = file_get_contents($file_path);
-		$result = json_decode($data, true);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		return $result;
-	}
-
-	function synchronize_profile($email)
-	{
-		session_regenerate_id(true);
-
-		$user_profile = fetch_profile($email);
-
-		if (!$user_profile)
-			return false;
-
-		$user_profile['online'] = true;
-		$user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
-		$user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
-		$user_profile['security']['last_activity'] = time();
-
-		$result = update_profile($user_profile);
-
-		if (!$result)
-			return false;
-
-		UTIL::Set_Session_Variable('auth', $user_profile);
-
-		return true;
-	}
-	
-	function fetch_profile($email)
-	{
-		$username = substr($email, 0, strpos($email, '@'));
-		$file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
-		$data = file_get_contents($file_path);
-		$result = json_decode($data, true);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		return $result;
-	}
-
-	function update_profile($new_profile)
-	{
-		$email = $new_profile['email'];
-		$username = substr($email, 0, strpos($email, '@'));
-		$new_json_profile = json_encode($new_profile);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		$file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
-		file_put_contents($file_path, $new_json_profile);
 
 		return true;
 	}

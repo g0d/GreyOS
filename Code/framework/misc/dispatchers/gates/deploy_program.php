@@ -14,25 +14,63 @@
     if (!defined('micro_mvc'))
         exit();
 
-    // Check for missing arguments
-    if (empty($_POST['program_name']) || empty($_POST['program_source']) || is_set($_POST['replace']))
+	// Load helper extensions
+    UTIL::Load_Extension('arkangel', 'php');
+
+    // Check for missing general arguments
+    if (empty($_POST['program_name']))
 	{
 		echo '-1';
 
 		return;
 	}
 
-	$user_profile = UTIL::Get_Session_Variable('auth');
+	// Check for existing program name
+	if (isset($_POST['check_existing']))
+	{
+		$my_profile = ARKANGEL::Fetch_My_Profile();
+		$program_name = trim($_POST['program_name']);
+
+		if (!$my_profile)
+		{
+			echo '-1';
+
+			return;
+		}
+
+		foreach ($my_profile['user_programs'] as $this_program)
+		{
+			if ($program_name == $this_program['name'])
+			{
+				echo '1';
+
+				return;
+			}
+		}
+
+		echo '0';
+
+		return;
+	}
+
+	// Check for empty program source
+	if (empty($_POST['program_source']))
+	{
+		echo '-1';
+
+		return;
+	}
+
+	$my_profile = ARKANGEL::Fetch_My_Profile();
 
 	$program_name = trim($_POST['program_name']);
 	$program_source = $_POST['program_source'];
 	$program_run = minify_source($program_source);
 	$program = array($program_name, $program_source, $program_run);
-	$replace = $_POST['replace'];
 
-	$user_profile = deploy_program($user_profile, $program);
+	$user_profile = deploy_program($my_profile, $program);
 
-	if (!update_profile($user_profile))
+	if (!ARKANGEL::Update_Profile($user_profile))
 	{
 		echo '-1';
 
@@ -67,30 +105,30 @@
 	{
 		$email = $profile['email'];
 		$username = substr($email, 0, strpos($email, '@'));
-		$new_program = array('name' 		=> 	$program[0],
-							 'last_run' 	=> 	null);
+		$is_match_found = false;
 
-		array_push($profile['user_programs'], $new_program);
+		foreach ($profile['user_programs'] as $this_program)
+		{
+			if ($program[0] == $this_program['name'])
+			{
+				$is_match_found = true;
+
+				break;
+			}
+		}
+
+		if (!$is_match_found)
+		{
+			$new_program = array('name' 		=> 	$program[0],
+								 'last_run' 	=> 	null);
+
+			array_push($profile['user_programs'], $new_program);
+		}
 
 		$file_path = UTIL::Absolute_Path('fs/' . $username);
 		file_put_contents($file_path . '/programs/source/' . $program[0] . '.js', $program[1]);
 		file_put_contents($file_path . '/programs/run/' . $program[0] . '.js', $program[2]);
 
 		return $profile;
-	}
-
-	function update_profile($profile)
-	{
-		$email = $profile['email'];
-		$username = substr($email, 0, strpos($email, '@'));
-		$updated_json_profile = json_encode($profile);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		$file_path = UTIL::Absolute_Path('fs/' . $username);
-		file_put_contents($file_path . '/profile.cfg', $updated_json_profile);
-
-		return true;
 	}
 ?>

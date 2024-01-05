@@ -98,6 +98,17 @@
     background-color: #0bdde4;
 }
 
+.ce_prog_name_input
+{
+    color: #5C5C5C;
+    cursor: text;
+    font-weight: normal;
+    width: 64%;
+    margin-top: 38px;
+    border-radius: 2px;
+    padding: 4px;
+}
+
 #ce_status
 {
     float: right;

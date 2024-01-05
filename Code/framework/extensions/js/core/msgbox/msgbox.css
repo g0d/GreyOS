@@ -57,12 +57,18 @@
 
 #msgbox_content
 {
-    text-align: justify;
+    text-align: center;
     min-height: 100px;
     margin-bottom: 10px;
 }
 
-#msgbox_button
+#msgbox_buttons_area
+{
+    width: 40%;
+    margin: auto;
+}
+
+.msgbox_button
 {
     color: #d8d8d8;
     background-color: #45454a;
@@ -70,7 +76,7 @@
     border: solid 1px #479e44;
     border-radius: 6px;
     cursor: pointer;
-    width: 24%;
+    width: 34%;
     margin-left: auto;
     margin-right: auto;
     padding: 8px;
@@ -79,12 +85,25 @@
     transition: background .25s ease-in-out;
 }
 
-#msgbox_button:hover
+.msgbox_button:hover
 {
     background-color: #5b5a63;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
     transition: background .25s ease-in-out;
+}
+
+.mb_buttons_triple
+{
+    width: 65% !important;
+}
+
+.mb_triple
+{
+    float: left;
+    width: 20%;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .mb_fade_in

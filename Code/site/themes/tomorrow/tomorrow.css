@@ -633,13 +633,13 @@ option
 
 }
 
-#msgbox_button
+.msgbox_button
 {
     background-color: #45454acf !important;
     border: solid 1px #596b69 !important;
 }
 
-#msgbox_button:hover
+.msgbox_button:hover
 {
     background-color: #5b5a63d1 !important;
 }

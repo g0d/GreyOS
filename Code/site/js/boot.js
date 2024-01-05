@@ -190,6 +190,7 @@ function boot_script()
             if (!krator_app.init(login_success_callback))
             {
                 msg_win.show('GreyOS', 'A system error occurred. Your system will be rebooted!', 
+                msg_win.types.SINGLE_BUTTON, 
                 function()
                 {
                     var cc_reload = new f5();

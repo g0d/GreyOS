@@ -1,7 +1,7 @@
 /*
 	Armadillo (JSON DB over the browser)
 
-	File: armadillo.js (Version: 1.1)
+	File: armadillo.js (Version: 1.2)
 	Description: This file contains the Armadillo extension.
 	Dependencies: Vulcan, Pythia and Sensei.
 
@@ -200,7 +200,7 @@ function armadillo()
 			
 			for (__db_name in data_repo.db_container)
 			{
-				if (__db_name != db_name)
+				if (__db_name !== db_name)
 					__new_db_container[__db_name] = data_repo.db_container[db_name];
 			}
 

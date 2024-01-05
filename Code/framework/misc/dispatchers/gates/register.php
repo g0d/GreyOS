@@ -14,6 +14,9 @@
     if (!defined('micro_mvc'))
         exit();
 
+	// Load helper extensions
+    UTIL::Load_Extension('arkangel', 'php');
+
 	// Check for a valid mode (if invalid terminate)
 	if (empty($_POST['mode']))
 	{
@@ -59,7 +62,7 @@
 	// Register
 	function register($username, $password)
 	{
-		$all_users = fetch_credentials();
+		$all_users = ARKANGEL::Fetch_Credentials();
 
 		if (!$all_users)
 		{
@@ -163,68 +166,9 @@
 		return true;
 	}
 
-	function fetch_credentials()
-	{
-		$file_path = UTIL::Absolute_Path('framework/config/users.cfg');
-		$data = file_get_contents($file_path);
-		$result = json_decode($data, true);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		return $result;
-	}
-
-	function update_credentials($new_user_credentials)
-	{
-		$all_credentials = fetch_credentials();
-
-		if (!$all_credentials)
-			return false;
-
-		array_push($all_credentials, $new_user_credentials);
-
-		$all_credentials_json = json_encode($all_credentials);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		$file_path = UTIL::Absolute_Path('framework/config/users.cfg');
-		file_put_contents($file_path, $all_credentials_json);
-
-		return true;
-	}
-
-	function fetch_default_profile()
-	{
-		$file_path = UTIL::Absolute_Path('framework/misc/data/default_profile.cfg');
-		$data = file_get_contents($file_path);
-		$result = json_decode($data, true);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		return $result;
-	}
-
-	function update_profile($new_profile)
-	{
-		$email = $new_profile['email'];
-		$username = substr($email, 0, strpos($email, '@'));
-		$new_json_profile = json_encode($new_profile);
-
-		if (json_last_error() !== JSON_ERROR_NONE)
-			return false;
-
-		$file_path = UTIL::Absolute_Path('fs/' . $username);
-		file_put_contents($file_path . '/profile.cfg', $new_json_profile);
-
-		return true;
-	}
-
 	function create_new_user($email, $password)
 	{
-		$new_user_profile = fetch_default_profile();
+		$new_user_profile = ARKANGEL::Fetch_Default_Profile();
 
 		if (!$new_user_profile)
 			return false;
@@ -232,7 +176,7 @@
 		$new_user_credentials = array('username' => $email,
 									  'password' => md5($password));
 
-		$result = update_credentials($new_user_credentials);
+		$result = ARKANGEL::Update_Credentials($new_user_credentials);
 
 		if (!$result)
 			return false;
@@ -257,7 +201,7 @@
 		$new_user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
 		$new_user_profile['security']['last_activity'] = time();
 
-		$result = update_profile($new_user_profile);
+		$result = ARKANGEL::Update_Profile($new_user_profile);
 
 		if (!$result)
 			return false;
