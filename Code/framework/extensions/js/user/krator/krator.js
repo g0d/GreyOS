@@ -128,7 +128,7 @@ function krator()
             __handler = function(event)
             {
                 if (krator_bee.status.gui.casement_deployed())
-                    krator_bee.gui.actions.casement.hide(event);
+                    krator_bee.gui.actions.casement.retract(event);
                 else
                     krator_bee.gui.actions.casement.deploy(event);
             };

@@ -288,6 +288,8 @@ function meta_script()
         if (is_program_loaded === false)
             return false;
 
+        var me = this;
+
         function app_api_model()
         {
             var me = this,
@@ -343,10 +345,13 @@ function meta_script()
 
             function casement()
             {
-                this.deploy = function(event, callback)
+                this.show = function(event, callback)
                 {
                     if (__new_app === null)
                         return false;
+
+                    if (utils_sys.validation.misc.is_undefined(event))
+                        event = null;
 
                     return __new_app.gui.actions.casement.deploy(event, callback);
                 };
@@ -356,7 +361,24 @@ function meta_script()
                     if (__new_app === null)
                         return false;
 
-                    return __new_app.gui.actions.casement.hide(event, callback);
+                    if (utils_sys.validation.misc.is_undefined(event))
+                        event = null;
+
+                    return __new_app.gui.actions.casement.retract(event, callback);
+                };
+
+                this.trigger = function(event, callback)
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    if (utils_sys.validation.misc.is_undefined(event))
+                        event = null;
+
+                    me.casement.hide(event, callback);
+                    me.casement.show(event, callback);
+
+                    return true;
                 };
 
                 this.set_title = function(val)
@@ -386,7 +408,7 @@ function meta_script()
 
             function position()
             {
-                this.set_top = function()
+                this.set_topmost = function()
                 {
                     if (__new_app === null)
                         return false;

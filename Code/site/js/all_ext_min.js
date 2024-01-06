@@ -8802,7 +8802,7 @@ function krator()
  __handler = function(event)
  {
  if (krator_bee.status.gui.casement_deployed())
- krator_bee.gui.actions.casement.hide(event);
+ krator_bee.gui.actions.casement.retract(event);
  else
  krator_bee.gui.actions.casement.deploy(event);
  };
@@ -10769,6 +10769,7 @@ function meta_script()
  {
  if (is_program_loaded === false)
  return false;
+ var me = this;
  function app_api_model()
  {
  var me = this,
@@ -10813,17 +10814,31 @@ function meta_script()
  }
  function casement()
  {
- this.deploy = function(event, callback)
+ this.show = function(event, callback)
  {
  if (__new_app === null)
  return false;
+ if (utils_sys.validation.misc.is_undefined(event))
+ event = null;
  return __new_app.gui.actions.casement.deploy(event, callback);
  };
  this.hide = function(event, callback)
  {
  if (__new_app === null)
  return false;
- return __new_app.gui.actions.casement.hide(event, callback);
+ if (utils_sys.validation.misc.is_undefined(event))
+ event = null;
+ return __new_app.gui.actions.casement.retract(event, callback);
+ };
+ this.trigger = function(event, callback)
+ {
+ if (__new_app === null)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event))
+ event = null;
+ me.casement.hide(event, callback);
+ me.casement.show(event, callback);
+ return true;
  };
  this.set_title = function(val)
  {
@@ -10846,7 +10861,7 @@ function meta_script()
  }
  function position()
  {
- this.set_top = function()
+ this.set_topmost = function()
  {
  if (__new_app === null)
  return false;
@@ -13959,7 +13974,7 @@ function bee()
  ' <div id="' + ui_config.window.menu.ids.max_mode + '" ' +
  ' class="menu_option max_mode">Max mode</div>' +
  ' <div id="' + ui_config.window.menu.ids.manage_casement + '" ' +
- ' class="menu_option manage_casement">Deploy casement</div>' +
+ ' class="menu_option manage_casement">Show casement</div>' +
  ' <div id="' + ui_config.window.menu.ids.send_to_desktop + '" ' +
  ' class="menu_option send_to_desktop">Send to desktop...</div>' +
  ' <div id="' + ui_config.window.menu.ids.close + '" ' +
@@ -14239,10 +14254,7 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
  return false;
- if (bee_statuses.casement_deployed())
- self.gui.actions.casement.hide(event_object);
- else
- self.gui.actions.casement.deploy(event_object);
+ self.gui.actions.casement.trigger(event_object);
  return true;
  }
  this.gui_init = function()
@@ -16385,7 +16397,7 @@ function bee()
  return false;
  if (bee_statuses.menu_activated())
  return false;
- if (event_object.buttons === 0 && utils_int.last_mouse_button() === 1)
+ if (event_object === null || event_object.buttons === 0 && utils_int.last_mouse_button() === 1)
  {
  gfx.visibility.toggle(ui_config.window.menu.id, 1);
  bee_statuses.menu_activated(true);
@@ -16456,7 +16468,7 @@ function bee()
  {
  msg_win = new msgbox();
  msg_win.init('desktop');
- msg_win.show(xenon.load('os_name'), 'The casement can not be deployed here as it overflows your screen!');
+ msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
  return false;
  }
  ui_objects.window.ui.style.borderTopRightRadius = '0px';
@@ -16470,7 +16482,7 @@ function bee()
  ui_objects.window.menu.manage_casement.innerHTML = 'Hide casement';
  return true;
  };
- this.hide = function(event_object, callback)
+ this.retract = function(event_object, callback)
  {
  function animate_casement()
  {
@@ -16504,7 +16516,15 @@ function bee()
  else
  animate_casement();
  if (self.settings.actions.can_use_menu())
- ui_objects.window.menu.manage_casement.innerHTML = 'Deploy casement';
+ ui_objects.window.menu.manage_casement.innerHTML = 'Show casement';
+ return true;
+ };
+ this.trigger = function(event_object, callback)
+ {
+ if (is_init === false)
+ return false;
+ self.gui.actions.casement.retract(event_object, callback);
+ self.gui.actions.casement.deploy(event_object, callback);
  return true;
  };
  }
@@ -16535,7 +16555,7 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(event_object) || bee_statuses.close())
  return false;
- if (event_object.buttons === 1)
+ if (event_object === null || event_object.buttons === 1)
  {
  utils_int.edit_win_title();
  return true;
@@ -16616,7 +16636,7 @@ function bee()
  if (bee_statuses.in_hive())
  ui_objects.casement.ui.style.visibility = 'hidden';
  owl.status.applications.set(my_bee_id, __app_id, 'END');
- me.actions.casement.hide(event_object,
+ me.actions.casement.retract(event_object,
  function()
  {
  try
@@ -18049,9 +18069,8 @@ function cloud_edit()
  }
  function ce_program_api()
  {
- this.telemetry = function(prog_id)
+ this.telemetry = function(data)
  {
- var dynamic_program_id = prog_id;
  return true;
  };
  this.source = function()
@@ -18120,7 +18139,7 @@ function cloud_edit()
  function side_panel(event_object)
  {
  if (cloud_edit_bee.status.gui.casement_deployed())
- cloud_edit_bee.gui.actions.casement.hide(event_object);
+ cloud_edit_bee.gui.actions.casement.retract(event_object);
  else
  cloud_edit_bee.gui.actions.casement.deploy(event_object);
  }

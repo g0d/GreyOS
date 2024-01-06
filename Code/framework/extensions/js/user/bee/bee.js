@@ -437,7 +437,7 @@ function bee()
                           '    <div id="' + ui_config.window.menu.ids.max_mode + '" ' + 
                           '         class="menu_option max_mode">Max mode</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.manage_casement + '" ' + 
-                          '         class="menu_option manage_casement">Deploy casement</div>' + 
+                          '         class="menu_option manage_casement">Show casement</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.send_to_desktop + '" ' + 
                           '         class="menu_option send_to_desktop">Send to desktop...</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.close + '" ' + 
@@ -812,10 +812,7 @@ function bee()
             if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
                 return false;
 
-            if (bee_statuses.casement_deployed())
-                self.gui.actions.casement.hide(event_object);
-            else
-                self.gui.actions.casement.deploy(event_object);
+            self.gui.actions.casement.trigger(event_object);
 
             return true;
         }
@@ -3629,7 +3626,7 @@ function bee()
                     if (bee_statuses.menu_activated())
                         return false;
 
-                    if (event_object.buttons === 0 && utils_int.last_mouse_button() === 1)
+                    if (event_object === null || event_object.buttons === 0 && utils_int.last_mouse_button() === 1)
                     {
                         gfx.visibility.toggle(ui_config.window.menu.id, 1);
 
@@ -3727,7 +3724,7 @@ function bee()
                         msg_win = new msgbox();
 
                         msg_win.init('desktop');
-                        msg_win.show(xenon.load('os_name'), 'The casement can not be deployed here as it overflows your screen!');
+                        msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
 
                         return false;
                     }
@@ -3748,7 +3745,7 @@ function bee()
                     return true;
                 };
 
-                this.hide = function(event_object, callback)
+                this.retract = function(event_object, callback)
                 {
                     function animate_casement()
                     {
@@ -3794,7 +3791,18 @@ function bee()
                         animate_casement();
 
                     if (self.settings.actions.can_use_menu())
-                        ui_objects.window.menu.manage_casement.innerHTML = 'Deploy casement';
+                        ui_objects.window.menu.manage_casement.innerHTML = 'Show casement';
+
+                    return true;
+                };
+
+                this.trigger = function(event_object, callback)
+                {
+                    if (is_init === false)
+                        return false;
+
+                    self.gui.actions.casement.retract(event_object, callback);
+                    self.gui.actions.casement.deploy(event_object, callback);
 
                     return true;
                 };
@@ -3839,7 +3847,7 @@ function bee()
                 if (utils_sys.validation.misc.is_undefined(event_object) || bee_statuses.close())
                     return false;
 
-                if (event_object.buttons === 1)
+                if (event_object === null || event_object.buttons === 1)
                 {
                     utils_int.edit_win_title();
 
@@ -3954,7 +3962,7 @@ function bee()
 
                     owl.status.applications.set(my_bee_id, __app_id, 'END');
 
-                    me.actions.casement.hide(event_object, 
+                    me.actions.casement.retract(event_object, 
                     function()
                     {
                         try

@@ -33,10 +33,8 @@ function cloud_edit()
 
     function ce_program_api()
     {
-        this.telemetry = function(prog_id)
+        this.telemetry = function(data)
         {
-            var dynamic_program_id = prog_id;
-
             // TODO: Use the telemetry for future features...
 
             return true;
@@ -128,7 +126,7 @@ function cloud_edit()
         function side_panel(event_object)
         {
             if (cloud_edit_bee.status.gui.casement_deployed())
-                cloud_edit_bee.gui.actions.casement.hide(event_object);
+                cloud_edit_bee.gui.actions.casement.retract(event_object);
             else
                 cloud_edit_bee.gui.actions.casement.deploy(event_object);
         }
