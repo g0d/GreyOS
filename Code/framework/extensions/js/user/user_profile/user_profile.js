@@ -18,6 +18,7 @@ function user_profile()
     {
         this.full_name = null;
         this.email = null;
+        this.role = null;
         this.wallpaper = null;
     }
 
@@ -64,7 +65,7 @@ function user_profile()
             setTimeout(function(){ run_heartbeat(); }, 1000);
         };
 
-        this.details = function(print)
+        this.details = function()
         {
             var __data = 'gate=auth&mode=details';
 
@@ -74,20 +75,16 @@ function user_profile()
 
                                     user_profile_data.full_name = __auth_details.profile;
                                     user_profile_data.email = __auth_details.email;
+                                    user_profile_data.role = __auth_details.role;
                                     user_profile_data.wallpaper = __auth_details.ui.wallpaper;
 
-                                    if (print === true)
-                                    {
-                                        utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
-                                        utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
+                                    utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
+                                    utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
 
-                                        if (user_profile_data.wallpaper === '')
-                                            document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.jpg)';
-                                        else
-                                            document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
-                                    }
+                                    if (user_profile_data.wallpaper === '')
+                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
                                     else
-                                        return user_profile_data;
+                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
                                  },
                                  function()
                                  {
@@ -127,7 +124,7 @@ function user_profile()
         {
             me.draw();
             me.attach_events();
-            me.details(true);
+            me.details();
             me.session_watchdog();
 
             return true;
@@ -323,7 +320,7 @@ function user_profile()
         if (is_init === false)
             return false;
 
-        return utils_int.details(false);
+        return user_profile_data;
     };
 
     this.logout = function()
