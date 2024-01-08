@@ -18,7 +18,7 @@ function cloud_edit()
     {
         function ce_model()
         {
-            this.program_name = 'new_app';
+            this.program_name = 'new_program';
             this.editor = null;
             this.extra_button = null;
             this.exec_button = null;
@@ -183,7 +183,7 @@ function cloud_edit()
                                                             {
                                                                 msg_win.show(os_name, 'This program name already exists!<br>\
                                                                                        Do you want to replace it with the current program?', 
-                                                                                       msg_win.types.TRIPLE_BUTTON, 
+                                                                                       msg_win.types.YES_NO_CANCEL, 
                                                                                        [() => { ajax.run(__ajax_config); }, 
                                                                                         () => { deploy_program(); },
                                                                                         () => {  }]);
@@ -195,8 +195,8 @@ function cloud_edit()
 
             msg_win.init('desktop');
             msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
-                                   <input id="input_prog_name" class="ce_prog_name_input" value="new_app" placeholder="Enter program name...">', 
-                                   msg_win.types.SINGLE_BUTTON, [() => { save_program(); }]);
+                                   <input id="input_prog_name" class="ce_prog_name_input" value="new_program" placeholder="Enter program name...">', 
+                                   msg_win.types.OK_CANCEL, [() => { save_program(); }]);
 
             __input_prog_name_object = utils_sys.objects.by_id('input_prog_name');
 

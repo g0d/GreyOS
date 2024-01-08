@@ -18,9 +18,10 @@ function msgbox()
     // Types of msgbox
     function types_model()
     {
-        this.SINGLE_BUTTON = 0;
-        this.DUAL_BUTTON = 1;
-        this.TRIPLE_BUTTON = 2;
+        this.OK = 0;
+        this.OK_CANCEL = 1;
+        this.YES_NO = 2;
+        this.YES_NO_CANCEL = 3;
     }
 
     // General helpers
@@ -65,7 +66,7 @@ function msgbox()
                      '  <div id="' + __win_title + '"></div>' + 
                      '  <div id="' + msgbox_object.id + '_content"></div>' + 
                      '  <div id="' + msgbox_object.id + '_buttons_area">' + 
-                     '      <div id="' + __button_title + '_1" class="msgbox_button">Close</div>' + 
+                     '      <div id="' + __button_title + '_1" class="msgbox_button">OK</div>' + 
                      '  </div>' + 
                      '</div>';
 
@@ -96,19 +97,27 @@ function msgbox()
             msgbox_object.childNodes[0].childNodes[3].innerHTML = message;
 
             var __container = utils.objects.by_id(msgbox_object.id + '_buttons_area'),
+                __var_dynamic_label_button_1 = 'OK',
+                __var_dynamic_label_button_2 = 'Cancel',
                 __button_object = null;
 
-            if (type === self.types.DUAL_BUTTON)
+            if (type === self.types.OK_CANCEL || type === self.types.YES_NO)
             {
+                if (type === self.types.YES_NO)
+                {
+                    __var_dynamic_label_button_1 = 'Yes';
+                    __var_dynamic_label_button_2 = 'No';
+                }
+
                 msgbox_object.childNodes[0].childNodes[5].childNodes[1].style.float = 'left';
-                msgbox_object.childNodes[0].childNodes[5].childNodes[1].innerHTML = 'Yes';
+                msgbox_object.childNodes[0].childNodes[5].childNodes[1].innerHTML = __var_dynamic_label_button_1;
 
                 __button_object = document.createElement('div');
 
                 __button_object.id = msgbox_object.id + '_button_2';
                 __button_object.className = 'msgbox_button';
                 __button_object.style.float = 'right';
-                __button_object.innerHTML = 'No';
+                __button_object.innerHTML = __var_dynamic_label_button_2;
 
                 __container.appendChild(__button_object);
 
@@ -121,7 +130,7 @@ function msgbox()
                     me.hide_win();
                 });    
             }
-            else if (type === self.types.TRIPLE_BUTTON)
+            else if (type === self.types.YES_NO_CANCEL)
             {
                 msgbox_object.childNodes[0].childNodes[5].classList.add('mb_buttons_triple');
                 msgbox_object.childNodes[0].childNodes[5].childNodes[1].classList.add('mb_triple');
@@ -191,7 +200,7 @@ function msgbox()
     }
 
     // Show msgbox (with type and optional callbacks on hide)
-    this.show = function(title, message, type = self.types.SINGLE_BUTTON, hide_callback_array = [])
+    this.show = function(title, message, type = self.types.OK, hide_callback_array = [])
     {
         if (!is_init || is_open || 
             !utils.validation.alpha.is_string(title) || 
@@ -202,13 +211,10 @@ function msgbox()
             !utils.validation.misc.is_array(hide_callback_array))
             return false;
 
-        if (hide_callback_array.length > 0)
-        {
-            if ((global_type === self.types.SINGLE_BUTTON && hide_callback_array.length > 1) || 
-                (global_type === self.types.DUAL_BUTTON && hide_callback_array.length > 2) ||
-                (global_type === self.types.TRIPLE_BUTTON && hide_callback_array.length > 3))
-                return false;
-        }
+        if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) || 
+            ((global_type === self.types.OK_CANCEL || global_type === self.types.YES_NO) && hide_callback_array.length > 2) || 
+            (global_type === self.types.YES_NO_CANCEL && hide_callback_array.length > 3)))
+            return false;
 
         var __found = false;
 
@@ -250,13 +256,10 @@ function msgbox()
             !utils.validation.misc.is_array(hide_callback_array))
             return false;
 
-        if (hide_callback_array.length > 0)
-        {
-            if ((global_type === self.types.SINGLE_BUTTON && hide_callback_array.length > 1) || 
-                (global_type === self.types.DUAL_BUTTON && hide_callback_array.length > 2) || 
-                (global_type === self.types.TRIPLE_BUTTON && hide_callback_array.length > 3))
-                return false;
-        }
+        if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) || 
+            ((global_type === self.types.OK_CANCEL || global_type === self.types.YES_NO) && hide_callback_array.length > 2) || 
+            (global_type === self.types.YES_NO_CANCEL && hide_callback_array.length > 3)))
+            return false;
 
         for (i = 0; i < hide_callback_array.length; i++)
         {

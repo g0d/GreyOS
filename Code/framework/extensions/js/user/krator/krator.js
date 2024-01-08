@@ -218,14 +218,14 @@ function krator()
 
             if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
             {
-                msg_win.show(os_name, 'The email format is invalid!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                msg_win.show(os_name, 'The email format is invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
 
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show(os_name, 'Credentials are invalid!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                msg_win.show(os_name, 'Credentials are invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
@@ -240,7 +240,7 @@ function krator()
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Your credentials are wrong!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                                    msg_win.show(os_name, 'Your credentials are wrong!', msg_win.types.OK, [() => { enable_controls(); }]);
                                },
                                function()
                                {
@@ -274,28 +274,28 @@ function krator()
 
             if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
             {
-                msg_win.show(os_name, 'The email format is invalid!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                msg_win.show(os_name, 'The email format is invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
 
             if (password_object.value.length === 0)
             {
-                msg_win.show(os_name, 'Please enter a password!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                msg_win.show(os_name, 'Please enter a password!', msg_win.types.OK, [() => { enable_controls(); }]);
     
                 return;
             }
 
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show(os_name, 'Please choose more complex credentials!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                msg_win.show(os_name, 'Please choose more complex credentials!', msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
 
             if (password_object.value !== password_comfirm_object.value)
             {
-                msg_win.show(os_name, 'Password confirmation failed!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                msg_win.show(os_name, 'Password confirmation failed!', msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
@@ -305,13 +305,13 @@ function krator()
             ajax_factory(data, function(result)
                                {
                                     if (result === '9')
-                                        msg_win.show(os_name, 'This account already exists!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                                        msg_win.show(os_name, 'This account already exists!', msg_win.types.OK, [() => { enable_controls(); }]);
                                     else
-                                        msg_win.show(os_name, 'Registration succeeded!', msg_win.types.SINGLE_BUTTON, [() => { is_login_ok = true; close_krator(); }]);
+                                        msg_win.show(os_name, 'Registration succeeded!', msg_win.types.OK, [() => { is_login_ok = true; close_krator(); }]);
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Registration failed!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+                                    msg_win.show(os_name, 'Registration failed!', msg_win.types.OK, [() => { enable_controls(); }]);
                                },
                                function()
                                {

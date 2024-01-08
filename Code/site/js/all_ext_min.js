@@ -914,9 +914,10 @@ function msgbox()
  var self = this;
  function types_model()
  {
- this.SINGLE_BUTTON = 0;
- this.DUAL_BUTTON = 1;
- this.TRIPLE_BUTTON = 2;
+ this.OK = 0;
+ this.OK_CANCEL = 1;
+ this.YES_NO = 2;
+ this.YES_NO_CANCEL = 3;
  }
  function general_helpers()
  {
@@ -950,7 +951,7 @@ function msgbox()
  ' <div id="' + __win_title + '"></div>' +
  ' <div id="' + msgbox_object.id + '_content"></div>' +
  ' <div id="' + msgbox_object.id + '_buttons_area">' +
- ' <div id="' + __button_title + '_1" class="msgbox_button">Close</div>' +
+ ' <div id="' + __button_title + '_1" class="msgbox_button">OK</div>' +
  ' </div>' +
  '</div>';
  msgbox_object.innerHTML = __html;
@@ -972,16 +973,23 @@ function msgbox()
  msgbox_object.childNodes[0].childNodes[1].innerHTML = title;
  msgbox_object.childNodes[0].childNodes[3].innerHTML = message;
  var __container = utils.objects.by_id(msgbox_object.id + '_buttons_area'),
+ __var_dynamic_label_button_1 = 'OK',
+ __var_dynamic_label_button_2 = 'Cancel',
  __button_object = null;
- if (type === self.types.DUAL_BUTTON)
+ if (type === self.types.OK_CANCEL || type === self.types.YES_NO)
  {
+ if (type === self.types.YES_NO)
+ {
+ __var_dynamic_label_button_1 = 'Yes';
+ __var_dynamic_label_button_2 = 'No';
+ }
  msgbox_object.childNodes[0].childNodes[5].childNodes[1].style.float = 'left';
- msgbox_object.childNodes[0].childNodes[5].childNodes[1].innerHTML = 'Yes';
+ msgbox_object.childNodes[0].childNodes[5].childNodes[1].innerHTML = __var_dynamic_label_button_1;
  __button_object = document.createElement('div');
  __button_object.id = msgbox_object.id + '_button_2';
  __button_object.className = 'msgbox_button';
  __button_object.style.float = 'right';
- __button_object.innerHTML = 'No';
+ __button_object.innerHTML = __var_dynamic_label_button_2;
  __container.appendChild(__button_object);
  utils.events.attach(__button_object.id, __button_object, 'click',
  () =>
@@ -991,7 +999,7 @@ function msgbox()
  me.hide_win();
  });
  }
- else if (type === self.types.TRIPLE_BUTTON)
+ else if (type === self.types.YES_NO_CANCEL)
  {
  msgbox_object.childNodes[0].childNodes[5].classList.add('mb_buttons_triple');
  msgbox_object.childNodes[0].childNodes[5].childNodes[1].classList.add('mb_triple');
@@ -1039,7 +1047,7 @@ function msgbox()
  is_open = false;
  };
  }
- this.show = function(title, message, type = self.types.SINGLE_BUTTON, hide_callback_array = [])
+ this.show = function(title, message, type = self.types.OK, hide_callback_array = [])
  {
  if (!is_init || is_open ||
  !utils.validation.alpha.is_string(title) ||
@@ -1048,13 +1056,10 @@ function msgbox()
  if (!utils.validation.misc.is_invalid(hide_callback_array) &&
  !utils.validation.misc.is_array(hide_callback_array))
  return false;
- if (hide_callback_array.length > 0)
- {
- if ((global_type === self.types.SINGLE_BUTTON && hide_callback_array.length > 1) ||
- (global_type === self.types.DUAL_BUTTON && hide_callback_array.length > 2) ||
- (global_type === self.types.TRIPLE_BUTTON && hide_callback_array.length > 3))
+ if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) ||
+ ((global_type === self.types.OK_CANCEL || global_type === self.types.YES_NO) && hide_callback_array.length > 2) ||
+ (global_type === self.types.YES_NO_CANCEL && hide_callback_array.length > 3)))
  return false;
- }
  var __found = false;
  for (var [__key, __value] of Object.entries(self.types))
  {
@@ -1083,13 +1088,10 @@ function msgbox()
  if (!utils.validation.misc.is_invalid(hide_callback_array) &&
  !utils.validation.misc.is_array(hide_callback_array))
  return false;
- if (hide_callback_array.length > 0)
- {
- if ((global_type === self.types.SINGLE_BUTTON && hide_callback_array.length > 1) ||
- (global_type === self.types.DUAL_BUTTON && hide_callback_array.length > 2) ||
- (global_type === self.types.TRIPLE_BUTTON && hide_callback_array.length > 3))
+ if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) ||
+ ((global_type === self.types.OK_CANCEL || global_type === self.types.YES_NO) && hide_callback_array.length > 2) ||
+ (global_type === self.types.YES_NO_CANCEL && hide_callback_array.length > 3)))
  return false;
- }
  for (i = 0; i < hide_callback_array.length; i++)
  {
  if (!utils.validation.misc.is_function(hide_callback_array[i]))
@@ -8872,12 +8874,12 @@ function krator()
  disable_controls();
  if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
  {
- msg_win.show(os_name, 'The email format is invalid!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'The email format is invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
  return;
  }
  if (username_object.value.length < 3 || password_object.value.length < 8)
  {
- msg_win.show(os_name, 'Credentials are invalid!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'Credentials are invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
  return;
  }
  var data = 'gate=auth&mode=login&username=' + username_object.value + '&password=' + password_object.value;
@@ -8888,7 +8890,7 @@ function krator()
  },
  function()
  {
- msg_win.show(os_name, 'Your credentials are wrong!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'Your credentials are wrong!', msg_win.types.OK, [() => { enable_controls(); }]);
  },
  function()
  {
@@ -8915,35 +8917,35 @@ function krator()
  disable_controls();
  if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
  {
- msg_win.show(os_name, 'The email format is invalid!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'The email format is invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
  return;
  }
  if (password_object.value.length === 0)
  {
- msg_win.show(os_name, 'Please enter a password!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'Please enter a password!', msg_win.types.OK, [() => { enable_controls(); }]);
  return;
  }
  if (username_object.value.length < 3 || password_object.value.length < 8)
  {
- msg_win.show(os_name, 'Please choose more complex credentials!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'Please choose more complex credentials!', msg_win.types.OK, [() => { enable_controls(); }]);
  return;
  }
  if (password_object.value !== password_comfirm_object.value)
  {
- msg_win.show(os_name, 'Password confirmation failed!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'Password confirmation failed!', msg_win.types.OK, [() => { enable_controls(); }]);
  return;
  }
  var data = 'gate=register&mode=reg&username=' + username_object.value.trim() + '&password=' + password_object.value;
  ajax_factory(data, function(result)
  {
  if (result === '9')
- msg_win.show(os_name, 'This account already exists!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'This account already exists!', msg_win.types.OK, [() => { enable_controls(); }]);
  else
- msg_win.show(os_name, 'Registration succeeded!', msg_win.types.SINGLE_BUTTON, [() => { is_login_ok = true; close_krator(); }]);
+ msg_win.show(os_name, 'Registration succeeded!', msg_win.types.OK, [() => { is_login_ok = true; close_krator(); }]);
  },
  function()
  {
- msg_win.show(os_name, 'Registration failed!', msg_win.types.SINGLE_BUTTON, [() => { enable_controls(); }]);
+ msg_win.show(os_name, 'Registration failed!', msg_win.types.OK, [() => { enable_controls(); }]);
  },
  function()
  {
@@ -18053,7 +18055,7 @@ function cloud_edit()
  {
  function ce_model()
  {
- this.program_name = 'new_app';
+ this.program_name = 'new_program';
  this.editor = null;
  this.extra_button = null;
  this.exec_button = null;
@@ -18183,7 +18185,7 @@ function cloud_edit()
  {
  msg_win.show(os_name, 'This program name already exists!<br>\
  Do you want to replace it with the current program?',
- msg_win.types.TRIPLE_BUTTON,
+ msg_win.types.YES_NO_CANCEL,
  [() => { ajax.run(__ajax_config); },
  () => { deploy_program(); },
  () => { }]);
@@ -18193,8 +18195,8 @@ function cloud_edit()
  msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
- <input id="input_prog_name" class="ce_prog_name_input" value="new_app" placeholder="Enter program name...">',
- msg_win.types.SINGLE_BUTTON, [() => { save_program(); }]);
+ <input id="input_prog_name" class="ce_prog_name_input" value="new_program" placeholder="Enter program name...">',
+ msg_win.types.OK_CANCEL, [() => { save_program(); }]);
  __input_prog_name_object = utils_sys.objects.by_id('input_prog_name');
  __input_prog_name_object.focus();
  __handler = function(event)
