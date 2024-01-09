@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cloud Edit (Version: 2.3)
+    GreyOS - Cloud Edit (Version: 2.4)
 
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
@@ -16,9 +16,15 @@ function cloud_edit()
 
     function config_model()
     {
+        function program_model()
+        {
+            this.icon = '';
+            this.name = '';
+            this.type = null;
+        }
+
         function ce_model()
         {
-            this.program_name = 'new_program';
             this.editor = null;
             this.extra_button = null;
             this.exec_button = null;
@@ -28,6 +34,7 @@ function cloud_edit()
 
         this.id = null;
         this.content = null;
+        this.program = new program_model();
         this.ce = new ce_model();
     }
 
@@ -35,7 +42,9 @@ function cloud_edit()
     {
         this.telemetry = function(data)
         {
-            // TODO: Use the telemetry for future features...
+            config.program.icon = encodeURIComponent(data.icon);
+            config.program.name = encodeURIComponent(data.name);
+            config.program.type = data.type;
 
             return true;
         };
@@ -135,15 +144,19 @@ function cloud_edit()
         {
             function save_program()
             {
-                config.ce.program_name = utils_sys.objects.by_id('input_prog_name').value;
+                __user_prog_name = encodeURIComponent(utils_sys.objects.by_id('input_prog_name').value);
+                __prog_source = encodeURIComponent(config.ce.editor.getValue());
 
-                __ajax_config.data += encodeURIComponent(config.ce.program_name);
-                __source_code = encodeURIComponent(config.ce.editor.getValue());
+                __ajax_config.data += __user_prog_name;
+
+                __prog_model = JSON.stringify(config.program);
 
                 ajax.run(__ajax_config)
             }
 
-            var __source_code = null,
+            var __user_prog_name = null,
+                __prog_source = null,
+                __prog_model = null,
                 __input_prog_name_object = null,
                 __handler = null,
                 __ajax_config = {
@@ -165,13 +178,19 @@ function cloud_edit()
                                                                 return;
                                                             }
 
-                                                            __ajax_config.data = "gate=deploy_program&program_name=" + config.ce.program_name + 
-                                                                                 "&program_source=" + __source_code;
+                                                            __ajax_config.data = "gate=deploy_program&program_name=" + __user_prog_name + 
+                                                                                 "&program_source=" + __prog_source + "&program_model=" + __prog_model;
                                                             __ajax_config.on_success = (result) =>
                                                                                        {
                                                                                             if (result === '-1')
                                                                                             {
-                                                                                                msg_win.show(os_name, 'An error has occurred. Program has not been saved!');
+                                                                                                msg_win = new msgbox();
+
+                                                                                                msg_win.init('desktop');
+
+                                                                                                msg_win.show(os_name, 'An error has occurred. \
+                                                                                                                       Program has not been saved!',
+                                                                                                                       msg_win.types.OK);
 
                                                                                                 return;
                                                                                             }

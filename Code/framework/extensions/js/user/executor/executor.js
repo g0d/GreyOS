@@ -1,5 +1,5 @@
 /*
-    GreyOS - Executor (Version: 1.2)
+    GreyOS - Executor (Version: 1.4)
 
     File name: executor.js
     Description: This file contains the Executor - User-level program execution development module.
@@ -98,10 +98,10 @@ function executor()
         {
             __this_program = eval('new ' + __dynamic_program_model);
 
-            if (!meta_script.program.start(__dynamic_program_model, meta_caller))
+            if (!meta_script.start(__dynamic_program_model, meta_caller))
                 return false;
 
-            if (!__this_program.main(meta_script))
+            if (!__this_program.main(meta_script.ms_object))
             {
                 error_details.code = self.error.codes.MISMATCH;
                 error_details.message = 'Program is incomplete!';
@@ -131,7 +131,7 @@ function executor()
 
         is_program_loaded = false;
 
-        return meta_script.program.end();
+        return meta_script.end();
     };
 
     this.cosmos = function(cosmos_object)

@@ -1343,8 +1343,9 @@ function bee()
                 __status_bar_marquee = false,
                 __resizable = false,
                 __resize_tooltip = false,
-                __backtrace = false,
-                __casement_width = 100;
+                __icon = 'default',
+                __casement_width = 100,
+                __backtrace = false;
 
             this.app_id = function()
             {
@@ -1544,6 +1545,25 @@ function bee()
                     return false;
 
                 __resize_tooltip = val;
+
+                return true;
+            };
+
+            this.icon = function(val)
+            {
+                if (is_init === false)
+                    return false;
+
+                if (utils_sys.validation.misc.is_undefined(val))
+                    return __icon;
+
+                if (bee_statuses.running())
+                    return false;
+
+                if (!utils_sys.validation.alpha.is_string(val))
+                    return false;
+
+                __icon = val;
 
                 return true;
             };

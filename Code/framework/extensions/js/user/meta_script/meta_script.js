@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.5)
+    GreyOS - Meta-Script (Version: 1.6)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -29,282 +29,1044 @@ function meta_script()
         this.svcs = [];
     }
 
-    function os()
+    function ms_object_model()
     {
-        this.info = function()
+        function os()
         {
-            return xenon;
-        };
-
-        this.date_time = function()
-        {
-            return tik_tok;
-        };
-
-        this.sound = function()
-        {
-            return parrot;
-        };
-
-        this.usb = function()
-        {
-            return octopus;
-        };
-
-        this.timer = function()
-        {
-            return precise_timer;
-        };
-
-        this.tasks = function()
-        {
-            return owl;
-        };
-
-        this.fs = function()
-        {
-            return teal_fs;
-        };
-
-        this.gaming_contollers = function()
-        {
-            return xgc;
-        };
-
-        this.utilities = function()
-        {
-            return utils_sys;
-        };
-
-        this.ajax = function()
-        {
-            return ajax;
-        };
-
-        this.settings_validator = function()
-        {
-            return config_parser;
-        };
-
-        this.run = function(program)
-        {
-            // TODO:...
-
-            return (program);
-        };
-
-        this.reboot = function()
-        {
-            // TODO: Inform user and check for his/her prompt
-
-            cc_reload.init();
-
-            return true;
-        };
-
-        this.logout = function()
-        {
-            // TODO: Inform user and check for his/her prompt
-
-            return user_profile.logout();
-        };
-    }
-
-    function system()
-    {
-        function ui()
-        {
-            this.themes = function()
+            this.info = function()
             {
-                return nature;
+                return xenon;
             };
 
-            this.progress = function()
+            this.date_time = function()
             {
-                return infinity;
+                return tik_tok;
             };
 
-            this.message_box = function()
+            this.sound = function()
             {
-                return msg_box;
+                return parrot;
             };
 
-            this.work_box = function()
+            this.usb = function()
             {
-                return work_box;
+                return octopus;
+            };
+
+            this.timer = function()
+            {
+                return precise_timer;
+            };
+
+            this.tasks = function()
+            {
+                return owl;
+            };
+
+            this.fs = function()
+            {
+                return teal_fs;
+            };
+
+            this.gaming_contollers = function()
+            {
+                return xgc;
+            };
+
+            this.utilities = function()
+            {
+                return utils_sys;
+            };
+
+            this.ajax = function()
+            {
+                return ajax;
+            };
+
+            this.settings_validator = function()
+            {
+                return config_parser;
+            };
+
+            this.run = function(program)
+            {
+                // TODO:...
+
+                return (program);
+            };
+
+            this.reboot = function()
+            {
+                // TODO: Inform user and check for his/her prompt
+    
+                cc_reload.init();
+
+                return true;
+            };
+
+            this.logout = function()
+            {
+                // TODO: Inform user and check for his/her prompt
+
+                return user_profile.logout();
             };
         }
 
-        function profile()
+        function system()
         {
-            this.messages = function()
+            function ui()
+            {
+                this.themes = function()
+                {
+                    return nature;
+                };
+
+                this.progress = function()
+                {
+                    return infinity;
+                };
+
+                this.message_box = function()
+                {
+                    return msg_box;
+                };
+
+                this.work_box = function()
+                {
+                    return work_box;
+                };
+            }
+
+            function profile()
+            {
+                this.messages = function()
+                {
+                    // TODO:...
+
+                    return true;
+                };
+
+                this.alerts = function()
+                {
+                    // TODO:...
+
+                    return true;
+                };
+
+                this.calendar = function()
+                {
+                    // TODO:...
+
+                    return true;
+                };
+
+                this.settings = function()
+                {
+                    // TODO:...
+
+                    return true;
+                };
+            }
+
+            this.apps = function()
+            {
+                return app_box;
+            };
+
+            this.services = function()
+            {
+                return matrix;
+            };
+
+            this.notifications = function(notification_config)
             {
                 // TODO:...
 
                 return true;
             };
 
-            this.alerts = function()
-            {
-                // TODO:...
+            this.ui = new ui();
+            this.profile = new profile();
+        }
 
-                return true;
+        function interface()
+        {
+            this.desktops = function()
+            {
+                return forest;
             };
 
-            this.calendar = function()
+            this.dock = function()
             {
-                // TODO:...
-
-                return true;
+                return dock;
             };
 
-            this.settings = function()
+            this.stack = function()
             {
-                // TODO:...
+                return hive;
+            };
 
-                return true;
+            this.tray = function()
+            {
+                return super_tray;
             };
         }
 
-        this.apps = function()
+        function program()
         {
-            return app_box;
-        };
+            this.expose_api = function(public_calls_array)
+            {
+                if (!utils_sys.validation.misc.is_array(public_calls_array))
+                        return false;
 
-        this.services = function()
-        {
-            return matrix;
-        };
+                var __public_call = null,
+                    __public_api_calls_config = 
+                    {
+                        "program_id"    :   program_config.model.name,
+                        "calls"         :   []
+                    };
 
-        this.notifications = function(notification_config)
-        {
-            // TODO:...
+                for (__public_call of public_calls_array)
+                {
+                    __public_api_calls_config.calls.push(__public_call);
 
-            return true;
-        };
+                    if (!uniplex.expose(__public_api_calls_config))
+                        return false;
+                }
 
-        this.ui = new ui();
-        this.profile = new profile();
-    }
+                return true;
+            };
 
-    function interface()
-    {
-        this.desktops = function()
-        {
-            return forest;
-        };
+            this.list_api = function()
+            {
+                return uniplex.list();
+            };
+        }
 
-        this.dock = function()
-        {
-            return dock;
-        };
-
-        this.stack = function()
-        {
-            return hive;
-        };
-
-        this.tray = function()
-        {
-            return super_tray;
-        };
-    }
-
-    function program()
-    {
-        this.start = function(program_model, meta_caller)
-        {
-            if (!utils_sys.validation.misc.is_function(program_model) || 
-                !utils_sys.validation.misc.is_object(meta_caller))
-                return false;
-
-            program_config.model = program_model;
-            program_config.meta_caller = meta_caller;
-
-            is_program_loaded = true;
-
-            return true;
-        };
-
-        this.end = function()
+        this.app = function()
         {
             if (is_program_loaded === false)
                 return false;
 
-            var i = 0,
-                __apps_num = program_config.apps.length,
-                __svcs_num = program_config.svcs.length;
+            var me = this;
 
-            for (i = 0; i < __apps_num; i++)
-                program_config.apps[i].close(null);
+            function app_api_model()
+            {
+                var me = this,
+                    __new_app = null,
+                    __is_init = false,
+                    __is_run = false;
 
-            for (i = 0; i < __svcs_num; i++)
-                program_config.svcs[i].terminate();
-
-            program_config.apps = [];
-            program_config.svcs = [];
-
-            global_app_index = -1;
-            global_svc_index = -1;
-
-            uniplex.clear(program_config.model.name);
-
-            is_program_loaded = false;
-
-            return true;
-        };
-
-        this.expose_api = function(public_calls_array)
-        {
-            if (!utils_sys.validation.misc.is_array(public_calls_array))
-                    return false;
-
-            var __public_call = null,
-                __public_api_calls_config = 
+                function menu()
                 {
-                    "program_id"    :   program_config.model.name,
-                    "calls"         :   []
-                };
+                    this.open = function(event)
+                    {
+                        if (__new_app === null)
+                            return false;
 
-            for (__public_call of public_calls_array)
-            {
-                __public_api_calls_config.calls.push(__public_call);
+                        return __new_app.gui.actions.menu.open(event);
+                    };
 
-                if (!uniplex.expose(__public_api_calls_config))
-                    return false;
-            }
+                    this.close = function(event)
+                    {
+                        if (__new_app === null)
+                            return false;
 
-            return true;
-        };
+                        return __new_app.gui.actions.menu.close(event);
+                    };
+                }
 
-        this.list_api = function()
-        {
-            return uniplex.list();
-        };
-    }
+                function main()
+                {
+                    this.set_title = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
 
-    this.app = function()
-    {
-        if (is_program_loaded === false)
-            return false;
+                        return __new_app.settings.data.window.labels.title(val);
+                    };
 
-        var me = this;
+                    this.set_content = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
 
-        function app_api_model()
-        {
-            var me = this,
-                __new_app = null,
-                __is_init = false,
-                __is_run = false;
+                        return __new_app.settings.data.window.content(val);
+                    };
 
-            function menu()
-            {
-                this.open = function(event)
+                    this.set_status = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.data.window.labels.status_bar(val);
+                    };
+                }
+
+                function casement()
+                {
+                    this.show = function(event, callback)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        if (utils_sys.validation.misc.is_undefined(event))
+                            event = null;
+
+                        return __new_app.gui.actions.casement.deploy(event, callback);
+                    };
+
+                    this.hide = function(event, callback)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        if (utils_sys.validation.misc.is_undefined(event))
+                            event = null;
+
+                        return __new_app.gui.actions.casement.retract(event, callback);
+                    };
+
+                    this.trigger = function(event, callback)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        if (utils_sys.validation.misc.is_undefined(event))
+                            event = null;
+
+                        me.casement.hide(event, callback);
+                        me.casement.show(event, callback);
+
+                        return true;
+                    };
+
+                    this.set_title = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.data.casement.labels.title(val);
+                    };
+
+                    this.set_content = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.data.casement.content(val);
+                    };
+
+                    this.set_status = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.data.casement.labels.status(val);
+                    };
+                }
+
+                function position()
+                {
+                    this.set_topmost = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.actions.set_top();
+                    };
+
+                    this.left = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.position.left(val);
+                    };
+
+                    this.top = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.position.top(val);
+                    };
+                }
+
+                function size()
+                {
+                    function min()
+                    {
+                        this.width = function(val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.size.min.width(val);
+                        };
+
+                        this.height = function(val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.size.min.height(val);
+                        };
+                    }
+
+                    function max()
+                    {
+                        this.width = function(val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.size.max.width(val);
+                        };
+
+                        this.height = function(val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.size.max.height(val);
+                        };
+                    }
+
+                    this.width = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.size.width(val);
+                    };
+
+                    this.height = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.gui.size.height(val);
+                    };
+
+                    this.min = new min();
+                    this.max = new max();
+                }
+
+                function fx()
+                {
+                    function enabled()
+                    {
+                        function fade()
+                        {
+                            this.into = function(val)
+                            {
+                                if (__new_app === null)
+                                    return false;
+
+                                return __new_app.gui.fx.fade.into(val);
+                            };
+
+                            this.out = function(val)
+                            {
+                                if (__new_app === null)
+                                    return false;
+
+                                return __new_app.gui.fx.fade.out(val);
+                            };
+                        }
+
+                        this.all = function(val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.enabled.all(val);
+                        };
+
+                        this.opacity = function(val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.enabled.opacity(val);
+                        };
+
+                        this.fade = new fade();
+                    }
+
+                    function opacity()
+                    {
+                        function settings()
+                        {
+                            this.get = function()
+                            {
+                                if (__new_app === null)
+                                    return false;
+
+                                return __new_app.gui.fx.opacity.settings.get();
+                            };
+
+                            this.set = function(val)
+                            {
+                                if (__new_app === null)
+                                    return false;
+
+                                return __new_app.gui.fx.opacity.settings.set(val);
+                            };
+                        }
+
+                        this.apply = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.opacity.apply();
+                        };
+
+                        this.reset = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.opacity.reset();
+                        };
+
+                        this.settings = new settings();
+                    }
+
+                    function fade()
+                    {
+                        function settings()
+                        {
+                            this.batch = function(type, step, speed, delay)
+                            {
+                                if (__new_app === null)
+                                    return false;
+
+                                return __new_app.gui.fx.fade.settings.batch(type, step, speed, delay);
+                            };
+
+                            function into()
+                            {
+                                function get()
+                                {
+                                    this.from = function(option, index)
+                                    {
+                                        if (__new_app === null)
+                                            return false;
+
+                                        return __new_app.gui.fx.fade.settings.into.get.from(option, index);
+                                    };
+
+                                    this.last = function(option)
+                                    {
+                                        if (__new_app === null)
+                                            return false;
+
+                                        return __new_app.gui.fx.fade.settings.into.get.last(option);
+                                    };
+                                }
+
+                                this.set = function(step, speed, delay)
+                                {
+                                    if (__new_app === null)
+                                        return false;
+
+                                    return __new_app.gui.fx.fade.settings.into.set(step, speed, delay);
+                                };
+
+                                this.get = new get();
+                            }
+
+                            function out()
+                            {
+                                function get()
+                                {
+                                    this.from = function(option, index)
+                                    {
+                                        if (__new_app === null)
+                                            return false;
+
+                                        return __new_app.gui.fx.fade.settings.out.get.from(option, index);
+                                    };
+
+                                    this.last = function(option)
+                                    {
+                                        if (__new_app === null)
+                                            return false;
+
+                                        return __new_app.gui.fx.fade.settings.out.get.last(option);
+                                    };
+                                }
+
+                                this.set = function(step, speed, delay)
+                                {
+                                    if (__new_app === null)
+                                        return false;
+
+                                    return __new_app.gui.fx.fade.settings.out.set(step, speed, delay);
+                                };
+
+                                this.get = new get();
+                            }
+
+                            this.into = new into();
+                            this.out = new out();
+                        }
+
+                        this.batch = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.fade.batch();
+                        };
+
+                        this.into = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.fade.into();
+                        };
+
+                        this.out = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.fx.fade.out();
+                        };
+
+                        this.settings = new settings();
+                    }
+
+                    this.enabled = new enabled();
+                    this.opacity = new opacity();
+                    this.fade = new fade();
+                }
+
+                function css()
+                {
+                    function style()
+                    {
+                        this.get = function(context, sub_context, option)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.css.style.get(context, sub_context, option);
+                        };
+
+                        this.set = function(context, sub_context, option, val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.css.style.set(context, sub_context, option, val);
+                        };
+                    }
+
+                    function class_name()
+                    {
+                        this.get = function(context, sub_context)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.css.style.get(context, sub_context);
+                        };
+
+                        this.set = function(context, sub_context, val)
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.gui.css.style.set(context, sub_context, val);
+                        };
+                    }
+
+                    this.style = new style();
+                    this.class_name = new class_name();
+                }
+
+                function can()
+                {
+                    this.open = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.actions.can_open(val);
+                    };
+
+                    this.close = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.actions.can_close(val);
+                    };
+
+                    this.edit_title = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.actions.can_edit_title(val);
+                    };
+
+                    this.use_menu = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.actions.can_use_menu(val);
+                    };
+
+                    this.use_casement = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.actions.can_use_casement(val);
+                    };
+
+                    this.drag = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.actions.can_drag.enabled(val);
+                    };
+
+                    this.resize = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.actions.can_resize.enabled(val);
+                    };
+                }
+
+                function status()
+                {
+                    function mouse()
+                    {
+                        this.event = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mouse_clicked();
+                        };
+
+                        this.click = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mouseclick();
+                        };
+
+                        this.dblclick = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mousedblclick();
+                        };
+
+                        this.down = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mousedown();
+                        };
+
+                        this.up = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mouseup();
+                        };
+
+                        this.move = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mousemove();
+                        };
+
+                        this.over = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mouseover();
+                        };
+
+                        this.out = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.mouseout();
+                        };
+                    }
+
+                    function keyboard()
+                    {
+                        this.event = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.key_pressed();
+                        };
+
+                        this.press = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.keypress();
+                        };
+
+                        this.down = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.keydown();
+                        };
+
+                        this.up = function()
+                        {
+                            if (__new_app === null)
+                                return false;
+
+                            return __new_app.status.gui.keyup();
+                        };
+                    }
+
+                    this.running = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.system.running();
+                    };
+
+                    this.opened = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.gui.opened();
+                    };
+
+                    this.closed = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.gui.closed();
+                    };
+
+                    this.dragged = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.gui.dragged();
+                    };
+
+                    this.resized = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.gui.resized();
+                    };
+
+                    this.topmost = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.gui.topmost();
+                    };
+
+                    this.menu_activated = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.gui.menu_activated();
+                    };
+
+                    this.casement_deployed = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.gui.casement_deployed();
+                    };
+
+                    this.focused = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.system.active();
+                    };
+
+                    this.in_stack_bar = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.system.in_hive();
+                    };
+
+                    this.desktop_changed = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.system.desktop_changed();
+                    };
+
+                    this.content_updated = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.data.content_changed();
+                    };
+
+                    this.title_updated = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.data.labels.title_changed();
+                    };
+
+                    this.status_updated = function()
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.status.data.labels.status_bar_label_changed();
+                    };
+
+                    this.mouse = new mouse();
+                    this.keyboard = new keyboard();
+                }
+
+                function settings()
+                {
+                    this.single_instance = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.general.single_instance(val);
+                    };
+
+                    this.icon = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.general.icon(val);
+                    };
+
+                    this.resizable = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.general.resizable(val);
+                    };
+
+                    this.casement_width = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.general.casement_width(val);
+                    };
+
+                    this.status_bar_marquee = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.general.status_bar_marquee(val);
+                    };
+
+                    this.use_resize_tooltip = function(val)
+                    {
+                        if (__new_app === null)
+                            return false;
+
+                        return __new_app.settings.general.resize_tooltip(val);
+                    };
+                }
+
+                this.get_app_id = function()
                 {
                     if (__new_app === null)
                         return false;
 
-                    return __new_app.gui.actions.menu.open(event);
+                    return __new_app.settings.general.app_id();
+                };
+
+                this.get_system_id = function()
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.settings.general.id();
+                };
+
+                this.get_desktop_id = function()
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.settings.general.desktop_id();
+                };
+
+                this.get_last_error = function()
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.error.last();
+                };
+
+                this.get_error_codes = function()
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.error.codes;
+                };
+
+                this.get_keys = function(event)
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.gui.actions.keys.get(event);
                 };
 
                 this.close = function(event)
@@ -312,997 +1074,263 @@ function meta_script()
                     if (__new_app === null)
                         return false;
 
-                    return __new_app.gui.actions.menu.close(event);
+                    __is_run = false;
+
+                    return __new_app.gui.actions.close(event);
                 };
+
+                this.on = function(event_name, callback)
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app.on(event_name, callback);
+                };
+
+                this.object = function()
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return __new_app;
+                };
+
+                this.reflection = function()
+                {
+                    if (__new_app === null)
+                        return false;
+
+                    return program_config.meta_caller.source();
+                };
+
+                this.run = function(parent_app_id = null, headless = false)
+                {
+                    if (__new_app === null || __is_run === true)
+                        return false;
+
+                    var __data = {
+                                    "icon"  :   me.settings.icon(),
+                                    "name"  :   me.get_app_id(),
+                                    "type"  :   "app"
+                                 };
+
+                    program_config.meta_caller.telemetry(__data);
+
+                    me.on('close', function()
+                                   {
+                                       app_box.remove(program_config.model.name);
+
+                                       //program_config.meta_caller.reset();
+                                   });
+
+                    app_box.replace([program_config.model]);
+
+                    if (!swarm.bees.insert(__new_app))
+                        return false;
+
+                    var __result = __new_app.run(parent_app_id, headless);
+
+                    if (__result === true)
+                        __is_run = true;
+
+                    return __result;
+                };
+
+                this.init = function(app_id)
+                {
+                    if (__is_init === true)
+                        return false;
+
+                    __new_app = dev_box.get('bee');
+
+                    __result = __new_app.init(app_id);
+
+                    if (__result === true)
+                        __is_init = true;
+
+                    return __result;
+                };
+
+                this.menu = new menu();
+                this.main = new main();
+                this.casement = new casement();
+                this.position = new position();
+                this.size = new size();
+                this.fx = new fx();
+                this.css = new css();
+                this.can = new can();
+                this.status = new status();
+                this.settings = new settings();
             }
 
-            function main()
-            {
-                this.set_title = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
+            global_app_index++;
 
-                    return __new_app.settings.data.window.labels.title(val);
-                };
+            program_config.apps.push(new app_api_model());
 
-                this.set_content = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.data.window.content(val);
-                };
-
-                this.set_status = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.data.window.labels.status_bar(val);
-                };
-            }
-
-            function casement()
-            {
-                this.show = function(event, callback)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    if (utils_sys.validation.misc.is_undefined(event))
-                        event = null;
-
-                    return __new_app.gui.actions.casement.deploy(event, callback);
-                };
-
-                this.hide = function(event, callback)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    if (utils_sys.validation.misc.is_undefined(event))
-                        event = null;
-
-                    return __new_app.gui.actions.casement.retract(event, callback);
-                };
-
-                this.trigger = function(event, callback)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    if (utils_sys.validation.misc.is_undefined(event))
-                        event = null;
-
-                    me.casement.hide(event, callback);
-                    me.casement.show(event, callback);
-
-                    return true;
-                };
-
-                this.set_title = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.data.casement.labels.title(val);
-                };
-
-                this.set_content = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.data.casement.content(val);
-                };
-
-                this.set_status = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.data.casement.labels.status(val);
-                };
-            }
-
-            function position()
-            {
-                this.set_topmost = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.gui.actions.set_top();
-                };
-
-                this.left = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.gui.position.left(val);
-                };
-
-                this.top = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.gui.position.top(val);
-                };
-            }
-
-            function size()
-            {
-                function min()
-                {
-                    this.width = function(val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.size.min.width(val);
-                    };
-
-                    this.height = function(val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.size.min.height(val);
-                    };
-                }
-
-                function max()
-                {
-                    this.width = function(val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.size.max.width(val);
-                    };
-
-                    this.height = function(val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.size.max.height(val);
-                    };
-                }
-
-                this.width = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.gui.size.width(val);
-                };
-
-                this.height = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.gui.size.height(val);
-                };
-
-                this.min = new min();
-                this.max = new max();
-            }
-
-            function fx()
-            {
-                function enabled()
-                {
-                    function fade()
-                    {
-                        this.into = function(val)
-                        {
-                            if (__new_app === null)
-                                return false;
-
-                            return __new_app.gui.fx.fade.into(val);
-                        };
-
-                        this.out = function(val)
-                        {
-                            if (__new_app === null)
-                                return false;
-
-                            return __new_app.gui.fx.fade.out(val);
-                        };
-                    }
-
-                    this.all = function(val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.fx.enabled.all(val);
-                    };
-
-                    this.opacity = function(val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.fx.enabled.opacity(val);
-                    };
-
-                    this.fade = new fade();
-                }
-
-                function opacity()
-                {
-                    function settings()
-                    {
-                        this.get = function()
-                        {
-                            if (__new_app === null)
-                                return false;
-    
-                            return __new_app.gui.fx.opacity.settings.get();
-                        };
-
-                        this.set = function(val)
-                        {
-                            if (__new_app === null)
-                                return false;
-    
-                            return __new_app.gui.fx.opacity.settings.set(val);
-                        };
-                    }
-
-                    this.apply = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.fx.opacity.apply();
-                    };
-
-                    this.reset = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.fx.opacity.reset();
-                    };
-
-                    this.settings = new settings();
-                }
-
-                function fade()
-                {
-                    function settings()
-                    {
-                        this.batch = function(type, step, speed, delay)
-                        {
-                            if (__new_app === null)
-                                return false;
-
-                            return __new_app.gui.fx.fade.settings.batch(type, step, speed, delay);
-                        };
-
-                        function into()
-                        {
-                            function get()
-                            {
-                                this.from = function(option, index)
-                                {
-                                    if (__new_app === null)
-                                        return false;
-
-                                    return __new_app.gui.fx.fade.settings.into.get.from(option, index);
-                                };
-
-                                this.last = function(option)
-                                {
-                                    if (__new_app === null)
-                                        return false;
-
-                                    return __new_app.gui.fx.fade.settings.into.get.last(option);
-                                };
-                            }
-
-                            this.set = function(step, speed, delay)
-                            {
-                                if (__new_app === null)
-                                    return false;
-
-                                return __new_app.gui.fx.fade.settings.into.set(step, speed, delay);
-                            };
-
-                            this.get = new get();
-                        }
-
-                        function out()
-                        {
-                            function get()
-                            {
-                                this.from = function(option, index)
-                                {
-                                    if (__new_app === null)
-                                        return false;
-
-                                    return __new_app.gui.fx.fade.settings.out.get.from(option, index);
-                                };
-
-                                this.last = function(option)
-                                {
-                                    if (__new_app === null)
-                                        return false;
-
-                                    return __new_app.gui.fx.fade.settings.out.get.last(option);
-                                };
-                            }
-
-                            this.set = function(step, speed, delay)
-                            {
-                                if (__new_app === null)
-                                    return false;
-
-                                return __new_app.gui.fx.fade.settings.out.set(step, speed, delay);
-                            };
-
-                            this.get = new get();
-                        }
-
-                        this.into = new into();
-                        this.out = new out();
-                    }
-
-                    this.batch = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.fx.fade.batch();
-                    };
-
-                    this.into = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.fx.fade.into();
-                    };
-
-                    this.out = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.fx.fade.out();
-                    };
-
-                    this.settings = new settings();
-                }
-
-                this.enabled = new enabled();
-                this.opacity = new opacity();
-                this.fade = new fade();
-            }
-
-            function css()
-            {
-                function style()
-                {
-                    this.get = function(context, sub_context, option)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.css.style.get(context, sub_context, option);
-                    };
-
-                    this.set = function(context, sub_context, option, val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.css.style.set(context, sub_context, option, val);
-                    };
-                }
-
-                function class_name()
-                {
-                    this.get = function(context, sub_context)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.css.style.get(context, sub_context);
-                    };
-
-                    this.set = function(context, sub_context, val)
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.gui.css.style.set(context, sub_context, val);
-                    };
-                }
-
-                this.style = new style();
-                this.class_name = new class_name();
-            }
-
-            function can()
-            {
-                this.open = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.actions.can_open(val);
-                };
-
-                this.close = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.actions.can_close(val);
-                };
-
-                this.edit_title = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.actions.can_edit_title(val);
-                };
-
-                this.use_menu = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.actions.can_use_menu(val);
-                };
-
-                this.use_casement = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.actions.can_use_casement(val);
-                };
-
-                this.drag = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.actions.can_drag.enabled(val);
-                };
-
-                this.resize = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.actions.can_resize.enabled(val);
-                };
-            }
-
-            function status()
-            {
-                function mouse()
-                {
-                    this.event = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mouse_clicked();
-                    };
-
-                    this.click = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mouseclick();
-                    };
-
-                    this.dblclick = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mousedblclick();
-                    };
-
-                    this.down = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mousedown();
-                    };
-
-                    this.up = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mouseup();
-                    };
-
-                    this.move = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mousemove();
-                    };
-
-                    this.over = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mouseover();
-                    };
-
-                    this.out = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.mouseout();
-                    };
-                }
-
-                function keyboard()
-                {
-                    this.event = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.key_pressed();
-                    };
-
-                    this.press = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.keypress();
-                    };
-
-                    this.down = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.keydown();
-                    };
-
-                    this.up = function()
-                    {
-                        if (__new_app === null)
-                            return false;
-
-                        return __new_app.status.gui.keyup();
-                    };
-                }
-
-                this.running = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.system.running();
-                };
-
-                this.opened = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.gui.opened();
-                };
-
-                this.closed = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.gui.closed();
-                };
-
-                this.dragged = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.gui.dragged();
-                };
-
-                this.resized = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.gui.resized();
-                };
-
-                this.topmost = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.gui.topmost();
-                };
-
-                this.menu_activated = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.gui.menu_activated();
-                };
-
-                this.casement_deployed = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.gui.casement_deployed();
-                };
-
-                this.focused = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.system.active();
-                };
-
-                this.in_stack_bar = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.system.in_hive();
-                };
-
-                this.desktop_changed = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.system.desktop_changed();
-                };
-
-                this.content_updated = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.data.content_changed();
-                };
-
-                this.title_updated = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.data.labels.title_changed();
-                };
-
-                this.status_updated = function()
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.status.data.labels.status_bar_label_changed();
-                };
-
-                this.mouse = new mouse();
-                this.keyboard = new keyboard();
-            }
-
-            function settings()
-            {
-                this.single_instance = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.single_instance(val);
-                };
-
-                this.resizable = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.resizable(val);
-                };
-
-                this.casement_width = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.casement_width(val);
-                };
-
-                this.status_bar_marquee = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.status_bar_marquee(val);
-                };
-
-                this.use_resize_tooltip = function(val)
-                {
-                    if (__new_app === null)
-                        return false;
-
-                    return __new_app.settings.general.resize_tooltip(val);
-                };
-            }
-
-            this.get_app_id = function()
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app.settings.general.app_id();
-            };
-
-            this.get_system_id = function()
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app.settings.general.id();
-            };
-
-            this.get_desktop_id = function()
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app.settings.general.desktop_id();
-            };
-
-            this.get_last_error = function()
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app.error.last();
-            };
-
-            this.get_error_codes = function()
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app.error.codes;
-            };
-
-            this.get_keys = function(event)
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app.gui.actions.keys.get(event);
-            };
-
-            this.close = function(event)
-            {
-                if (__new_app === null)
-                    return false;
-
-                __is_run = false;
-
-                return __new_app.gui.actions.close(event);
-            };
-
-            this.on = function(event_name, callback)
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app.on(event_name, callback);
-            };
-
-            this.object = function()
-            {
-                if (__new_app === null)
-                    return false;
-
-                return __new_app;
-            };
-
-            this.reflection = function()
-            {
-                if (__new_app === null)
-                    return false;
-
-                return program_config.meta_caller.source();
-            };
-
-            this.run = function(parent_app_id = null, headless = false)
-            {
-                if (__new_app === null || __is_run === true)
-                    return false;
-
-                program_config.meta_caller.telemetry(me.get_system_id());
-
-                me.on('close', function()
-                               {
-                                   app_box.remove(program_config.model.name);
-
-                                   //program_config.meta_caller.reset();
-                               });
-
-                app_box.replace([program_config.model]);
-
-                if (!swarm.bees.insert(__new_app))
-                    return false;
-
-                var __result = __new_app.run(parent_app_id, headless);
-
-                if (__result === true)
-                    __is_run = true;
-
-                return __result;
-            };
-
-            this.init = function(app_id)
-            {
-                if (__is_init === true)
-                    return false;
-
-                __new_app = dev_box.get('bee');
-
-                __result = __new_app.init(app_id);
-
-                if (__result === true)
-                    __is_init = true;
-
-                return __result;
-            };
-
-            this.menu = new menu();
-            this.main = new main();
-            this.casement = new casement();
-            this.position = new position();
-            this.size = new size();
-            this.fx = new fx();
-            this.css = new css();
-            this.can = new can();
-            this.status = new status();
-            this.settings = new settings();
+            return program_config.apps[global_app_index];
         }
 
-        global_app_index++;
+        this.service = function()
+        {
+            if (is_program_loaded === false)
+                return false;
 
-        program_config.apps.push(new app_api_model());
+            function svc_api_model()
+            {
+                var me = this,
+                    __new_svc = null,
+                    __is_init = false,
+                    __is_run = false;
 
-        return program_config.apps[global_app_index];
+                this.get_config = function()
+                {
+                    if (__new_svc === null)
+                        return false;
+
+                    return __new_svc.get_config();
+                };
+
+                this.set = function(func_name, body)
+                {
+                    if (__new_svc === null)
+                        return false;
+
+                    return __new_svc.set_function(func_name, body);
+                };
+
+                this.execute = function(func_name, func_args = [])
+                {
+                    if (__new_svc === null)
+                        return false;
+
+                    return __new_svc.exec_function(func_name, func_args);
+                };
+
+                this.on = function(event_name, callback)
+                {
+                    if (__new_svc === null)
+                        return false;
+
+                    return __new_svc.on(event_name, callback);
+                };
+
+                this.terminate = function()
+                {
+                    if (__new_svc === null)
+                        return false;
+
+                    super_tray.remove(__new_svc.get_config().sys_name);
+
+                    __is_run = false;
+
+                    return __new_svc.unregister(program_config.model.name);
+                };
+
+                this.reflection = function()
+                {
+                    if (__new_svc === null)
+                        return false;
+
+                    return program_config.meta_caller.source();
+                };
+
+                this.run = function()
+                {
+                    if (__new_svc === null || __is_run === true)
+                        return false;
+
+                    var __data = {
+                                    "icon"  :   me.get_config().icon,
+                                    "name"  :   me.get_config().name,
+                                    "type"  :   "svc"
+                                 };
+
+                    me.on('register', function() { program_config.meta_caller.telemetry(__data); });
+                    //me.on('unregister', function() { program_config.meta_caller.reset(); });
+
+                    matrix.unregister(program_config.model.name);
+
+                    var __result = __new_svc.register(program_config.model);
+
+                    if (__result === true)
+                    {
+                        super_tray.add(__new_svc);
+
+                        __is_run = true;
+                    }
+
+                    return __result;
+                };
+
+                this.init = function(svc_id, icon = 'default')
+                {
+                    if (__is_init === true)
+                        return false;
+
+                    __new_svc = dev_box.get('bat');
+
+                    var __result = __new_svc.init(svc_id, icon);
+
+                    if (__result === true)
+                        __is_init = true;
+
+                    return __result;
+                };
+            }
+
+            global_svc_index++
+
+            program_config.svcs.push(new svc_api_model());
+
+            return program_config.svcs[global_svc_index];
+        };
+
+        this.os = new os();
+        this.system = new system();
+        this.interface = new interface();
+        this.program = new program();    
     }
 
-    this.service = function()
+    this.start = function(program_model, meta_caller)
+    {
+        if (!utils_sys.validation.misc.is_function(program_model) || 
+            !utils_sys.validation.misc.is_object(meta_caller))
+            return false;
+
+        program_config.model = program_model;
+        program_config.meta_caller = meta_caller;
+
+        program_config.apps = [];
+        program_config.svcs = [];
+
+        global_app_index = -1;
+        global_svc_index = -1;
+
+        is_program_loaded = true;
+
+        return true;
+    };
+
+    this.end = function()
     {
         if (is_program_loaded === false)
             return false;
 
-        function svc_api_model()
-        {
-            var me = this,
-                __new_svc = null,
-                __is_init = false,
-                __is_run = false;
+        var i = 0,
+            __apps_num = program_config.apps.length,
+            __svcs_num = program_config.svcs.length;
 
-            this.get_config = function()
-            {
-                if (__new_svc === null)
-                    return false;
+        for (i = 0; i < __apps_num; i++)
+            program_config.apps[i].close(null);
 
-                return __new_svc.get_config();
-            };
+        for (i = 0; i < __svcs_num; i++)
+            program_config.svcs[i].terminate();
 
-            this.set = function(func_name, body)
-            {
-                if (__new_svc === null)
-                    return false;
+        uniplex.clear(program_config.model.name);
 
-                return __new_svc.set_function(func_name, body);
-            };
+        is_program_loaded = false;
 
-            this.execute = function(func_name, func_args = [])
-            {
-                if (__new_svc === null)
-                    return false;
-
-                return __new_svc.exec_function(func_name, func_args);
-            };
-
-            this.on = function(event_name, callback)
-            {
-                if (__new_svc === null)
-                    return false;
-
-                return __new_svc.on(event_name, callback);
-            };
-
-            this.terminate = function()
-            {
-                if (__new_svc === null)
-                    return false;
-
-                super_tray.remove(__new_svc.get_config().sys_name);
-
-                __is_run = false;
-
-                return __new_svc.unregister(program_config.model.name);
-            };
-
-            this.reflection = function()
-            {
-                if (__new_svc === null)
-                    return false;
-
-                return program_config.meta_caller.source();
-            };
-
-            this.run = function()
-            {
-                if (__new_svc === null || __is_run === true)
-                    return false;
-
-                me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
-                //me.on('unregister', function() { program_config.meta_caller.reset(); });
-
-                matrix.unregister(program_config.model.name);
-
-                var __result = __new_svc.register(program_config.model);
-
-                if (__result === true)
-                {
-                    super_tray.add(__new_svc);
-
-                    __is_run = true;
-                }
-
-                return __result;
-            };
-
-            this.init = function(svc_id, icon = 'default')
-            {
-                if (__is_init === true)
-                    return false;
-
-                __new_svc = dev_box.get('bat');
-
-                var __result = __new_svc.init(svc_id, icon);
-
-                if (__result === true)
-                    __is_init = true;
-
-                return __result;
-            };
-        }
-
-        global_svc_index++
-
-        program_config.svcs.push(new svc_api_model());
-
-        return program_config.svcs[global_svc_index];
+        return true;
     };
 
     this.cosmos = function(cosmos_object)
@@ -1331,6 +1359,7 @@ function meta_script()
         owl = matrix.get('owl');
         uniplex = matrix.get('uniplex');
         teal_fs = matrix.get('teal_fs');
+
         infinity = dev_box.get('infinity');
 
         return true;
@@ -1369,8 +1398,5 @@ function meta_script()
         config_models = new config_models(),
         program_config = new program_config_model();
 
-    this.os = new os();
-    this.system = new system();
-    this.interface = new interface();
-    this.program = new program();
+    this.ms_object = new ms_object_model();
 }

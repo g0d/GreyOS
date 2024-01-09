@@ -53,8 +53,24 @@
 		return;
 	}
 
-	// Check for empty program source
-	if (empty($_POST['program_source']))
+	// Check for empty program source and model
+	if (empty($_POST['program_source']) || empty($_POST['program_model']))
+	{
+		echo '-1';
+
+		return;
+	}
+
+	$program_model = json_decode($_POST['program_model'], true);
+
+	if (json_last_error() !== JSON_ERROR_NONE)
+	{
+		echo '-1';
+
+		return;
+	}
+
+	if (!isset($program_model['icon']) || !isset($program_model['name']) || !isset($program_model['type']))
 	{
 		echo '-1';
 
@@ -65,8 +81,8 @@
 
 	$program_name = trim($_POST['program_name']);
 	$program_source = $_POST['program_source'];
-	$program_run = minify_source($program_source);
-	$program = array($program_name, $program_source, $program_run);
+	$program_run = minify_source($_POST['program_source']);
+	$program = array($program_name, $program_model, $program_source, $program_run);
 
 	$user_profile = deploy_program($my_profile, $program);
 
@@ -120,14 +136,16 @@
 		if (!$is_match_found)
 		{
 			$new_program = array('name' 		=> 	$program[0],
+								 'type' 		=> 	$program[1]['type'],
+								 'icon' 		=> 	$program[1]['icon'],
 								 'last_run' 	=> 	null);
 
 			array_push($profile['user_programs'], $new_program);
 		}
 
 		$file_path = UTIL::Absolute_Path('fs/' . $username);
-		file_put_contents($file_path . '/programs/source/' . $program[0] . '.js', $program[1]);
-		file_put_contents($file_path . '/programs/run/' . $program[0] . '.js', $program[2]);
+		file_put_contents($file_path . '/programs/source/' . $program[0] . '.js', $program[2]);
+		file_put_contents($file_path . '/programs/run/' . $program[0] . '.js', $program[3]);
 
 		return $profile;
 	}

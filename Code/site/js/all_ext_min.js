@@ -10576,6 +10576,8 @@ function meta_script()
  this.apps = [];
  this.svcs = [];
  }
+ function ms_object_model()
+ {
  function os()
  {
  this.info = function()
@@ -10712,35 +10714,6 @@ function meta_script()
  }
  function program()
  {
- this.start = function(program_model, meta_caller)
- {
- if (!utils_sys.validation.misc.is_function(program_model) ||
- !utils_sys.validation.misc.is_object(meta_caller))
- return false;
- program_config.model = program_model;
- program_config.meta_caller = meta_caller;
- is_program_loaded = true;
- return true;
- };
- this.end = function()
- {
- if (is_program_loaded === false)
- return false;
- var i = 0,
- __apps_num = program_config.apps.length,
- __svcs_num = program_config.svcs.length;
- for (i = 0; i < __apps_num; i++)
- program_config.apps[i].close(null);
- for (i = 0; i < __svcs_num; i++)
- program_config.svcs[i].terminate();
- program_config.apps = [];
- program_config.svcs = [];
- global_app_index = -1;
- global_svc_index = -1;
- uniplex.clear(program_config.model.name);
- is_program_loaded = false;
- return true;
- };
  this.expose_api = function(public_calls_array)
  {
  if (!utils_sys.validation.misc.is_array(public_calls_array))
@@ -11332,6 +11305,12 @@ function meta_script()
  return false;
  return __new_app.settings.general.single_instance(val);
  };
+ this.icon = function(val)
+ {
+ if (__new_app === null)
+ return false;
+ return __new_app.settings.general.icon(val);
+ };
  this.resizable = function(val)
  {
  if (__new_app === null)
@@ -11422,7 +11401,12 @@ function meta_script()
  {
  if (__new_app === null || __is_run === true)
  return false;
- program_config.meta_caller.telemetry(me.get_system_id());
+ var __data = {
+ "icon" : me.settings.icon(),
+ "name" : me.get_app_id(),
+ "type" : "app"
+ };
+ program_config.meta_caller.telemetry(__data);
  me.on('close', function()
  {
  app_box.remove(program_config.model.name);
@@ -11512,7 +11496,12 @@ function meta_script()
  {
  if (__new_svc === null || __is_run === true)
  return false;
- me.on('register', function() { program_config.meta_caller.telemetry(me.get_config().sys_name); });
+ var __data = {
+ "icon" : me.get_config().icon,
+ "name" : me.get_config().name,
+ "type" : "svc"
+ };
+ me.on('register', function() { program_config.meta_caller.telemetry(__data); });
  matrix.unregister(program_config.model.name);
  var __result = __new_svc.register(program_config.model);
  if (__result === true)
@@ -11536,6 +11525,40 @@ function meta_script()
  global_svc_index++
  program_config.svcs.push(new svc_api_model());
  return program_config.svcs[global_svc_index];
+ };
+ this.os = new os();
+ this.system = new system();
+ this.interface = new interface();
+ this.program = new program();
+ }
+ this.start = function(program_model, meta_caller)
+ {
+ if (!utils_sys.validation.misc.is_function(program_model) ||
+ !utils_sys.validation.misc.is_object(meta_caller))
+ return false;
+ program_config.model = program_model;
+ program_config.meta_caller = meta_caller;
+ program_config.apps = [];
+ program_config.svcs = [];
+ global_app_index = -1;
+ global_svc_index = -1;
+ is_program_loaded = true;
+ return true;
+ };
+ this.end = function()
+ {
+ if (is_program_loaded === false)
+ return false;
+ var i = 0,
+ __apps_num = program_config.apps.length,
+ __svcs_num = program_config.svcs.length;
+ for (i = 0; i < __apps_num; i++)
+ program_config.apps[i].close(null);
+ for (i = 0; i < __svcs_num; i++)
+ program_config.svcs[i].terminate();
+ uniplex.clear(program_config.model.name);
+ is_program_loaded = false;
+ return true;
  };
  this.cosmos = function(cosmos_object)
  {
@@ -11595,10 +11618,7 @@ function meta_script()
  cc_reload = new f5(),
  config_models = new config_models(),
  program_config = new program_config_model();
- this.os = new os();
- this.system = new system();
- this.interface = new interface();
- this.program = new program();
+ this.ms_object = new ms_object_model();
 }
 function executor()
 {
@@ -11669,9 +11689,9 @@ function executor()
  try
  {
  __this_program = eval('new ' + __dynamic_program_model);
- if (!meta_script.program.start(__dynamic_program_model, meta_caller))
+ if (!meta_script.start(__dynamic_program_model, meta_caller))
  return false;
- if (!__this_program.main(meta_script))
+ if (!__this_program.main(meta_script.ms_object))
  {
  error_details.code = self.error.codes.MISMATCH;
  error_details.message = 'Program is incomplete!';
@@ -11693,7 +11713,7 @@ function executor()
  return false;
  program = null;
  is_program_loaded = false;
- return meta_script.program.end();
+ return meta_script.end();
  };
  this.cosmos = function(cosmos_object)
  {
@@ -14673,8 +14693,9 @@ function bee()
  __status_bar_marquee = false,
  __resizable = false,
  __resize_tooltip = false,
- __backtrace = false,
- __casement_width = 100;
+ __icon = 'default',
+ __casement_width = 100,
+ __backtrace = false;
  this.app_id = function()
  {
  if (is_init === false)
@@ -14809,6 +14830,19 @@ function bee()
  if (!utils_sys.validation.misc.is_bool(val))
  return false;
  __resize_tooltip = val;
+ return true;
+ };
+ this.icon = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __icon;
+ if (bee_statuses.running())
+ return false;
+ if (!utils_sys.validation.alpha.is_string(val))
+ return false;
+ __icon = val;
  return true;
  };
  this.casement_width = function(val)
@@ -18053,9 +18087,14 @@ function cloud_edit()
  var self = this;
  function config_model()
  {
+ function program_model()
+ {
+ this.icon = '';
+ this.name = '';
+ this.type = null;
+ }
  function ce_model()
  {
- this.program_name = 'new_program';
  this.editor = null;
  this.extra_button = null;
  this.exec_button = null;
@@ -18064,12 +18103,16 @@ function cloud_edit()
  }
  this.id = null;
  this.content = null;
+ this.program = new program_model();
  this.ce = new ce_model();
  }
  function ce_program_api()
  {
  this.telemetry = function(data)
  {
+ config.program.icon = encodeURIComponent(data.icon);
+ config.program.name = encodeURIComponent(data.name);
+ config.program.type = data.type;
  return true;
  };
  this.source = function()
@@ -18146,12 +18189,15 @@ function cloud_edit()
  {
  function save_program()
  {
- config.ce.program_name = utils_sys.objects.by_id('input_prog_name').value;
- __ajax_config.data += encodeURIComponent(config.ce.program_name);
- __source_code = encodeURIComponent(config.ce.editor.getValue());
+ __user_prog_name = encodeURIComponent(utils_sys.objects.by_id('input_prog_name').value);
+ __prog_source = encodeURIComponent(config.ce.editor.getValue());
+ __ajax_config.data += __user_prog_name;
+ __prog_model = JSON.stringify(config.program);
  ajax.run(__ajax_config)
  }
- var __source_code = null,
+ var __user_prog_name = null,
+ __prog_source = null,
+ __prog_model = null,
  __input_prog_name_object = null,
  __handler = null,
  __ajax_config = {
@@ -18169,13 +18215,17 @@ function cloud_edit()
  msg_win.show(os_name, 'An error has occurred!');
  return;
  }
- __ajax_config.data = "gate=deploy_program&program_name=" + config.ce.program_name +
- "&program_source=" + __source_code;
+ __ajax_config.data = "gate=deploy_program&program_name=" + __user_prog_name +
+ "&program_source=" + __prog_source + "&program_model=" + __prog_model;
  __ajax_config.on_success = (result) =>
  {
  if (result === '-1')
  {
- msg_win.show(os_name, 'An error has occurred. Program has not been saved!');
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(os_name, 'An error has occurred. \
+ Program has not been saved!',
+ msg_win.types.OK);
  return;
  }
  };
