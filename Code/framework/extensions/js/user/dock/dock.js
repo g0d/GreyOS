@@ -1,11 +1,11 @@
 /*
-    GreyOS - Dock (Version: 1.9)
+    GreyOS - Dock (Version: 2.0)
 
     File name: dock.js
     Description: This file contains the Dock module.
 
     Coded by John Inglessis (negle) and George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 

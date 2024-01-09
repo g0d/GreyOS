@@ -144,18 +144,30 @@ function cloud_edit()
         {
             function save_program()
             {
-                __user_prog_name = encodeURIComponent(utils_sys.objects.by_id('input_prog_name').value);
+                user_prog_name = encodeURIComponent(utils_sys.objects.by_id('input_prog_name').value);
                 __prog_source = encodeURIComponent(config.ce.editor.getValue());
 
-                __ajax_config.data += __user_prog_name;
+                if (user_prog_name.length === 0)
+                {
+                    msg_win = new msgbox();
+
+                    msg_win.init('desktop');
+                    msg_win.show(os_name, 'Please enter a program name!', msg_win.types.OK,
+                                 [() => { user_prog_name = 'new_program'; deploy_program(); }]);
+
+                    return;
+                }
+
+                var __verification_options = "&program_type=" + config.program.type + "&program_name=" + user_prog_name;
+
+                __ajax_config.data += __verification_options;
 
                 __prog_model = JSON.stringify(config.program);
 
                 ajax.run(__ajax_config)
             }
 
-            var __user_prog_name = null,
-                __prog_source = null,
+            var __prog_source = null,
                 __prog_model = null,
                 __input_prog_name_object = null,
                 __handler = null,
@@ -163,7 +175,7 @@ function cloud_edit()
                                     "type"          :   "request",
                                     "method"        :   "post",
                                     "url"           :   "/",
-                                    "data"          :   "gate=deploy_program&check_existing=1&program_name=",
+                                    "data"          :   "gate=deploy_program&check_existing=1",
                                     "ajax_mode"     :   "asynchronous",
                                     "on_success"    :   (result) => 
                                                         {
@@ -178,7 +190,7 @@ function cloud_edit()
                                                                 return;
                                                             }
 
-                                                            __ajax_config.data = "gate=deploy_program&program_name=" + __user_prog_name + 
+                                                            __ajax_config.data = "gate=deploy_program&program_name=" + user_prog_name + 
                                                                                  "&program_source=" + __prog_source + "&program_model=" + __prog_model;
                                                             __ajax_config.on_success = (result) =>
                                                                                        {
@@ -188,9 +200,8 @@ function cloud_edit()
 
                                                                                                 msg_win.init('desktop');
 
-                                                                                                msg_win.show(os_name, 'An error has occurred. \
-                                                                                                                       Program has not been saved!',
-                                                                                                                       msg_win.types.OK);
+                                                                                                msg_win.show(os_name, 'An error has occurred.\
+                                                                                                                       The program has not been saved!');
 
                                                                                                 return;
                                                                                             }
@@ -214,7 +225,8 @@ function cloud_edit()
 
             msg_win.init('desktop');
             msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
-                                   <input id="input_prog_name" class="ce_prog_name_input" value="new_program" placeholder="Enter program name...">', 
+                                   <input id="input_prog_name" class="ce_prog_name_input" value="' + user_prog_name + '"\
+                                   maxlength="40" placeholder="Enter program name...">', 
                                    msg_win.types.OK_CANCEL, [() => { save_program(); }]);
 
             __input_prog_name_object = utils_sys.objects.by_id('input_prog_name');
@@ -450,6 +462,7 @@ function cloud_edit()
 
     var is_init = false,
         program_is_running = false,
+        user_prog_name = 'new_program',
         os_name = null,
         cosmos = null,
         matrix = null,

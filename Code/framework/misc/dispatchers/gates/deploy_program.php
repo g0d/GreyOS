@@ -26,10 +26,9 @@
 	}
 
 	// Check for existing program name
-	if (isset($_POST['check_existing']))
+	if (isset($_POST['check_existing']) && isset($_POST['program_type']) && isset($_POST['program_name']))
 	{
 		$my_profile = ARKANGEL::Fetch_My_Profile();
-		$program_name = trim($_POST['program_name']);
 
 		if (!$my_profile)
 		{
@@ -38,9 +37,11 @@
 			return;
 		}
 
-		foreach ($my_profile['user_programs'] as $this_program)
+		$program_name = trim($_POST['program_name']);
+
+		foreach ($my_profile['user_programs'][$_POST['program_type'] . 's'] as $this_program)
 		{
-			if ($program_name == $this_program['name'])
+			if ($program_name === $this_program['name'])
 			{
 				echo '1';
 
@@ -123,9 +124,9 @@
 		$username = substr($email, 0, strpos($email, '@'));
 		$is_match_found = false;
 
-		foreach ($profile['user_programs'] as $this_program)
+		foreach ($profile['user_programs'][$program[1]['type'] . 's'] as $this_program)
 		{
-			if ($program[0] == $this_program['name'])
+			if ($program[0] === $this_program['name'])
 			{
 				$is_match_found = true;
 
@@ -136,16 +137,19 @@
 		if (!$is_match_found)
 		{
 			$new_program = array('name' 		=> 	$program[0],
-								 'type' 		=> 	$program[1]['type'],
 								 'icon' 		=> 	$program[1]['icon'],
 								 'last_run' 	=> 	null);
 
-			array_push($profile['user_programs'], $new_program);
+			array_push($profile['user_programs'][$program[1]['type'] . 's'], $new_program);
 		}
 
 		$file_path = UTIL::Absolute_Path('fs/' . $username);
-		file_put_contents($file_path . '/programs/source/' . $program[0] . '.js', $program[2]);
-		file_put_contents($file_path . '/programs/run/' . $program[0] . '.js', $program[3]);
+
+		mkdir($file_path . '/programs/source/' . $program[0], 0700);
+		mkdir($file_path . '/programs/run/' . $program[0], 0700);
+
+		file_put_contents($file_path . '/programs/source/' . $program[0] . '/' . $program[0] . '.js', $program[2]);
+		file_put_contents($file_path . '/programs/run/' . $program[0] . '/' . $program[0] . '.js', $program[3]);
 
 		return $profile;
 	}

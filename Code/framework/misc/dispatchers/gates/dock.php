@@ -6,7 +6,7 @@
         Description: This file contains the Dock control gate (AJAX).
 
         Coded by George Delaportas (G0D)
-        Copyright © 2013 - 2023
+        Copyright © 2013 - 2024
         Open Software License (OSL 3.0)
     */
 
@@ -25,6 +25,7 @@
         if ($_POST['action'] === 'load')
         {
             $all_system_apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/all_system_apps.json')));
+
             $index = 1;
             $html = null;
 
@@ -37,7 +38,8 @@
                         $html .= '<div id="app_' . $app->app_id . '" 
                                        draggable="true" 
                                        data-position="' . $index . '" 
-                                       data-system="' . $app->system . '" 
+                                       data-system="true" 
+                                       data-icon="' . $app->icon . '" 
                                        class="favorites" 
                                        title="' . $app->title . '"></div>';
 
@@ -50,12 +52,13 @@
 
             foreach ($user_apps as $app)
             {
-                $html .= '<div id="app_' . $app->app_id . '" 
+                $html .= '<div id="app_' . $app->name . '" 
                                draggable="true" 
                                data-position="' . $index . '" 
-                               data-system="' . $app->system . '" 
+                               data-system="false" 
+                               data-icon="' . $app->icon . '" 
                                class="favorites" 
-                               title="' . $app->title . '"></div>';
+                               title="' . $app->name . '"></div>';
 
                 $index++;
             }

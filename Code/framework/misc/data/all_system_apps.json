@@ -2,85 +2,77 @@
     {
         "app_id": "coyote",
         "position": "1",
-        "system": true,
+
         "title": "Coyote :: A Web browser inside the browser ;-) Click me!"
     },
     {
         "app_id": "radio_dude",
         "position": "2",
-        "system": true,
+
         "title": "Radio Dude :: Put some tunes in your life. Click me!"
     },
     {
         "app_id": "i_bassoon",
         "position": "3",
-        "system": true,
+
         "title": "iBassoon :: 3rd-party integrated DAW for fun. Click me!"
     },
     {
         "app_id": "cloud_edit",
         "position": "4",
-        "system": true,
+
         "title": "Cloud Edit :: Integrated code editor for GreyOS. Click me!"
     },
     {
         "app_id": "i_youdj",
         "position": "5",
-        "system": true,
+
         "title": "iYouDJ :: 3rd-party integrated DJ studio. Click me!"
     },
     {
         "app_id": "i_audiomass",
         "position": "6",
-        "system": true,
+
         "title": "iAudioMass :: 3rd-party integrated audio editor. Click me!"
     },
     {
         "app_id": "i_soundtrap",
         "position": "7",
-        "system": true,
         "title": "iSoundTrap :: 3rd-party integrated DAW. Click me!"
     },
     {
         "app_id": "i_ampedstudio",
         "position": "8",
-        "system": true,
         "title": "iAmpedStudio :: 3rd-party integrated DAW. Click me!"
     },
     {
         "app_id": "i_vectorink",
         "position": "9",
-        "system": true,
         "title": "iVectorInk :: 3rd-party integrated vector graphics designer. Click me!"
     },
     {
         "app_id": "i_ganttio",
         "position": "10",
-        "system": true,
         "title": "iGanttIO :: 3rd-party integrated Gantt charts creator. Click me!"
     },
     {
         "app_id": "i_quakejs",
         "position": "11",
-        "system": true,
         "title": "iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"
     },
     {
         "app_id": "i_mariojs",
         "position": "12",
-        "system": true,
         "title": "iMarioJS :: 3rd-party integrated Mario game. Click me!"
     },
     {
         "app_id": "i_swooop",
         "position": "13",
-        "system": true,
         "title": "iSwooop :: 3rd-party integrated flight game. Click me!"
     },
     {
         "app_id": "i_webgl_preview",
         "position": "14",
-        "system": true,
         "title": "iWebGL (Preview) :: 3rd-party integrated showcase. Click me!"
     }
 ]
