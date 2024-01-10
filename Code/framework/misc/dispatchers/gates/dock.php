@@ -17,8 +17,7 @@
     if (isset($_POST))
     {
         $user_profile = UTIL::Get_Session_Variable('auth');
-        $username = substr($user_profile['email'], 0, strpos($user_profile['email'], '@'));
-        $role = $user_profile['role'];
+        $uid = $user_profile['uid'];
         $user_system_apps = $user_profile['system_apps'];
         $user_apps = $user_profile['user_programs']['apps'];
 
@@ -40,7 +39,7 @@
                                        data-position="' . $index . '" 
                                        data-system="true" 
                                        data-icon="' . $app->icon . '" 
-                                       class="favorites" 
+                                       class="favorites' . $app->icon . '" 
                                        title="' . $app->title . '"></div>';
 
                         $index++;
@@ -57,7 +56,7 @@
                                data-position="' . $index . '" 
                                data-system="false" 
                                data-icon="' . $app->icon . '" 
-                               class="favorites" 
+                               class="favorites' . $app->icon . '" 
                                title="' . $app->name . '"></div>';
 
                 $index++;
@@ -98,7 +97,7 @@
 
                 UTIL::Set_Session_Variable('auth', $user_profile);
 
-                $file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
+                $file_path = UTIL::Absolute_Path('fs/' . $uid . '/profile.cfg');
                 file_put_contents($file_path, json_encode($user_profile));
 
                 echo '1';

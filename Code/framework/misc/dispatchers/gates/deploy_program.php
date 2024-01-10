@@ -120,8 +120,7 @@
 
 	function deploy_program($profile, $program)
 	{
-		$email = $profile['email'];
-		$username = substr($email, 0, strpos($email, '@'));
+		$uid = $profile['uid'];
 		$is_match_found = false;
 
 		foreach ($profile['user_programs'][$program[1]['type'] . 's'] as $this_program)
@@ -143,7 +142,7 @@
 			array_push($profile['user_programs'][$program[1]['type'] . 's'], $new_program);
 		}
 
-		$file_path = UTIL::Absolute_Path('fs/' . $username);
+		$file_path = UTIL::Absolute_Path('fs/' . $uid);
 
 		mkdir($file_path . '/programs/source/' . $program[0], 0700);
 		mkdir($file_path . '/programs/run/' . $program[0], 0700);

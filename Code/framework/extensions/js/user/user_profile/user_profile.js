@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 1.8)
+    GreyOS - User Profile (Version: 2.0)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -33,8 +33,9 @@ function user_profile()
                 msg_win = new msgbox();
 
                 msg_win.init('desktop');
-                msg_win.show(os_name, 'Your session has been terminated!',
-                function() { setTimeout(function(){ location.reload(); }, 1000); });
+                msg_win.show(os_name, 'Your session has been terminated!', 
+                             msg_win.types.OK, 
+                             function() { setTimeout(function(){ location.reload(); }, 1000); });
             }
 
             function run_heartbeat()
@@ -110,6 +111,7 @@ function user_profile()
 
                                      msg_win.init('desktop');
                                      msg_win.show(os_name, 'Logout error!', 
+                                                  msg_win.types.OK, 
                                                   function() { cc_reload.init(); });
                                  },
                                  function()

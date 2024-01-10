@@ -173,8 +173,16 @@
 		if (!$new_user_profile)
 			return false;
 
-		$new_user_credentials = array('username' => $email,
-									  'password' => md5($password));
+		$new_user_profile['uid'] = md5($email . '-' . time());
+		$new_user_profile['email'] = $email;
+		$new_user_profile['online'] = true;
+		$new_user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
+		$new_user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
+		$new_user_profile['security']['last_activity'] = time();
+
+		$new_user_credentials = array('uid' 		=> 	$new_user_profile['uid'],
+									  'username' 	=> 	$email,
+									  'password' 	=> 	md5($password));
 
 		$result = ARKANGEL::Update_Credentials($new_user_credentials);
 
@@ -182,24 +190,17 @@
 			return false;
 
 		$dir_path = UTIL::Absolute_Path('fs');
-		$username = substr($email, 0, strpos($email, '@'));
 
-		mkdir($dir_path . '/' . $username, 0700);
-		mkdir($dir_path . '/' . $username . '/disk', 0700);
-		mkdir($dir_path . '/' . $username . '/disk/Docs', 0700);
-		mkdir($dir_path . '/' . $username . '/disk/Pictures', 0700);
-		mkdir($dir_path . '/' . $username . '/disk/Music', 0700);
-		mkdir($dir_path . '/' . $username . '/disk/Video', 0700);
-		mkdir($dir_path . '/' . $username . '/disk/Other', 0700);
-		mkdir($dir_path . '/' . $username . '/programs', 0700);
-		mkdir($dir_path . '/' . $username . '/programs/run', 0700);
-		mkdir($dir_path . '/' . $username . '/programs/source', 0700);
-
-		$new_user_profile['email'] = $email;
-		$new_user_profile['online'] = true;
-		$new_user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
-		$new_user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
-		$new_user_profile['security']['last_activity'] = time();
+		mkdir($dir_path . '/' . $new_user_profile['uid'], 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Docs', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Pictures', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Music', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Video', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Other', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/programs', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/programs/run', 0700);
+		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/programs/source', 0700);
 
 		$result = ARKANGEL::Update_Profile($new_user_profile);
 

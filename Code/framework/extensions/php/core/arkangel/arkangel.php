@@ -2,7 +2,7 @@
     /*
         /ARK|ANG[e]L\ (User credentials & profile manager for GreyOS)
         
-        File name: arkangel.php (Version: 1.0)
+        File name: arkangel.php (Version: 1.2)
         Description: This file contains the ARKANGEL - User credentials & profile manager extension.
         
         Coded by George Delaportas (G0D)
@@ -72,13 +72,12 @@
                 return false;
             }
             
-            return self::Fetch_Profile($user_profile['email']);
+            return self::Fetch_Profile($user_profile['uid']);
         }
         
-        public static function Fetch_Profile($email)
+        public static function Fetch_Profile($uid)
         {
-            $username = substr($email, 0, strpos($email, '@'));
-            $file_path = UTIL::Absolute_Path('fs/' . $username . '/profile.cfg');
+            $file_path = UTIL::Absolute_Path('fs/' . $uid . '/profile.cfg');
             $data = file_get_contents($file_path);
             $result = json_decode($data, true);
             
@@ -90,24 +89,23 @@
         
         public static function Update_Profile($new_profile)
         {
-            $email = $new_profile['email'];
-            $username = substr($email, 0, strpos($email, '@'));
+            $uid = $new_profile['uid'];
             $new_json_profile = json_encode($new_profile);
             
             if (json_last_error() !== JSON_ERROR_NONE)
                 return false;
             
-            $file_path = UTIL::Absolute_Path('fs/' . $username);
+            $file_path = UTIL::Absolute_Path('fs/' . $uid);
             file_put_contents($file_path . '/profile.cfg', $new_json_profile);
             
             return true;
         }
         
-        public static function Synchronize_Profile($email)
+        public static function Synchronize_Profile($uid)
         {
             session_regenerate_id(true);
             
-            $user_profile = self::Fetch_Profile($email);
+            $user_profile = self::Fetch_Profile($uid);
             
             if (!$user_profile)
                 return false;

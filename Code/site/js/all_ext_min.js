@@ -9572,6 +9572,7 @@ function user_profile()
  msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Your session has been terminated!',
+ msg_win.types.OK,
  function() { setTimeout(function(){ location.reload(); }, 1000); });
  }
  function run_heartbeat()
@@ -9632,6 +9633,7 @@ function user_profile()
  msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Logout error!',
+ msg_win.types.OK,
  function() { cc_reload.init(); });
  },
  function()

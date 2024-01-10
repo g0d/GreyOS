@@ -174,3 +174,23 @@ body
     color: #FFFFFF;
     background: #D5D5D5;
 }
+
+.default
+{
+    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/inactive/icon_app.png') !important;
+}
+
+.default:hover
+{
+    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/hover/icon_app.png') !important;
+}
+
+.default_on
+{
+    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/active/icon_app.png') !important;
+}
+
+.default_off
+{
+    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/inactive/icon_app.png') !important;
+}

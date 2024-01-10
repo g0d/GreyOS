@@ -51,7 +51,7 @@
 	}
 	else if ($_POST['mode'] === 'logout') 							// Logout
 		logout();
-	else if ($_POST['mode'] === 'status') 							// Status
+	else if ($_POST['mode'] === 'status') 							// User status
 		status();
 	else if ($_POST['mode'] === 'details')							// User details
 		details();
@@ -78,7 +78,7 @@
 		{
 			if ($credentials['username'] === $username && $credentials['password'] === md5($password))
 			{
-				$result = ARKANGEL::Synchronize_Profile($credentials['username']);
+				$result = ARKANGEL::Synchronize_Profile($credentials['uid']);
 
 				if (!$result)
 				{
@@ -116,19 +116,6 @@
 
 			return false;
 		}
-		else
-		{
-			$result = ARKANGEL::Synchronize_Profile($username);
-
-			if (!$result)
-			{
-				echo '0';
-
-				return false;
-			}
-
-			echo '1';
-		}
 
 		return true;
 	}
@@ -145,7 +132,7 @@
 			return false;
 		}
 
-		$user_profile = ARKANGEL::Fetch_Profile($user_profile['email']);
+		$user_profile = ARKANGEL::Fetch_Profile($user_profile['uid']);
 
 		$user_profile['online'] = false;
 
@@ -183,16 +170,16 @@
 
 	function details()
 	{
-		$user_profile = ARKANGEL::Fetch_My_Profile();
+		$my_profile = ARKANGEL::Fetch_My_Profile();
 
-		if (empty($user_profile))
+		if (empty($my_profile))
 		{
 			echo '0';
 
 			return false;
 		}
 
-		echo json_encode($user_profile);
+		echo json_encode($my_profile);
 
 		return true;
 	}
