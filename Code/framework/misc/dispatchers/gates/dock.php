@@ -14,16 +14,20 @@
     if (!defined('micro_mvc'))
         exit();
 
+	// Load helper extensions
+    UTIL::Load_Extension('arkangel', 'php');
+
     if (isset($_POST))
     {
-        $user_profile = UTIL::Get_Session_Variable('auth');
+        $user_profile = ARKANGEL::Fetch_My_Profile();
+
         $uid = $user_profile['uid'];
         $user_system_apps = $user_profile['system_apps'];
         $user_apps = $user_profile['user_programs']['apps'];
 
         if ($_POST['action'] === 'load')
         {
-            $all_system_apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/all_system_apps.json')));
+            $all_system_apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/all_system_apps.json')), true);
 
             $index = 1;
             $html = null;
@@ -32,32 +36,30 @@
             {
                 foreach ($all_system_apps as $app)
                 {
-                    if ($allowed_app === $app->app_id)
+                    if ($allowed_app === $app['app_id'])
                     {
-                        $html .= '<div id="app_' . $app->app_id . '" 
+                        $html .= '<div id="app_' . $app['app_id'] . '" 
                                        draggable="true" 
                                        data-position="' . $index . '" 
                                        data-system="true" 
-                                       data-icon="' . $app->icon . '" 
-                                       class="favorites' . $app->icon . '" 
-                                       title="' . $app->title . '"></div>';
+                                       data-icon="' . $app['icon'] . '" 
+                                       class="favorites' . $app['icon'] . '" 
+                                       title="' . $app['title'] . '"></div>';
 
                         $index++;
                     }
                 }
             }
 
-            $index = 1;
-
             foreach ($user_apps as $app)
             {
-                $html .= '<div id="app_' . $app->name . '" 
+                $html .= '<div id="app_' . $app['name'] . '" 
                                draggable="true" 
                                data-position="' . $index . '" 
                                data-system="false" 
-                               data-icon="' . $app->icon . '" 
-                               class="favorites' . $app->icon . '" 
-                               title="' . $app->name . '"></div>';
+                               data-icon="' . $app['icon'] . '" 
+                               class="favorites ' . $app['icon'] . '" 
+                               title="' . $app['name'] . '"></div>';
 
                 $index++;
             }

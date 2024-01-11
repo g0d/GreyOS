@@ -330,12 +330,44 @@ function krator()
         };
     }
 
-    this.get_bee = function()
+    this.base = function()
     {
         if (is_init === false)
             return false;
 
         return krator_bee;
+    };
+
+    this.on = function(event_name, event_handler)
+    {
+        if (is_init === false)
+            return false;
+
+        return krator_bee.on(event_name, event_handler);
+    };
+
+    this.run = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return krator_bee.run();
+    };
+
+    this.quit = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return krator_bee.close();
+    };
+
+    this.error = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return krator_bee.error;
     };
 
     this.init = function(script)

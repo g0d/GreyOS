@@ -1214,24 +1214,22 @@ function meta_script()
                     return __new_svc.on(event_name, callback);
                 };
 
-                this.terminate = function()
-                {
-                    if (__new_svc === null)
-                        return false;
-
-                    super_tray.remove(__new_svc.get_config().sys_name);
-
-                    __is_run = false;
-
-                    return __new_svc.unregister(program_config.model.name);
-                };
-
                 this.reflection = function()
                 {
                     if (__new_svc === null)
                         return false;
 
                     return program_config.meta_caller.source();
+                };
+
+                this.terminate = function()
+                {
+                    if (__new_svc === null)
+                        return false;
+
+                    __is_run = false;
+
+                    return __new_svc.unregister(program_config.model.name);
                 };
 
                 this.run = function()
@@ -1253,11 +1251,7 @@ function meta_script()
                     var __result = __new_svc.register(program_config.model);
 
                     if (__result === true)
-                    {
-                        super_tray.add(__new_svc);
-
                         __is_run = true;
-                    }
 
                     return __result;
                 };
@@ -1355,8 +1349,8 @@ function meta_script()
         parrot = matrix.get('parrot');
         octopus = matrix.get('octopus');
         super_tray = matrix.get('super_tray');
-        xgc = matrix.get('xgc');
         owl = matrix.get('owl');
+        xgc = matrix.get('xgc');
         uniplex = matrix.get('uniplex');
         teal_fs = matrix.get('teal_fs');
 
@@ -1383,8 +1377,8 @@ function meta_script()
         parrot = null,
         octopus = null,
         super_tray = null,
-        xgc = null,
         owl = null,
+        xgc = null,
         uniplex = null,
         teal_fs = null,
         infinity = null,

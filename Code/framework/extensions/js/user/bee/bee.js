@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.0)
+    GreyOS - Bee (Version: 5.1)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -885,7 +885,9 @@ function bee()
         this.is_lonely_bee = function(bee_id)
         {
             var __swarm_bees = swarm.bees.list(),
-                __hive_bees = matrix.get('hive').status.bees.list();
+                __hive_bees = matrix.get('hive').status.bees.list(),
+                __bees_list = null,
+                __bees_list_num = 0;
 
             for (var i = 0; i < __swarm_bees.length; i++)
             {
@@ -893,11 +895,13 @@ function bee()
                     return false;
             }
 
-            for (var bees_list in __hive_bees)
+            for (__bees_list in __hive_bees)
             {
-                for (var i = 0; i < bees_list.length; i++)
+                __bees_list_num = __bees_list.length;
+
+                for (var i = 0; i < __bees_list_num; i++)
                 {
-                    if (bees_list[i] === bee_id)
+                    if (__bees_list[i] === bee_id)
                         return false;
                 }
             }
@@ -3877,13 +3881,30 @@ function bee()
                 return false;
             };
 
-            this.show = function(parent_app_id = null, headless = false)
+            this.show = function(child_bees = [], headless = false)
             {
                 if (is_init === false)
                     return false;
 
                 if (error_code !== null)
                     return false;
+
+                if (!utils_sys.validation.misc.is_array(child_bees))
+                    return false;
+
+                var __child_bee = null;
+
+                for (__child_bee in child_bees)
+                {
+                    if (!colony.is_bee(__child_bee))
+                    {
+                        owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
+
+                        utils_int.log('Run', 'INVALID CHILD BEES');
+    
+                        return false;
+                    }
+                }
 
                 if (!utils_sys.validation.misc.is_bool(headless))
                     return false;
@@ -3907,8 +3928,7 @@ function bee()
                 {
                     if (!utils_int.gui_init())
                     {
-                        if (parent_app_id === null)
-                            owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
+                        owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
 
                         utils_int.log('Show', 'ERROR');
 
@@ -3920,6 +3940,9 @@ function bee()
                 bee_statuses.active(true);
 
                 morpheus.execute(my_bee_id, 'system', 'running');
+
+                for (__child_bee in child_bees)
+                    __child_bee.show();
 
                 owl.status.applications.set(my_bee_id, __app_id, 'RUN');
 
@@ -3985,15 +4008,22 @@ function bee()
                     me.actions.casement.retract(event_object, 
                     function()
                     {
+                        var __child_bee = null;
+
+                        for (__child_bee in my_child_bees)
+                            __child_bee.close(null);
+
+                        morpheus.execute(my_bee_id, 'gui', 'close');
+/*
                         try
                         {
-                            morpheus.execute(my_bee_id, 'gui', 'close');
+
                         }
                         catch
                         {
                             // Do nothing...
                         }
-
+*/
                         if (utils_int.animating_events.in_progress())
                             setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());
                         else
@@ -4870,21 +4900,22 @@ function bee()
         if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(cmd))
             return false;
 
-        var __context_list = new events_status_settings_model();
+        var __context_list = new events_status_settings_model(),
+            __context = null;
 
-        for (var context in __context_list)
+        for (__context in __context_list)
         {
-            if (context === 'on_event')
+            if (__context === 'on_event')
                 continue;
 
-            if (bee_events.contains(this_event, context))
+            if (bee_events.contains(this_event, __context))
             {
                 var __event_receiver_object = document,
                     __cmd = cmd;
 
-                if (context === 'mouse')
+                if (__context === 'mouse')
                     __event_receiver_object = ui_objects.window.ui;
-                else if (context === 'key')
+                else if (__context === 'key')
                 {
                     var __exended_cmd = function()
                                         {
@@ -4895,7 +4926,7 @@ function bee()
                     __cmd = __exended_cmd;
                 }
 
-                morpheus.store(my_bee_id, context, this_event, __cmd, __event_receiver_object);
+                morpheus.store(my_bee_id, __context, this_event, __cmd, __event_receiver_object);
 
                 return true;
             }
@@ -4904,7 +4935,7 @@ function bee()
         return false;
     };
 
-    this.run = function(parent_app_id = null, headless = false)
+    this.run = function(child_bees = [], headless = false)
     {
         if (is_init === false)
             return false;
@@ -4914,14 +4945,15 @@ function bee()
 
         var __app_id = self.settings.general.app_id(),
             __all_bees = colony.list(),
+            __this_bee = null,
             __max_allowed_instances = self.settings.general.allowed_instances(),
             __currrent_running_instances_num = 0;
 
         if (__max_allowed_instances > 0)
         {
-            for (var this_bee of __all_bees)
+            for (__this_bee of __all_bees)
             {
-                if (this_bee.settings.general.app_id() === __app_id)
+                if (__this_bee.settings.general.app_id() === __app_id)
                 {
                     __currrent_running_instances_num++;
 
@@ -4941,8 +4973,10 @@ function bee()
             }
         }
 
-        if (!self.gui.actions.show(parent_app_id, headless))
+        if (!self.gui.actions.show(child_bees, headless))
             return false;
+
+        my_child_bees = child_bees;
 
         utils_int.log('Run', 'OK');
 
@@ -5000,6 +5034,7 @@ function bee()
     var is_init = false,
         error_code = null,
         my_bee_id = null,
+        my_child_bees = [],
         cosmos = null,
         matrix = null,
         nature = null,

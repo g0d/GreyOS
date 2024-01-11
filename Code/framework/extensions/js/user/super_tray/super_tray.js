@@ -1,11 +1,11 @@
 /*
-    GreyOS - Super Tray (Version: 1.4)
+    GreyOS - Super Tray (Version: 1.5)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area service module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2022
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -313,6 +313,8 @@ function super_tray()
         tray_services.list.push(__new_tray_service);
         tray_services.num++;
 
+        svc_box.replace([bat_object]);
+    
         utils_int.add_service_icon(tray_services.num);
         utils_int.fix_service_icon_names(__service_config.name);
 
@@ -346,6 +348,8 @@ function super_tray()
 
                 roost.remove(sys_service_id);
 
+                svc_box.remove(sys_service_id);
+
                 return true;
             }
         }
@@ -358,12 +362,17 @@ function super_tray()
         if (is_init === false)
             return false;
 
+        for (var i = 0; i < tray_services.num; i++)
+        {
+            roost.remove(tray_services.list[i].sys_id);
+
+            svc_box.remove(tray_services.list[i].sys_id);
+        }
+
         tray_services.num = 0;
         tray_services.list = [];
 
         utils_int.clear_service_icons();
-
-        roost.clear();
 
         return true;
     };
@@ -397,6 +406,8 @@ function super_tray()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
+        app_box = cosmos.hub.access('app_box');
+        svc_box = cosmos.hub.access('svc_box');
         roost = cosmos.hub.access('roost');
 
         morpheus = matrix.get('morpheus');
@@ -410,6 +421,8 @@ function super_tray()
         super_tray_id = null,
         cosmos = null,
         matrix = null,
+        app_box = null,
+        svc_box = null,
         roost = null,
         morpheus = null,
         nature = null,

@@ -61,12 +61,44 @@ function i_youdj()
         };
     }
 
-    this.get_bee = function()
+    this.base = function()
     {
         if (is_init === false)
             return false;
 
         return i_youdj_bee;
+    };
+
+    this.on = function(event_name, event_handler)
+    {
+        if (is_init === false)
+            return false;
+
+        return i_youdj_bee.on(event_name, event_handler);
+    };
+
+    this.run = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return i_youdj_bee.run();
+    };
+
+    this.quit = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return i_youdj_bee.close();
+    };
+
+    this.error = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return i_youdj_bee.error;
     };
 
     this.init = function()

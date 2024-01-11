@@ -1,16 +1,16 @@
 /*
-    GreyOS - Executor (Version: 1.4)
+    GreyOS - Meta-Executor (Version: 1.6)
 
-    File name: executor.js
-    Description: This file contains the Executor - User-level program execution development module.
+    File name: meta_executor.js
+    Description: This file contains the Meta-Executor - Meta-Script program execution module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 
-// Executor
-function executor()
+// Meta-Executor
+function meta_executor()
 {
     var self = this;
 
@@ -67,6 +67,12 @@ function executor()
     this.process = function(meta_caller)
     {
         if (is_program_loaded === false)
+            return false;
+
+        if (utils_sys.validation.misc.is_undefined(meta_caller) || !utils_sys.validation.misc.is_object(meta_caller))
+            return false;
+
+        if (!meta_caller.hasOwnProperty('telemetry') || !meta_caller.hasOwnProperty('source') || !meta_caller.hasOwnProperty('reset'))
             return false;
 
         if (program.indexOf('navigator') >= 0 || program.indexOf('window') >= 0 || 

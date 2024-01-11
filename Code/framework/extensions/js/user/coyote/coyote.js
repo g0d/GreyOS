@@ -1,5 +1,5 @@
 /*
-    GreyOS - Coyote (Version: 3.0)
+    GreyOS - Coyote (Version: 3.1)
 
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
@@ -237,9 +237,12 @@ function coyote()
                 if (callback !== undefined)
                     callback.call(this);
 
-                is_browser_loading = false;
+                setTimeout(function()
+                           {
+                                is_browser_loading = false;
 
-                setTimeout(function() { infinity.end(); }, 8000);
+                                infinity.end();
+                           }, 8000);
             };
             config.ajax_config.on_timeout = () => { };
             config.ajax_config.on_fail = () => { };
@@ -474,9 +477,44 @@ function coyote()
         this.go = new explore_ctrl();
     };
 
-    this.get_bee = function()
+    this.base = function()
     {
+        if (is_init === false)
+            return false;
+
         return coyote_bee;
+    };
+
+    this.on = function(event_name, event_handler)
+    {
+        if (is_init === false)
+            return false;
+
+        return coyote_bee.on(event_name, event_handler);
+    };
+
+    this.run = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return coyote_bee.run();
+    };
+
+    this.quit = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return coyote_bee.close();
+    };
+
+    this.error = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return coyote_bee.error;
     };
 
     this.init = function()
@@ -533,21 +571,24 @@ function coyote()
                                   {
                                       utils_int.browser_frame_size();
 
-                                      infinity.begin();
+                                      if (!is_browser_loading)
+                                      {
+                                            infinity.begin();
 
-                                      browser_frame.style.visibility = 'hidden';
+                                            browser_frame.style.visibility = 'hidden';
+                                      }
                                   });
         coyote_bee.on('resized', function()
                                  {
-                                    if (is_browser_loading)
-                                        return;
-
                                     var browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
                                         browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
 
                                     if (hb_manager !== null && browser_frame_height !== false)
                                     {
                                         hb_manager.resize(browser_frame_width, browser_frame_height);
+
+                                        if (is_browser_loading)
+                                            return;
 
                                         browser_frame.style.visibility = 'visible';
 

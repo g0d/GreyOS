@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 2.0)
+    GreyOS - Dock (Version: 2.2)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -74,9 +74,10 @@ function dock()
                 __position = null,
                 __system = null,
                 __title = null
+                __dock_app = null,
                 __dock = utils_sys.objects.by_class('favorites');
 
-            for (var __dock_app of __dock)
+            for (__dock_app of __dock)
             {
                 __app_id = __dock_app.getAttribute('id').split('app_')[1],
                 __position = __dock_app.getAttribute('data-position'),
@@ -92,13 +93,14 @@ function dock()
         function attach_events()
         {
             var __dock_div = utils_sys.objects.by_id(self.settings.container()),
-                __handler = null;
+                __handler = null,
+                __dock_app = null;
 
             __handler = function() { last_button_clicked = 0; };
             morpheus.run(dock_id, 'mouse', 'mouseenter', __handler, __dock_div);
 
-            for (var __dock_app of config.dock_array)
-                open_app(__dock_app);
+            for (__dock_app of config.dock_array)
+                run_app(__dock_app);
 
             enable_drag();
 
@@ -117,7 +119,7 @@ function dock()
             return true;
         }
 
-        function open_app(dock_app)
+        function run_app(dock_app)
         {
             var __handler = function(event)
                             {
@@ -128,68 +130,20 @@ function dock()
                                     return false;
 
                                 var __app_id = dock_app['app_id'],
-                                    __sys_theme = chameleon.get();
+                                    __system_app = dock_app['system'],
+                                    __sys_theme = chameleon.get(),
+                                    __is_sys_level = true;
 
                                 parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
 
-                                if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
-                                    return false;
-
-                                var __app = app_box.get(__app_id);
-
-                                __app.init();
-
-                                __bee = __app.get_bee();
-
-                                if (!swarm.bees.insert(__bee))
-                                    return false;
-
-                                if (__bee.run())
-                                {
-                                    utils_sys.objects.by_id('app_' + __app_id).classList.remove('app_' + __app_id + '_off');
-                                    utils_sys.objects.by_id('app_' + __app_id).classList.add('app_' + __app_id + '_on');
-
-                                    close_app(__bee, __app_id);
-                                }
+                                if (__system_app === 'true')
+                                    __is_sys_level = true;
                                 else
-                                {
-                                    if (__bee.error.last() === __bee.error.codes.POSITION || 
-                                        __bee.error.last() === __bee.error.codes.SIZE)
-                                    {
-                                        swarm.bees.remove(__bee);
+                                    __is_sys_level = false;
 
-                                        msg_win = new msgbox();
-
-                                        msg_win.init('desktop');
-                                        msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
-                                                                             You need a larger screen or higher resolution to run it!');
-                                    }
-                                    else if (__bee.error.last() === __bee.error.codes.INSTANCE_NUM_LIMIT)
-                                    {
-                                        swarm.bees.remove(__bee);
-
-                                        msg_win = new msgbox();
-
-                                        msg_win.init('desktop');
-                                        msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
-                                    }
-                                }
+                                x_runner.start('app', __app_id, __is_sys_level);
                             };
             morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['app_id']));
-        }
-
-        function close_app(bee, app_id)
-        {
-            bee.on('closed', function()
-                             {
-                                if (owl.status.applications.get.by_proc_id(app_id, 'RUN'))
-                                    return false;
-
-                                utils_sys.objects.by_id('app_' + app_id).classList.remove('app_' + app_id + '_on');
-                                utils_sys.objects.by_id('app_' + app_id).classList.add('app_' + app_id + '_off');
-
-                                return true;
-                             });
         }
 
         function enable_drag()
@@ -384,14 +338,9 @@ function dock()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
-        app_box = cosmos.hub.access('app_box');
-        colony = cosmos.hub.access('colony');
 
-        xenon = matrix.get('xenon');
-        swarm = matrix.get('swarm');
-        hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
-        owl = matrix.get('owl');
+        x_runner = matrix.get('x_runner');
         parrot = matrix.get('parrot');
         chameleon = matrix.get('chameleon');
         nature = matrix.get('nature');
@@ -404,17 +353,11 @@ function dock()
         dock_id = null,
         cosmos = null,
         matrix = null,
-        xenon = null,
-        swarm = null,
-        hive = null,
-        app_box = null,
-        colony = null,
         morpheus = null,
-        owl = null,
+        x_runner = null,
         parrot = null,
         chameleon = null,
         nature = null,
-        msg_win = null,
         last_button_clicked = 0,
         utils_sys = new vulcan(),
         ajax = new bull(),

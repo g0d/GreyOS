@@ -5,11 +5,11 @@
     Description: This file contains the bootstrap facility.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
-// Run high quality, secure and verified code
+// Parse JS always in strict mode
 "use strict";
 
 // GreyOS - Bootstrap script
@@ -33,7 +33,7 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '3.6 (alpha)');  // Meta-OS version
+    os_settings.set('version', '3.7 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
     os_settings.set('max_services', 20);        // Maximum number of allowed active services per session
     os_settings.set('max_apps', 16);            // Maximum number of allowed active apps per session
@@ -44,18 +44,22 @@ function boot_script()
     var init_script = function()
     {
         // List of containers
-        var containers_list = [dev_box, app_box, matrix, colony, roost];
+        var containers_list = [dev_box, app_box, svc_box, matrix, colony, roost];
 
         // List of development tools
-        var dev_tools = [bee, bat, meta_program_config, meta_script, executor, infinity, scrollbar];
+        var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
         // List of system services
         var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            teal_fs, morpheus, panda, octopus, super_tray, parrot, xgc, owl, uniplex, nature, chameleon];
+                            teal_fs, morpheus, x_runner, panda, octopus, super_tray, parrot, xgc, owl, uniplex, 
+                            nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
                     i_ampedstudio, i_vectorink, i_ganttio, i_quakejs, i_mariojs, i_swooop, i_webgl_preview];
+
+        // List of services
+        var svcs = [];
 
         // Add a VM to the hypervisor
         os_hypervisor.add([os_vm]);
@@ -81,13 +85,21 @@ function boot_script()
 
         //console.log(matrix_container.list());
 
-        // App Box - Integrated applications container
+        // App Box - Applications container
         var app_box_container = os_vm.hub.access('app_box');
 
         // Add applications in the container
         app_box_container.add(apps);
 
         //console.log(app_box_container.list());
+
+        // Svc Box - Services container
+        var svc_box_container = os_vm.hub.access('svc_box');
+
+        // Add services in the container
+        svc_box_container.add(svcs);
+
+        //console.log(svc_box_container.list());
 
         // Colony - Bee keeper container
         var bees_container = os_vm.hub.access('colony');
@@ -201,7 +213,7 @@ function boot_script()
                 return false;
             }
 
-            var krator_bee = krator_app.get_bee();
+            var krator_bee = krator_app.base();
 
             matrix_container.get('swarm').bees.insert(krator_bee);
 
@@ -427,17 +439,22 @@ function boot_script()
     var init_script_dev = function()
     {
         // List of containers
-        var containers_list = [dev_box, app_box, matrix, colony, roost];
+        var containers_list = [dev_box, app_box, svc_box, matrix, colony, roost];
 
         // List of development tools
-        var dev_tools = [bee, bat, meta_program_config, meta_script, executor, infinity, scrollbar];
+        var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
         // List of system services
         var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            morpheus, panda, octopus, super_tray, parrot, xgc, owl, nature, chameleon];
+                            teal_fs, morpheus, x_runner, panda, octopus, super_tray, parrot, xgc, owl, uniplex, 
+                            nature, chameleon];
 
         // List of applications
-        var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_quakejs, i_webgl_preview];
+        var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
+                    i_ampedstudio, i_vectorink, i_ganttio, i_quakejs, i_mariojs, i_swooop, i_webgl_preview];
+
+        // List of services
+        var svcs = [];
 
         // Add a VM to the hypervisor
         //os_hypervisor.backtrace(true);
@@ -475,6 +492,14 @@ function boot_script()
         app_box_container.add(apps);
 
         //console.log(app_box_container.list());
+
+        // Svc Box - Services container
+        var svc_box_container = os_vm.hub.access('svc_box');
+
+        // Add services in the container
+        svc_box_container.add(svcs);
+
+        //console.log(svc_box_container.list());
 
         // Colony - Bee keeper container
         var bees_container = os_vm.hub.access('colony');
@@ -552,7 +577,7 @@ function boot_script()
             new_hive.stack.bees.show();
 
             // Load Banana (User suggestions widget)
-            Banana();
+            //Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()

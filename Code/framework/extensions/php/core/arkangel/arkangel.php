@@ -79,12 +79,14 @@
         {
             $file_path = UTIL::Absolute_Path('fs/' . $uid . '/profile.cfg');
             $data = file_get_contents($file_path);
-            $result = json_decode($data, true);
+            $user_profile = json_decode($data, true);
             
             if (json_last_error() !== JSON_ERROR_NONE)
                 return false;
             
-            return $result;
+            UTIL::Set_Session_Variable('auth', $user_profile);
+            
+            return $user_profile;
         }
         
         public static function Update_Profile($new_profile)
@@ -98,13 +100,13 @@
             $file_path = UTIL::Absolute_Path('fs/' . $uid);
             file_put_contents($file_path . '/profile.cfg', $new_json_profile);
             
+            UTIL::Set_Session_Variable('auth', $new_profile);
+            
             return true;
         }
         
         public static function Synchronize_Profile($uid)
         {
-            session_regenerate_id(true);
-            
             $user_profile = self::Fetch_Profile($uid);
             
             if (!$user_profile)

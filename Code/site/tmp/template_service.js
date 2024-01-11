@@ -1,5 +1,5 @@
 /*
-    GreyOS - Template [Service] (Version: 0.1)
+    GreyOS - Template [Service] (Version: 0.2)
 
     File name: template_service.js
     Description: This file contains the Template Service - Template service module.
@@ -65,7 +65,23 @@ function template_service()
         return true;
     };
 
-    this.init = function(any = false) // Always have a public "init" method available
+    this.run = function(service_model) // Always have a public "run" method available with this code in the body
+    {
+        if (!is_init)
+            return false;
+
+        return template_svc_bat.register(service_model);
+    };
+
+    this.terminate = function(service_model) // Always have a public "terminate" method available with this code in the body
+    {
+        if (!is_init)
+            return false;
+
+        return template_svc_bat.unregister(service_model);
+    };
+
+    this.init = function(any = false) // Always have a public "init" method available following the template in the body
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
@@ -75,6 +91,8 @@ function template_service()
 
         if (utils_sys.validation.misc.is_undefined(any) || !utils_sys.validation.misc.is_bool(any))
             return false;
+
+        template_svc_bat = dev_box.get('bat'); // Get a "bat" service model from the development toolbox
 
         var __handler = null;
 
@@ -100,6 +118,7 @@ function template_service()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix'); // Always have "matrix" to reference other OS services
+        dev_box = cosmos.hub.access('dev_box'); // Always have a "dev_box" to reference the development toolbox
 
         morpheus = matrix.get('morpheus'); // Good to have to manage OS level events
 
@@ -112,8 +131,10 @@ function template_service()
         cosmos = null,  // Always have a "cosmos" internal variable
         // Your code here...
         matrix = null, // Always have a "matrix" internal variable
+        dev_box = null, // Always have a "dev_box" internal variable
         morpheus = null, // Good to have a "morpheus" internal variable
         // Your code here...
+        template_svc_bat = null, // Always have a "xxx_bat" internal variable
         utils_sys = new vulcan(), // Always have a "utils_sys" internal variable that utilizes "vulcan"
         // Your code here...
         template_service_config = new template_service_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model

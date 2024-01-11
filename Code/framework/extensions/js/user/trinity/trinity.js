@@ -1,11 +1,11 @@
 /*
-    GreyOS - Trinity (Version: 1.0)
+    GreyOS - Trinity (Version: 1.1)
 
     File name: trinity.js
     Description: This file contains the Trinity - Process Management UI (front-end) application.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2022
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -57,12 +57,44 @@ function trinity()
         }
     }
 
-    this.get_bee = function()
+    this.base = function()
     {
         if (is_init === false)
             return false;
 
         return trinity_bee;
+    };
+
+    this.on = function(event_name, event_handler)
+    {
+        if (is_init === false)
+            return false;
+
+        return trinity_bee.on(event_name, event_handler);
+    };
+
+    this.run = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return trinity_bee.run();
+    };
+
+    this.quit = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return trinity_bee.close();
+    };
+
+    this.error = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return trinity_bee.error;
     };
 
     this.init = function()
@@ -117,6 +149,8 @@ function trinity()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
+        app_box = cosmos.hub.access('app_box');
+        svc_box = cosmos.hub.access('svc_box');
         dev_box = cosmos.hub.access('dev_box');
         colony = cosmos.hub.access('colony');
         roost = cosmos.hub.access('roost');
@@ -131,6 +165,8 @@ function trinity()
     var is_init = false,
         cosmos = null,
         matrix = null,
+        app_box = null,
+        svc_box = null,
         dev_box = null,
         colony = null,
         roost = null,

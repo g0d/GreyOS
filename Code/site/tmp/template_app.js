@@ -1,5 +1,5 @@
 /*
-    GreyOS - Template [App] (Version: 0.1)
+    GreyOS - Template [App] (Version: 0.2)
 
     File name: template_app.js
     Description: This file contains the Template App - Template application.
@@ -100,7 +100,7 @@ function template_app()
         return true;
     };
 
-    this.get_bee = function() // Always have a public "get_bee" method available
+    this.base = function() // Always have a public "base" method available with this code in the body
     {
         if (is_init === false)
             return false;
@@ -108,7 +108,39 @@ function template_app()
         return template_app_bee;
     };
 
-    this.init = function(any = false) // Always have a public "init" method available
+    this.on = function(event_name, event_handler) // Always have a public "on" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_app_bee.on(event_name, event_handler);
+    };
+
+    this.run = function() // Always have a public "run" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_app_bee.run();
+    };
+
+    this.quit = function() // Always have a public "quit" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_app_bee.close();
+    };
+
+    this.error = function() // Always have a public "error" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_app_bee.error;
+    };
+
+    this.init = function(any = false) // Always have a public "init" method available following the template in the body
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
@@ -205,9 +237,11 @@ function template_app()
         cosmos = null,  // Always have a "cosmos" internal variable
         // Your code here...
         matrix = null, // Always have a "matrix" internal variable
+        dev_box = null, // Always have a "dev_box" internal variable
         morpheus = null, // Good to have a "morpheus" internal variable
         nature = null, // Always have a "nature" internal variable
         infinity = null, // Always have a "infinity" internal variable
+        // Your code here...
         template_app_bee = null, // Always have a "xxx_bee" internal variable
         template_app_bee_id = null, // Always have a "xxx_bee_id" internal variable
         // Your code here...

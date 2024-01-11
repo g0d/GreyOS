@@ -2462,7 +2462,7 @@ function teal_mail()
 		};
 	}
 
-	this.get_bee = function()
+	this.base = function()
     {
 		if (is_init === false)
 			return false;

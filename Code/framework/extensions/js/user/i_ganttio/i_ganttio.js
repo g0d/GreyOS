@@ -61,12 +61,44 @@ function i_ganttio()
         };
     }
 
-    this.get_bee = function()
+    this.base = function()
     {
         if (is_init === false)
             return false;
 
         return i_ganttio_bee;
+    };
+
+    this.on = function(event_name, event_handler)
+    {
+        if (is_init === false)
+            return false;
+
+        return cloud_edit_bee.on(event_name, event_handler);
+    };
+
+    this.run = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return i_ganttio_bee.run();
+    };
+
+    this.quit = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return i_ganttio_bee.close();
+    };
+
+    this.error = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return i_ganttio_bee.error;
     };
 
     this.init = function()

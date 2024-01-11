@@ -1062,7 +1062,7 @@ function i_linkedin()
 
     }
 
-    this.get_bee = function()
+    this.base = function()
     {
 
         if (is_init === false)

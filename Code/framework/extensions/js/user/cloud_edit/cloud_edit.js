@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cloud Edit (Version: 2.4)
+    GreyOS - Cloud Edit (Version: 2.5)
 
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
@@ -38,7 +38,7 @@ function cloud_edit()
         this.ce = new ce_model();
     }
 
-    function ce_program_api()
+    function ce_meta_caller()
     {
         this.telemetry = function(data)
         {
@@ -76,7 +76,7 @@ function cloud_edit()
 
             __code = config.ce.editor.getValue();
 
-            if (!executor.load(__code))
+            if (!meta_executor.load(__code))
             {
                 config.ce.status_label.innerHTML = '[EMPTY]';
                 config.ce.exec_button.value = 'Run';
@@ -88,37 +88,37 @@ function cloud_edit()
                 return false;
             }
 
-            if (executor.process(ce_api) !== true)
+            if (meta_executor.process(ce_mc) !== true)
             {
-                if (executor.error.last.code() === executor.error.codes.INVALID)
+                if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
                 {
                     config.ce.status_label.innerHTML = '[INVALID]';
                     config.ce.exec_button.value = 'Run';
                     config.ce.exec_button.classList.remove('ce_stop');
 
                     frog('CLOUD EDIT', '% Invalid %', 
-                         executor.error.last.message() + '\nPlease check the template...');
+                         meta_executor.error.last.message() + '\nPlease check the template...');
                 }
-                else if (executor.error.last.code() === executor.error.codes.MISMATCH)
+                else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
                 {
                     config.ce.status_label.innerHTML = '[ERROR]';
                     config.ce.exec_button.value = 'Run';
                     config.ce.exec_button.classList.remove('ce_stop');
 
-                    frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
+                    frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
                 }
-                else if (executor.error.last.code() === executor.error.codes.OTHER)
+                else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
                 {
                     config.ce.status_label.innerHTML = '[ERROR]';
                     config.ce.exec_button.value = 'Run';
                     config.ce.exec_button.classList.remove('ce_stop');
 
-                    frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
+                    frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
                 }
 
                 disable_deploy_button();
 
-                return executor.terminate();
+                return meta_executor.terminate();
             }
 
             config.ce.status_label.innerHTML = '[RUNNING]';
@@ -348,7 +348,7 @@ function cloud_edit()
 
         this.reset = function()
         {
-            executor.terminate();
+            meta_executor.terminate();
 
             config.ce.status_label.innerHTML = '[READY]';
             config.ce.exec_button.value = 'Run';
@@ -371,12 +371,44 @@ function cloud_edit()
         };
     }
 
-    this.get_bee = function()
+    this.base = function()
     {
         if (is_init === false)
             return false;
 
         return cloud_edit_bee;
+    };
+
+    this.on = function(event_name, event_handler)
+    {
+        if (is_init === false)
+            return false;
+
+        return cloud_edit_bee.on(event_name, event_handler);
+    };
+
+    this.run = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return cloud_edit_bee.run();
+    };
+
+    this.quit = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return cloud_edit_bee.close();
+    };
+
+    this.error = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return cloud_edit_bee.error;
     };
 
     this.init = function()
@@ -432,7 +464,7 @@ function cloud_edit()
                                    {
                                        cloud_edit_bee.gui.fx.fade.out();
 
-                                       executor.terminate();
+                                       meta_executor.terminate();
 
                                        utils_int.destroy_editor();
                                    });
@@ -455,7 +487,7 @@ function cloud_edit()
         xenon = matrix.get('xenon');
         nature = matrix.get('nature');
         infinity = dev_box.get('infinity');
-        executor = dev_box.get('executor');
+        meta_executor = dev_box.get('meta_executor');
 
         return true;
     };
@@ -470,12 +502,12 @@ function cloud_edit()
         colony = null,
         morpheus = null,
         xenon = null,
-        executor = null,
+        meta_executor = null,
         nature = null,
         infinity = null,
         cloud_edit_bee = null,
         config = new config_model(),
-        ce_api = new ce_program_api(),
+        ce_mc = new ce_meta_caller(),
         utils_int = new utilities(),
         utils_sys = new vulcan(),
         key_control = new key_manager(),

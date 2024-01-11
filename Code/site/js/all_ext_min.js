@@ -5757,6 +5757,178 @@ function app_box()
  apps = new app_box_model(),
  utils_int = new utilities();
 }
+function svc_box()
+{
+ var self = this;
+ function svc_box_model()
+ {
+ this.num = 0;
+ this.list = [];
+ }
+ function utilities()
+ {
+ this.model_exists = function(model)
+ {
+ if (!utils_sys.validation.misc.is_object(model))
+ return false;
+ for (var i = 0; i < svcs.num; i++)
+ {
+ if (svcs.list[i].constructor.name === model.constructor.name)
+ return true;
+ }
+ return false;
+ };
+ }
+ this.num = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return svcs.num;
+ };
+ this.list = function(index)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_undefined(index))
+ return svcs.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (svcs.num - 1))
+ return false;
+ return svcs.list[index];
+ };
+ this.get = function(svc_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (svcs.num === 0)
+ return null;
+ if (utils_sys.validation.alpha.is_symbol(svc_id))
+ return false;
+ for (var i = 0; i < svcs.num; i++)
+ {
+ if (svcs.list[i].constructor.name === svc_id)
+ {
+ var __new_svc = new svcs.list[i].constructor();
+ __new_svc.cosmos(cosmos);
+ if (backtrace === true)
+ frog('SVC BOX', 'Models :: Get', svc_id);
+ return __new_svc;
+ }
+ }
+ return false;
+ };
+ this.add = function(models_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(models_array))
+ return false;
+ var __models_num = models_array.length;
+ if (__models_num === 0)
+ return false;
+ for (var i = 0; i < __models_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(models_array[i]))
+ {
+ if (backtrace === true)
+ frog('SVC BOX', 'Models :: Invalid', models_array[i]);
+ self.clear();
+ return false;
+ }
+ var __object_model = new models_array[i]();
+ if (utils_int.model_exists(__object_model))
+ {
+ if (backtrace === true)
+ frog('SVC BOX', 'Models :: Duplication', __object_model.constructor.name);
+ self.clear();
+ return false;
+ }
+ svcs.list.push(__object_model);
+ svcs.num++;
+ if (backtrace === true)
+ frog('SVC BOX', 'Models :: Addition', __object_model.constructor.name);
+ }
+ if (backtrace === true)
+ frog('SVC BOX', 'All models', svcs.list, 'Model count: ' + svcs.num);
+ return true;
+ };
+ this.remove = function(svc_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(svc_id))
+ return false;
+ for (var i = 0; i < svcs.num; i++)
+ {
+ if (svcs.list[i].constructor.name === svc_id)
+ {
+ svcs.list.splice(i, 1);
+ svcs.num--;
+ if (backtrace === true)
+ {
+ frog('SVC BOX', 'Models :: Removal', svc_id);
+ frog('SVC BOX', 'All models', svcs.list, 'Model count: ' + svcs.num);
+ }
+ return true;
+ }
+ }
+ return false;
+ };
+ this.replace = function(models_array)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_array(models_array))
+ return false;
+ var __models_num = models_array.length;
+ if (__models_num === 0)
+ return false;
+ for (var i = 0; i < __models_num; i++)
+ {
+ if (!utils_sys.validation.misc.is_function(models_array[i]))
+ {
+ if (backtrace === true)
+ frog('SVC BOX', 'Models :: Invalid', models_array[i]);
+ self.clear();
+ return false;
+ }
+ self.remove(models_array[i].name);
+ }
+ return self.add(models_array);
+ };
+ this.clear = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (svcs.num === 0)
+ return false;
+ svcs.num = 0;
+ svcs.list = [];
+ if (backtrace === true)
+ frog('SVC BOX', 'Models :: Clear', svcs.list);
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ utils_sys = new vulcan(),
+ svcs = new svc_box_model(),
+ utils_int = new utilities();
+}
 function colony()
 {
  var self = this;
@@ -5912,7 +6084,7 @@ function colony()
  utils_sys.validation.misc.is_undefined(object.drone))
  return false;
  var bee_length = Object.keys(object).length;
- if (bee_length < 9 || bee_length > 9)
+ if (bee_length !== 9)
  return false;
  return true;
  };
@@ -8634,11 +8806,35 @@ function trinity()
  var __data = utils_sys.objects.by_id(trinity_bee.settings.general.id() + '_data');
  }
  }
- this.get_bee = function()
+ this.base = function()
  {
  if (is_init === false)
  return false;
  return trinity_bee;
+ };
+ this.on = function(event_name, event_handler)
+ {
+ if (is_init === false)
+ return false;
+ return trinity_bee.on(event_name, event_handler);
+ };
+ this.run = function()
+ {
+ if (is_init === false)
+ return false;
+ return trinity_bee.run();
+ };
+ this.quit = function()
+ {
+ if (is_init === false)
+ return false;
+ return trinity_bee.close();
+ };
+ this.error = function()
+ {
+ if (is_init === false)
+ return false;
+ return trinity_bee.error;
  };
  this.init = function()
  {
@@ -8680,6 +8876,8 @@ function trinity()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
+ app_box = cosmos.hub.access('app_box');
+ svc_box = cosmos.hub.access('svc_box');
  dev_box = cosmos.hub.access('dev_box');
  colony = cosmos.hub.access('colony');
  roost = cosmos.hub.access('roost');
@@ -8691,6 +8889,8 @@ function trinity()
  var is_init = false,
  cosmos = null,
  matrix = null,
+ app_box = null,
+ svc_box = null,
  dev_box = null,
  colony = null,
  roost = null,
@@ -8959,11 +9159,35 @@ function krator()
  return true;
  };
  }
- this.get_bee = function()
+ this.base = function()
  {
  if (is_init === false)
  return false;
  return krator_bee;
+ };
+ this.on = function(event_name, event_handler)
+ {
+ if (is_init === false)
+ return false;
+ return krator_bee.on(event_name, event_handler);
+ };
+ this.run = function()
+ {
+ if (is_init === false)
+ return false;
+ return krator_bee.run();
+ };
+ this.quit = function()
+ {
+ if (is_init === false)
+ return false;
+ return krator_bee.close();
+ };
+ this.error = function()
+ {
+ if (is_init === false)
+ return false;
+ return krator_bee.error;
  };
  this.init = function(script)
  {
@@ -9284,8 +9508,9 @@ function dock()
  __position = null,
  __system = null,
  __title = null
+ __dock_app = null,
  __dock = utils_sys.objects.by_class('favorites');
- for (var __dock_app of __dock)
+ for (__dock_app of __dock)
  {
  __app_id = __dock_app.getAttribute('id').split('app_')[1],
  __position = __dock_app.getAttribute('data-position'),
@@ -9298,11 +9523,12 @@ function dock()
  function attach_events()
  {
  var __dock_div = utils_sys.objects.by_id(self.settings.container()),
- __handler = null;
+ __handler = null,
+ __dock_app = null;
  __handler = function() { last_button_clicked = 0; };
  morpheus.run(dock_id, 'mouse', 'mouseenter', __handler, __dock_div);
- for (var __dock_app of config.dock_array)
- open_app(__dock_app);
+ for (__dock_app of config.dock_array)
+ run_app(__dock_app);
  enable_drag();
  return true;
  }
@@ -9315,7 +9541,7 @@ function dock()
  config.dock_array[position_two]['position'] = position_two + 1;
  return true;
  }
- function open_app(dock_app)
+ function run_app(dock_app)
  {
  var __handler = function(event)
  {
@@ -9324,53 +9550,17 @@ function dock()
  if (is_dragging)
  return false;
  var __app_id = dock_app['app_id'],
- __sys_theme = chameleon.get();
+ __system_app = dock_app['system'],
+ __sys_theme = chameleon.get(),
+ __is_sys_level = true;
  parrot.play('action', '/site/themes/' + __sys_theme + '/sounds/button_click.mp3');
- if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
- return false;
- var __app = app_box.get(__app_id);
- __app.init();
- __bee = __app.get_bee();
- if (!swarm.bees.insert(__bee))
- return false;
- if (__bee.run())
- {
- utils_sys.objects.by_id('app_' + __app_id).classList.remove('app_' + __app_id + '_off');
- utils_sys.objects.by_id('app_' + __app_id).classList.add('app_' + __app_id + '_on');
- close_app(__bee, __app_id);
- }
+ if (__system_app === 'true')
+ __is_sys_level = true;
  else
- {
- if (__bee.error.last() === __bee.error.codes.POSITION ||
- __bee.error.last() === __bee.error.codes.SIZE)
- {
- swarm.bees.remove(__bee);
- msg_win = new msgbox();
- msg_win.init('desktop');
- msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
- You need a larger screen or higher resolution to run it!');
- }
- else if (__bee.error.last() === __bee.error.codes.INSTANCE_NUM_LIMIT)
- {
- swarm.bees.remove(__bee);
- msg_win = new msgbox();
- msg_win.init('desktop');
- msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
- }
- }
+ __is_sys_level = false;
+ x_runner.start('app', __app_id, __is_sys_level);
  };
  morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['app_id']));
- }
- function close_app(bee, app_id)
- {
- bee.on('closed', function()
- {
- if (owl.status.applications.get.by_proc_id(app_id, 'RUN'))
- return false;
- utils_sys.objects.by_id('app_' + app_id).classList.remove('app_' + app_id + '_on');
- utils_sys.objects.by_id('app_' + app_id).classList.add('app_' + app_id + '_off');
- return true;
- });
  }
  function enable_drag()
  {
@@ -9516,13 +9706,8 @@ function dock()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
- app_box = cosmos.hub.access('app_box');
- colony = cosmos.hub.access('colony');
- xenon = matrix.get('xenon');
- swarm = matrix.get('swarm');
- hive = matrix.get('hive');
  morpheus = matrix.get('morpheus');
- owl = matrix.get('owl');
+ x_runner = matrix.get('x_runner');
  parrot = matrix.get('parrot');
  chameleon = matrix.get('chameleon');
  nature = matrix.get('nature');
@@ -9533,17 +9718,11 @@ function dock()
  dock_id = null,
  cosmos = null,
  matrix = null,
- xenon = null,
- swarm = null,
- hive = null,
- app_box = null,
- colony = null,
  morpheus = null,
- owl = null,
+ x_runner = null,
  parrot = null,
  chameleon = null,
  nature = null,
- msg_win = null,
  last_button_clicked = 0,
  utils_sys = new vulcan(),
  ajax = new bull(),
@@ -11480,19 +11659,18 @@ function meta_script()
  return false;
  return __new_svc.on(event_name, callback);
  };
- this.terminate = function()
- {
- if (__new_svc === null)
- return false;
- super_tray.remove(__new_svc.get_config().sys_name);
- __is_run = false;
- return __new_svc.unregister(program_config.model.name);
- };
  this.reflection = function()
  {
  if (__new_svc === null)
  return false;
  return program_config.meta_caller.source();
+ };
+ this.terminate = function()
+ {
+ if (__new_svc === null)
+ return false;
+ __is_run = false;
+ return __new_svc.unregister(program_config.model.name);
  };
  this.run = function()
  {
@@ -11507,10 +11685,7 @@ function meta_script()
  matrix.unregister(program_config.model.name);
  var __result = __new_svc.register(program_config.model);
  if (__result === true)
- {
- super_tray.add(__new_svc);
  __is_run = true;
- }
  return __result;
  };
  this.init = function(svc_id, icon = 'default')
@@ -11581,8 +11756,8 @@ function meta_script()
  parrot = matrix.get('parrot');
  octopus = matrix.get('octopus');
  super_tray = matrix.get('super_tray');
- xgc = matrix.get('xgc');
  owl = matrix.get('owl');
+ xgc = matrix.get('xgc');
  uniplex = matrix.get('uniplex');
  teal_fs = matrix.get('teal_fs');
  infinity = dev_box.get('infinity');
@@ -11606,8 +11781,8 @@ function meta_script()
  parrot = null,
  octopus = null,
  super_tray = null,
- xgc = null,
  owl = null,
+ xgc = null,
  uniplex = null,
  teal_fs = null,
  infinity = null,
@@ -11622,7 +11797,7 @@ function meta_script()
  program_config = new program_config_model();
  this.ms_object = new ms_object_model();
 }
-function executor()
+function meta_executor()
 {
  var self = this;
  function error_details_model()
@@ -11667,6 +11842,10 @@ function executor()
  this.process = function(meta_caller)
  {
  if (is_program_loaded === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(meta_caller) || !utils_sys.validation.misc.is_object(meta_caller))
+ return false;
+ if (!meta_caller.hasOwnProperty('telemetry') || !meta_caller.hasOwnProperty('source') || !meta_caller.hasOwnProperty('reset'))
  return false;
  if (program.indexOf('navigator') >= 0 || program.indexOf('window') >= 0 ||
  program.indexOf('document') >= 0 || program.indexOf('location') >= 0 ||
@@ -12009,6 +12188,188 @@ function morpheus()
  cosmos = null,
  utils_sys = new vulcan(),
  global_events_scheduler = new events_scheduler();
+}
+function x_runner()
+{
+ var self = this;
+ function x_meta_caller()
+ {
+ this.telemetry = function(data)
+ {
+ return true;
+ };
+ this.source = function()
+ {
+ return
+ };
+ this.reset = function()
+ {
+ return;
+ };
+ }
+ function utilities()
+ {
+ var me = this;
+ function execute_meta(x_id)
+ {
+ var __code = null;
+ meta_executor = dev_box.get('meta_executor');
+ if (!meta_executor.load(__code))
+ return false;
+ if (meta_executor.process(x_mc))
+ return meta_executor.run();
+ return false;
+ }
+ function app()
+ {
+ function close_app(app, app_id, dock_app_object)
+ {
+ app.on('closed', function()
+ {
+ if (owl.status.applications.get.by_proc_id(app_id, 'RUN'))
+ return;
+ dock_app_object.classList.remove('app_' + app_id + '_on');
+ dock_app_object.classList.add('app_' + app_id + '_off');
+ });
+ }
+ this.start = function(app_id, is_sys_level)
+ {
+ if (is_sys_level)
+ {
+ if (owl.status.applications.get.by_proc_id(app_id, 'RUN') && colony.is_single_instance(app_id))
+ return false;
+ var __app = app_box.get(app_id),
+ __bee = null;
+ __app.init();
+ __bee = __app.base();
+ if (!swarm.bees.insert(__bee))
+ return false;
+ if (__app.run())
+ {
+ var __dock_app_object = utils_sys.objects.by_id('app_' + app_id);
+ if (!__dock_app_object)
+ return false;
+ __dock_app_object.classList.remove('app_' + app_id + '_off');
+ __dock_app_object.classList.add('app_' + app_id + '_on');
+ close_app(__app, app_id, __dock_app_object);
+ }
+ else
+ {
+ var __app_error = __app.error();
+ if (__app_error.last() === __app_error.codes.POSITION ||
+ __app_error.last() === __app_error.codes.SIZE)
+ {
+ swarm.bees.remove(__bee);
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
+ You need a larger screen or higher resolution to run it!');
+ }
+ else if (__app_error.last() === __app_error.codes.INSTANCE_NUM_LIMIT)
+ {
+ swarm.bees.remove(__bee);
+ msg_win = new msgbox();
+ msg_win.init('desktop');
+ msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
+ }
+ }
+ return true;
+ }
+ return execute_meta(app_id);
+ };
+ this.stop = function()
+ {
+ if (x_is_sys_level)
+ return this_app.quit();
+ else
+ return meta_executor.terminate();
+ };
+ }
+ function svc()
+ {
+ this.start = function(service_id, is_sys_level)
+ {
+ if (is_sys_level)
+ {
+ this_bat = svc_box.get(service_id);
+ if (!this_bat)
+ return false;
+ return this_bat.run();
+ }
+ return execute_meta(service_id);
+ };
+ this.stop = function()
+ {
+ if (x_is_sys_level)
+ return this_bat.terminate();
+ else
+ return meta_executor.terminate();
+ };
+ }
+ this.check_arguments = function(mode, id, system)
+ {
+ if (utils_sys.validation.misc.is_undefined(mode) || utils_sys.validation.misc.is_nothing(id))
+ return false;
+ if (!utils_sys.misc.contains(mode, modes_list))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(system))
+ return false;
+ return true;
+ };
+ this.app = new app();
+ this.svc = new svc();
+ }
+ this.start = function(mode, id, is_sys_level)
+ {
+ if (!utils_int.check_arguments(mode, id, is_sys_level))
+ return false;
+ x_mode = mode;
+ x_id = id;
+ x_is_sys_level = is_sys_level;
+ return utils_int[mode].start(id, is_sys_level);
+ };
+ this.stop = function()
+ {
+ if (!is_x_running)
+ return false;
+ is_x_running = false;
+ return utils_int[x_mode].stop();
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ app_box = cosmos.hub.access('app_box');
+ svc_box = cosmos.hub.access('svc_box');
+ dev_box = cosmos.hub.access('dev_box');
+ colony = cosmos.hub.access('colony');
+ xenon = matrix.get('xenon');
+ swarm = matrix.get('swarm');
+ owl = matrix.get('owl');
+ return true;
+ };
+ var is_x_running = false,
+ x_is_sys_level = false,
+ x_mode = null,
+ x_id = null,
+ this_app = null,
+ this_svc = null,
+ cosmos = null,
+ matrix = null,
+ xenon = null,
+ app_box = null,
+ svc_box = null,
+ dev_box = null,
+ colony = null,
+ swarm = null,
+ owl = null,
+ meta_executor = null,
+ modes_list = ['app', 'svc'],
+ utils_sys = new vulcan(),
+ x_mc = new x_meta_caller(),
+ utils_int = new utilities();
 }
 function panda()
 {
@@ -12521,6 +12882,7 @@ function super_tray()
  __new_tray_service.action = action;
  tray_services.list.push(__new_tray_service);
  tray_services.num++;
+ svc_box.replace([bat_object]);
  utils_int.add_service_icon(tray_services.num);
  utils_int.fix_service_icon_names(__service_config.name);
  return true;
@@ -12545,6 +12907,7 @@ function super_tray()
  utils_int.fix_service_icon_names(tray_services.list[j].id);
  }
  roost.remove(sys_service_id);
+ svc_box.remove(sys_service_id);
  return true;
  }
  }
@@ -12554,10 +12917,14 @@ function super_tray()
  {
  if (is_init === false)
  return false;
+ for (var i = 0; i < tray_services.num; i++)
+ {
+ roost.remove(tray_services.list[i].sys_id);
+ svc_box.remove(tray_services.list[i].sys_id);
+ }
  tray_services.num = 0;
  tray_services.list = [];
  utils_int.clear_service_icons();
- roost.clear();
  return true;
  };
  this.init = function(container_id)
@@ -12580,6 +12947,8 @@ function super_tray()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
+ app_box = cosmos.hub.access('app_box');
+ svc_box = cosmos.hub.access('svc_box');
  roost = cosmos.hub.access('roost');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
@@ -12590,6 +12959,8 @@ function super_tray()
  super_tray_id = null,
  cosmos = null,
  matrix = null,
+ app_box = null,
+ svc_box = null,
  roost = null,
  morpheus = null,
  nature = null,
@@ -14330,17 +14701,20 @@ function bee()
  this.is_lonely_bee = function(bee_id)
  {
  var __swarm_bees = swarm.bees.list(),
- __hive_bees = matrix.get('hive').status.bees.list();
+ __hive_bees = matrix.get('hive').status.bees.list(),
+ __bees_list = null,
+ __bees_list_num = 0;
  for (var i = 0; i < __swarm_bees.length; i++)
  {
  if (__swarm_bees[i] === bee_id)
  return false;
  }
- for (var bees_list in __hive_bees)
+ for (__bees_list in __hive_bees)
  {
- for (var i = 0; i < bees_list.length; i++)
+ __bees_list_num = __bees_list.length;
+ for (var i = 0; i < __bees_list_num; i++)
  {
- if (bees_list[i] === bee_id)
+ if (__bees_list[i] === bee_id)
  return false;
  }
  }
@@ -16597,12 +16971,24 @@ function bee()
  }
  return false;
  };
- this.show = function(parent_app_id = null, headless = false)
+ this.show = function(child_bees = [], headless = false)
  {
  if (is_init === false)
  return false;
  if (error_code !== null)
  return false;
+ if (!utils_sys.validation.misc.is_array(child_bees))
+ return false;
+ var __child_bee = null;
+ for (__child_bee in child_bees)
+ {
+ if (!colony.is_bee(__child_bee))
+ {
+ owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
+ utils_int.log('Run', 'INVALID CHILD BEES');
+ return false;
+ }
+ }
  if (!utils_sys.validation.misc.is_bool(headless))
  return false;
  if (bee_statuses.running())
@@ -16620,7 +17006,6 @@ function bee()
  {
  if (!utils_int.gui_init())
  {
- if (parent_app_id === null)
  owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
  utils_int.log('Show', 'ERROR');
  return false;
@@ -16629,6 +17014,8 @@ function bee()
  bee_statuses.running(true);
  bee_statuses.active(true);
  morpheus.execute(my_bee_id, 'system', 'running');
+ for (__child_bee in child_bees)
+ __child_bee.show();
  owl.status.applications.set(my_bee_id, __app_id, 'RUN');
  if (headless === false)
  utils_int.log('Show', 'OK');
@@ -16674,13 +17061,10 @@ function bee()
  me.actions.casement.retract(event_object,
  function()
  {
- try
- {
+ var __child_bee = null;
+ for (__child_bee in my_child_bees)
+ __child_bee.close(null);
  morpheus.execute(my_bee_id, 'gui', 'close');
- }
- catch
- {
- }
  if (utils_int.animating_events.in_progress())
  setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());
  else
@@ -17370,18 +17754,19 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(cmd))
  return false;
- var __context_list = new events_status_settings_model();
- for (var context in __context_list)
+ var __context_list = new events_status_settings_model(),
+ __context = null;
+ for (__context in __context_list)
  {
- if (context === 'on_event')
+ if (__context === 'on_event')
  continue;
- if (bee_events.contains(this_event, context))
+ if (bee_events.contains(this_event, __context))
  {
  var __event_receiver_object = document,
  __cmd = cmd;
- if (context === 'mouse')
+ if (__context === 'mouse')
  __event_receiver_object = ui_objects.window.ui;
- else if (context === 'key')
+ else if (__context === 'key')
  {
  var __exended_cmd = function()
  {
@@ -17390,13 +17775,13 @@ function bee()
  };
  __cmd = __exended_cmd;
  }
- morpheus.store(my_bee_id, context, this_event, __cmd, __event_receiver_object);
+ morpheus.store(my_bee_id, __context, this_event, __cmd, __event_receiver_object);
  return true;
  }
  }
  return false;
  };
- this.run = function(parent_app_id = null, headless = false)
+ this.run = function(child_bees = [], headless = false)
  {
  if (is_init === false)
  return false;
@@ -17404,13 +17789,14 @@ function bee()
  return false;
  var __app_id = self.settings.general.app_id(),
  __all_bees = colony.list(),
+ __this_bee = null,
  __max_allowed_instances = self.settings.general.allowed_instances(),
  __currrent_running_instances_num = 0;
  if (__max_allowed_instances > 0)
  {
- for (var this_bee of __all_bees)
+ for (__this_bee of __all_bees)
  {
- if (this_bee.settings.general.app_id() === __app_id)
+ if (__this_bee.settings.general.app_id() === __app_id)
  {
  __currrent_running_instances_num++;
  if (__currrent_running_instances_num > __max_allowed_instances)
@@ -17424,8 +17810,9 @@ function bee()
  }
  }
  }
- if (!self.gui.actions.show(parent_app_id, headless))
+ if (!self.gui.actions.show(child_bees, headless))
  return false;
+ my_child_bees = child_bees;
  utils_int.log('Run', 'OK');
  return true;
  };
@@ -17465,6 +17852,7 @@ function bee()
  var is_init = false,
  error_code = null,
  my_bee_id = null,
+ my_child_bees = [],
  cosmos = null,
  matrix = null,
  nature = null,
@@ -17539,14 +17927,14 @@ function bat()
  }
  return true;
  };
- this.on = function(this_event, cmd)
+ this.on = function(this_event, this_handler)
  {
  if (is_init === false)
  return false;
- if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(cmd))
+ if (utils_sys.validation.misc.is_undefined(this_event) || utils_sys.validation.misc.is_undefined(this_handler))
  return false;
  if (utils_sys.misc.contains(this_event, events_list))
- return morpheus.store(service_config.sys_name, 'main', this_event, cmd, document);
+ return morpheus.store(service_config.sys_name, 'main', this_event, this_handler, document);
  return false;
  };
  this.register = function(service_model)
@@ -17556,6 +17944,13 @@ function bat()
  if (!matrix.register([service_model]))
  {
  owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
+ return false;
+ }
+ if (use_super_tray)
+ super_tray.add(service_model);
+ else
+ {
+ if (!roost.add([self]))
  return false;
  }
  owl.status.services.set(service_config.sys_name, service_config.name, 'RUN');
@@ -17579,25 +17974,31 @@ function bat()
  owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
  return false;
  }
+ if (use_super_tray)
+ super_tray.remove(ervice_config.sys_name);
+ else
+ roost.remove(service_id);
  owl.status.services.set(service_config.sys_name, service_config.name, 'END');
  if (backtrace === true)
  frog('BAT', 'Services :: Unregister', service_config);
  return morpheus.execute(service_config.sys_name, 'main', 'unregister');
  };
- this.init = function(svc_name, icon = 'default')
+ this.init = function(svc_name, icon = 'default', in_super_tray = true)
  {
+ if (is_init === true)
+ return false;
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
  if (utils_sys.validation.misc.is_undefined(svc_name) ||
  utils_sys.validation.alpha.is_blank(svc_name) ||
  utils_sys.validation.alpha.is_symbol(svc_name) ||
- utils_sys.validation.alpha.is_symbol(icon))
- return false;
- if (is_init === true)
+ utils_sys.validation.alpha.is_symbol(icon) ||
+ !utils_sys.validation.misc.is_bool(in_super_tray))
  return false;
  service_config.sys_name = svc_name.toLowerCase().replace(/\s/g,'_') + '_' + random.generate();
  service_config.name = svc_name.trim();
  service_config.icon = icon;
+ use_super_tray = in_super_tray
  is_init = true;
  return true;
  };
@@ -17616,15 +18017,20 @@ function bat()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
+ roost = cosmos.hub.access('roost');
  morpheus = matrix.get('morpheus');
+ super_tray = matrix.get('super_tray');
  owl = matrix.get('owl');
  return true;
  };
  var is_init = false,
+ use_super_tray = true,
  backtrace = false,
  cosmos = null,
  matrix = null,
+ roost = null,
  morpheus = null,
+ super_tray = null,
  owl = null,
  events_list = ['register', 'unregister'],
  dynamic_functions_list = [],
@@ -17804,8 +18210,11 @@ function coyote()
  ping_timer.start(config.ping_interval, () => { hb_manager.ping(); });
  if (callback !== undefined)
  callback.call(this);
+ setTimeout(function()
+ {
  is_browser_loading = false;
- setTimeout(function() { infinity.end(); }, 8000);
+ infinity.end();
+ }, 8000);
  };
  config.ajax_config.on_timeout = () => { };
  config.ajax_config.on_fail = () => { };
@@ -17975,9 +18384,35 @@ function coyote()
  this.tabs = new tab_ctrl();
  this.go = new explore_ctrl();
  };
- this.get_bee = function()
+ this.base = function()
  {
+ if (is_init === false)
+ return false;
  return coyote_bee;
+ };
+ this.on = function(event_name, event_handler)
+ {
+ if (is_init === false)
+ return false;
+ return coyote_bee.on(event_name, event_handler);
+ };
+ this.run = function()
+ {
+ if (is_init === false)
+ return false;
+ return coyote_bee.run();
+ };
+ this.quit = function()
+ {
+ if (is_init === false)
+ return false;
+ return coyote_bee.close();
+ };
+ this.error = function()
+ {
+ if (is_init === false)
+ return false;
+ return coyote_bee.error;
  };
  this.init = function()
  {
@@ -18024,18 +18459,21 @@ function coyote()
  coyote_bee.on('resizing', function()
  {
  utils_int.browser_frame_size();
+ if (!is_browser_loading)
+ {
  infinity.begin();
  browser_frame.style.visibility = 'hidden';
+ }
  });
  coyote_bee.on('resized', function()
  {
- if (is_browser_loading)
- return;
  var browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
  browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
  if (hb_manager !== null && browser_frame_height !== false)
  {
  hb_manager.resize(browser_frame_width, browser_frame_height);
+ if (is_browser_loading)
+ return;
  browser_frame.style.visibility = 'visible';
  setTimeout(function() { infinity.end(); }, 200);
  }
@@ -18108,7 +18546,7 @@ function cloud_edit()
  this.program = new program_model();
  this.ce = new ce_model();
  }
- function ce_program_api()
+ function ce_meta_caller()
  {
  this.telemetry = function(data)
  {
@@ -18137,7 +18575,7 @@ function cloud_edit()
  if (program_is_running === true)
  return utils_int.reset();
  __code = config.ce.editor.getValue();
- if (!executor.load(__code))
+ if (!meta_executor.load(__code))
  {
  config.ce.status_label.innerHTML = '[EMPTY]';
  config.ce.exec_button.value = 'Run';
@@ -18146,32 +18584,32 @@ function cloud_edit()
  'No code detected!');
  return false;
  }
- if (executor.process(ce_api) !== true)
+ if (meta_executor.process(ce_mc) !== true)
  {
- if (executor.error.last.code() === executor.error.codes.INVALID)
+ if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
  {
  config.ce.status_label.innerHTML = '[INVALID]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
  frog('CLOUD EDIT', '% Invalid %',
- executor.error.last.message() + '\nPlease check the template...');
+ meta_executor.error.last.message() + '\nPlease check the template...');
  }
- else if (executor.error.last.code() === executor.error.codes.MISMATCH)
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
  {
  config.ce.status_label.innerHTML = '[ERROR]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
- frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
+ frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
  }
- else if (executor.error.last.code() === executor.error.codes.OTHER)
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
  {
  config.ce.status_label.innerHTML = '[ERROR]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
- frog('CLOUD EDIT', '[!] Error [!]', executor.error.last.message());
+ frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
  }
  disable_deploy_button();
- return executor.terminate();
+ return meta_executor.terminate();
  }
  config.ce.status_label.innerHTML = '[RUNNING]';
  config.ce.exec_button.value = 'Stop';
@@ -18346,7 +18784,7 @@ function cloud_edit()
  };
  this.reset = function()
  {
- executor.terminate();
+ meta_executor.terminate();
  config.ce.status_label.innerHTML = '[READY]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
@@ -18362,11 +18800,35 @@ function cloud_edit()
  return true;
  };
  }
- this.get_bee = function()
+ this.base = function()
  {
  if (is_init === false)
  return false;
  return cloud_edit_bee;
+ };
+ this.on = function(event_name, event_handler)
+ {
+ if (is_init === false)
+ return false;
+ return cloud_edit_bee.on(event_name, event_handler);
+ };
+ this.run = function()
+ {
+ if (is_init === false)
+ return false;
+ return cloud_edit_bee.run();
+ };
+ this.quit = function()
+ {
+ if (is_init === false)
+ return false;
+ return cloud_edit_bee.close();
+ };
+ this.error = function()
+ {
+ if (is_init === false)
+ return false;
+ return cloud_edit_bee.error;
  };
  this.init = function()
  {
@@ -18411,7 +18873,7 @@ function cloud_edit()
  cloud_edit_bee.on('close', function()
  {
  cloud_edit_bee.gui.fx.fade.out();
- executor.terminate();
+ meta_executor.terminate();
  utils_int.destroy_editor();
  });
  return true;
@@ -18428,7 +18890,7 @@ function cloud_edit()
  xenon = matrix.get('xenon');
  nature = matrix.get('nature');
  infinity = dev_box.get('infinity');
- executor = dev_box.get('executor');
+ meta_executor = dev_box.get('meta_executor');
  return true;
  };
  var is_init = false,
@@ -18441,12 +18903,12 @@ function cloud_edit()
  colony = null,
  morpheus = null,
  xenon = null,
- executor = null,
+ meta_executor = null,
  nature = null,
  infinity = null,
  cloud_edit_bee = null,
  config = new config_model(),
- ce_api = new ce_program_api(),
+ ce_mc = new ce_meta_caller(),
  utils_int = new utilities(),
  utils_sys = new vulcan(),
  key_control = new key_manager(),
@@ -18536,11 +18998,35 @@ function radio_dude()
  __streams_list.children[i].onclick = me.change_stream;
  };
  }
- this.get_bee = function()
+ this.base = function()
  {
  if (is_init === false)
  return false;
  return radio_dude_bee;
+ };
+ this.on = function(event_name, event_handler)
+ {
+ if (is_init === false)
+ return false;
+ return radio_dude_bee.on(event_name, event_handler);
+ };
+ this.run = function()
+ {
+ if (is_init === false)
+ return false;
+ return radio_dude_bee.run();
+ };
+ this.quit = function()
+ {
+ if (is_init === false)
+ return false;
+ return radio_dude_bee.close();
+ };
+ this.error = function()
+ {
+ if (is_init === false)
+ return false;
+ return radio_dude_bee.error;
  };
  this.init = function()
  {

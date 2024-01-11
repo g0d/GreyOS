@@ -98,7 +98,7 @@ function e_games()
 
     };
 
-    this.get_bee = function()
+    this.base = function()
     {
 
         return e_games_bee;

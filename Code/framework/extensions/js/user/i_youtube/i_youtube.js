@@ -2732,7 +2732,7 @@ function i_youtube()
 
     }
 
-    this.get_bee = function()
+    this.base = function()
     {
         
         if (is_init === false)
