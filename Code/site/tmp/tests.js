@@ -7,14 +7,14 @@ console.log(navigator.languages);
 console.log(navigator.userAgentData);
 
 var tk = new task();
-tk.create('/framework/extensions/js/user/task/worker.js');
+tk.create('/framework/extensions/js/core/task/worker.js');
 tk.message.receive((x) => { console.log(x.data); });
 tk.message.send('Test');
 
 var pl = new parallel();
-var tk_1 = pl.create('/framework/extensions/js/user/parallel/worker.js');
-var tk_2 = pl.create('/framework/extensions/js/user/parallel/worker.js');
-var tk_3 = pl.create('/framework/extensions/js/user/parallel/worker.js');
+var tk_1 = pl.create('/framework/extensions/js/core/parallel/worker.js');
+var tk_2 = pl.create('/framework/extensions/js/core/parallel/worker.js');
+var tk_3 = pl.create('/framework/extensions/js/core/parallel/worker.js');
 var tasks_config = 
 [
     { "id" : tk_1, "data" : "Task 1" },

@@ -16,7 +16,7 @@ function octopus()
 
     this.init = function(any, callback = null)
     {
-        var result = new_task.create('/framework/extensions/js/user/' + self.constructor.name + '/task.js');
+        var result = new_task.create('/framework/extensions/js/core/' + self.constructor.name + '/task.js');
 
         if (result === false)
             return false;

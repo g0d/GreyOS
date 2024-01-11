@@ -57,9 +57,9 @@ function ui_controls()
                 __control = utils_sys.objects.selectors.first(__selector);
 
             if (id === 'boxify_all')
-                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify_hover.png')";
+                __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify_hover.png')";
             else if (id === 'stack_all')
-                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack_hover.png')";
+                __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/stack_hover.png')";
             else
                 return false;
 
@@ -75,9 +75,9 @@ function ui_controls()
                 __control = utils_sys.objects.selectors.first(__selector);
 
             if (id === 'boxify_all')
-                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify.png')";
+                __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify.png')";
             else if (id === 'stack_all')
-                __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack.png')";
+                __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/stack.png')";
             else
                 return false;
 

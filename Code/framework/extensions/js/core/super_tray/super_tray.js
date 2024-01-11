@@ -182,7 +182,7 @@ function super_tray()
             __dynamic_object.setAttribute('data-id', __new_service.sys_id);
             __dynamic_object.setAttribute('title', __new_service.name);
 
-            __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/user/nature/themes/super_tray/pix/' + 
+            __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/core/nature/themes/super_tray/pix/' + 
                                                      __new_service.icon + '.png")';
 
             __service_icons_tray.appendChild(__dynamic_object);

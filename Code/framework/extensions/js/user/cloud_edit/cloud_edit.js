@@ -427,7 +427,7 @@ function cloud_edit()
 
         config.id = 'cloud_edit';
         config.content = `// Welcome to Cloud Edit!\n// Please load the test template from \
-                          https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
+                          https://greyos.gr/framework/extensions/js/core/cloud_edit/my_ms_program.js\n`;
 
         nature.theme([config.id]);
         nature.apply('new');

@@ -177,20 +177,20 @@ body
 
 .default
 {
-    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/inactive/icon_app.png') !important;
+    background-image: url('/framework/extensions/js/core/nature/themes/dock/pix/favorites/inactive/icon_app.png') !important;
 }
 
 .default:hover
 {
-    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/hover/icon_app.png') !important;
+    background-image: url('/framework/extensions/js/core/nature/themes/dock/pix/favorites/hover/icon_app.png') !important;
 }
 
 .default_on
 {
-    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/active/icon_app.png') !important;
+    background-image: url('/framework/extensions/js/core/nature/themes/dock/pix/favorites/active/icon_app.png') !important;
 }
 
 .default_off
 {
-    background-image: url('/framework/extensions/js/user/nature/themes/dock/pix/favorites/inactive/icon_app.png') !important;
+    background-image: url('/framework/extensions/js/core/nature/themes/dock/pix/favorites/inactive/icon_app.png') !important;
 }

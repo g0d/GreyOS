@@ -408,7 +408,7 @@ function coyote()
                 __page_info.style.left = '87px';
                 __page_info.style.top = '30px';
                 browser_address_box.style.width = 'Calc(100vw - 167px)';
-                __full_screen.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/coyote/pix/full_screen_hover.png')";
+                __full_screen.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/coyote/pix/full_screen_hover.png')";
                 __full_screen.title = 'Normal mode';
 
                 coyote_fs_layer.innerHTML = __coyote_content.innerHTML;

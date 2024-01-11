@@ -4615,7 +4615,7 @@ function workbox()
  if (utils.validation.misc.is_invalid(container_id) || !utils.validation.alpha.is_string(container_id) ||
  !utils.validation.alpha.is_string(title) || !utils.validation.alpha.is_string(button_label))
  return false;
- utils.graphics.apply_theme('/framework/extensions/js/user/workbox', 'workbox');
+ utils.graphics.apply_theme('/framework/extensions/js/core/workbox', 'workbox');
  if (!helpers.draw_screen(container_id, title, button_label))
  return false;
  is_init = true;
@@ -4835,7 +4835,7 @@ function linux_mode()
  {
  this.apply_css_fix = function()
  {
- utils_sys.graphics.apply_theme('/framework/extensions/js/user/linux_mode', 'linux');
+ utils_sys.graphics.apply_theme('/framework/extensions/js/core/linux_mode', 'linux');
  return true;
  };
  }
@@ -9295,9 +9295,9 @@ function ui_controls()
  var __selector = '#top_panel #bottom_area #action_icons #placement ' + '#' + id,
  __control = utils_sys.objects.selectors.first(__selector);
  if (id === 'boxify_all')
- __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify_hover.png')";
+ __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify_hover.png')";
  else if (id === 'stack_all')
- __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack_hover.png')";
+ __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/stack_hover.png')";
  else
  return false;
  return true;
@@ -9309,9 +9309,9 @@ function ui_controls()
  var __selector = '#top_panel #bottom_area #action_icons #placement' + ' #' + id,
  __control = utils_sys.objects.selectors.first(__selector);
  if (id === 'boxify_all')
- __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/boxify.png')";
+ __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify.png')";
  else if (id === 'stack_all')
- __control.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/ui_controls/pix/stack.png')";
+ __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/stack.png')";
  else
  return false;
  return true;
@@ -10127,14 +10127,14 @@ function nature()
  {
  if (self.exists(__themes_array[i]))
  return true;
- var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/user/nature/themes/' +
+ var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' +
  __themes_array[i], __themes_array[i]);
  return __result;
  }
  else if (mode === 'replace')
  {
  self.remove(__themes_array[i]);
- var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/user/nature/themes/' +
+ var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' +
  __themes_array[i], __themes_array[i]);
  return __result;
  }
@@ -12790,7 +12790,7 @@ function super_tray()
  __dynamic_object.setAttribute('class', 'super_tray_service');
  __dynamic_object.setAttribute('data-id', __new_service.sys_id);
  __dynamic_object.setAttribute('title', __new_service.name);
- __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/user/nature/themes/super_tray/pix/' +
+ __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/core/nature/themes/super_tray/pix/' +
  __new_service.icon + '.png")';
  __service_icons_tray.appendChild(__dynamic_object);
  if (__new_service.action !== null)
@@ -13885,113 +13885,6 @@ function scrollbar()
  this.status = new status();
  this.side = new side();
  this.scroll = new scroll();
-}
-function max_screen()
-{
- var self = this;
- function utilities()
- {
- var me = this;
- this.go_full_screen = function()
- {
- var __element = vulcan.objects.by_id(self.settings.container());
- vulcan.objects.by_id('max_screen_splash').style.display = 'none';
- if (__element.requestFullscreen)
- __element.requestFullscreen();
- else if (__element.mozRequestFullScreen)
- __element.mozRequestFullScreen();
- else if (__element.webkitRequestFullscreen)
- __element.webkitRequestFullscreen();
- else
- return false;
- self.settings.callback_function().call();
- return true;
- };
- this.setup = function(theme)
- {
- var __handler = null,
- __dynamic_object = null;
- if (!vulcan.graphics.apply_theme('/framework/extensions/js/max_screen/theme', theme))
- return false;
- __dynamic_object = document.createElement('div');
- __dynamic_object.setAttribute('id', 'max_screen_splash');
- __dynamic_object.setAttribute('class', 'max_screen');
- document.body.appendChild(__dynamic_object);
- __handler = function() { me.go_full_screen(); };
- vulcan.objects.by_id('max_screen_splash').onmousedown = __handler;
- return true;
- };
- }
- function settings()
- {
- var __container = null,
- __callback_function = null;
- this.container = function(val)
- {
- if (is_init === false)
- return false;
- if (vulcan.validation.misc.is_undefined(val))
- return __container;
- if (vulcan.validation.alpha.is_symbol(val))
- return false;
- __container = val;
- return true;
- };
- this.callback_function = function(val)
- {
- if (is_init === false)
- return false;
- if (vulcan.validation.misc.is_undefined(val))
- return __callback_function;
- __callback_function = val;
- return true;
- };
- }
- function status()
- {
- this.full_screen = function()
- {
- if (is_init === false)
- return false;
- if ((screen.height - window.innerHeight) < 5)
- return true;
- return false;
- };
- }
- this.init = function(container_id, func, theme)
- {
- if (is_init === true)
- return false;
- if (vulcan.validation.misc.is_undefined(container_id) ||
- vulcan.validation.alpha.is_symbol(container_id) || vulcan.objects.by_id(container_id) === null ||
- !vulcan.validation.misc.is_function(func))
- return false;
- if (!self.settings.container(container_id))
- return false;
- self.settings.callback_function(func);
- if (!utils.setup(theme))
- return false;
- is_init = true;
- return true;
- };
- this.cosmos = function(cosmos_object)
- {
- if (cosmos_exists === true)
- return false;
- if (cosmos_object === undefined)
- return false;
- cosmos = cosmos_object;
- vulcan = cosmos.hub.access('vulcan');
- cosmos_exists = true;
- return true;
- };
- var cosmos_exists = false,
- is_init = false,
- cosmos = null,
- vulcan = null,
- utils = new utilities();
- this.settings = new settings();
- this.status = new status();
 }
 function bee()
 {
@@ -18333,7 +18226,7 @@ function coyote()
  __page_info.style.left = '87px';
  __page_info.style.top = '30px';
  browser_address_box.style.width = 'Calc(100vw - 167px)';
- __full_screen.style.backgroundImage = "url('/framework/extensions/js/user/nature/themes/coyote/pix/full_screen_hover.png')";
+ __full_screen.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/coyote/pix/full_screen_hover.png')";
  __full_screen.title = 'Normal mode';
  coyote_fs_layer.innerHTML = __coyote_content.innerHTML;
  coyote_fs_layer.style.display = 'block';
@@ -18521,6 +18414,113 @@ function coyote()
  config = new config_model(),
  utils_int = new utilities();
  this.browser_controls = new browser_ctrl();
+}
+function max_screen()
+{
+ var self = this;
+ function utilities()
+ {
+ var me = this;
+ this.go_full_screen = function()
+ {
+ var __element = vulcan.objects.by_id(self.settings.container());
+ vulcan.objects.by_id('max_screen_splash').style.display = 'none';
+ if (__element.requestFullscreen)
+ __element.requestFullscreen();
+ else if (__element.mozRequestFullScreen)
+ __element.mozRequestFullScreen();
+ else if (__element.webkitRequestFullscreen)
+ __element.webkitRequestFullscreen();
+ else
+ return false;
+ self.settings.callback_function().call();
+ return true;
+ };
+ this.setup = function(theme)
+ {
+ var __handler = null,
+ __dynamic_object = null;
+ if (!vulcan.graphics.apply_theme('/framework/extensions/js/max_screen/theme', theme))
+ return false;
+ __dynamic_object = document.createElement('div');
+ __dynamic_object.setAttribute('id', 'max_screen_splash');
+ __dynamic_object.setAttribute('class', 'max_screen');
+ document.body.appendChild(__dynamic_object);
+ __handler = function() { me.go_full_screen(); };
+ vulcan.objects.by_id('max_screen_splash').onmousedown = __handler;
+ return true;
+ };
+ }
+ function settings()
+ {
+ var __container = null,
+ __callback_function = null;
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.misc.is_undefined(val))
+ return __container;
+ if (vulcan.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ this.callback_function = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (vulcan.validation.misc.is_undefined(val))
+ return __callback_function;
+ __callback_function = val;
+ return true;
+ };
+ }
+ function status()
+ {
+ this.full_screen = function()
+ {
+ if (is_init === false)
+ return false;
+ if ((screen.height - window.innerHeight) < 5)
+ return true;
+ return false;
+ };
+ }
+ this.init = function(container_id, func, theme)
+ {
+ if (is_init === true)
+ return false;
+ if (vulcan.validation.misc.is_undefined(container_id) ||
+ vulcan.validation.alpha.is_symbol(container_id) || vulcan.objects.by_id(container_id) === null ||
+ !vulcan.validation.misc.is_function(func))
+ return false;
+ if (!self.settings.container(container_id))
+ return false;
+ self.settings.callback_function(func);
+ if (!utils.setup(theme))
+ return false;
+ is_init = true;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (cosmos_exists === true)
+ return false;
+ if (cosmos_object === undefined)
+ return false;
+ cosmos = cosmos_object;
+ vulcan = cosmos.hub.access('vulcan');
+ cosmos_exists = true;
+ return true;
+ };
+ var cosmos_exists = false,
+ is_init = false,
+ cosmos = null,
+ vulcan = null,
+ utils = new utilities();
+ this.settings = new settings();
+ this.status = new status();
 }
 function cloud_edit()
 {
@@ -18841,7 +18841,7 @@ function cloud_edit()
  cloud_edit_bee = dev_box.get('bee');
  config.id = 'cloud_edit';
  config.content = `// Welcome to Cloud Edit!\n// Please load the test template from \
- https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
+ https://greyos.gr/framework/extensions/js/core/cloud_edit/my_ms_program.js\n`;
  nature.theme([config.id]);
  nature.apply('new');
  infinity.init();

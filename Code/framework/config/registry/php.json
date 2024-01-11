@@ -1,12 +1,12 @@
 {
     "portal"            :   "core",
     "arkangel"          :   "core",
+    "anti_hijack"       :   "core",
+    "splash"            :   "user",
     "teal_fs"           :   "core",
     "adi"               :   "user",
-    "anti_hijack"       :   "user",
     "ms_sql"            :   "user",
     "ra"                :   "user",
-    "splash"            :   "user",
     "woody"             :   "user",
     "ultra_cache"       :   "user",
     "nusoap"            :   "user"

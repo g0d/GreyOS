@@ -16,7 +16,7 @@ function linux_mode()
     {
         this.apply_css_fix = function()
         {
-            utils_sys.graphics.apply_theme('/framework/extensions/js/user/linux_mode', 'linux');
+            utils_sys.graphics.apply_theme('/framework/extensions/js/core/linux_mode', 'linux');
 
             return true;
         };

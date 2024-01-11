@@ -174,7 +174,7 @@ function workbox()
             !utils.validation.alpha.is_string(title) || !utils.validation.alpha.is_string(button_label))
             return false;
 
-        utils.graphics.apply_theme('/framework/extensions/js/user/workbox', 'workbox');
+        utils.graphics.apply_theme('/framework/extensions/js/core/workbox', 'workbox');
 
         if (!helpers.draw_screen(container_id, title, button_label))
             return false;

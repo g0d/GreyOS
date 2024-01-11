@@ -68,7 +68,7 @@ function nature()
                 if (self.exists(__themes_array[i]))
                     return true;
 
-                var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/user/nature/themes/' + 
+                var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + 
                                                               __themes_array[i], __themes_array[i]);
 
                 return __result;
@@ -77,7 +77,7 @@ function nature()
             {
                 self.remove(__themes_array[i]);
 
-                var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/user/nature/themes/' + 
+                var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + 
                                                               __themes_array[i], __themes_array[i]);
 
                 return __result;
