@@ -19,7 +19,7 @@ function super_tray()
         this.sys_id = null;
         this.id = null;
         this.name = null;
-        this.icon = 'default';
+        this.icon = 'app_default';
         this.action = null;
     }
 
@@ -304,7 +304,7 @@ function super_tray()
         __new_tray_service.id = __service_config.name;
         __new_tray_service.name = __service_config.name;
 
-        if (__service_config.icon !== 'default')
+        if (__service_config.icon !== 'app_default')
             __new_tray_service.icon = __service_config.icon;
 
         if (action !== null)

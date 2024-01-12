@@ -1,5 +1,5 @@
 /*
-    GreyOS - X-Runner (Version: 0.5)
+    GreyOS - X-Runner (Version: 1.0)
 
     File name: x_runner.js
     Description: This file contains the X-Runner - User-level programs execution service module.
@@ -18,7 +18,10 @@ function x_runner()
     {
         this.telemetry = function(data)
         {
-            // TODO: System calls
+            if (data.type === 'app')
+                x_app = colony.get(data.app_id)
+            else
+                x_app = null;
 
             return true;
         };
@@ -27,7 +30,7 @@ function x_runner()
         {
             // TODO: Ideas?
 
-            return 
+            return;
         };
 
         this.reset = function()
@@ -42,37 +45,56 @@ function x_runner()
     {
         var me = this;
 
-        function execute_meta(x_id)
+        function execute_meta_program(mode, x_id)
         {
-            var __code = null;
-
-            // TODO: Use AJAX to get the source with x_id, put in in __code and run!
+            var __code = null,
+                __ajax_config = {
+                                    "type"          :   "request",
+                                    "method"        :   "post",
+                                    "url"           :   "/",
+                                    "data"          :   "gate=meta_programs&action=code&mode=" + mode + "&x_id=" + x_id,
+                                    "ajax_mode"     :   "synchronous",
+                                };
 
             meta_executor = dev_box.get('meta_executor');
 
+            __code = ajax.run(__ajax_config);
+
             if (!meta_executor.load(__code))
+            {
+                frog('X-RUNNER', '% Empty %', 
+                     'No code detected!');
+
                 return false;
+            }
 
-            if (meta_executor.process(x_mc))
-                return meta_executor.run();
+            if (!meta_executor.process(x_mc))
+            {
+                if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
+                    frog('X-RUNNER', '% Invalid %', meta_executor.error.last.message());
+                else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
+                    frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+                else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
+                    frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
 
-            return false;
+                return meta_executor.terminate();
+            }
+
+            utils_int.set_dock_icon_status(x_id);
+
+            if (x_app !== null)
+            {
+                if (!utils_int.close_app(x_app, x_id, false))
+                    return false;
+            }
+
+            is_x_running = true;
+
+            return true;
         }
 
         function app()
         {
-            function close_app(app, app_id, dock_app_object)
-            {
-                app.on('closed', function()
-                                 {
-                                    if (owl.status.applications.get.by_proc_id(app_id, 'RUN'))
-                                        return;
-
-                                    dock_app_object.classList.remove('app_' + app_id + '_on');
-                                    dock_app_object.classList.add('app_' + app_id + '_off');
-                                 });
-            }
-
             this.start = function(app_id, is_sys_level)
             {
                 if (is_sys_level)
@@ -92,15 +114,16 @@ function x_runner()
 
                     if (__app.run())
                     {
-                        var __dock_app_object = utils_sys.objects.by_id('app_' + app_id);
+                        me.set_dock_icon_status(app_id)
 
-                        if (!__dock_app_object)
+                        if (!me.close_app(__app, app_id, true))
                             return false;
 
-                        __dock_app_object.classList.remove('app_' + app_id + '_off');
-                        __dock_app_object.classList.add('app_' + app_id + '_on');
+                        x_program = __app;
 
-                        close_app(__app, app_id, __dock_app_object);
+                        is_x_running = true;
+
+                        return true;
                     }
                     else
                     {
@@ -126,18 +149,18 @@ function x_runner()
                             msg_win.init('desktop');
                             msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
                         }
-                    }
 
-                    return true;
+                        return false;
+                    }
                 }
 
-                return execute_meta(app_id);
+                return execute_meta_program('app', app_id);
             };
 
-            this.stop = function()
+            this.stop = function(is_sys_level)
             {
-                if (x_is_sys_level)
-                    return this_app.quit();
+                if (is_sys_level)
+                    return x_program.quit();
                 else
                     return meta_executor.terminate();
             };
@@ -149,25 +172,70 @@ function x_runner()
             {
                 if (is_sys_level)
                 {
-                    this_bat = svc_box.get(service_id);
+                    var __bat = svc_box.get(service_id);
 
-                    if (!this_bat)
+                    if (!__bat)
                         return false;
 
-                    return this_bat.run();
+                    x_program = __bat;
+
+                    is_x_running = true;
+
+                    return __bat.run();
                 }
 
-                return execute_meta(service_id);
+                is_x_running = true;
+
+                return execute_meta_program('svc', service_id);
             };
 
-            this.stop = function()
+            this.stop = function(is_sys_level)
             {
-                if (x_is_sys_level)
-                    return this_bat.terminate();
+                if (is_sys_level)
+                    return x_program.terminate();
                 else
                     return meta_executor.terminate();
             };
         }
+
+        this.set_dock_icon_status = function(app_id, reverse = false)
+        {
+            var __dock_app_object = utils_sys.objects.by_id('app_' + app_id),
+                __icon_id = null;
+
+            if (!__dock_app_object)
+                return false;
+
+            __icon_id = __dock_app_object.getAttribute('data-icon');
+
+            if (reverse)
+                __dock_app_object.classList.remove(__icon_id + '_on');
+            else
+                __dock_app_object.classList.add(__icon_id + '_on');
+
+            return true;
+        };
+
+        this.close_app = function(app, process_id, is_sys_level)
+        {
+            app.on('closed', function()
+                             {
+                                if (is_sys_level)
+                                {
+                                    if (owl.status.applications.get.by_proc_id(process_id, 'RUN'))
+                                        return;
+                                }
+                                else
+                                {
+                                    if (owl.status.applications.get.by_proc_id(app.settings.general.app_id(), 'RUN'))
+                                        return;
+                                }
+
+                                me.set_dock_icon_status(process_id, true);
+                             });
+
+            return true;
+        };
 
         this.check_arguments = function(mode, id, system)
         {
@@ -193,8 +261,6 @@ function x_runner()
             return false;
 
         x_mode = mode;
-        x_id = id;
-        x_is_sys_level = is_sys_level;
 
         return utils_int[mode].start(id, is_sys_level);
     };
@@ -230,11 +296,9 @@ function x_runner()
     };
 
     var is_x_running = false,
-        x_is_sys_level = false,
         x_mode = null,
-        x_id = null,
-        this_app = null,
-        this_svc = null,
+        x_app = null,
+        x_program = null,
         cosmos = null,
         matrix = null,
         xenon = null,
@@ -247,6 +311,7 @@ function x_runner()
         meta_executor = null,
         modes_list = ['app', 'svc'],
         utils_sys = new vulcan(),
+        ajax = new taurus(),
         x_mc = new x_meta_caller(),
         utils_int = new utilities();
 }

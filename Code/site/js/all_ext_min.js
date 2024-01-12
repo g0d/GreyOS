@@ -1,9 +1,9 @@
 
-function ajax_factory(ajax_data, success_cb, failure_cb, default_cb)
+function ajax_factory(ajax_data, success_cb = null, failure_cb = null, default_cb = null)
 {
  var ajax = new bull(),
  utils = new vulcan(),
- bull_config = {
+ ajax_config = {
  "type" : "request",
  "url" : "/",
  "data" : ajax_data,
@@ -18,11 +18,11 @@ function ajax_factory(ajax_data, success_cb, failure_cb, default_cb)
  default_cb.call(this);
  }
  };
- if (!utils.validation.misc.is_function(success_cb) ||
- !utils.validation.misc.is_function(failure_cb) ||
- !utils.validation.misc.is_function(default_cb))
+ if ((success_cb !== null && !utils.validation.misc.is_function(success_cb)) ||
+ (failure_cb !== null && !utils.validation.misc.is_function(failure_cb)) ||
+ (default_cb !== null && !utils.validation.misc.is_function(default_cb)))
  return false;
- ajax.run(bull_config);
+ ajax.run(ajax_config);
  return true;
 }
 function bull()
@@ -357,9 +357,7 @@ function centurion()
 function content_fetcher(content_id, language_code, success_cb, failure_cb, default_cb)
 {
  var data = null,
- ajax_config = null,
- utils = new vulcan(),
- ajax = new bull();
+ utils = new vulcan();
  if (utils.validation.misc.is_undefined(content_id))
  return false;
  if (!utils.validation.alpha.is_string(content_id) ||
@@ -373,22 +371,7 @@ function content_fetcher(content_id, language_code, success_cb, failure_cb, defa
  data = "gate=content&content_id=" + content_id;
  if (!utils.validation.misc.is_nothing(language_code))
  data += '&language_code=' + language_code;
- ajax_config = {
- "type" : "request",
- "url" : "/",
- "data" : data,
- "method" : "post",
- "ajax_mode" : "asynchronous",
- "on_success" : function(response)
- {
- if (response !== 'undefined')
- success_cb.call(this, response);
- else
- failure_cb.call(this, response);
- default_cb.call(this);
- }
- };
- ajax.run(ajax_config);
+ ajax_factory(data, success_cb, failure_cb, default_cb);
  return true;
 }
 function heartbeat(user_config)
@@ -9467,7 +9450,7 @@ function dock()
  {
  if (utils_sys.validation.misc.is_undefined(element_id))
  return false;
- var __bull_config = {
+ var __ajax_config = {
  "type" : "data",
  "url" : "/",
  "data" : "gate=dock&action=load",
@@ -9488,23 +9471,24 @@ function dock()
  fail_callback.call();
  }
  };
- ajax.run(__bull_config);
+ ajax.run(__ajax_config);
  return true;
  }
  function ajax_save(apps_array)
  {
- var __bull_config = {
+ var __ajax_config = {
  "type" : "request",
  "method" : "post",
  "url" : "/",
  "data" : "gate=dock&action=save&apps=" + apps_array,
  "ajax_mode" : "synchronous",
  };
- return ajax.run(__bull_config);
+ return ajax.run(__ajax_config);
  }
  function create_dock_array()
  {
  var __app_id = null,
+ __app_icon = null,
  __position = null,
  __system = null,
  __title = null
@@ -9513,10 +9497,12 @@ function dock()
  for (__dock_app of __dock)
  {
  __app_id = __dock_app.getAttribute('id').split('app_')[1],
+ __app_icon = __dock_app.getAttribute('data-icon'),
  __position = __dock_app.getAttribute('data-position'),
  __system = __dock_app.getAttribute('data-system'),
  __title = __dock_app.getAttribute('title');
- config.dock_array.push({ "app_id" : __app_id, "position" : __position, "system" : __system, "title" : __title });
+ config.dock_array.push({ "app_id" : __app_id, "icon" : __app_icon,
+ "position" : __position, "system" : __system, "title" : __title });
  }
  return true;
  }
@@ -9725,7 +9711,7 @@ function dock()
  nature = null,
  last_button_clicked = 0,
  utils_sys = new vulcan(),
- ajax = new bull(),
+ ajax = new taurus(),
  random = new pythia(),
  config = new config_model(),
  utils_int = new utilities();
@@ -10801,11 +10787,19 @@ function meta_script()
  {
  return ajax;
  };
+ this.ajax_factory = function(ajax_data, success_cb, failure_cb, default_cb)
+ {
+ return ajax_factory(ajax_data, success_cb, failure_cb, default_cb);
+ };
  this.settings_validator = function()
  {
  return config_parser;
  };
  this.run = function(program)
+ {
+ return (program);
+ };
+ this.quit = function(program)
  {
  return (program);
  };
@@ -11578,13 +11572,21 @@ function meta_script()
  return false;
  return program_config.meta_caller.source();
  };
- this.run = function(parent_app_id = null, headless = false)
+ this.run = function(child_apps_array = [], headless = false)
  {
  if (__new_app === null || __is_run === true)
  return false;
+ app_box.replace([program_config.model]);
+ if (!swarm.bees.insert(__new_app))
+ return false;
+ var __result = __new_app.run(child_apps_array, headless);
+ if (__result === true)
+ __is_run = true;
  var __data = {
- "icon" : me.settings.icon(),
+ "ms_id" : program_config.model.name,
+ "app_id" : me.get_system_id(),
  "name" : me.get_app_id(),
+ "icon" : me.settings.icon(),
  "type" : "app"
  };
  program_config.meta_caller.telemetry(__data);
@@ -11592,12 +11594,6 @@ function meta_script()
  {
  app_box.remove(program_config.model.name);
  });
- app_box.replace([program_config.model]);
- if (!swarm.bees.insert(__new_app))
- return false;
- var __result = __new_app.run(parent_app_id, headless);
- if (__result === true)
- __is_run = true;
  return __result;
  };
  this.init = function(app_id)
@@ -11676,19 +11672,21 @@ function meta_script()
  {
  if (__new_svc === null || __is_run === true)
  return false;
- var __data = {
- "icon" : me.get_config().icon,
- "name" : me.get_config().name,
- "type" : "svc"
- };
- me.on('register', function() { program_config.meta_caller.telemetry(__data); });
  matrix.unregister(program_config.model.name);
  var __result = __new_svc.register(program_config.model);
  if (__result === true)
  __is_run = true;
+ var __data = {
+ "ms_id" : program_config.model.name,
+ "svc_id" : me.get_config().sys_name,
+ "name" : me.get_config().name,
+ "icon" : me.get_config().icon,
+ "type" : "svc"
+ };
+ me.on('register', function() { program_config.meta_caller.telemetry(__data); });
  return __result;
  };
- this.init = function(svc_id, icon = 'default')
+ this.init = function(svc_id, icon = 'svc_default')
  {
  if (__is_init === true)
  return false;
@@ -12196,11 +12194,15 @@ function x_runner()
  {
  this.telemetry = function(data)
  {
+ if (data.type === 'app')
+ x_app = colony.get(data.app_id)
+ else
+ x_app = null;
  return true;
  };
  this.source = function()
  {
- return
+ return;
  };
  this.reset = function()
  {
@@ -12210,28 +12212,45 @@ function x_runner()
  function utilities()
  {
  var me = this;
- function execute_meta(x_id)
+ function execute_meta_program(mode, x_id)
  {
- var __code = null;
+ var __code = null,
+ __ajax_config = {
+ "type" : "request",
+ "method" : "post",
+ "url" : "/",
+ "data" : "gate=meta_programs&action=code&mode=" + mode + "&x_id=" + x_id,
+ "ajax_mode" : "synchronous",
+ };
  meta_executor = dev_box.get('meta_executor');
+ __code = ajax.run(__ajax_config);
  if (!meta_executor.load(__code))
+ {
+ frog('X-RUNNER', '% Empty %',
+ 'No code detected!');
  return false;
- if (meta_executor.process(x_mc))
- return meta_executor.run();
+ }
+ if (!meta_executor.process(x_mc))
+ {
+ if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
+ frog('X-RUNNER', '% Invalid %', meta_executor.error.last.message());
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
+ frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
+ frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+ return meta_executor.terminate();
+ }
+ utils_int.set_dock_icon_status(x_id);
+ if (x_app !== null)
+ {
+ if (!utils_int.close_app(x_app, x_id, false))
  return false;
+ }
+ is_x_running = true;
+ return true;
  }
  function app()
  {
- function close_app(app, app_id, dock_app_object)
- {
- app.on('closed', function()
- {
- if (owl.status.applications.get.by_proc_id(app_id, 'RUN'))
- return;
- dock_app_object.classList.remove('app_' + app_id + '_on');
- dock_app_object.classList.add('app_' + app_id + '_off');
- });
- }
  this.start = function(app_id, is_sys_level)
  {
  if (is_sys_level)
@@ -12246,12 +12265,12 @@ function x_runner()
  return false;
  if (__app.run())
  {
- var __dock_app_object = utils_sys.objects.by_id('app_' + app_id);
- if (!__dock_app_object)
+ me.set_dock_icon_status(app_id)
+ if (!me.close_app(__app, app_id, true))
  return false;
- __dock_app_object.classList.remove('app_' + app_id + '_off');
- __dock_app_object.classList.add('app_' + app_id + '_on');
- close_app(__app, app_id, __dock_app_object);
+ x_program = __app;
+ is_x_running = true;
+ return true;
  }
  else
  {
@@ -12272,15 +12291,15 @@ function x_runner()
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
  }
+ return false;
  }
- return true;
  }
- return execute_meta(app_id);
+ return execute_meta_program('app', app_id);
  };
- this.stop = function()
+ this.stop = function(is_sys_level)
  {
- if (x_is_sys_level)
- return this_app.quit();
+ if (is_sys_level)
+ return x_program.quit();
  else
  return meta_executor.terminate();
  };
@@ -12291,21 +12310,55 @@ function x_runner()
  {
  if (is_sys_level)
  {
- this_bat = svc_box.get(service_id);
- if (!this_bat)
+ var __bat = svc_box.get(service_id);
+ if (!__bat)
  return false;
- return this_bat.run();
+ x_program = __bat;
+ is_x_running = true;
+ return __bat.run();
  }
- return execute_meta(service_id);
+ is_x_running = true;
+ return execute_meta_program('svc', service_id);
  };
- this.stop = function()
+ this.stop = function(is_sys_level)
  {
- if (x_is_sys_level)
- return this_bat.terminate();
+ if (is_sys_level)
+ return x_program.terminate();
  else
  return meta_executor.terminate();
  };
  }
+ this.set_dock_icon_status = function(app_id, reverse = false)
+ {
+ var __dock_app_object = utils_sys.objects.by_id('app_' + app_id),
+ __icon_id = null;
+ if (!__dock_app_object)
+ return false;
+ __icon_id = __dock_app_object.getAttribute('data-icon');
+ if (reverse)
+ __dock_app_object.classList.remove(__icon_id + '_on');
+ else
+ __dock_app_object.classList.add(__icon_id + '_on');
+ return true;
+ };
+ this.close_app = function(app, process_id, is_sys_level)
+ {
+ app.on('closed', function()
+ {
+ if (is_sys_level)
+ {
+ if (owl.status.applications.get.by_proc_id(process_id, 'RUN'))
+ return;
+ }
+ else
+ {
+ if (owl.status.applications.get.by_proc_id(app.settings.general.app_id(), 'RUN'))
+ return;
+ }
+ me.set_dock_icon_status(process_id, true);
+ });
+ return true;
+ };
  this.check_arguments = function(mode, id, system)
  {
  if (utils_sys.validation.misc.is_undefined(mode) || utils_sys.validation.misc.is_nothing(id))
@@ -12324,8 +12377,6 @@ function x_runner()
  if (!utils_int.check_arguments(mode, id, is_sys_level))
  return false;
  x_mode = mode;
- x_id = id;
- x_is_sys_level = is_sys_level;
  return utils_int[mode].start(id, is_sys_level);
  };
  this.stop = function()
@@ -12351,11 +12402,9 @@ function x_runner()
  return true;
  };
  var is_x_running = false,
- x_is_sys_level = false,
  x_mode = null,
- x_id = null,
- this_app = null,
- this_svc = null,
+ x_app = null,
+ x_program = null,
  cosmos = null,
  matrix = null,
  xenon = null,
@@ -12368,6 +12417,7 @@ function x_runner()
  meta_executor = null,
  modes_list = ['app', 'svc'],
  utils_sys = new vulcan(),
+ ajax = new taurus(),
  x_mc = new x_meta_caller(),
  utils_int = new utilities();
 }
@@ -12671,7 +12721,7 @@ function super_tray()
  this.sys_id = null;
  this.id = null;
  this.name = null;
- this.icon = 'default';
+ this.icon = 'app_default';
  this.action = null;
  }
  function tray_services_collection()
@@ -12876,7 +12926,7 @@ function super_tray()
  __new_tray_service.sys_id = __service_config.sys_name;
  __new_tray_service.id = __service_config.name;
  __new_tray_service.name = __service_config.name;
- if (__service_config.icon !== 'default')
+ if (__service_config.icon !== 'app_default')
  __new_tray_service.icon = __service_config.icon;
  if (action !== null)
  __new_tray_service.action = action;
@@ -14962,7 +15012,7 @@ function bee()
  __status_bar_marquee = false,
  __resizable = false,
  __resize_tooltip = false,
- __icon = 'default',
+ __icon = 'app_default',
  __casement_width = 100,
  __backtrace = false;
  this.app_id = function()
@@ -17778,7 +17828,7 @@ function bat()
  {
  this.sys_name = null;
  this.name = null;
- this.icon = 'default';
+ this.icon = 'svc_default';
  }
  function dynamic_function_model()
  {
@@ -17868,7 +17918,7 @@ function bat()
  return false;
  }
  if (use_super_tray)
- super_tray.remove(ervice_config.sys_name);
+ super_tray.remove(service_config.sys_name);
  else
  roost.remove(service_id);
  owl.status.services.set(service_config.sys_name, service_config.name, 'END');
@@ -17876,7 +17926,7 @@ function bat()
  frog('BAT', 'Services :: Unregister', service_config);
  return morpheus.execute(service_config.sys_name, 'main', 'unregister');
  };
- this.init = function(svc_name, icon = 'default', in_super_tray = true)
+ this.init = function(svc_name, icon = 'svc_default', in_super_tray = true)
  {
  if (is_init === true)
  return false;
@@ -17959,13 +18009,6 @@ function coyote()
  "profile" : {
  "save" : true
  }
- };
- this.ajax_config = {
- "type" : "request",
- "method" : "post",
- "url" : "/",
- "data" : "gate=hyperbeam&config=" + JSON.stringify(this.hb_options),
- "ajax_mode" : "asynchronous",
  };
  }
  function utilities()
@@ -18090,7 +18133,7 @@ function coyote()
  };
  this.init_hyberbeam = function(url, callback)
  {
- config.ajax_config.on_success = async (hb_url) =>
+ var __on_success = async (hb_url) =>
  {
  if (utils_sys.validation.misc.is_nothing(hb_url))
  return false;
@@ -18109,11 +18152,9 @@ function coyote()
  infinity.end();
  }, 8000);
  };
- config.ajax_config.on_timeout = () => { };
- config.ajax_config.on_fail = () => { };
  infinity.setup(coyote_bee_id + '_data');
  infinity.begin();
- ajax.run(config.ajax_config);
+ ajax_factory("gate=hyperbeam&config=" + JSON.stringify(config.hb_options), __on_success, null, null);
  };
  }
  function browser_ctrl()
@@ -18409,7 +18450,6 @@ function coyote()
  hb_manager = null,
  init_url = 'https://www.bing.com/?setlang=en&cc=gb',
  utils_sys = new vulcan(),
- ajax = new taurus(),
  ping_timer = new stopwatch(),
  config = new config_model(),
  utils_int = new utilities();

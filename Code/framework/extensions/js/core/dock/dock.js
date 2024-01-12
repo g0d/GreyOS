@@ -28,7 +28,7 @@ function dock()
             if (utils_sys.validation.misc.is_undefined(element_id))
                 return false;
 
-            var __bull_config = {
+            var __ajax_config = {
                                     "type"                  :   "data",
                                     "url"                   :   "/",
                                     "data"                  :   "gate=dock&action=load",
@@ -50,14 +50,14 @@ function dock()
                                                                 }
                                 };
 
-            ajax.run(__bull_config);
+            ajax.run(__ajax_config);
 
             return true;
         }
 
         function ajax_save(apps_array)
         {
-            var __bull_config = {
+            var __ajax_config = {
                                     "type"          :   "request",
                                     "method"        :   "post",
                                     "url"           :   "/",
@@ -65,12 +65,13 @@ function dock()
                                     "ajax_mode"     :   "synchronous",
                                 };
 
-            return ajax.run(__bull_config);
+            return ajax.run(__ajax_config);
         }
 
         function create_dock_array()
         {
             var __app_id = null,
+                __app_icon = null,
                 __position = null,
                 __system = null,
                 __title = null
@@ -80,11 +81,13 @@ function dock()
             for (__dock_app of __dock)
             {
                 __app_id = __dock_app.getAttribute('id').split('app_')[1],
+                __app_icon =  __dock_app.getAttribute('data-icon'),
                 __position = __dock_app.getAttribute('data-position'),
                 __system = __dock_app.getAttribute('data-system'),
                 __title = __dock_app.getAttribute('title');
 
-                config.dock_array.push({ "app_id" : __app_id, "position" : __position, "system" : __system, "title" : __title });
+                config.dock_array.push({ "app_id" : __app_id, "icon" : __app_icon, 
+                                         "position" : __position, "system" : __system, "title" : __title });
             }
 
             return true;
@@ -360,7 +363,7 @@ function dock()
         nature = null,
         last_button_clicked = 0,
         utils_sys = new vulcan(),
-        ajax = new bull(),
+        ajax = new taurus(),
         random = new pythia(),
         config = new config_model(),
         utils_int = new utilities();

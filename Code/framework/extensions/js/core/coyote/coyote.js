@@ -36,13 +36,6 @@ function coyote()
                                                         "save"  :   true
                                                     }
                           };
-        this.ajax_config = {
-                                "type"          :   "request",
-                                "method"        :   "post",
-                                "url"           :   "/",
-                                "data"          :   "gate=hyperbeam&config=" + JSON.stringify(this.hb_options),
-                                "ajax_mode"     :   "asynchronous",
-                           };
     }
 
     function utilities()
@@ -218,7 +211,7 @@ function coyote()
 
         this.init_hyberbeam = function(url, callback)
         {
-            config.ajax_config.on_success = async (hb_url) =>
+            var __on_success = async (hb_url) =>
             {
                 if (utils_sys.validation.misc.is_nothing(hb_url))
                     return false;
@@ -244,13 +237,11 @@ function coyote()
                                 infinity.end();
                            }, 8000);
             };
-            config.ajax_config.on_timeout = () => { };
-            config.ajax_config.on_fail = () => { };
 
             infinity.setup(coyote_bee_id + '_data');
             infinity.begin();
 
-            ajax.run(config.ajax_config);
+            ajax_factory("gate=hyperbeam&config=" + JSON.stringify(config.hb_options), __on_success, null, null);
         };
     }
 
@@ -644,7 +635,6 @@ function coyote()
         hb_manager = null,
         init_url = 'https://www.bing.com/?setlang=en&cc=gb',
         utils_sys = new vulcan(),
-        ajax = new taurus(),
         ping_timer = new stopwatch(),
         config = new config_model(),
         utils_int = new utilities();

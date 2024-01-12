@@ -26,7 +26,7 @@ ms_app.on('opened', () => { gui(); });                  // On-opened: Start doin
 ms_app.on('close', () => { mc.reset(); });              // On-close: Close all apps and services & reset Cloud Edit status
 ms_app.run();                                           // Run your app
 
-ms_svc.init('Example', 'default');                      // Initialize service name with default icon
+ms_svc.init('Example', 'svc_default');                  // Initialize service name with default icon
 ms_svc.set('function_name',                             // Set function name and body
            (func_args) =>                               // Array of arguments
            {

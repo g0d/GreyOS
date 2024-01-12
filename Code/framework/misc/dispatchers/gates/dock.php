@@ -43,7 +43,7 @@
                                        data-position="' . $index . '" 
                                        data-system="true" 
                                        data-icon="' . $app['icon'] . '" 
-                                       class="favorites' . $app['icon'] . '" 
+                                       class="favorites ' . $app['icon'] . '" 
                                        title="' . $app['title'] . '"></div>';
 
                         $index++;

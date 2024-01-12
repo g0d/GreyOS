@@ -18,7 +18,7 @@ function bat()
     {
         this.sys_name = null;
         this.name = null;
-        this.icon = 'default';
+        this.icon = 'svc_default';
     }
 
     function dynamic_function_model()
@@ -141,7 +141,7 @@ function bat()
         }
 
         if (use_super_tray)
-            super_tray.remove(ervice_config.sys_name);
+            super_tray.remove(service_config.sys_name);
         else
             roost.remove(service_id);
 
@@ -153,7 +153,7 @@ function bat()
         return morpheus.execute(service_config.sys_name, 'main', 'unregister');
     };
 
-    this.init = function(svc_name, icon = 'default', in_super_tray = true)
+    this.init = function(svc_name, icon = 'svc_default', in_super_tray = true)
     {
         if (is_init === true)
             return false;

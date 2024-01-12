@@ -1,7 +1,7 @@
 var my_bull = new bull();
 var ajax_data = 'some_id=some_data&another_id=other_data';
 var response = null;
-var bull_config = {
+var ajax_config = {
                         "type"          :   "request",
                         "url"           :   "/",
                         "data"          :   ajax_data,
@@ -13,6 +13,6 @@ var bull_config = {
                                             }
                   };
 
-response = my_bull.run(bull_config);
+response = my_bull.run(ajax_config);
 
 console.log(response);

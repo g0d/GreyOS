@@ -1347,7 +1347,7 @@ function bee()
                 __status_bar_marquee = false,
                 __resizable = false,
                 __resize_tooltip = false,
-                __icon = 'default',
+                __icon = 'app_default',
                 __casement_width = 100,
                 __backtrace = false;
 

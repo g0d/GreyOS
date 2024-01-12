@@ -1,7 +1,7 @@
 var my_taurus = new taurus();
 var ajax_data = 'record=' + JSON.stringify({ id : 1000, full_name : "George Delaportas" });
 var response = null;
-var taurus_config = {
+var ajax_config = {
                         "type"          :   "request",
                         "url"           :   "/",
                         "data"          :   ajax_data,
@@ -11,8 +11,8 @@ var taurus_config = {
                                                 // Do actions here...
                                                 console.log(response);
                                             }
-                    };
+                  };
 
-response = my_taurus.run(taurus_config);
+response = my_taurus.run(ajax_config);
 
 console.log(response);

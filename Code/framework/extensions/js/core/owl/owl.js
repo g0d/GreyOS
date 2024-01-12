@@ -5,7 +5,7 @@
     Description: This file contains the Owl - Process (Bee & Bat) tracer & status logger module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2025
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 

@@ -487,6 +487,7 @@ function cloud_edit()
         xenon = matrix.get('xenon');
         nature = matrix.get('nature');
         infinity = dev_box.get('infinity');
+
         meta_executor = dev_box.get('meta_executor');
 
         return true;

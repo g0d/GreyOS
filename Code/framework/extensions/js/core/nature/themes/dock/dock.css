@@ -78,6 +78,31 @@
 	box-shadow: 2px 2px 2px 1px #bababa;
 }
 
+.app_default
+{
+    background-image: url('pix/favorites/inactive/icon_app.png') !important;
+}
+
+.app_default:hover
+{
+    background-image: url('pix/favorites/hover/icon_app.png') !important;
+}
+
+.app_default_on
+{
+    background-image: url('pix/favorites/active/icon_app.png') !important;
+}
+
+.svc_default
+{
+    background-image: url('pix/favorites/inactive/icon_box.png') !important;
+}
+
+.svc_default:hover
+{
+    background-image: url('pix/favorites/hover/icon_box.png') !important;
+}
+
 #app_rooster
 {
     background-image: url('pix/favorites/inactive/icon_clock.png');
@@ -91,11 +116,6 @@
 .app_rooster_on
 {
     background-image: url('pix/favorites/active/icon_clock.png') !important;
-}
-
-.app_rooster_off
-{
-    background-image: url('pix/favorites/inactive/icon_clock.png') !important;
 }
 
 #app_greyos_cloud
@@ -113,11 +133,6 @@
     background-image: url('pix/favorites/active/icon_cloud.png') !important;
 }
 
-.app_greyos_cloud_off
-{
-    background-image: url('pix/favorites/inactive/icon_cloud.png') !important;
-}
-
 #app_coyote
 {
     background-image: url('pix/favorites/inactive/icon_coyote.png');
@@ -131,11 +146,6 @@
 .app_coyote_on
 {
     background-image: url('pix/favorites/active/icon_coyote.png') !important;
-}
-
-.app_coyote_off
-{
-    background-image: url('pix/favorites/inactive/icon_coyote.png') !important;
 }
 
 #app_greyos_mail
@@ -153,11 +163,6 @@
     background-image: url('pix/favorites/active/icon_email.png') !important;
 }
 
-.app_greyos_mail_off
-{
-    background-image: url('pix/favorites/inactive/icon_email.png') !important;
-}
-
 #app_i_youtube
 {
     background-image: url('pix/favorites/inactive/icon_youtube.png');
@@ -171,11 +176,6 @@
 .app_i_youtube_on
 {
     background-image: url('pix/favorites/active/icon_youtube.png') !important;
-}
-
-.app_i_youtube_off
-{
-    background-image: url('pix/favorites/inactive/icon_youtube.png') !important;
 }
 
 #app_i_fb
@@ -193,11 +193,6 @@
     background-image: url('pix/favorites/active/icon_facebook.png') !important;
 }
 
-.app_i_fb_off
-{
-    background-image: url('pix/favorites/inactive/icon_facebook.png') !important;
-}
-
 #app_twitter
 {
     background-image: url('pix/favorites/inactive/icon_twitter.png');
@@ -211,11 +206,6 @@
 .app_twitter_on
 {
     background-image: url('pix/favorites/active/icon_twitter.png') !important;
-}
-
-.app_twitter_off
-{
-    background-image: url('pix/favorites/inactive/icon_twitter.png') !important;
 }
 
 #app_i_linkedin
@@ -233,11 +223,6 @@
     background-image: url('pix/favorites/active/icon_linkedin.png') !important;
 }
 
-.app_i_linkedin_off
-{
-    background-image: url('pix/favorites/inactive/icon_linkedin.png') !important;
-}
-
 #app_radio_dude
 {
     background-image: url('pix/favorites/inactive/icon_radio.png');
@@ -251,11 +236,6 @@
 .app_radio_dude_on
 {
     background-image: url('pix/favorites/active/icon_radio.png') !important;
-}
-
-.app_radio_dude_off
-{
-    background-image: url('pix/favorites/inactive/icon_radio.png') !important;
 }
 
 #app_cloud_edit
@@ -273,11 +253,6 @@
     background-image: url('pix/favorites/active/icon_cloud_edit.png') !important;
 }
 
-.app_cloud_edit_off
-{
-    background-image: url('pix/favorites/inactive/icon_cloud_edit.png') !important;
-}
-
 #app_i_bassoon
 {
     background-image: url('pix/favorites/inactive/icon_daw.png');
@@ -291,11 +266,6 @@
 .app_i_bassoon_on
 {
     background-image: url('pix/favorites/active/icon_daw.png') !important;
-}
-
-.app_i_bassoon_off
-{
-    background-image: url('pix/favorites/inactive/icon_daw.png') !important;
 }
 
 #app_i_quakejs
@@ -314,11 +284,6 @@
     background-image: url('pix/favorites/active/icon_games.png') !important;
 }
 
-.app_i_quakejs_off
-{
-    background-image: url('pix/favorites/inactive/icon_games.png') !important;
-}
-
 #app_i_minecraft
 {
     background-image: url('pix/favorites/inactive/icon_games.png');
@@ -332,11 +297,6 @@
 .app_i_minecraft_on
 {
     background-image: url('pix/favorites/active/icon_games.png') !important;
-}
-
-.app_i_minecraft_off
-{
-    background-image: url('pix/favorites/inactive/icon_games.png') !important;
 }
 
 #app_i_mariojs
@@ -354,11 +314,6 @@
     background-image: url('pix/favorites/active/icon_games.png') !important;
 }
 
-.app_i_mariojs_off
-{
-    background-image: url('pix/favorites/inactive/icon_games.png') !important;
-}
-
 #app_i_swooop
 {
     background-image: url('pix/favorites/inactive/icon_games.png');
@@ -372,11 +327,6 @@
 .app_i_swooop_on
 {
     background-image: url('pix/favorites/active/icon_games.png') !important;
-}
-
-.app_i_swooop_off
-{
-    background-image: url('pix/favorites/inactive/icon_games.png') !important;
 }
 
 #app_i_youdj
@@ -394,11 +344,6 @@
     background-image: url('pix/favorites/active/icon_app.png') !important;
 }
 
-.app_i_youdj_off
-{
-    background-image: url('pix/favorites/inactive/icon_app.png') !important;
-}
-
 #app_i_audiomass
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
@@ -412,11 +357,6 @@
 .app_i_audiomass_on
 {
     background-image: url('pix/favorites/active/icon_app.png') !important;
-}
-
-.app_i_audiomass_off
-{
-    background-image: url('pix/favorites/inactive/icon_app.png') !important;
 }
 
 #app_i_soundtrap
@@ -434,11 +374,6 @@
     background-image: url('pix/favorites/active/icon_app.png') !important;
 }
 
-.app_i_soundtrap_off
-{
-    background-image: url('pix/favorites/inactive/icon_app.png') !important;
-}
-
 #app_i_ampedstudio
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
@@ -454,11 +389,6 @@
     background-image: url('pix/favorites/active/icon_app.png') !important;
 }
 
-.app_i_ampedstudio_off
-{
-    background-image: url('pix/favorites/inactive/icon_app.png') !important;
-}
-
 #app_i_vectorink
 {
     background-image: url('pix/favorites/inactive/icon_app.png');
@@ -472,11 +402,6 @@
 .app_i_vectorink_on
 {
     background-image: url('pix/favorites/active/icon_app.png') !important;
-}
-
-.app_i_vectorink_off
-{
-    background-image: url('pix/favorites/inactive/icon_app.png') !important;
 }
 
 #app_i_ganttio
@@ -495,11 +420,6 @@
     background-image: url('pix/favorites/active/icon_app.png') !important;
 }
 
-.app_i_ganttio_off
-{
-    background-image: url('pix/favorites/inactive/icon_app.png') !important;
-}
-
 #app_i_webgl_preview
 {
     background-image: url('pix/favorites/inactive/icon_star.png');
@@ -513,11 +433,6 @@
 .app_i_webgl_preview_on
 {
     background-image: url('pix/favorites/active/icon_star.png') !important;
-}
-
-.app_i_webgl_preview_off
-{
-    background-image: url('pix/favorites/inactive/icon_star.png') !important;
 }
 
 #app_games
@@ -535,11 +450,6 @@
     background-image: url('pix/favorites/active/icon_games.png') !important;
 }
 
-.app_games_off
-{
-    background-image: url('pix/favorites/inactive/icon_games.png') !important;
-}
-
 #app_map_fuzion
 {
     background-image: url('pix/favorites/inactive/icon_maps.png');
@@ -555,11 +465,6 @@
     background-image: url('pix/favorites/active/icon_maps.png') !important;
 }
 
-.app_map_fuzion_off
-{
-    background-image: url('pix/favorites/inactive/icon_maps.png') !important;
-}
-
 #app_greyos_talk
 {
     background-image: url('pix/favorites/inactive/icon_chat.png');
@@ -573,11 +478,6 @@
 .app_greyos_talk_on
 {
     background-image: url('pix/favorites/active/icon_chat.png') !important;
-}
-
-.app_greyos_talk_off
-{
-    background-image: url('pix/favorites/inactive/icon_chat.png') !important;
 }
 
 #app_other
@@ -598,11 +498,6 @@
 .app_bookmarks_on
 {
     background-image: url('pix/favorites/active/icon_star.png') !important;
-}
-
-.app_bookmarks_off
-{
-    background-image: url('pix/favorites/inactive/icon_star.png') !important;
 }
 
 .games_list

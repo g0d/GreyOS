@@ -11,11 +11,11 @@
 */
 
 // AJAX Factory
-function ajax_factory(ajax_data, success_cb, failure_cb, default_cb)
+function ajax_factory(ajax_data, success_cb = null, failure_cb = null, default_cb = null)
 {
     var ajax = new bull(),
     	utils = new vulcan(),
-    	bull_config = {
+    	ajax_config = {
                             "type"          :   "request",
                             "url"           :   "/",
                             "data"          :   ajax_data,
@@ -32,12 +32,12 @@ function ajax_factory(ajax_data, success_cb, failure_cb, default_cb)
                                                 }
                       };
 
-    if (!utils.validation.misc.is_function(success_cb) || 
-        !utils.validation.misc.is_function(failure_cb) || 
-        !utils.validation.misc.is_function(default_cb))
+    if ((success_cb !== null && !utils.validation.misc.is_function(success_cb)) || 
+        (failure_cb !== null && !utils.validation.misc.is_function(failure_cb)) || 
+        (default_cb !== null && !utils.validation.misc.is_function(default_cb)))
         return false;
 
-    ajax.run(bull_config);
+    ajax.run(ajax_config);
 
     return true;
 }

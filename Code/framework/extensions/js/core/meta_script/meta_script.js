@@ -83,12 +83,24 @@ function meta_script()
                 return ajax;
             };
 
+            this.ajax_factory = function(ajax_data, success_cb, failure_cb, default_cb)
+            {
+                return ajax_factory(ajax_data, success_cb, failure_cb, default_cb);
+            };
+
             this.settings_validator = function()
             {
                 return config_parser;
             };
 
             this.run = function(program)
+            {
+                // TODO:...
+
+                return (program);
+            };
+
+            this.quit = function(program)
             {
                 // TODO:...
 
@@ -1103,15 +1115,27 @@ function meta_script()
                     return program_config.meta_caller.source();
                 };
 
-                this.run = function(parent_app_id = null, headless = false)
+                this.run = function(child_apps_array = [], headless = false)
                 {
                     if (__new_app === null || __is_run === true)
                         return false;
 
+                    app_box.replace([program_config.model]);
+
+                    if (!swarm.bees.insert(__new_app))
+                        return false;
+
+                    var __result = __new_app.run(child_apps_array, headless);
+
+                    if (__result === true)
+                        __is_run = true;
+
                     var __data = {
-                                    "icon"  :   me.settings.icon(),
-                                    "name"  :   me.get_app_id(),
-                                    "type"  :   "app"
+                                    "ms_id"     :   program_config.model.name,
+                                    "app_id"    :   me.get_system_id(),
+                                    "name"      :   me.get_app_id(),
+                                    "icon"      :   me.settings.icon(),
+                                    "type"      :   "app"
                                  };
 
                     program_config.meta_caller.telemetry(__data);
@@ -1122,16 +1146,6 @@ function meta_script()
 
                                        //program_config.meta_caller.reset();
                                    });
-
-                    app_box.replace([program_config.model]);
-
-                    if (!swarm.bees.insert(__new_app))
-                        return false;
-
-                    var __result = __new_app.run(parent_app_id, headless);
-
-                    if (__result === true)
-                        __is_run = true;
 
                     return __result;
                 };
@@ -1237,15 +1251,6 @@ function meta_script()
                     if (__new_svc === null || __is_run === true)
                         return false;
 
-                    var __data = {
-                                    "icon"  :   me.get_config().icon,
-                                    "name"  :   me.get_config().name,
-                                    "type"  :   "svc"
-                                 };
-
-                    me.on('register', function() { program_config.meta_caller.telemetry(__data); });
-                    //me.on('unregister', function() { program_config.meta_caller.reset(); });
-
                     matrix.unregister(program_config.model.name);
 
                     var __result = __new_svc.register(program_config.model);
@@ -1253,10 +1258,21 @@ function meta_script()
                     if (__result === true)
                         __is_run = true;
 
+                    var __data = {
+                                    "ms_id"     :   program_config.model.name,
+                                    "svc_id"    :   me.get_config().sys_name,
+                                    "name"      :   me.get_config().name,
+                                    "icon"      :   me.get_config().icon,
+                                    "type"      :   "svc"
+                                 };
+
+                    me.on('register', function() { program_config.meta_caller.telemetry(__data); });
+                    //me.on('unregister', function() { program_config.meta_caller.reset(); });
+
                     return __result;
                 };
 
-                this.init = function(svc_id, icon = 'default')
+                this.init = function(svc_id, icon = 'svc_default')
                 {
                     if (__is_init === true)
                         return false;
