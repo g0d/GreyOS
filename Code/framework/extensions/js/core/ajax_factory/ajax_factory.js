@@ -1,12 +1,12 @@
 /*
     AJAX Factory (Factory method for AJAX calls)
 
-    File name: ajax_factory.js (Version: 1.4)
+    File name: ajax_factory.js (Version: 1.5)
     Description: This file contains the AJAX Factory extension.
     Dependencies: Vulcan and BULL.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2019 - 2023
+    Copyright (C) 2019 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -24,11 +24,18 @@ function ajax_factory(ajax_data, success_cb = null, failure_cb = null, default_c
                             "on_success"    :   function(response)
                                                 {
                                                     if (response !== '0' && response !== '-1' && response !== 'undefined')
-                                                        success_cb.call(this, response);
+                                                    {
+                                                        if (success_cb !== null)
+                                                            success_cb.call(this, response);
+                                                    }
                                                     else
-                                                        failure_cb.call(this, response);
+                                                    {
+                                                        if (failure_cb !== null)
+                                                            failure_cb.call(this, response);
+                                                    }
 
-                                                    default_cb.call(this);
+                                                    if (default_cb !== null)
+                                                        default_cb.call(this);
                                                 }
                       };
 
