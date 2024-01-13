@@ -19,7 +19,7 @@
 
 	if (!empty($_POST['send']) && $_POST['send'] === '1' && !empty($_POST['email']))
 	{
-		$result = Woody::Send_Mail('hello@micro-mvc.co', $_POST['email'], 'micro-MVC');
+		$result = Woody::Send_Mail('hello@greyos.gr', $_POST['email'], 'GreyOS');
 
 		if (!empty($result))
 			echo 'E-mail successfully sent!';

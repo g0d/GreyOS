@@ -219,6 +219,7 @@ function radio_dude()
 
         swarm = matrix.get('swarm');
         nature = matrix.get('nature');
+
         infinity = dev_box.get('infinity');
 
         return true;
