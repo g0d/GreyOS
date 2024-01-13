@@ -12,9 +12,16 @@ function ajax_factory(ajax_data, success_cb = null, failure_cb = null, default_c
  "on_success" : function(response)
  {
  if (response !== '0' && response !== '-1' && response !== 'undefined')
+ {
+ if (success_cb !== null)
  success_cb.call(this, response);
+ }
  else
+ {
+ if (failure_cb !== null)
  failure_cb.call(this, response);
+ }
+ if (default_cb !== null)
  default_cb.call(this);
  }
  };

@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include CONTROL class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/classes/control.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/classes/control.php'));
 
     // Utility: [ACTION]
     abstract class ACTION extends CONTROL

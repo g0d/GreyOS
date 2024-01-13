@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include OPTION class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/utilities/control/option.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/utilities/control/option.php'));
 
     // Class: [CHECK]
     class CHECK extends OPTION

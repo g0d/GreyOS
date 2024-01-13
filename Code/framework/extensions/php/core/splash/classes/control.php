@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include HELPERS class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/helpers/helpers.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/helpers/helpers.php'));
 
     // Class: [CONTROL]
     abstract class CONTROL

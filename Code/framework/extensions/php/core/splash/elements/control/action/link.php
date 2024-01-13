@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include ACTION class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/utilities/control/action.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/utilities/control/action.php'));
 
     // Class: [LINK]
     class LINK extends ACTION

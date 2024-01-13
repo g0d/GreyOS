@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include WINDOW class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/classes/window.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/classes/window.php'));
 
     // Class: [BROWSER]
     class BROWSER extends WINDOW

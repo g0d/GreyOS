@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include PLUGIN class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/classes/plugin.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/classes/plugin.php'));
 
     // Utility: [ADAPTER]
     abstract class ADAPTER extends PLUGIN

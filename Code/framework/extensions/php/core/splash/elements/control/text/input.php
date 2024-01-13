@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include TEXT class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/utilities/control/text.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/utilities/control/text.php'));
 
     // Class: [INPUT]
     class INPUT extends TEXT

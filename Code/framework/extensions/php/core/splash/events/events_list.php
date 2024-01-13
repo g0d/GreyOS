@@ -13,10 +13,10 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include MOUSE::CLICK event
-    require(UTIL::Absolute_Path('framework/extensions/php/user/splash/events/mouse/click.php'));
+    require(UTIL::Absolute_Path('framework/extensions/php/core/splash/events/mouse/click.php'));
 
     // Include KEY::DOWN event
-    require(UTIL::Absolute_Path('framework/extensions/php/user/splash/events/key/down.php'));
+    require(UTIL::Absolute_Path('framework/extensions/php/core/splash/events/key/down.php'));
 
     /* ------------------------- END ------------------------- */
 ?>

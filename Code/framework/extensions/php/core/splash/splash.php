@@ -514,4 +514,4 @@
     }
 ?>
 
-<script src="/framework/extensions/php/user/splash/splash.js"></script>
+<script src="/framework/extensions/php/core/splash/splash.js"></script>

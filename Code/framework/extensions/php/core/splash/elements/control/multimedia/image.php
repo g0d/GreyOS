@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include MULTIMEDIA class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/utilities/control/multimedia.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/utilities/control/multimedia.php'));
 
     // Class: [IMAGE]
     class IMAGE extends MULTIMEDIA

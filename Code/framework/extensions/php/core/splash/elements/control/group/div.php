@@ -13,7 +13,7 @@
     /* ------------------------ BEGIN ------------------------ */
 
     // Include GROUP class
-    require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/utilities/control/group.php'));
+    require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/utilities/control/group.php'));
 
     // Class: [DIV]
     class DIV extends GROUP

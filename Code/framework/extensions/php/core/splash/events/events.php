@@ -21,7 +21,7 @@
         if (!empty($_POST['splash_ajax_action']))
         {
             // Include HELPERS class
-            require(UTIL::Absolute_Path('framework/extensions/php/user/splash/helpers/helpers.php'));
+            require(UTIL::Absolute_Path('framework/extensions/php/core/splash/helpers/helpers.php'));
 
             echo HELPERS::Call_User_Function($_POST['splash_ajax_action']);
         }

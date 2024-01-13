@@ -25,9 +25,9 @@
     UTIL::Load_Extension('i_mariojs', 'js');
     UTIL::Load_Extension('i_swooop', 'js');
     UTIL::Load_Extension('i_webgl_preview', 'js');
-    //UTIL::Load_Extension('e_games', 'js');
     //UTIL::Load_Extension('i_fb', 'js');
     //UTIL::Load_Extension('i_twitter', 'js');
     //UTIL::Load_Extension('i_linkedin', 'js');
     //UTIL::Load_Extension('i_youtube', 'js');
+    //UTIL::Load_Extension('e_games', 'js');
 ?>

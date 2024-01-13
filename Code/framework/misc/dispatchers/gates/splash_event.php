@@ -14,5 +14,5 @@
     if (!defined('micro_mvc'))
 		exit();
 
-	require_once(UTIL::Absolute_Path('framework/extensions/php/user/splash/events/events.php'));
+	require_once(UTIL::Absolute_Path('framework/extensions/php/core/splash/events/events.php'));
 ?>
