@@ -6,6 +6,6 @@
                  "xenon", "teal_fs", "owl", "forest", "swarm", "hive", "trinity", "krator", "ui_controls", "dock", "user_profile", 
                  "chameleon", "nature", "eagle", "tik_tok", "meta_program_config", "meta_script", "meta_executor", "x_runner", 
                  "morpheus", "panda", "octopus", "super_tray", "parrot", "uniplex", "xgc", "infinity", "scrollbar", "max_screen", 
-                 "bee", "bat", "oz", "coyote", "radio_dude", "cloud_edit"],
+                 "bee", "bat", "oz", "coyote", "radio_dude", "cloud_edit", "test_svc"],
     "php"   :   ["arkangel", "splash", "eureka", "chaos"]
 }

@@ -109,7 +109,7 @@ function template_app()
 
     this.base = function() // Always have a public "base" method available with this code in the body
     {
-        if (is_init === false)
+        if (!is_init)
             return false;
 
         return template_app_bee;
@@ -117,7 +117,7 @@ function template_app()
 
     this.on = function(event_name, event_handler) // Always have a public "on" method available with this code in the body
     {
-        if (is_init === false)
+        if (!is_init)
             return false;
 
         return template_app_bee.on(event_name, event_handler);
@@ -125,7 +125,7 @@ function template_app()
 
     this.run = function() // Always have a public "run" method available with this code in the body
     {
-        if (is_init === false)
+        if (!is_init)
             return false;
 
         return template_app_bee.run();
@@ -133,7 +133,7 @@ function template_app()
 
     this.quit = function() // Always have a public "quit" method available with this code in the body
     {
-        if (is_init === false)
+        if (!is_init)
             return false;
 
         utils_int.detach_events(); // Always call a "detach_events" method to detach events
@@ -143,7 +143,7 @@ function template_app()
 
     this.error = function() // Always have a public "error" method available with this code in the body
     {
-        if (is_init === false)
+        if (!is_init)
             return false;
 
         return template_app_bee.error;
@@ -154,7 +154,7 @@ function template_app()
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (is_init === true)
+        if (is_init)
             return false;
 
         is_init = true;

@@ -93,5 +93,6 @@
     "i_quakejs"                 :       "user",
     "i_mariojs"                 :       "user",
     "i_swooop"                  :       "user",
-    "i_webgl_preview"           :       "user"
+    "i_webgl_preview"           :       "user",
+    "test_svc"                  :       "user"
 }

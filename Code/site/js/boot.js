@@ -37,7 +37,7 @@ function boot_script()
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
     os_settings.set('max_apps', 50);            // Maximum number of allowed active apps per session
     os_settings.set('max_services', 100)        // Maximum number of allowed active services per session
-    os_settings.set('apps_per_view', 18);       // Apps per stack bar view
+    os_settings.set('apps_per_view', 18);       // Apps per stack bar view (This is buggy / Stackbar tries to resize automatically but usually fails)
     os_settings.set('stack_bars', 4);           // Number of stack bars
 
     // Initialization script
@@ -454,7 +454,7 @@ function boot_script()
                     i_ampedstudio, i_vectorink, i_ganttio, i_quakejs, i_mariojs, i_swooop, i_webgl_preview];
 
         // List of services
-        var svcs = [];
+        var svcs = [test_svc];
 
         // Add a VM to the hypervisor
         //os_hypervisor.backtrace(true);
@@ -578,6 +578,16 @@ function boot_script()
 
             // Load Banana (User suggestions widget)
             //Banana();
+
+            // Load test service
+            var test_svc = svc_box_container.get('test_svc');
+
+            test_svc.init();
+            test_svc.setup('test_svc_1');
+            test_svc.set_func('test', (args) => { console.log(test_svc.config().sys_name + ': HELLO WORLD' + args); });
+            test_svc.exec_func('test', ['... my man!']);
+            test_svc.run();
+            console.log(test_svc);
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()

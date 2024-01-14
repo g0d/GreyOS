@@ -1,21 +1,21 @@
 /*
-    GreyOS - Template [Service] (Version: 0.3)
+    GreyOS - Test Service (Version: 1.0)
 
-    File name: template_service.js
-    Description: This file contains the Template Service - Template service module.
+    File name: test_svc.js
+    Description: This file contains the Test Svc - Test Service module.
     Notes: Low Level API
 
-    Coded by [Name Surname]
-    Copyright © [Year]
+    Coded by George Delaportas
+    Copyright © 2024
     Open Software License (OSL 3.0)
 */
 
 // Template Service
-function template_service()
+function test_svc()
 {
     var self = this; // Use "self" to referense the whole class module easily so that you do no confuse "this" in various scopes
 
-    function template_service_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
+    function test_svc_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
     {
         function test_object_model()
         {
@@ -36,7 +36,7 @@ function template_service()
             this.pption_3 = 'test';
         }
 
-        this.namespace_1 = new template_model_1(); // Create the namespace as public attribute of the "template_service_config_model"
+        this.namespace_1 = new template_model_1(); // Create the namespace as public attribute of the "test_svc_config_model"
         this.namespace_2 = new template_model_2();
     }
 
@@ -91,7 +91,7 @@ function template_service()
 
     this.set_func = function(name, body) // Always have a public "set_func" method available with this code in the body
     {
-        if (!is_setup)
+         if (!is_setup)
             return false;
 
         return template_svc_bat.set_function(name, body);
@@ -99,7 +99,7 @@ function template_service()
 
     this.exec_func = function(func_name, func_args = []) // Always have a public "exec_func" method available with this code in the body
     {
-        if (!is_setup)
+         if (!is_setup)
             return false;
 
         return template_svc_bat.exec_function(func_name, func_args);
@@ -107,7 +107,7 @@ function template_service()
 
     this.run = function(service_model, action) // Always have a public "run" method available with this code in the body
     {
-        if (!is_setup)
+         if (!is_setup)
             return false;
 
         return template_svc_bat.register(service_model, action);
@@ -115,7 +115,7 @@ function template_service()
 
     this.terminate = function() // Always have a public "terminate" method available with this code in the body
     {
-        if (!is_setup)
+         if (!is_setup)
             return false;
 
         return template_svc_bat.unregister();
@@ -180,7 +180,7 @@ function template_service()
         utils_sys = new vulcan(), // Always have a "utils_sys" internal variable that utilizes "vulcan"
         ajax = new taurus(), // Always have a "ajax" internal variable that utilizes "taurus"
         // Your code here...
-        template_service_config = new template_service_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model
+        test_svc_config = new test_svc_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model
         // Your code here...
         utils_int = new utilities(); // Always have a "utils_int" internal variable that utilizes "utilities" model
 }
