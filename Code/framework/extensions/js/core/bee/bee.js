@@ -3745,8 +3745,6 @@ function bee()
 
                     if ((__window_pos_x + (__window_width + __casement_width )) >= swarm.settings.right())
                     {
-                        msg_win = new msgbox();
-
                         msg_win.init('desktop');
                         msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
 
@@ -5014,6 +5012,7 @@ function bee()
         xenon = matrix.get('xenon');
         morpheus = matrix.get('morpheus');
         owl = matrix.get('owl');
+        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         nature = matrix.get('nature');
@@ -5028,13 +5027,13 @@ function bee()
         cosmos = null,
         matrix = null,
         nature = null,
+        xenon = null,
         morpheus = null,
         owl = null,
-        xenon = null,
+        msg_win = null,
         swarm = null,
         hive = null,
         colony = null,
-        msg_win = null,
         utils_sys = new vulcan(),
         random = new pythia(),
         key_control = new key_manager(),

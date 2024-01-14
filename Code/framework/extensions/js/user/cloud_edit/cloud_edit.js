@@ -149,8 +149,6 @@ function cloud_edit()
 
                 if (user_prog_name.length === 0)
                 {
-                    msg_win = new msgbox();
-
                     msg_win.init('desktop');
                     msg_win.show(os_name, 'Please enter a program name!', msg_win.types.OK,
                                  [() => { user_prog_name = 'new_program'; deploy_program(); }]);
@@ -179,8 +177,6 @@ function cloud_edit()
                                     "ajax_mode"     :   "asynchronous",
                                     "on_success"    :   (result) => 
                                                         {
-                                                            msg_win = new msgbox();
-
                                                             msg_win.init('desktop');
 
                                                             if (result === '-1')
@@ -196,8 +192,6 @@ function cloud_edit()
                                                                                        {
                                                                                             if (result === '-1')
                                                                                             {
-                                                                                                msg_win = new msgbox();
-
                                                                                                 msg_win.init('desktop');
 
                                                                                                 msg_win.show(os_name, 'An error has occurred.\
@@ -222,8 +216,6 @@ function cloud_edit()
                                                             }
                                                         }
                                 };
-
-            msg_win = new msgbox();
 
             msg_win.init('desktop');
             msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
@@ -489,6 +481,7 @@ function cloud_edit()
         xenon = matrix.get('xenon');
         nature = matrix.get('nature');
         dock = matrix.get('dock');
+        msg_win = matrix.get('msgbox');
         infinity = dev_box.get('infinity');
 
         meta_executor = dev_box.get('meta_executor');
@@ -508,6 +501,7 @@ function cloud_edit()
         xenon = null,
         dock = null,
         nature = null,
+        msg_win = null,
         infinity = null,
         meta_executor = null,
         cloud_edit_bee = null,
@@ -516,6 +510,5 @@ function cloud_edit()
         utils_int = new utilities(),
         utils_sys = new vulcan(),
         key_control = new key_manager(),
-        ajax = new taurus(),
-        msg_win = new msgbox();
+        ajax = new taurus();
 }

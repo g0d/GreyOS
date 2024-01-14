@@ -909,17 +909,17 @@ function msgbox()
  this.YES_NO = 2;
  this.YES_NO_CANCEL = 3;
  }
- function general_helpers()
+ function utilities()
  {
  var me = this;
  this.draw_screen = function(container_id)
  {
  var __button_object = null,
- __container = utils.objects.by_id(container_id),
+ __container = utils_sys.objects.by_id(container_id),
  __html = null;
- if (__container === false || utils.validation.misc.is_undefined(__container) || __container === null)
+ if (__container === false || utils_sys.validation.misc.is_undefined(__container) || __container === null)
  return false;
- msgbox_object = utils.objects.by_id('msgbox');
+ msgbox_object = utils_sys.objects.by_id('msgbox');
  if (msgbox_object !== null)
  {
  try
@@ -946,8 +946,8 @@ function msgbox()
  '</div>';
  msgbox_object.innerHTML = __html;
  __container.appendChild(msgbox_object);
- __button_object = utils.objects.by_id(__button_title + '_1');
- utils.events.attach(__button_title + '_1', __button_object, 'click',
+ __button_object = utils_sys.objects.by_id(__button_title + '_1');
+ utils_sys.events.attach(__button_title + '_1', __button_object, 'click',
  () =>
  {
  if (global_hide_callbacks.length > 0)
@@ -962,7 +962,7 @@ function msgbox()
  clearTimeout(timer);
  msgbox_object.childNodes[0].childNodes[1].innerHTML = title;
  msgbox_object.childNodes[0].childNodes[3].innerHTML = message;
- var __container = utils.objects.by_id(msgbox_object.id + '_buttons_area'),
+ var __container = utils_sys.objects.by_id(msgbox_object.id + '_buttons_area'),
  __var_dynamic_label_button_1 = 'OK',
  __var_dynamic_label_button_2 = 'Cancel',
  __button_object = null;
@@ -981,7 +981,7 @@ function msgbox()
  __button_object.style.float = 'right';
  __button_object.innerHTML = __var_dynamic_label_button_2;
  __container.appendChild(__button_object);
- utils.events.attach(__button_object.id, __button_object, 'click',
+ utils_sys.events.attach(__button_object.id, __button_object, 'click',
  () =>
  {
  if (global_hide_callbacks.length > 1)
@@ -999,7 +999,7 @@ function msgbox()
  __button_object.className = 'msgbox_button mb_triple';
  __button_object.innerHTML = 'No';
  __container.appendChild(__button_object);
- utils.events.attach(__button_object.id, __button_object, 'click',
+ utils_sys.events.attach(__button_object.id, __button_object, 'click',
  () =>
  {
  if (global_hide_callbacks.length > 1)
@@ -1011,7 +1011,7 @@ function msgbox()
  __button_object.className = 'msgbox_button mb_triple';
  __button_object.innerHTML = 'Cancel';
  __container.appendChild(__button_object);
- utils.events.attach(__button_object.id, __button_object, 'click',
+ utils_sys.events.attach(__button_object.id, __button_object, 'click',
  () =>
  {
  if (global_hide_callbacks.length > 2)
@@ -1037,14 +1037,20 @@ function msgbox()
  is_open = false;
  };
  }
+ this.is_open = function()
+ {
+ if (!is_init)
+ return false;
+ return is_open;
+ };
  this.show = function(title, message, type = self.types.OK, hide_callback_array = [])
  {
  if (!is_init || is_open ||
- !utils.validation.alpha.is_string(title) ||
- !utils.validation.alpha.is_string(message))
+ !utils_sys.validation.alpha.is_string(title) ||
+ !utils_sys.validation.alpha.is_string(message))
  return false;
- if (!utils.validation.misc.is_invalid(hide_callback_array) &&
- !utils.validation.misc.is_array(hide_callback_array))
+ if (!utils_sys.validation.misc.is_invalid(hide_callback_array) &&
+ !utils_sys.validation.misc.is_array(hide_callback_array))
  return false;
  if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) ||
  ((global_type === self.types.OK_CANCEL || global_type === self.types.YES_NO) && hide_callback_array.length > 2) ||
@@ -1064,19 +1070,19 @@ function msgbox()
  var i = 0;
  for (i = 0; i < hide_callback_array.length; i++)
  {
- if (!utils.validation.misc.is_function(hide_callback_array[i]))
+ if (!utils_sys.validation.misc.is_function(hide_callback_array[i]))
  return false;
  global_hide_callbacks.push(hide_callback_array[i]);
  }
- helpers.show_win(title, message, type);
+ utils_int.show_win(title, message, type);
  return true;
  };
  this.hide = function(hide_callback_array = [])
  {
  if (!is_init || !is_open)
  return false;
- if (!utils.validation.misc.is_invalid(hide_callback_array) &&
- !utils.validation.misc.is_array(hide_callback_array))
+ if (!utils_sys.validation.misc.is_invalid(hide_callback_array) &&
+ !utils_sys.validation.misc.is_array(hide_callback_array))
  return false;
  if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) ||
  ((global_type === self.types.OK_CANCEL || global_type === self.types.YES_NO) && hide_callback_array.length > 2) ||
@@ -1084,29 +1090,35 @@ function msgbox()
  return false;
  for (i = 0; i < hide_callback_array.length; i++)
  {
- if (!utils.validation.misc.is_function(hide_callback_array[i]))
+ if (!utils_sys.validation.misc.is_function(hide_callback_array[i]))
  return false;
  global_hide_callbacks.push(hide_callback_array[i]);
  }
- helpers.hide_win();
+ utils_int.hide_win();
  return true;
- };
- this.is_open = function()
- {
- if (!is_init)
- return false;
- return is_open;
  };
  this.init = function(container_id)
  {
  if (is_init)
  return false;
- if (utils.validation.misc.is_invalid(container_id) || !utils.validation.alpha.is_string(container_id))
+ if (utils_sys.validation.misc.is_invalid(container_id) || !utils_sys.validation.alpha.is_string(container_id))
  return false;
- utils.graphics.apply_theme('/framework/extensions/js/core/msgbox', 'msgbox');
- if (!helpers.draw_screen(container_id))
+ if (!utils_int.draw_screen(container_id))
  return false;
+ nature.theme('msgbox');
+ nature.apply('new');
  is_init = true;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
  return true;
  };
  var is_init = false,
@@ -1115,8 +1127,12 @@ function msgbox()
  global_type = null,
  global_hide_callbacks = [],
  timer = null,
- helpers = new general_helpers(),
- utils = new vulcan();
+ cosmos = null,
+ matrix = null,
+ morpheus = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ utils_int = new utilities();
  this.types = new types_model();
 }
 function pythia()
@@ -5989,7 +6005,6 @@ function colony()
  if (__objects_num > 0)
  {
  xenon = matrix.get('xenon');
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'Maximum apps for this session, reached! Please close a few apps in order to open others.');
  }
@@ -6109,6 +6124,7 @@ function colony()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
+ msg_win = matrix.get('msgbox');
  return true;
  };
  var backtrace = false,
@@ -7956,7 +7972,6 @@ function hive()
  {
  if (self.status.bees.num() === self.status.bees.max())
  {
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'All stack views are full!');
  return false;
@@ -8734,6 +8749,7 @@ function hive()
  matrix = cosmos.hub.access('matrix');
  colony = cosmos.hub.access('colony');
  xenon = matrix.get('xenon');
+ msg_win = matrix.get('msgbox');
  swarm = matrix.get('swarm');
  forest = matrix.get('forest');
  morpheus = matrix.get('morpheus');
@@ -8746,11 +8762,11 @@ function hive()
  matrix = null,
  colony = null,
  xenon = null,
+ msg_win = null,
  swarm = null,
  forest = null,
  morpheus = null,
  nature = null,
- msg_win = null,
  max_stack_width = 0,
  last_mouse_button_clicked = 0,
  utils_sys = new vulcan(),
@@ -9059,7 +9075,6 @@ function krator()
  password_object.disabled = true;
  login_button_object.disabled = true;
  }
- msg_win = new msgbox();
  msg_win.init('desktop');
  disable_controls();
  if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
@@ -9102,7 +9117,6 @@ function krator()
  password_comfirm_object.disabled = true;
  register_button_object.disabled = true;
  }
- msg_win = new msgbox();
  msg_win.init('desktop');
  disable_controls();
  if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
@@ -9194,7 +9208,7 @@ function krator()
  nature.theme([config.id]);
  nature.apply('new');
  krator_bee.init(config.id);
- krator_bee.settings.data.window.labels.title('Krator :: Login & Registration');
+ krator_bee.settings.data.window.labels.title('Login & Registration Form');
  krator_bee.settings.data.window.labels.status_bar(os_name + ' - Login/Registration');
  krator_bee.settings.actions.can_edit_title(false);
  krator_bee.settings.actions.can_use_menu(false);
@@ -9229,6 +9243,7 @@ function krator()
  morpheus = matrix.get('morpheus');
  xenon = matrix.get('xenon');
  swarm = matrix.get('swarm');
+ msg_win = matrix.get('msgbox');
  nature = matrix.get('nature');
  return true;
  };
@@ -9756,7 +9771,6 @@ function user_profile()
  {
  function abnormal_logout()
  {
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Your session has been terminated!',
  msg_win.types.OK,
@@ -9817,7 +9831,6 @@ function user_profile()
  },
  function()
  {
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Logout error!',
  msg_win.types.OK,
@@ -10012,7 +10025,6 @@ function user_profile()
  nature.theme('user_profile');
  nature.apply('new');
  utils_int.draw_user_profile();
- msg_win = new msgbox();
  msg_win.init('desktop');
  return true;
  };
@@ -10024,6 +10036,7 @@ function user_profile()
  matrix = cosmos.hub.access('matrix');
  colony = cosmos.hub.access('colony');
  xenon = matrix.get('xenon');
+ msg_win = matrix.get('msgbox');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
  morpheus = matrix.get('morpheus');
@@ -10039,11 +10052,11 @@ function user_profile()
  matrix = null,
  colony = null,
  xenon = null,
+ msg_win = null,
  swarm = null,
  hive = null,
  morpheus = null,
  nature = null,
- msg_win = null,
  utils_sys = new vulcan(),
  random = new pythia(),
  key_control = new key_manager(),
@@ -10849,7 +10862,7 @@ function meta_script()
  };
  this.message_box = function()
  {
- return msg_box;
+ return msg_win;
  };
  this.work_box = function()
  {
@@ -11771,6 +11784,7 @@ function meta_script()
  svc_box = cosmos.hub.access('svc_box');
  dev_box = cosmos.hub.access('dev_box');
  xenon = matrix.get('xenon');
+ msg_win = matrix.get('msgbox');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
  forest = matrix.get('forest');
@@ -11797,6 +11811,7 @@ function meta_script()
  svc_box = null,
  dev_box = null,
  xenon = null,
+ msg_win = null,
  swarm = null,
  hive = null,
  forest = null,
@@ -11816,7 +11831,6 @@ function meta_script()
  precise_timer = new stopwatch(),
  config_parser = new jap(),
  ajax = new taurus(),
- msg_box = new msgbox(),
  work_box = new workbox(),
  cc_reload = new f5(),
  config_models = new config_models(),
@@ -12307,7 +12321,6 @@ function x_runner()
  __app_error.last() === __app_error.codes.SIZE)
  {
  swarm.bees.remove(__bee);
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
  You need a larger screen or higher resolution to run it!');
@@ -12315,7 +12328,6 @@ function x_runner()
  else if (__app_error.last() === __app_error.codes.INSTANCE_NUM_LIMIT)
  {
  swarm.bees.remove(__bee);
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
  }
@@ -12431,6 +12443,7 @@ function x_runner()
  colony = cosmos.hub.access('colony');
  xenon = matrix.get('xenon');
  swarm = matrix.get('swarm');
+ msg_win = matrix.get('msgbox');
  owl = matrix.get('owl');
  return true;
  };
@@ -12440,12 +12453,13 @@ function x_runner()
  x_program = null,
  cosmos = null,
  matrix = null,
- xenon = null,
  app_box = null,
  svc_box = null,
  dev_box = null,
  colony = null,
+ xenon = null,
  swarm = null,
+ msg_win = null,
  owl = null,
  meta_executor = null,
  modes_list = ['app', 'svc'],
@@ -16857,7 +16871,6 @@ function bee()
  __speed = Math.ceil(__step / 3);
  if ((__window_pos_x + (__window_width + __casement_width )) >= swarm.settings.right())
  {
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
  return false;
@@ -17825,6 +17838,7 @@ function bee()
  xenon = matrix.get('xenon');
  morpheus = matrix.get('morpheus');
  owl = matrix.get('owl');
+ msg_win = matrix.get('msgbox');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
  nature = matrix.get('nature');
@@ -17837,13 +17851,13 @@ function bee()
  cosmos = null,
  matrix = null,
  nature = null,
+ xenon = null,
  morpheus = null,
  owl = null,
- xenon = null,
+ msg_win = null,
  swarm = null,
  hive = null,
  colony = null,
- msg_win = null,
  utils_sys = new vulcan(),
  random = new pythia(),
  key_control = new key_manager(),
@@ -18698,7 +18712,6 @@ function cloud_edit()
  __prog_source = encodeURIComponent(config.ce.editor.getValue());
  if (user_prog_name.length === 0)
  {
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Please enter a program name!', msg_win.types.OK,
  [() => { user_prog_name = 'new_program'; deploy_program(); }]);
@@ -18721,7 +18734,6 @@ function cloud_edit()
  "ajax_mode" : "asynchronous",
  "on_success" : (result) =>
  {
- msg_win = new msgbox();
  msg_win.init('desktop');
  if (result === '-1')
  {
@@ -18734,7 +18746,6 @@ function cloud_edit()
  {
  if (result === '-1')
  {
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'An error has occurred.\
  The program has not been saved!');
@@ -18756,7 +18767,6 @@ function cloud_edit()
  }
  }
  };
- msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
  <input id="input_prog_name" class="ce_prog_name_input" value="' + decodeURIComponent(user_prog_name) + '"\
@@ -18957,6 +18967,7 @@ function cloud_edit()
  xenon = matrix.get('xenon');
  nature = matrix.get('nature');
  dock = matrix.get('dock');
+ msg_win = matrix.get('msgbox');
  infinity = dev_box.get('infinity');
  meta_executor = dev_box.get('meta_executor');
  return true;
@@ -18973,6 +18984,7 @@ function cloud_edit()
  xenon = null,
  dock = null,
  nature = null,
+ msg_win = null,
  infinity = null,
  meta_executor = null,
  cloud_edit_bee = null,
@@ -18981,8 +18993,7 @@ function cloud_edit()
  utils_int = new utilities(),
  utils_sys = new vulcan(),
  key_control = new key_manager(),
- ajax = new taurus(),
- msg_win = new msgbox();
+ ajax = new taurus();
 }
 function radio_dude()
 {
@@ -19157,126 +19168,4 @@ function radio_dude()
  utils_sys = new vulcan(),
  config = new config_model(),
  utils_int = new utilities();
-}
-function test_svc()
-{
- var self = this; // Use "self" to referense the whole class module easily so that you do no confuse "this" in various scopes
- function test_svc_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
- {
- function test_object_model()
- {
- }
- function template_model_1() // Internal private models keep information catrgorized under namespaces
- {
- this.pption_1 = false;
- this.pption_2 = null;
- this.pption_3 = 10.98;
- }
- function template_model_2()
- {
- this.pption_1 = new test_object_model();
- this.pption_2 = false;
- this.pption_3 = 'test';
- }
- this.namespace_1 = new template_model_1(); // Create the namespace as public attribute of the "test_svc_config_model"
- this.namespace_2 = new template_model_2();
- }
- function utilities() // Always use a "utiltiies" model to organize internal operations for the class module
- {
- var me = this; // Use "me" to referense internal classes of the module
- this.test_utility_function = function(any) // Your own function(s) / method(s)
- {
- var __test_var_1 = null,
- __test_var_2 = null;
- return true;
- };
- }
- this.test_function = function() // Use your own public methods
- {
- if (!is_setup)
- return false;
- return true;
- };
- this.base = function() // Always have a public "base" method available with this code in the body
- {
- if (!is_setup)
- return false;
- return template_svc_bat;
- };
- this.config = function() // Always have a public "config" method available with this code in the body
- {
- if (!is_setup)
- return false;
- return template_svc_bat.config();
- };
- this.on = function(event_name, event_handler) // Always have a public "on" method available with this code in the body
- {
- if (!is_setup)
- return false;
- return template_svc_bat.on(event_name, event_handler);
- };
- this.set_func = function(name, body) // Always have a public "set_func" method available with this code in the body
- {
- if (!is_setup)
- return false;
- return template_svc_bat.set_function(name, body);
- };
- this.exec_func = function(func_name, func_args = []) // Always have a public "exec_func" method available with this code in the body
- {
- if (!is_setup)
- return false;
- return template_svc_bat.exec_function(func_name, func_args);
- };
- this.run = function(service_model, action) // Always have a public "run" method available with this code in the body
- {
- if (!is_setup)
- return false;
- return template_svc_bat.register(service_model, action);
- };
- this.terminate = function() // Always have a public "terminate" method available with this code in the body
- {
- if (!is_setup)
- return false;
- return template_svc_bat.unregister();
- };
- this.setup = function(service_id, icon = 'svc_default', in_super_tray = true) // Always have a public "setup" method available with this code in the body
- {
- if (!is_init)
- return false;
- if (!template_svc_bat.init(service_id, icon, in_super_tray))
- return false;
- is_setup = true;
- return true;
- };
- this.init = function() // Always have a public "init" method available following the template in the body
- {
- if (utils_sys.validation.misc.is_nothing(cosmos))
- return false;
- if (is_init)
- return false;
- template_svc_bat = dev_box.get('bat'); // Get a "bat" service model from the development toolbox
- is_init = true;
- return true;
- };
- this.cosmos = function(cosmos_object) // Always have a public "cosmos" method available
- {
- if (utils_sys.validation.misc.is_undefined(cosmos_object))
- return false;
- cosmos = cosmos_object;
- matrix = cosmos.hub.access('matrix'); // Always have "matrix" to reference other OS services
- dev_box = cosmos.hub.access('dev_box'); // Always have a "dev_box" to reference the development toolbox
- morpheus = matrix.get('morpheus'); // Good to have to manage OS level events
- return true;
- };
- var is_init = false, // Always have a "is_init" internal variable
- is_setup = false, // Always have a "is_setup" internal variable
- cosmos = null, // Always have a "cosmos" internal variable
- matrix = null, // Always have a "matrix" internal variable
- dev_box = null, // Always have a "dev_box" internal variable
- morpheus = null, // Good to have a "morpheus" internal variable
- template_svc_bat = null, // Always have a "xxx_bat" internal variable
- utils_sys = new vulcan(), // Always have a "utils_sys" internal variable that utilizes "vulcan"
- ajax = new taurus(), // Always have a "ajax" internal variable that utilizes "taurus"
- test_svc_config = new test_svc_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model
- utils_int = new utilities(); // Always have a "utils_int" internal variable that utilizes "utilities" model
 }

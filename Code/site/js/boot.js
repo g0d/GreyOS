@@ -50,9 +50,9 @@ function boot_script()
         var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
         // List of system components
-        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, octopus, parrot, super_tray, 
-                              swarm, hive, forest, ui_controls, dock, user_profile, tik_tok, eagle, 
-                              nature, chameleon];
+        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, msgbox, 
+                              octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
+                              user_profile, tik_tok, eagle, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
@@ -194,21 +194,16 @@ function boot_script()
 
         function run_krator_app()
         {
+            var cc_reload = new f5();
+            var new_msgbox = matrix_container.get('msgbox');
             var krator_app = app_box_container.get('krator');
-            var msg_win = new msgbox();
 
-            msg_win.init('desktop');
+            new_msgbox.init('desktop');
 
             if (!krator_app.init(login_success_callback))
             {
-                msg_win.show('GreyOS', 'A system error occurred. Your system will be rebooted!', 
-                msg_win.types.OK, 
-                function()
-                {
-                    var cc_reload = new f5();
-
-                    cc_reload.init();
-                });
+                new_msgbox.show(os_settings.get('name'), 'A system error occurred. ' + os_settings.get('name') + ' will be reloaded!', 
+                                new_msgbox.types.OK, [() => { cc_reload.init(); }]);
 
                 return false;
             }
@@ -337,13 +332,16 @@ function boot_script()
         function init_environment()
         {
             var cc_reload = new f5();
-            /*
+            var new_msgbox = matrix_container.get('msgbox');
+
+            new_msgbox.init('desktop');
+
             os_utils.events.attach('greyos', window, 'resize', 
-            function() 
+            function()
             {
-                cc_reload.init();
+                new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
+                                new_msgbox.types.OK, [() => { cc_reload.init(); }]);
             });
-            */
 
             os_utils.events.attach('greyos', document, 'keydown', 
             function(event) 
@@ -445,16 +443,16 @@ function boot_script()
         var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
         // List of system components
-        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, octopus, parrot, super_tray, 
-                              swarm, hive, forest, ui_controls, dock, user_profile, tik_tok, eagle, 
-                              nature, chameleon];
+        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, msgbox, 
+                              octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
+                              user_profile, tik_tok, eagle, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
                     i_ampedstudio, i_vectorink, i_ganttio, i_quakejs, i_mariojs, i_swooop, i_webgl_preview];
 
         // List of services
-        var svcs = [test_svc];
+        var svcs = []; // test_svc
 
         // Add a VM to the hypervisor
         //os_hypervisor.backtrace(true);
@@ -580,6 +578,7 @@ function boot_script()
             //Banana();
 
             // Load test service
+            /*
             var test_svc = svc_box_container.get('test_svc');
 
             test_svc.init();
@@ -588,7 +587,7 @@ function boot_script()
             test_svc.exec_func('test', ['... my man!']);
             test_svc.run();
             console.log(test_svc);
-
+            */
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()
             {
@@ -604,13 +603,17 @@ function boot_script()
         function init_environment()
         {
             var cc_reload = new f5();
-            /*
+            var new_msgbox = matrix_container.get('msgbox');
+
+            new_msgbox.init('desktop');
+
             os_utils.events.attach('greyos', window, 'resize', 
-            function() 
+            function()
             {
-                cc_reload.init();
+                new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
+                                new_msgbox.types.OK, [() => { cc_reload.init(); }]);
             });
-            */
+
             os_utils.events.attach('greyos', document, 'keydown', 
             function(event) 
             {

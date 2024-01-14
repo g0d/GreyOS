@@ -307,8 +307,6 @@ function hive()
         {
             if (self.status.bees.num() === self.status.bees.max())
             {
-                msg_win = new msgbox();
-
                 msg_win.init('desktop');
                 msg_win.show(xenon.load('os_name'), 'All stack views are full!');
 
@@ -1417,6 +1415,7 @@ function hive()
         colony = cosmos.hub.access('colony');
 
         xenon = matrix.get('xenon');
+        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         forest = matrix.get('forest');
         morpheus = matrix.get('morpheus');
@@ -1431,11 +1430,11 @@ function hive()
         matrix = null,
         colony = null,
         xenon = null,
+        msg_win = null,
         swarm = null,
         forest = null,
         morpheus = null,
         nature = null,
-        msg_win = null,
         max_stack_width = 0,
         last_mouse_button_clicked = 0,
         utils_sys = new vulcan(),

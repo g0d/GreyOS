@@ -30,8 +30,6 @@ function user_profile()
         {
             function abnormal_logout()
             {
-                msg_win = new msgbox();
-
                 msg_win.init('desktop');
                 msg_win.show(os_name, 'Your session has been terminated!', 
                              msg_win.types.OK, 
@@ -107,8 +105,6 @@ function user_profile()
                                  },
                                  function()
                                  {
-                                     msg_win = new msgbox();
-
                                      msg_win.init('desktop');
                                      msg_win.show(os_name, 'Logout error!', 
                                                   msg_win.types.OK, 
@@ -359,8 +355,6 @@ function user_profile()
 
         utils_int.draw_user_profile();
 
-        msg_win = new msgbox();
-
         msg_win.init('desktop');
 
         return true;
@@ -377,6 +371,7 @@ function user_profile()
         colony =  cosmos.hub.access('colony');
 
         xenon = matrix.get('xenon');
+        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
@@ -394,11 +389,11 @@ function user_profile()
         matrix = null,
         colony = null,
         xenon = null,
+        msg_win = null,
         swarm = null,
         hive = null,
         morpheus = null,
         nature = null,
-        msg_win = null,
         utils_sys = new vulcan(),
         random = new pythia(),
         key_control = new key_manager(),

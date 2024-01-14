@@ -134,8 +134,6 @@ function x_runner()
                         {
                             swarm.bees.remove(__bee);
 
-                            msg_win = new msgbox();
-
                             msg_win.init('desktop');
                             msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
                                                                  You need a larger screen or higher resolution to run it!');
@@ -143,8 +141,6 @@ function x_runner()
                         else if (__app_error.last() === __app_error.codes.INSTANCE_NUM_LIMIT)
                         {
                             swarm.bees.remove(__bee);
-
-                            msg_win = new msgbox();
 
                             msg_win.init('desktop');
                             msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
@@ -297,6 +293,7 @@ function x_runner()
 
         xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
+        msg_win = matrix.get('msgbox');
         owl = matrix.get('owl');
 
         return true;
@@ -308,12 +305,13 @@ function x_runner()
         x_program = null,
         cosmos = null,
         matrix = null,
-        xenon = null,
         app_box = null,
         svc_box = null,
         dev_box = null,
         colony = null,
+        xenon = null,
         swarm = null,
+        msg_win = null,
         owl = null,
         meta_executor = null,
         modes_list = ['app', 'svc'],

@@ -140,7 +140,7 @@ function meta_script()
 
                 this.message_box = function()
                 {
-                    return msg_box;
+                    return msg_win;
                 };
 
                 this.work_box = function()
@@ -1360,6 +1360,7 @@ function meta_script()
         dev_box = cosmos.hub.access('dev_box');
 
         xenon = matrix.get('xenon');
+        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         forest = matrix.get('forest');
@@ -1389,6 +1390,7 @@ function meta_script()
         svc_box = null,
         dev_box = null,
         xenon = null,
+        msg_win = null,
         swarm = null,
         hive = null,
         forest = null,
@@ -1408,7 +1410,6 @@ function meta_script()
         precise_timer = new stopwatch(),
         config_parser = new jap(),
         ajax = new taurus(),
-        msg_box = new msgbox(),
         work_box = new workbox(),
         cc_reload = new f5(),
         config_models = new config_models(),

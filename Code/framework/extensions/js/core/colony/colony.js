@@ -103,8 +103,6 @@ function colony()
             {
                 xenon = matrix.get('xenon');
 
-                msg_win = new msgbox();
-
                 msg_win.init('desktop');
                 msg_win.show(xenon.load('os_name'), 'Maximum apps for this session, reached! Please close a few apps in order to open others.');
             }
@@ -266,6 +264,8 @@ function colony()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
+
+        msg_win = matrix.get('msgbox');
 
         return true;
     };

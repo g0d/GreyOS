@@ -210,8 +210,6 @@ function krator()
                 login_button_object.disabled = true;
             }
 
-            msg_win = new msgbox();
-
             msg_win.init('desktop');
 
             disable_controls();
@@ -265,8 +263,6 @@ function krator()
                 password_comfirm_object.disabled = true;
                 register_button_object.disabled = true;
             }
-
-            msg_win = new msgbox();
 
             msg_win.init('desktop');
 
@@ -394,7 +390,7 @@ function krator()
 
         // Declare bee's settings
         krator_bee.init(config.id);
-        krator_bee.settings.data.window.labels.title('Krator :: Login & Registration');
+        krator_bee.settings.data.window.labels.title('Login & Registration Form');
         krator_bee.settings.data.window.labels.status_bar(os_name + ' - Login/Registration');
         krator_bee.settings.actions.can_edit_title(false);
         krator_bee.settings.actions.can_use_menu(false);
@@ -434,6 +430,7 @@ function krator()
         morpheus = matrix.get('morpheus');
         xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
+        msg_win = matrix.get('msgbox');
         nature = matrix.get('nature');
 
         return true;
