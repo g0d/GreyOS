@@ -2,7 +2,7 @@
     GreyOS - XGC (Version: 0.7)
 
     File name: xgc.js
-    Description: This file contains the XGC - Extended Gaming Controller service module.
+    Description: This file contains the XGC - Extended Gaming Controller module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2023

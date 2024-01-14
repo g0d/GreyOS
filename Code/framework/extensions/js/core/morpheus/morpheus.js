@@ -2,7 +2,7 @@
     GreyOS - Morpheus (Version: 1.2)
 
     File name: morpheus.js
-    Description: This file contains the Morpheus - Events Manager service module.
+    Description: This file contains the Morpheus - Events Manager module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2023

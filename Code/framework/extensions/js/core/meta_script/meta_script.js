@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.6)
+    GreyOS - Meta-Script (Version: 1.7)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.
@@ -1120,7 +1120,8 @@ function meta_script()
                     if (__new_app === null || __is_run === true)
                         return false;
 
-                    app_box.replace([program_config.model]);
+                    if (!app_box.replace([program_config.model]))
+                        return false;
 
                     if (!swarm.bees.insert(__new_app))
                         return false;
@@ -1196,12 +1197,12 @@ function meta_script()
                     __is_init = false,
                     __is_run = false;
 
-                this.get_config = function()
+                this.config = function()
                 {
                     if (__new_svc === null)
                         return false;
 
-                    return __new_svc.get_config();
+                    return __new_svc.config();
                 };
 
                 this.set = function(func_name, body)
@@ -1243,43 +1244,44 @@ function meta_script()
 
                     __is_run = false;
 
-                    return __new_svc.unregister(program_config.model.name);
+                    return __new_svc.unregister();
                 };
 
-                this.run = function()
+                this.run = function(action)
                 {
                     if (__new_svc === null || __is_run === true)
                         return false;
 
-                    matrix.unregister(program_config.model.name);
+                    if (!svc_box.replace([program_config.model]))
+                        return false;
 
-                    var __result = __new_svc.register(program_config.model);
+                    var __result = __new_svc.register(action);
 
                     if (__result === true)
                         __is_run = true;
 
                     var __data = {
                                     "ms_id"     :   program_config.model.name,
-                                    "svc_id"    :   me.get_config().sys_name,
-                                    "name"      :   me.get_config().name,
-                                    "icon"      :   me.get_config().icon,
+                                    "svc_id"    :   me.config().sys_name,
+                                    "name"      :   me.config().name,
+                                    "icon"      :   me.config().icon,
                                     "type"      :   "svc"
                                  };
 
                     me.on('register', function() { program_config.meta_caller.telemetry(__data); });
-                    //me.on('unregister', function() { program_config.meta_caller.reset(); });
+                    me.on('unregister', function() { svc_box.remove(program_config.model.name); });
 
                     return __result;
                 };
 
-                this.init = function(svc_id, icon = 'svc_default')
+                this.init = function(svc_id, icon = 'svc_default', in_super_tray = true)
                 {
                     if (__is_init === true)
                         return false;
 
                     __new_svc = dev_box.get('bat');
 
-                    var __result = __new_svc.init(svc_id, icon);
+                    var __result = __new_svc.init(svc_id, icon, in_super_tray);
 
                     if (__result === true)
                         __is_init = true;
@@ -1352,6 +1354,7 @@ function meta_script()
 
         matrix = cosmos.hub.access('matrix');
         app_box = cosmos.hub.access('app_box');
+        svc_box = cosmos.hub.access('svc_box');
         dev_box = cosmos.hub.access('dev_box');
 
         xenon = matrix.get('xenon');
@@ -1381,6 +1384,7 @@ function meta_script()
         cosmos = null,
         matrix = null,
         app_box = null,
+        svc_box = null,
         dev_box = null,
         xenon = null,
         swarm = null,

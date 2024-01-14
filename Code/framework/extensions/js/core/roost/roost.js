@@ -1,5 +1,5 @@
 /*
-    GreyOS - Roost (Version: 1.1)
+    GreyOS - Roost (Version: 1.2)
 
     File name: roost.js
     Description: This file contains the Roost - Bat keeper container module.
@@ -75,7 +75,7 @@ function roost()
 
         for (var i = 0; i < bats.num; i++)
         {
-            if (bats.list[i].get_config().sys_name === bat_id)
+            if (bats.list[i].config().sys_name === bat_id)
             {
                 if (backtrace === true)
                     frog('ROOST', 'Objects :: Get', bat_id);
@@ -148,7 +148,7 @@ function roost()
 
         for (var i = 0; i < bats.num; i++)
         {
-            if (bats.list[i].get_config().sys_name === bat_id)
+            if (bats.list[i].config().sys_name === bat_id)
             {
                 bats.list.splice(i, 1);
                 bats.num--;
@@ -194,7 +194,7 @@ function roost()
         if (utils_sys.validation.misc.is_undefined(object.init) || 
             utils_sys.validation.misc.is_undefined(object.register) || utils_sys.validation.misc.is_undefined(object.unregister) || 
             utils_sys.validation.misc.is_undefined(object.exec_function) || utils_sys.validation.misc.is_undefined(object.on) || 
-            utils_sys.validation.misc.is_undefined(object.get_config) || utils_sys.validation.misc.is_undefined(object.set_function))
+            utils_sys.validation.misc.is_undefined(object.config) || utils_sys.validation.misc.is_undefined(object.set_function))
             return false;
 
         var bat_length = Object.keys(object).length;

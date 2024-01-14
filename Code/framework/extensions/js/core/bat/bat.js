@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bat (Version: 1.6)
+    GreyOS - Bat (Version: 1.7)
 
     File name: bat.js
     Description: This file contains the Bat - System services development module.
@@ -19,6 +19,7 @@ function bat()
         this.sys_name = null;
         this.name = null;
         this.icon = 'svc_default';
+        this.visible_in_super_tray = true;
     }
 
     function dynamic_function_model()
@@ -27,7 +28,7 @@ function bat()
         this.body = null;
     }
 
-    this.get_config = function()
+    this.config = function()
     {
         if (is_init === false)
             return false;
@@ -90,70 +91,59 @@ function bat()
         return false;
     };
 
-    this.register = function(service_model)
+    this.register = function(action = null)
     {
         if (is_init === false)
             return false;
 
-        if (!matrix.register([service_model]))
+        if (!super_tray.add(self, service_config.visible_in_super_tray, action))
         {
             owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
 
             return false;
         }
 
-        if (use_super_tray)
-            super_tray.add(service_model);
-        else
-        {
-            if (!roost.add([self]))
-                return false;
-        }
+        morpheus.execute(service_config.sys_name, 'main', 'register');
+
+        var __calls_list_length = on_run_calls_list.length;
+
+        for (var i = 0; i < __calls_list_length; i++)
+            on_run_calls_list[i]['func_body'].call(this, on_run_calls_list[i]['func_args']);
 
         owl.status.services.set(service_config.sys_name, service_config.name, 'RUN');
 
         if (backtrace === true)
             frog('BAT', 'Services :: Register', service_config);
 
-        var __result = morpheus.execute(service_config.sys_name, 'main', 'register');
-
-        if (__result === true)
-        {
-            var __calls_list_length = on_run_calls_list.length;
-
-            for (var i = 0; i < __calls_list_length; i++)
-                on_run_calls_list[i]['func_body'].call(this, on_run_calls_list[i]['func_args']);
-        }
-
-        return __result;
+        return true;
     };
 
-    this.unregister = function(service_id)
+    this.unregister = function()
     {
         if (is_init === false)
             return false;
 
-        if (!matrix.unregister(service_id))
+        dynamic_functions_list = [];
+        on_run_calls_list = [];
+
+        if (!super_tray.remove(service_config.sys_name))
         {
             owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
 
             return false;
         }
 
-        if (use_super_tray)
-            super_tray.remove(service_config.sys_name);
-        else
-            roost.remove(service_id);
+        morpheus.execute(service_config.sys_name, 'main', 'unregister');
 
         owl.status.services.set(service_config.sys_name, service_config.name, 'END');
 
         if (backtrace === true)
             frog('BAT', 'Services :: Unregister', service_config);
 
-        return morpheus.execute(service_config.sys_name, 'main', 'unregister');
+        return true;
     };
 
-    this.init = function(svc_name, icon = 'svc_default', in_super_tray = true)
+    this.init = function(svc_name, icon = null, visible_in_super_tray = true)
     {
         if (is_init === true)
             return false;
@@ -164,15 +154,14 @@ function bat()
         if (utils_sys.validation.misc.is_undefined(svc_name) || 
             utils_sys.validation.alpha.is_blank(svc_name) || 
             utils_sys.validation.alpha.is_symbol(svc_name) || 
-            utils_sys.validation.alpha.is_symbol(icon) || 
-            !utils_sys.validation.misc.is_bool(in_super_tray))
+            (icon !== null && utils_sys.validation.alpha.is_blank(icon)) || 
+            !utils_sys.validation.misc.is_bool(visible_in_super_tray))
             return false;
 
         service_config.sys_name = svc_name.toLowerCase().replace(/\s/g,'_') + '_' + random.generate();
         service_config.name = svc_name.trim();
-        service_config.icon = icon;
-
-        use_super_tray = in_super_tray
+        service_config.icon = (icon === null) ? 'svc_default' : icon;
+        service_config.visible_in_super_tray = visible_in_super_tray;
 
         is_init = true;
 
@@ -200,7 +189,6 @@ function bat()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
-        roost = cosmos.hub.access('roost');
 
         morpheus = matrix.get('morpheus');
         super_tray = matrix.get('super_tray');
@@ -210,11 +198,9 @@ function bat()
     };
 
     var is_init = false,
-        use_super_tray = true,
         backtrace = false,
         cosmos = null,
         matrix = null,
-        roost = null,
         morpheus = null,
         super_tray = null,
         owl = null,

@@ -2,7 +2,7 @@
     GreyOS - Eagle (Version: 2.1)
 
     File name: eagle.js
-    Description: This file contains the Eagle - "Alt-Tab"-like keys facility.
+    Description: This file contains the Eagle - "Alt-Tab"-like keys facility module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2023

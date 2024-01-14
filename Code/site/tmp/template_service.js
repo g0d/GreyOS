@@ -1,5 +1,5 @@
 /*
-    GreyOS - Template [Service] (Version: 0.2)
+    GreyOS - Template [Service] (Version: 0.3)
 
     File name: template_service.js
     Description: This file contains the Template Service - Template service module.
@@ -65,23 +65,76 @@ function template_service()
         return true;
     };
 
-    this.run = function(service_model) // Always have a public "run" method available with this code in the body
+    this.base = function() // Always have a public "base" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_svc_bat;
+    };
+
+    this.config = function() // Always have a public "config" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_svc_bat.config();
+    };
+
+    this.on = function(event_name, event_handler) // Always have a public "on" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_svc_bat.on(event_name, event_handler);
+    };
+
+    this.set_func = function(name, body) // Always have a public "set_func" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_svc_bat.set_function(name, body);
+    };
+
+    this.exec_func = function(func_name, func_args = []) // Always have a public "exec_func" method available with this code in the body
+    {
+        if (is_init === false)
+            return false;
+
+        return template_svc_bat.exec_function(func_name, func_args);
+    };
+
+    this.run = function(service_model, action) // Always have a public "run" method available with this code in the body
     {
         if (!is_init)
             return false;
 
-        return template_svc_bat.register(service_model);
+        return template_svc_bat.register(service_model, action);
     };
 
-    this.terminate = function(service_model) // Always have a public "terminate" method available with this code in the body
+    this.terminate = function() // Always have a public "terminate" method available with this code in the body
     {
         if (!is_init)
             return false;
 
-        return template_svc_bat.unregister(service_model);
+        return template_svc_bat.unregister();
     };
 
-    this.init = function(any = false) // Always have a public "init" method available following the template in the body
+    this.setup = function(service_id, icon = 'svc_default', in_super_tray = true) // Always have a public "setup" method available with this code in the body
+    {
+        if (!is_init)
+            return false;
+
+        if (!template_svc_bat.init(service_id, icon, in_super_tray))
+            return false;
+
+        // Your code...
+
+        return true;
+    };
+
+    this.init = function() // Always have a public "init" method available following the template in the body
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
@@ -89,21 +142,7 @@ function template_service()
         if (is_init === true)
             return false;
 
-        if (utils_sys.validation.misc.is_undefined(any) || !utils_sys.validation.misc.is_bool(any))
-            return false;
-
         template_svc_bat = dev_box.get('bat'); // Get a "bat" service model from the development toolbox
-
-        var __handler = null;
-
-        __handler = function(event) { /* Your code... */ };
-        morpheus.run('template_service_context', 'mouse', 'event_name', __handler);
-
-        __handler = function(event) { /* Your code... */ };
-        morpheus.run('template_service_context', 'key', 'event_name', __handler);
-
-        __handler = function(event) { /* Your code... */ };
-        morpheus.run('template_service_context', 'controller', 'event_name', __handler);
 
         is_init = true;
 

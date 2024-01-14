@@ -27,15 +27,28 @@
         {
             $user_programs = $user_profile['user_programs'][$_POST['mode'] . 's'];
 
+            $counter = 0;
+
             foreach ($user_programs as $program)
             {
                 if ($program['name'] === $_POST['x_id'])
                 {
+                    $user_profile['user_programs'][$_POST['mode'] . 's'][$counter]['last_run'] = time();
+
+                    if (!ARKANGEL::Update_Profile($user_profile))
+                    {
+                        echo '-1';
+
+                        return;
+                    }
+
                     $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/run/' . $_POST['x_id']  . '/' .  $_POST['x_id'] . '.js');
                     $source = file_get_contents($file_path);
 
                     echo $source;
                 }
+
+                $counter++;
             }
         }
         else

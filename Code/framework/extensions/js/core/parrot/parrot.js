@@ -2,13 +2,13 @@
     GreyOS - Parrot (Version: 1.1)
 
     File name: parrot.js
-    Description: This file contains the Parrot - Sound service module.
+    Description: This file contains the Parrot - Sound module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
-
+// TODO: Create a SERVICE Parrot Manager component
 // Parrot
 function parrot()
 {

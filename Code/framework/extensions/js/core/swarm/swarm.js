@@ -2,7 +2,7 @@
     GreyOS - Swarm (Version: 3.2)
 
     File name: swarm.js
-    Description: This file contains the Swarm - Bees action area container module.
+    Description: This file contains the Swarm - Bees action area module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2023

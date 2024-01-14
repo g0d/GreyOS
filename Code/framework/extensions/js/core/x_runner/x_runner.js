@@ -1,8 +1,8 @@
 /*
-    GreyOS - X-Runner (Version: 1.0)
+    GreyOS - X-Runner (Version: 1.1)
 
     File name: x_runner.js
-    Description: This file contains the X-Runner - User-level programs execution service module.
+    Description: This file contains the X-Runner - User-level programs execution module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2024
@@ -68,7 +68,7 @@ function x_runner()
                 return false;
             }
 
-            if (!meta_executor.process(x_mc))
+            if (meta_executor.process(x_mc) !== true)
             {
                 if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
                     frog('X-RUNNER', '% Invalid %', meta_executor.error.last.message());
@@ -172,16 +172,23 @@ function x_runner()
             {
                 if (is_sys_level)
                 {
-                    var __bat = svc_box.get(service_id);
+                    var __svc = svc_box.get(service_id),
+                        __bat = null;
 
-                    if (!__bat)
-                        return false;
+                    __svc.init();
 
-                    x_program = __bat;
+                    __bat = __svc.base();
 
-                    is_x_running = true;
+                    if (__bat.run())
+                    {
+                        x_program = __bat;
 
-                    return __bat.run();
+                        is_x_running = true;
+
+                        return true;
+                    }
+
+                    return false;
                 }
 
                 is_x_running = true;

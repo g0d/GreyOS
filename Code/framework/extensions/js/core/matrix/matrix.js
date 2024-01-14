@@ -2,7 +2,7 @@
     GreyOS - Matrix (Version: 1.8)
 
     File name: matrix.js
-    Description: This file contains the Matrix - System services container module.
+    Description: This file contains the Matrix - System components container module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2013 - 2021
@@ -14,7 +14,7 @@ function matrix()
 {
     var self = this;
 
-    function services_model()
+    function components_model()
     {
         this.num = 0;
         this.list = [];
@@ -29,9 +29,9 @@ function matrix()
             if (!utils_sys.validation.misc.is_object(model))
                 return false;
 
-            for (var i = 0; i < services.num; i++)
+            for (var i = 0; i < components.num; i++)
             {
-                if (services.list[i].constructor.name === model.constructor.name)
+                if (components.list[i].constructor.name === model.constructor.name)
                     return true;
             }
 
@@ -44,7 +44,7 @@ function matrix()
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        return services.num;
+        return components.num;
     };
 
     this.list = function(index)
@@ -53,35 +53,35 @@ function matrix()
             return false;
 
         if (utils_sys.validation.misc.is_undefined(index))
-            return services.list;
+            return components.list;
 
-        if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (services.num - 1))
+        if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (components.num - 1))
             return false;
 
-        return services.list[index];
+        return components.list[index];
     };
 
-    this.get = function(service_id)
+    this.get = function(component_id)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (services.num === 0)
+        if (components.num === 0)
             return null;
 
-        if (utils_sys.validation.alpha.is_symbol(service_id))
+        if (utils_sys.validation.alpha.is_symbol(component_id))
             return false;
 
-        for (var i = 0; i < services.num; i++)
+        for (var i = 0; i < components.num; i++)
         {
-            if (services.list[i].constructor.name === service_id)
+            if (components.list[i].constructor.name === component_id)
             {
                 if (backtrace === true)
-                    frog('MATRIX', 'Models :: Get', service_id);
+                    frog('MATRIX', 'Models :: Get', component_id);
 
-                services.list[i].cosmos(cosmos);
+                components.list[i].cosmos(cosmos);
 
-                return services.list[i];
+                return components.list[i];
             }
         }
 
@@ -125,38 +125,38 @@ function matrix()
                 return false;
             }
 
-            services.list.push(__object_model);
-            services.num++;
+            components.list.push(__object_model);
+            components.num++;
 
             if (backtrace === true)
                 frog('MATRIX', 'Models :: Register', __object_model.constructor.name);
         }
 
         if (backtrace === true)
-            frog('MATRIX', 'All models', services.list, 'Model count: ' + services.num);
+            frog('MATRIX', 'All models', components.list, 'Model count: ' + components.num);
 
         return true;
     };
 
-    this.unregister = function(service_id)
+    this.unregister = function(component_id)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (utils_sys.validation.alpha.is_symbol(service_id))
+        if (utils_sys.validation.alpha.is_symbol(component_id))
             return false;
 
-        for (var i = 0; i < services.num; i++)
+        for (var i = 0; i < components.num; i++)
         {
-            if (services.list[i].constructor.name === service_id)
+            if (components.list[i].constructor.name === component_id)
             {
-                services.list.splice(i, 1);
-                services.num--;
+                components.list.splice(i, 1);
+                components.num--;
 
                 if (backtrace === true)
                 {
-                    frog('MATRIX', 'Models :: Unregister', service_id);
-                    frog('MATRIX', 'All models', services.list, 'Model count: ' + services.num);
+                    frog('MATRIX', 'Models :: Unregister', component_id);
+                    frog('MATRIX', 'All models', components.list, 'Model count: ' + components.num);
                 }
 
                 return true;
@@ -171,14 +171,14 @@ function matrix()
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (services.num === 0)
+        if (components.num === 0)
             return false;
 
-        services.num = 0;
-        services.list = [];
+        components.num = 0;
+        components.list = [];
 
         if (backtrace === true)
-            frog('MATRIX', 'Models :: Clear', services.list);
+            frog('MATRIX', 'Models :: Clear', components.list);
     
         return true;
     };
@@ -209,6 +209,6 @@ function matrix()
     var backtrace = false,
         cosmos = null,
         utils_sys = new vulcan(),
-        services = new services_model(),
+        components = new components_model(),
         utils_int = new utilities();
 }

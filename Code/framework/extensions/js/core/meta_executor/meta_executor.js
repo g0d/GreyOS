@@ -48,13 +48,13 @@ function meta_executor()
 
     this.load = function(new_program)
     {
+        if (is_program_loaded === true)
+            return false;
+
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (utils_sys.validation.misc.is_nothing(new_program) || !utils_sys.validation.alpha.is_string(new_program))
-            return false;
-
-        if (is_program_loaded === true)
             return false;
 
         program = new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();

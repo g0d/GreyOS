@@ -205,6 +205,8 @@ function cloud_edit()
 
                                                                                                 return;
                                                                                             }
+                                                                                            else
+                                                                                                dock.refresh();
                                                                                        };
 
                                                             if (result === '0')
@@ -486,6 +488,7 @@ function cloud_edit()
         morpheus = matrix.get('morpheus');
         xenon = matrix.get('xenon');
         nature = matrix.get('nature');
+        dock = matrix.get('dock');
         infinity = dev_box.get('infinity');
 
         meta_executor = dev_box.get('meta_executor');
@@ -503,9 +506,10 @@ function cloud_edit()
         colony = null,
         morpheus = null,
         xenon = null,
-        meta_executor = null,
+        dock = null,
         nature = null,
         infinity = null,
+        meta_executor = null,
         cloud_edit_bee = null,
         config = new config_model(),
         ce_mc = new ce_meta_caller(),

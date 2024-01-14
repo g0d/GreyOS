@@ -2,7 +2,7 @@
     GreyOS - Panda (Version: 1.0)
 
     File name: panda.js
-    Description: This file contains the Panda - DOM manager proxy service module.
+    Description: This file contains the Panda - DOM manager proxy module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021

@@ -2,7 +2,7 @@
     GreyOS - Octopus (Version: 1.3)
 
     File name: octopus.js
-    Description: This file contains the Octopus - Devices management service module.
+    Description: This file contains the Octopus - Devices management module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021 - 2023
@@ -143,7 +143,7 @@ function octopus()
             };
 
             //navigator.mediaDevices.getUserMedia(__constraints).then(() => { device_manager(); });
-            navigator.mediaDevices.ondevicechange = function() { device_manager(); };
+            navigator.mediaDevices.ondevicechange = function() { device_manager(); }; // TODO: Make Device Managee a SERVICE!!!
 
             is_service_active = true;
 

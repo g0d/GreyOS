@@ -5278,7 +5278,7 @@ function cosmos()
 function matrix()
 {
  var self = this;
- function services_model()
+ function components_model()
  {
  this.num = 0;
  this.list = [];
@@ -5290,9 +5290,9 @@ function matrix()
  {
  if (!utils_sys.validation.misc.is_object(model))
  return false;
- for (var i = 0; i < services.num; i++)
+ for (var i = 0; i < components.num; i++)
  {
- if (services.list[i].constructor.name === model.constructor.name)
+ if (components.list[i].constructor.name === model.constructor.name)
  return true;
  }
  return false;
@@ -5302,34 +5302,34 @@ function matrix()
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- return services.num;
+ return components.num;
  };
  this.list = function(index)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
  if (utils_sys.validation.misc.is_undefined(index))
- return services.list;
- if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (services.num - 1))
+ return components.list;
+ if (!utils_sys.validation.numerics.is_integer(index) || index < 0 || index > (components.num - 1))
  return false;
- return services.list[index];
+ return components.list[index];
  };
- this.get = function(service_id)
+ this.get = function(component_id)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- if (services.num === 0)
+ if (components.num === 0)
  return null;
- if (utils_sys.validation.alpha.is_symbol(service_id))
+ if (utils_sys.validation.alpha.is_symbol(component_id))
  return false;
- for (var i = 0; i < services.num; i++)
+ for (var i = 0; i < components.num; i++)
  {
- if (services.list[i].constructor.name === service_id)
+ if (components.list[i].constructor.name === component_id)
  {
  if (backtrace === true)
- frog('MATRIX', 'Models :: Get', service_id);
- services.list[i].cosmos(cosmos);
- return services.list[i];
+ frog('MATRIX', 'Models :: Get', component_id);
+ components.list[i].cosmos(cosmos);
+ return components.list[i];
  }
  }
  return false;
@@ -5360,31 +5360,31 @@ function matrix()
  self.clear();
  return false;
  }
- services.list.push(__object_model);
- services.num++;
+ components.list.push(__object_model);
+ components.num++;
  if (backtrace === true)
  frog('MATRIX', 'Models :: Register', __object_model.constructor.name);
  }
  if (backtrace === true)
- frog('MATRIX', 'All models', services.list, 'Model count: ' + services.num);
+ frog('MATRIX', 'All models', components.list, 'Model count: ' + components.num);
  return true;
  };
- this.unregister = function(service_id)
+ this.unregister = function(component_id)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- if (utils_sys.validation.alpha.is_symbol(service_id))
+ if (utils_sys.validation.alpha.is_symbol(component_id))
  return false;
- for (var i = 0; i < services.num; i++)
+ for (var i = 0; i < components.num; i++)
  {
- if (services.list[i].constructor.name === service_id)
+ if (components.list[i].constructor.name === component_id)
  {
- services.list.splice(i, 1);
- services.num--;
+ components.list.splice(i, 1);
+ components.num--;
  if (backtrace === true)
  {
- frog('MATRIX', 'Models :: Unregister', service_id);
- frog('MATRIX', 'All models', services.list, 'Model count: ' + services.num);
+ frog('MATRIX', 'Models :: Unregister', component_id);
+ frog('MATRIX', 'All models', components.list, 'Model count: ' + components.num);
  }
  return true;
  }
@@ -5395,12 +5395,12 @@ function matrix()
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- if (services.num === 0)
+ if (components.num === 0)
  return false;
- services.num = 0;
- services.list = [];
+ components.num = 0;
+ components.list = [];
  if (backtrace === true)
- frog('MATRIX', 'Models :: Clear', services.list);
+ frog('MATRIX', 'Models :: Clear', components.list);
  return true;
  };
  this.backtrace = function(val)
@@ -5422,7 +5422,7 @@ function matrix()
  var backtrace = false,
  cosmos = null,
  utils_sys = new vulcan(),
- services = new services_model(),
+ components = new components_model(),
  utils_int = new utilities();
 }
 function dev_box()
@@ -6166,7 +6166,7 @@ function roost()
  return false;
  for (var i = 0; i < bats.num; i++)
  {
- if (bats.list[i].get_config().sys_name === bat_id)
+ if (bats.list[i].config().sys_name === bat_id)
  {
  if (backtrace === true)
  frog('ROOST', 'Objects :: Get', bat_id);
@@ -6221,7 +6221,7 @@ function roost()
  return false;
  for (var i = 0; i < bats.num; i++)
  {
- if (bats.list[i].get_config().sys_name === bat_id)
+ if (bats.list[i].config().sys_name === bat_id)
  {
  bats.list.splice(i, 1);
  bats.num--;
@@ -6256,7 +6256,7 @@ function roost()
  if (utils_sys.validation.misc.is_undefined(object.init) ||
  utils_sys.validation.misc.is_undefined(object.register) || utils_sys.validation.misc.is_undefined(object.unregister) ||
  utils_sys.validation.misc.is_undefined(object.exec_function) || utils_sys.validation.misc.is_undefined(object.on) ||
- utils_sys.validation.misc.is_undefined(object.get_config) || utils_sys.validation.misc.is_undefined(object.set_function))
+ utils_sys.validation.misc.is_undefined(object.config) || utils_sys.validation.misc.is_undefined(object.set_function))
  return false;
  var bat_length = Object.keys(object).length;
  if (bat_length < 9 || bat_length > 9)
@@ -8508,7 +8508,6 @@ function hive()
  {
  var __active_bee_id = swarm.status.active_bee();
  honeycomb_views.list(i).bees.remove(__active_bee_id);
- swarm.bees.insert(__active_bee_id);
  colony.get(__active_bee_id).settings.general.in_hive(false);
  swarm.settings.active_bee(__active_bee_id);
  utils_int.set_z_index(__active_bee_id);
@@ -9634,6 +9633,13 @@ function dock()
  var __dock_array = encodeURIComponent(JSON.stringify(config.dock_array));
  return ajax_save(__dock_array);
  };
+ this.clear = function()
+ {
+ var __dock = utils_sys.objects.by_class('favorites');
+ __dock.innerHTML = '';
+ morpheus.clear(dock_id);
+ return true;
+ };
  }
  function settings()
  {
@@ -9672,6 +9678,14 @@ function dock()
  {
  if (is_init === false)
  return false;
+ return true;
+ };
+ this.refresh = function()
+ {
+ if (is_init === false)
+ return false;
+ utils_int.clear();
+ utils_int.draw();
  return true;
  };
  this.init = function(container_id)
@@ -11583,7 +11597,8 @@ function meta_script()
  {
  if (__new_app === null || __is_run === true)
  return false;
- app_box.replace([program_config.model]);
+ if (!app_box.replace([program_config.model]))
+ return false;
  if (!swarm.bees.insert(__new_app))
  return false;
  var __result = __new_app.run(child_apps_array, headless);
@@ -11638,11 +11653,11 @@ function meta_script()
  __new_svc = null,
  __is_init = false,
  __is_run = false;
- this.get_config = function()
+ this.config = function()
  {
  if (__new_svc === null)
  return false;
- return __new_svc.get_config();
+ return __new_svc.config();
  };
  this.set = function(func_name, body)
  {
@@ -11673,32 +11688,34 @@ function meta_script()
  if (__new_svc === null)
  return false;
  __is_run = false;
- return __new_svc.unregister(program_config.model.name);
+ return __new_svc.unregister();
  };
- this.run = function()
+ this.run = function(action)
  {
  if (__new_svc === null || __is_run === true)
  return false;
- matrix.unregister(program_config.model.name);
- var __result = __new_svc.register(program_config.model);
+ if (!svc_box.replace([program_config.model]))
+ return false;
+ var __result = __new_svc.register(action);
  if (__result === true)
  __is_run = true;
  var __data = {
  "ms_id" : program_config.model.name,
- "svc_id" : me.get_config().sys_name,
- "name" : me.get_config().name,
- "icon" : me.get_config().icon,
+ "svc_id" : me.config().sys_name,
+ "name" : me.config().name,
+ "icon" : me.config().icon,
  "type" : "svc"
  };
  me.on('register', function() { program_config.meta_caller.telemetry(__data); });
+ me.on('unregister', function() { svc_box.remove(program_config.model.name); });
  return __result;
  };
- this.init = function(svc_id, icon = 'svc_default')
+ this.init = function(svc_id, icon = 'svc_default', in_super_tray = true)
  {
  if (__is_init === true)
  return false;
  __new_svc = dev_box.get('bat');
- var __result = __new_svc.init(svc_id, icon);
+ var __result = __new_svc.init(svc_id, icon, in_super_tray);
  if (__result === true)
  __is_init = true;
  return __result;
@@ -11749,6 +11766,7 @@ function meta_script()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  app_box = cosmos.hub.access('app_box');
+ svc_box = cosmos.hub.access('svc_box');
  dev_box = cosmos.hub.access('dev_box');
  xenon = matrix.get('xenon');
  swarm = matrix.get('swarm');
@@ -11774,6 +11792,7 @@ function meta_script()
  cosmos = null,
  matrix = null,
  app_box = null,
+ svc_box = null,
  dev_box = null,
  xenon = null,
  swarm = null,
@@ -11834,11 +11853,11 @@ function meta_executor()
  }
  this.load = function(new_program)
  {
+ if (is_program_loaded === true)
+ return false;
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
  if (utils_sys.validation.misc.is_nothing(new_program) || !utils_sys.validation.alpha.is_string(new_program))
- return false;
- if (is_program_loaded === true)
  return false;
  program = new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
  is_program_loaded = true;
@@ -12237,7 +12256,7 @@ function x_runner()
  'No code detected!');
  return false;
  }
- if (!meta_executor.process(x_mc))
+ if (meta_executor.process(x_mc) !== true)
  {
  if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
  frog('X-RUNNER', '% Invalid %', meta_executor.error.last.message());
@@ -12317,12 +12336,17 @@ function x_runner()
  {
  if (is_sys_level)
  {
- var __bat = svc_box.get(service_id);
- if (!__bat)
- return false;
+ var __svc = svc_box.get(service_id),
+ __bat = null;
+ __svc.init();
+ __bat = __svc.base();
+ if (__bat.run())
+ {
  x_program = __bat;
  is_x_running = true;
- return __bat.run();
+ return true;
+ }
+ return false;
  }
  is_x_running = true;
  return execute_meta_program('svc', service_id);
@@ -12594,7 +12618,7 @@ function octopus()
  volume: 0.30,
  }
  };
- navigator.mediaDevices.ondevicechange = function() { device_manager(); };
+ navigator.mediaDevices.ondevicechange = function() { device_manager(); }; // TODO: Make Device Managee a SERVICE!!!
  is_service_active = true;
  return true;
  };
@@ -12728,7 +12752,8 @@ function super_tray()
  this.sys_id = null;
  this.id = null;
  this.name = null;
- this.icon = 'app_default';
+ this.icon = 'default';
+ this.visible = true;
  this.action = null;
  }
  function tray_services_collection()
@@ -12796,44 +12821,44 @@ function super_tray()
  this.attach_events = function()
  {
  var __handler = null;
- __handler = function() { me.toggle_service_icons_area(); };
+ __handler = function() { me.toggle_tray_area(); };
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
- __handler = function() { me.hide_service_icons_area(); };
+ __handler = function() { me.hide_tray_area(); };
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
- __handler = function(event) { me.hide_service_icons_area_handler(event); };
+ __handler = function(event) { me.hide_tray_area_handler(event); };
  morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
  return true;
  };
- this.toggle_service_icons_area = function()
+ this.toggle_tray_area = function()
  {
  var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
- if (is_service_icons_tray_visible === true)
+ if (is_super_tray_visible === true)
  {
- is_service_icons_tray_visible = false;
+ is_super_tray_visible = false;
  __service_icons_tray.style.display = 'none';
  }
  else
  {
- is_service_icons_tray_visible = true;
+ is_super_tray_visible = true;
  __service_icons_tray.style.display = 'block';
  }
  return true;
  };
- this.hide_service_icons_area_handler = function(event)
+ this.hide_tray_area_handler = function(event)
  {
  if (utils_sys.validation.misc.is_undefined(event))
  return false;
  key_control.scan(event);
  if (key_control.get() !== key_control.keys.ESCAPE)
  return false;
- me.hide_service_icons_area();
+ me.hide_tray_area();
  return true;
  };
- this.hide_service_icons_area = function()
+ this.hide_tray_area = function()
  {
  var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
  __service_icons_tray.style.display = 'none';
- is_service_icons_tray_visible = false;
+ is_super_tray_visible = false;
  return true;
  };
  this.add_service_icon = function(index)
@@ -12916,7 +12941,7 @@ function super_tray()
  return tray_services.list;
  };
  }
- this.add = function(bat_object, action = null)
+ this.add = function(bat_object, visible_in_super_tray = true, action = null)
  {
  if (is_init === false)
  return false;
@@ -12926,22 +12951,26 @@ function super_tray()
  return false;
  if (!roost.add([bat_object]))
  return false;
- var __service_config = bat_object.get_config();
+ var __service_config = bat_object.config();
  if (utils_int.service_exists(__service_config.sys_name))
  return false;
  var __new_tray_service = new tray_service_model();
  __new_tray_service.sys_id = __service_config.sys_name;
  __new_tray_service.id = __service_config.name;
  __new_tray_service.name = __service_config.name;
- if (__service_config.icon !== 'app_default')
+ if (__service_config.icon !== 'svc_default')
  __new_tray_service.icon = __service_config.icon;
+ __new_tray_service.visible = visible_in_super_tray;
  if (action !== null)
  __new_tray_service.action = action;
  tray_services.list.push(__new_tray_service);
  tray_services.num++;
  svc_box.replace([bat_object]);
+ if (visible_in_super_tray)
+ {
  utils_int.add_service_icon(tray_services.num);
  utils_int.fix_service_icon_names(__service_config.name);
+ }
  return true;
  };
  this.remove = function(sys_service_id)
@@ -12950,21 +12979,24 @@ function super_tray()
  return false;
  if (utils_sys.validation.alpha.is_symbol(sys_service_id))
  return false;
+ roost.remove(sys_service_id);
+ svc_box.remove(sys_service_id);
  for (var i = 0; i < tray_services.num; i++)
  {
  if (tray_services.list[i].sys_id === sys_service_id)
  {
  var __common_svc_id = tray_services.list[i].id;
- utils_int.remove_service_icon(i);
- tray_services.list.splice(i, 1);
- tray_services.num--;
+ if (tray_services.list[i].visible)
+ {
  for (var j = 0; j < tray_services.num; j++)
  {
  if (tray_services.list[j].id === __common_svc_id)
  utils_int.fix_service_icon_names(tray_services.list[j].id);
  }
- roost.remove(sys_service_id);
- svc_box.remove(sys_service_id);
+ utils_int.remove_service_icon(i);
+ }
+ tray_services.list.splice(i, 1);
+ tray_services.num--;
  return true;
  }
  }
@@ -13012,7 +13044,7 @@ function super_tray()
  return true;
  };
  var is_init = false,
- is_service_icons_tray_visible = false,
+ is_super_tray_visible = false,
  super_tray_id = null,
  cosmos = null,
  matrix = null,
@@ -17836,13 +17868,14 @@ function bat()
  this.sys_name = null;
  this.name = null;
  this.icon = 'svc_default';
+ this.visible_in_super_tray = true;
  }
  function dynamic_function_model()
  {
  this.name = null;
  this.body = null;
  }
- this.get_config = function()
+ this.config = function()
  {
  if (is_init === false)
  return false;
@@ -17887,53 +17920,42 @@ function bat()
  return morpheus.store(service_config.sys_name, 'main', this_event, this_handler, document);
  return false;
  };
- this.register = function(service_model)
+ this.register = function(action = null)
  {
  if (is_init === false)
  return false;
- if (!matrix.register([service_model]))
+ if (!super_tray.add(self, service_config.visible_in_super_tray, action))
  {
  owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
  return false;
  }
- if (use_super_tray)
- super_tray.add(service_model);
- else
- {
- if (!roost.add([self]))
- return false;
- }
- owl.status.services.set(service_config.sys_name, service_config.name, 'RUN');
- if (backtrace === true)
- frog('BAT', 'Services :: Register', service_config);
- var __result = morpheus.execute(service_config.sys_name, 'main', 'register');
- if (__result === true)
- {
+ morpheus.execute(service_config.sys_name, 'main', 'register');
  var __calls_list_length = on_run_calls_list.length;
  for (var i = 0; i < __calls_list_length; i++)
  on_run_calls_list[i]['func_body'].call(this, on_run_calls_list[i]['func_args']);
- }
- return __result;
+ owl.status.services.set(service_config.sys_name, service_config.name, 'RUN');
+ if (backtrace === true)
+ frog('BAT', 'Services :: Register', service_config);
+ return true;
  };
- this.unregister = function(service_id)
+ this.unregister = function()
  {
  if (is_init === false)
  return false;
- if (!matrix.unregister(service_id))
+ dynamic_functions_list = [];
+ on_run_calls_list = [];
+ if (!super_tray.remove(service_config.sys_name))
  {
  owl.status.services.set(service_config.sys_name, service_config.name, 'FAIL');
  return false;
  }
- if (use_super_tray)
- super_tray.remove(service_config.sys_name);
- else
- roost.remove(service_id);
+ morpheus.execute(service_config.sys_name, 'main', 'unregister');
  owl.status.services.set(service_config.sys_name, service_config.name, 'END');
  if (backtrace === true)
  frog('BAT', 'Services :: Unregister', service_config);
- return morpheus.execute(service_config.sys_name, 'main', 'unregister');
+ return true;
  };
- this.init = function(svc_name, icon = 'svc_default', in_super_tray = true)
+ this.init = function(svc_name, icon = null, visible_in_super_tray = true)
  {
  if (is_init === true)
  return false;
@@ -17942,13 +17964,13 @@ function bat()
  if (utils_sys.validation.misc.is_undefined(svc_name) ||
  utils_sys.validation.alpha.is_blank(svc_name) ||
  utils_sys.validation.alpha.is_symbol(svc_name) ||
- utils_sys.validation.alpha.is_symbol(icon) ||
- !utils_sys.validation.misc.is_bool(in_super_tray))
+ (icon !== null && utils_sys.validation.alpha.is_blank(icon)) ||
+ !utils_sys.validation.misc.is_bool(visible_in_super_tray))
  return false;
  service_config.sys_name = svc_name.toLowerCase().replace(/\s/g,'_') + '_' + random.generate();
  service_config.name = svc_name.trim();
- service_config.icon = icon;
- use_super_tray = in_super_tray
+ service_config.icon = (icon === null) ? 'svc_default' : icon;
+ service_config.visible_in_super_tray = visible_in_super_tray;
  is_init = true;
  return true;
  };
@@ -17967,18 +17989,15 @@ function bat()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
- roost = cosmos.hub.access('roost');
  morpheus = matrix.get('morpheus');
  super_tray = matrix.get('super_tray');
  owl = matrix.get('owl');
  return true;
  };
  var is_init = false,
- use_super_tray = true,
  backtrace = false,
  cosmos = null,
  matrix = null,
- roost = null,
  morpheus = null,
  super_tray = null,
  owl = null,
@@ -18722,6 +18741,8 @@ function cloud_edit()
  The program has not been saved!');
  return;
  }
+ else
+ dock.refresh();
  };
  if (result === '0')
  ajax.run(__ajax_config);
@@ -18936,6 +18957,7 @@ function cloud_edit()
  morpheus = matrix.get('morpheus');
  xenon = matrix.get('xenon');
  nature = matrix.get('nature');
+ dock = matrix.get('dock');
  infinity = dev_box.get('infinity');
  meta_executor = dev_box.get('meta_executor');
  return true;
@@ -18950,9 +18972,10 @@ function cloud_edit()
  colony = null,
  morpheus = null,
  xenon = null,
- meta_executor = null,
+ dock = null,
  nature = null,
  infinity = null,
+ meta_executor = null,
  cloud_edit_bee = null,
  config = new config_model(),
  ce_mc = new ce_meta_caller(),

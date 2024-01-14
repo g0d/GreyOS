@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 2.2)
+    GreyOS - Dock (Version: 2.3)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -249,6 +249,17 @@ function dock()
 
            return ajax_save(__dock_array);
         };
+
+        this.clear = function()
+        {
+            var __dock = utils_sys.objects.by_class('favorites');
+
+            __dock.innerHTML = '';
+
+            morpheus.clear(dock_id);
+
+           return true;
+        };
     }
 
     function settings()
@@ -294,6 +305,8 @@ function dock()
         if (is_init === false)
             return false;
 
+        // TODO:...
+
         return true;
     };
 
@@ -301,6 +314,19 @@ function dock()
     {
         if (is_init === false)
             return false;
+
+        // TODO:...
+
+        return true;
+    };
+
+    this.refresh = function()
+    {
+        if (is_init === false)
+            return false;
+
+        utils_int.clear();
+        utils_int.draw();
 
         return true;
     };

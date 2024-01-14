@@ -1,5 +1,5 @@
 /*
-    GreyOS - Template [App] (Version: 0.2)
+    GreyOS - Template [App] (Version: 0.3)
 
     File name: template_app.js
     Description: This file contains the Template App - Template application.
@@ -64,7 +64,7 @@ function template_app()
             infinity.begin(); // Show the progress indicator
 
             me.draw(); // Always call a "draw" method to design the window components
-            me.attach_events('normal_to_fullscreen'); // Always call a "attach_events" method to attach events
+            me.attach_events(); // Always call a "attach_events" method to attach new events
 
             // Your code...
 
@@ -81,6 +81,13 @@ function template_app()
         };
 
         this.attach_events = function()
+        {
+            // Your code...
+
+            return true;
+        };
+
+        this.detach_events = function()
         {
             // Your code...
 
@@ -129,6 +136,8 @@ function template_app()
         if (is_init === false)
             return false;
 
+        utils_int.detach_events(); // Always call a "detach_events" method to detach events
+
         return template_app_bee.close();
     };
 
@@ -140,15 +149,12 @@ function template_app()
         return template_app_bee.error;
     };
 
-    this.init = function(any = false) // Always have a public "init" method available following the template in the body
+    this.init = function() // Always have a public "init" method available following the template in the body
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
         if (is_init === true)
-            return false;
-
-        if (utils_sys.validation.misc.is_undefined(any) || !utils_sys.validation.misc.is_bool(any))
             return false;
 
         is_init = true;

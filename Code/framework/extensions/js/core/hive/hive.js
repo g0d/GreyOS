@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 3.5)
+    GreyOS - Hive (Version: 3.6)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -1118,8 +1118,6 @@ function hive()
                                 var __active_bee_id = swarm.status.active_bee();
 
                                 honeycomb_views.list(i).bees.remove(__active_bee_id);
-
-                                swarm.bees.insert(__active_bee_id);
 
                                 colony.get(__active_bee_id).settings.general.in_hive(false);
 

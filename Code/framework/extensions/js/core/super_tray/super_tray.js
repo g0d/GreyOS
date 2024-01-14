@@ -1,14 +1,14 @@
 /*
-    GreyOS - Super Tray (Version: 1.5)
+    GreyOS - Super Tray (Version: 1.7)
 
     File name: super_tray.js
-    Description: This file contains the Super Tray - Service icons tray area service module.
+    Description: This file contains the Super Tray - Service icons tray area module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
-
+// TODO: Create a SERVICE Super Tray component
 // Super Tray
 function super_tray()
 {
@@ -19,7 +19,8 @@ function super_tray()
         this.sys_id = null;
         this.id = null;
         this.name = null;
-        this.icon = 'app_default';
+        this.icon = 'default';
+        this.visible = true;
         this.action = null;
     }
 
@@ -110,31 +111,31 @@ function super_tray()
         {
             var __handler = null;
 
-            __handler = function() { me.toggle_service_icons_area(); };
+            __handler = function() { me.toggle_tray_area(); };
             morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
 
-            __handler = function() {  me.hide_service_icons_area(); };
+            __handler = function() {  me.hide_tray_area(); };
             morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
 
-            __handler = function(event) {  me.hide_service_icons_area_handler(event); };
+            __handler = function(event) {  me.hide_tray_area_handler(event); };
             morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
 
             return true;
         };
 
-        this.toggle_service_icons_area = function()
+        this.toggle_tray_area = function()
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
 
-            if (is_service_icons_tray_visible === true)
+            if (is_super_tray_visible === true)
             {
-                is_service_icons_tray_visible = false;
+                is_super_tray_visible = false;
 
                 __service_icons_tray.style.display = 'none';
             }
             else
             {
-                is_service_icons_tray_visible = true;
+                is_super_tray_visible = true;
 
                 __service_icons_tray.style.display = 'block';
             }
@@ -142,7 +143,7 @@ function super_tray()
             return true;
         };
 
-        this.hide_service_icons_area_handler = function(event)
+        this.hide_tray_area_handler = function(event)
         {
             if (utils_sys.validation.misc.is_undefined(event))
                 return false;
@@ -152,18 +153,18 @@ function super_tray()
             if (key_control.get() !== key_control.keys.ESCAPE)
                 return false;
 
-            me.hide_service_icons_area();
+            me.hide_tray_area();
 
             return true;
         };
 
-        this.hide_service_icons_area = function()
+        this.hide_tray_area = function()
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
 
             __service_icons_tray.style.display = 'none';
 
-            is_service_icons_tray_visible = false;
+            is_super_tray_visible = false;
 
             return true;
         };
@@ -279,7 +280,7 @@ function super_tray()
         };
     }
 
-    this.add = function(bat_object, action = null)
+    this.add = function(bat_object, visible_in_super_tray = true, action = null)
     {
         if (is_init === false)
             return false;
@@ -293,7 +294,7 @@ function super_tray()
         if (!roost.add([bat_object]))
             return false;
 
-        var __service_config = bat_object.get_config();
+        var __service_config = bat_object.config();
 
         if (utils_int.service_exists(__service_config.sys_name))
             return false;
@@ -304,8 +305,10 @@ function super_tray()
         __new_tray_service.id = __service_config.name;
         __new_tray_service.name = __service_config.name;
 
-        if (__service_config.icon !== 'app_default')
+        if (__service_config.icon !== 'svc_default')
             __new_tray_service.icon = __service_config.icon;
+
+        __new_tray_service.visible = visible_in_super_tray;
 
         if (action !== null)
             __new_tray_service.action = action;
@@ -314,9 +317,12 @@ function super_tray()
         tray_services.num++;
 
         svc_box.replace([bat_object]);
-    
-        utils_int.add_service_icon(tray_services.num);
-        utils_int.fix_service_icon_names(__service_config.name);
+
+        if (visible_in_super_tray)
+        {
+            utils_int.add_service_icon(tray_services.num);
+            utils_int.fix_service_icon_names(__service_config.name);
+        }
 
         return true;
     };
@@ -329,26 +335,29 @@ function super_tray()
         if (utils_sys.validation.alpha.is_symbol(sys_service_id))
             return false;
 
+        roost.remove(sys_service_id);
+
+        svc_box.remove(sys_service_id);
+
         for (var i = 0; i < tray_services.num; i++)
         {
             if (tray_services.list[i].sys_id === sys_service_id)
             {
                 var __common_svc_id = tray_services.list[i].id;
 
-                utils_int.remove_service_icon(i);
+                if (tray_services.list[i].visible)
+                {
+                    for (var j = 0; j < tray_services.num; j++)
+                    {
+                        if (tray_services.list[j].id === __common_svc_id)
+                            utils_int.fix_service_icon_names(tray_services.list[j].id);
+                    }
+
+                    utils_int.remove_service_icon(i);
+                }
 
                 tray_services.list.splice(i, 1);
                 tray_services.num--;
-
-                for (var j = 0; j < tray_services.num; j++)
-                {
-                    if (tray_services.list[j].id === __common_svc_id)
-                        utils_int.fix_service_icon_names(tray_services.list[j].id);
-                }
-
-                roost.remove(sys_service_id);
-
-                svc_box.remove(sys_service_id);
 
                 return true;
             }
@@ -417,7 +426,7 @@ function super_tray()
     };
 
     var is_init = false,
-        is_service_icons_tray_visible = false,
+        is_super_tray_visible = false,
         super_tray_id = null,
         cosmos = null,
         matrix = null,

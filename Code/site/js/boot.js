@@ -33,7 +33,7 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '3.7 (alpha)');  // Meta-OS version
+    os_settings.set('version', '3.8 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
     os_settings.set('max_services', 20);        // Maximum number of allowed active services per session
     os_settings.set('max_apps', 16);            // Maximum number of allowed active apps per session
@@ -49,10 +49,10 @@ function boot_script()
         // List of development tools
         var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
-        // List of system services
-        var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            teal_fs, morpheus, x_runner, panda, octopus, super_tray, parrot, xgc, owl, uniplex, 
-                            nature, chameleon];
+        // List of system components
+        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, octopus, parrot, super_tray, 
+                              swarm, hive, forest, ui_controls, dock, user_profile, tik_tok, eagle, 
+                              nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
@@ -77,11 +77,11 @@ function boot_script()
 
         //console.log(dev_box_container.list());
 
-        // Matrix - System services container
+        // Matrix - System components container
         var matrix_container = os_vm.hub.access('matrix');
 
-        // Register (put) services in the container
-        matrix_container.register(sys_services);
+        // Register (put) components in the container
+        matrix_container.register(sys_components);
 
         //console.log(matrix_container.list());
 
@@ -147,7 +147,7 @@ function boot_script()
             // Show the loading screen while everything is loading
             load_screen.show();
 
-            // Load basic services and UI infrastructure
+            // Load basic components and UI infrastructure
             var new_xenon = matrix_container.get('xenon');
             var new_parrot = matrix_container.get('parrot');
             var new_tik_tok = matrix_container.get('tik_tok');
@@ -271,7 +271,7 @@ function boot_script()
             // Show the loading screen while everything is loading
             load_screen.show();
 
-            // Load all services and full UI infrastructure
+            // Load all components and full UI infrastructure
             var new_xenon = matrix_container.get('xenon');
             var new_octopus = matrix_container.get('octopus');
             var new_super_tray = matrix_container.get('super_tray');
@@ -444,10 +444,10 @@ function boot_script()
         // List of development tools
         var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
-        // List of system services
-        var sys_services = [xenon, swarm, hive, forest, ui_controls, dock, user_profile, eagle, tik_tok,
-                            teal_fs, morpheus, x_runner, panda, octopus, super_tray, parrot, xgc, owl, uniplex, 
-                            nature, chameleon];
+        // List of system components
+        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, octopus, parrot, super_tray, 
+                              swarm, hive, forest, ui_controls, dock, user_profile, tik_tok, eagle, 
+                              nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
@@ -475,12 +475,12 @@ function boot_script()
 
         //console.log(dev_box_container.list());
 
-        // Matrix - System services container
+        // Matrix - System components container
         var matrix_container = os_vm.hub.access('matrix');
 
-        // Register (put) services in the container
+        // Register (put) components in the container
         //matrix_container.backtrace(true);
-        matrix_container.register(sys_services);
+        matrix_container.register(sys_components);
 
         //console.log(matrix_container.list());
 
@@ -528,7 +528,7 @@ function boot_script()
             // Show the loading screen while everything is loading
             load_screen.show();
 
-            // Load all services and full UI infrastructure
+            // Load all components and full UI infrastructure
             var new_xenon = matrix_container.get('xenon');
             var new_ui_controls = matrix_container.get('ui_controls');
             var new_dock = matrix_container.get('dock');
