@@ -1,5 +1,5 @@
 /*
-    GreyOS - X-Runner (Version: 1.1)
+    GreyOS - X-Runner (Version: 1.2)
 
     File name: x_runner.js
     Description: This file contains the X-Runner - User-level programs execution module.

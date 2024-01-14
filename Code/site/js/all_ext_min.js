@@ -11706,7 +11706,8 @@ function meta_script()
  "icon" : me.config().icon,
  "type" : "svc"
  };
- me.on('register', function() { program_config.meta_caller.telemetry(__data); });
+ program_config.meta_caller.telemetry(__data);
+ me.on('register', function() { });
  me.on('unregister', function() { svc_box.remove(program_config.model.name); });
  return __result;
  };
@@ -14315,7 +14316,7 @@ function bee()
  }
  if (self.settings.general.status_bar_marquee())
  {
- if (__bee_settings.data.window.labels.status_bar().length * 9.0 > __bee_gui.size.width())
+ if (__bee_settings.data.window.labels.status_bar().length * 11.0 >= __bee_gui.size.width())
  __marquee_class = 'marquee';
  }
  __html = '<div id="' + ui_config.window.control_bar.id + '" class="' + ui_config.window.control_bar.classes.container + '">' +
@@ -15414,7 +15415,7 @@ function bee()
  ui_objects.window.status_bar.message.childNodes[1].innerHTML = val;
  if (self.settings.general.status_bar_marquee())
  {
- if (val.length * 9.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+ if (val.length * 11.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
  ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
  }
  bee_statuses.status_bar_label_changed(true);
@@ -17288,8 +17289,7 @@ function bee()
  __resize_y_offset = utils_sys.graphics.pixels_value(ui_objects.window.status_bar.resize.style.height),
  __resize_title_diff = 100,
  __resize_data_diff = 88,
- __resize_status_msg_diff = 50,
- __final_window_width = 0;
+ __resize_status_msg_diff = 50;
  __size_x = swarm.area.mouse.x() - me.position.left() -
  me.size.width() + __resize_x_offset;
  __size_y = swarm.area.mouse.y() - me.position.top() -
@@ -17421,17 +17421,17 @@ function bee()
  ui_objects.casement.data.style.height =
  __new_height + 'px';
  }
- __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
- ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
- ui_objects.casement.ui.style.width = __final_window_width * (self.settings.general.casement_width() / 100) + 'px';
- ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
- }
+ var __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
  if (self.settings.general.status_bar_marquee())
  {
- if (self.settings.data.window.labels.status_bar().length * 9.0 < __final_window_width)
+ if (self.settings.data.window.labels.status_bar().length * 9.0 <= __final_window_width)
  ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
  else
  ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+ }
+ ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
+ ui_objects.casement.ui.style.width = __final_window_width * (self.settings.general.casement_width() / 100) + 'px';
+ ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
  }
  if (self.settings.general.resize_tooltip())
  swarm.resize_tooltip(self, true);
@@ -17464,6 +17464,7 @@ function bee()
  bee_statuses.touch(false);
  bee_statuses.touched(true);
  bee_statuses.mouse_clicked(false);
+ swarm.resize_tooltip(self, false);
  morpheus.execute(my_bee_id, 'gui', 'touched');
  morpheus.execute(my_bee_id, 'gui', 'dragged');
  morpheus.execute(my_bee_id, 'gui', 'resized');
@@ -17471,7 +17472,6 @@ function bee()
  me.position.top(utils_sys.graphics.pixels_value(ui_objects.window.ui.style.top));
  return true;
  }
- swarm.resize_tooltip(self, false);
  bee_statuses.resizing(false);
  bee_statuses.resize(false);
  if (!self.settings.actions.can_close())
@@ -18760,7 +18760,7 @@ function cloud_edit()
  msg_win = new msgbox();
  msg_win.init('desktop');
  msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
- <input id="input_prog_name" class="ce_prog_name_input" value="' + user_prog_name + '"\
+ <input id="input_prog_name" class="ce_prog_name_input" value="' + decodeURIComponent(user_prog_name) + '"\
  maxlength="40" placeholder="Enter program name...">',
  msg_win.types.OK_CANCEL, [() => { save_program(); }]);
  __input_prog_name_object = utils_sys.objects.by_id('input_prog_name');

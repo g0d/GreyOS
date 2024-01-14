@@ -227,7 +227,7 @@ function cloud_edit()
 
             msg_win.init('desktop');
             msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
-                                   <input id="input_prog_name" class="ce_prog_name_input" value="' + user_prog_name + '"\
+                                   <input id="input_prog_name" class="ce_prog_name_input" value="' + decodeURIComponent(user_prog_name) + '"\
                                    maxlength="40" placeholder="Enter program name...">', 
                                    msg_win.types.OK_CANCEL, [() => { save_program(); }]);
 

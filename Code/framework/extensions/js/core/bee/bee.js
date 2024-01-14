@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.1)
+    GreyOS - Bee (Version: 5.2)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -398,7 +398,7 @@ function bee()
 
             if (self.settings.general.status_bar_marquee())
             {
-                if (__bee_settings.data.window.labels.status_bar().length * 9.0 > __bee_gui.size.width())
+                if (__bee_settings.data.window.labels.status_bar().length * 11.0 >= __bee_gui.size.width())
                     __marquee_class = 'marquee';
             }
 
@@ -1848,7 +1848,7 @@ function bee()
 
                         if (self.settings.general.status_bar_marquee())
                         {
-                            if (val.length * 9.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
+                            if (val.length * 11.0 >= utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width))
                                 ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
                         }
 
@@ -4014,16 +4014,7 @@ function bee()
                             __child_bee.close(null);
 
                         morpheus.execute(my_bee_id, 'gui', 'close');
-/*
-                        try
-                        {
 
-                        }
-                        catch
-                        {
-                            // Do nothing...
-                        }
-*/
                         if (utils_int.animating_events.in_progress())
                             setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());
                         else
@@ -4333,8 +4324,7 @@ function bee()
                         __resize_y_offset = utils_sys.graphics.pixels_value(ui_objects.window.status_bar.resize.style.height),
                         __resize_title_diff = 100,
                         __resize_data_diff = 88,
-                        __resize_status_msg_diff = 50,
-                        __final_window_width = 0;
+                        __resize_status_msg_diff = 50;
 
                     __size_x = swarm.area.mouse.x() - me.position.left() - 
                                me.size.width() + __resize_x_offset;
@@ -4503,19 +4493,19 @@ function bee()
                             __new_height + 'px';
                         }
 
-                        __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
+                        var __final_window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width);
+
+                        if (self.settings.general.status_bar_marquee())
+                        {
+                            if (self.settings.data.window.labels.status_bar().length * 9.0 <= __final_window_width)
+                                ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
+                            else
+                                ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
+                        }
 
                         ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
                         ui_objects.casement.ui.style.width = __final_window_width * (self.settings.general.casement_width() / 100) + 'px';
                         ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
-                    }
-
-                    if (self.settings.general.status_bar_marquee())
-                    {
-                        if (self.settings.data.window.labels.status_bar().length * 9.0 < __final_window_width)
-                            ui_objects.window.status_bar.message.childNodes[1].classList.remove('marquee');
-                        else
-                            ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
                     }
 
                     if (self.settings.general.resize_tooltip())
@@ -4563,6 +4553,8 @@ function bee()
 
                     bee_statuses.mouse_clicked(false);
 
+                    swarm.resize_tooltip(self, false);
+
                     morpheus.execute(my_bee_id, 'gui', 'touched');
                     morpheus.execute(my_bee_id, 'gui', 'dragged');
                     morpheus.execute(my_bee_id, 'gui', 'resized');
@@ -4572,8 +4564,6 @@ function bee()
 
                     return true;
                 }
-
-                swarm.resize_tooltip(self, false);
 
                 bee_statuses.resizing(false);
                 bee_statuses.resize(false);
