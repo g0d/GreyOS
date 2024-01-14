@@ -8,7 +8,7 @@
     Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
-// TODO: Create a SERVICE Super Tray component
+
 // Super Tray
 function super_tray()
 {
@@ -415,7 +415,6 @@ function super_tray()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
-        app_box = cosmos.hub.access('app_box');
         svc_box = cosmos.hub.access('svc_box');
         roost = cosmos.hub.access('roost');
 
@@ -430,7 +429,6 @@ function super_tray()
         super_tray_id = null,
         cosmos = null,
         matrix = null,
-        app_box = null,
         svc_box = null,
         roost = null,
         morpheus = null,

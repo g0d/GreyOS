@@ -35,8 +35,8 @@ function boot_script()
     os_settings.set('name', 'GreyOS');          // Meta-OS name
     os_settings.set('version', '3.8 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
-    os_settings.set('max_services', 20);        // Maximum number of allowed active services per session
-    os_settings.set('max_apps', 16);            // Maximum number of allowed active apps per session
+    os_settings.set('max_apps', 50);            // Maximum number of allowed active apps per session
+    os_settings.set('max_services', 100)        // Maximum number of allowed active services per session
     os_settings.set('apps_per_view', 18);       // Apps per stack bar view
     os_settings.set('stack_bars', 4);           // Number of stack bars
 

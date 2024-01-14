@@ -84,7 +84,7 @@ function x_runner()
 
             if (x_app !== null)
             {
-                if (!utils_int.close_app(x_app, x_id, false))
+                if (!utils_int.app_close_callback(x_app, x_id, false))
                     return false;
             }
 
@@ -116,7 +116,7 @@ function x_runner()
                     {
                         me.set_dock_icon_status(app_id)
 
-                        if (!me.close_app(__app, app_id, true))
+                        if (!me.app_close_callback(__app, app_id, true))
                             return false;
 
                         x_program = __app;
@@ -223,7 +223,7 @@ function x_runner()
             return true;
         };
 
-        this.close_app = function(app, process_id, is_sys_level)
+        this.app_close_callback = function(app, process_id, is_sys_level)
         {
             app.on('closed', function()
                              {

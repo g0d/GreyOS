@@ -1,5 +1,5 @@
 /*
-    GreyOS - Teletraan (Version: 1.1)
+    GreyOS - Teletraan (Version: 1.2)
 
     File name: teletraan.js
     Description: This file contains the Teletraan - Centralized settings module.
@@ -20,7 +20,8 @@ function teletraan()
         this.name = 'GreyOS';
         this.version = '0.0';
         this.theme = null;
-        this.max_apps = 1;
+        this.max_apps = 10;
+        this.max_services = 10;
         this.apps_per_view = 8;
         this.stack_bars = 4;
     }

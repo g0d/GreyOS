@@ -4887,7 +4887,8 @@ function teletraan()
  this.name = 'GreyOS';
  this.version = '0.0';
  this.theme = null;
- this.max_apps = 1;
+ this.max_apps = 10;
+ this.max_services = 10;
  this.apps_per_view = 8;
  this.stack_bars = 4;
  }
@@ -12270,7 +12271,7 @@ function x_runner()
  utils_int.set_dock_icon_status(x_id);
  if (x_app !== null)
  {
- if (!utils_int.close_app(x_app, x_id, false))
+ if (!utils_int.app_close_callback(x_app, x_id, false))
  return false;
  }
  is_x_running = true;
@@ -12293,7 +12294,7 @@ function x_runner()
  if (__app.run())
  {
  me.set_dock_icon_status(app_id)
- if (!me.close_app(__app, app_id, true))
+ if (!me.app_close_callback(__app, app_id, true))
  return false;
  x_program = __app;
  is_x_running = true;
@@ -12373,7 +12374,7 @@ function x_runner()
  __dock_app_object.classList.add(__icon_id + '_on');
  return true;
  };
- this.close_app = function(app, process_id, is_sys_level)
+ this.app_close_callback = function(app, process_id, is_sys_level)
  {
  app.on('closed', function()
  {
@@ -12597,12 +12598,12 @@ function octopus()
  {
  nature.theme('octopus');
  nature.apply('new');
- me.start_service();
+ me.start_component();
  me.draw();
  };
- this.start_service = function()
+ this.start_component = function()
  {
- if (is_service_active === true)
+ if (is_component_active === true)
  return false;
  var __constraints =
  {
@@ -12619,13 +12620,13 @@ function octopus()
  volume: 0.30,
  }
  };
- navigator.mediaDevices.ondevicechange = function() { device_manager(); }; // TODO: Make Device Managee a SERVICE!!!
- is_service_active = true;
+ navigator.mediaDevices.ondevicechange = function() { device_manager(); };
+ is_component_active = true;
  return true;
  };
  this.draw = function()
  {
- if (is_service_active === false)
+ if (is_component_active === false)
  return false;
  var __dynamic_object = null,
  __container = utils_sys.objects.by_id(self.settings.container());
@@ -12710,7 +12711,7 @@ function octopus()
  self.settings.id('octopus_' + random.generate());
  octopus_id = self.settings.id();
  if (utils_sys.validation.misc.is_undefined(container_id))
- return utils_int.start_service();
+ return utils_int.start_component();
  else
  {
  if (utils_sys.validation.alpha.is_symbol(container_id))
@@ -12731,7 +12732,7 @@ function octopus()
  return true;
  };
  var is_init = false,
- is_service_active = false,
+ is_component_active = false,
  octopus_id = null,
  cosmos = null,
  matrix = null,
@@ -13037,7 +13038,6 @@ function super_tray()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
- app_box = cosmos.hub.access('app_box');
  svc_box = cosmos.hub.access('svc_box');
  roost = cosmos.hub.access('roost');
  morpheus = matrix.get('morpheus');
@@ -13049,7 +13049,6 @@ function super_tray()
  super_tray_id = null,
  cosmos = null,
  matrix = null,
- app_box = null,
  svc_box = null,
  roost = null,
  morpheus = null,
@@ -13065,9 +13064,9 @@ function super_tray()
 function parrot()
 {
  var self = this;
- function audio_service_model()
+ function audio_component_model()
  {
- var __audio_service_init = false,
+ var __audio_component_init = false,
  __stream_contexts = ['sys', 'action', 'misc'],
  __sound_files = [],
  __stream_context_in_use = null,
@@ -13080,7 +13079,7 @@ function parrot()
  {
  this.login = function(sound_file)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (!utils_sys.validation.alpha.is_string(sound_file))
  return false;
@@ -13088,7 +13087,7 @@ function parrot()
  };
  this.logout = function(sound_file)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (!utils_sys.validation.alpha.is_string(sound_file))
  return false;
@@ -13096,7 +13095,7 @@ function parrot()
  };
  this.click = function(sound_file)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (!utils_sys.validation.alpha.is_string(sound_file))
  return false;
@@ -13107,7 +13106,7 @@ function parrot()
  {
  this.open = function(sound_file)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (!utils_sys.validation.alpha.is_string(sound_file))
  return false;
@@ -13115,7 +13114,7 @@ function parrot()
  };
  this.close = function(sound_file)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (!utils_sys.validation.alpha.is_string(sound_file))
  return false;
@@ -13127,7 +13126,7 @@ function parrot()
  }
  this.volume = function(app_id)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (utils_sys.validation.alpha.is_symbol(app_id))
  return false;
@@ -13135,7 +13134,7 @@ function parrot()
  };
  this.options = function(app_id)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (utils_sys.validation.alpha.is_symbol(app_id))
  return false;
@@ -13143,7 +13142,7 @@ function parrot()
  };
  this.play = function(context, sound_file, list = false, replay = false)
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (utils_sys.validation.misc.is_undefined(context) || utils_sys.validation.alpha.is_symbol(context))
  return false;
@@ -13177,7 +13176,7 @@ function parrot()
  };
  this.pause = function()
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (__stream_context_in_use === null)
  return false;
@@ -13186,7 +13185,7 @@ function parrot()
  };
  this.stop = function()
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  if (__stream_context_in_use === null)
  return false;
@@ -13196,7 +13195,7 @@ function parrot()
  };
  this.clear = function()
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  audio.stop();
  __sound_files = [];
@@ -13207,15 +13206,15 @@ function parrot()
  };
  this.files = function()
  {
- if (__audio_service_init === false)
+ if (__audio_component_init === false)
  return false;
  return __sound_files;
  };
  this.init = function()
  {
- if (__audio_service_init === true)
+ if (__audio_component_init === true)
  return false;
- __audio_service_init = true;
+ __audio_component_init = true;
  return true;
  };
  this.set = new set_sounds();
@@ -13227,12 +13226,12 @@ function parrot()
  {
  nature.theme('parrot');
  nature.apply('new');
- me.start_service();
+ me.start_component();
  me.draw();
  };
- this.start_service = function()
+ this.start_component = function()
  {
- if (is_service_active === true)
+ if (is_component_active === true)
  return false;
  var __dynamic_object = null,
  __container = utils_sys.objects.by_id(self.settings.container());
@@ -13241,18 +13240,18 @@ function parrot()
  __dynamic_object.setAttribute('id', parrot_id);
  __dynamic_object.setAttribute('class', 'parrot');
  __dynamic_object.setAttribute('title', 'Manage system & apps sound');
- __dynamic_object.innerHTML = '<audio id="' + parrot_id + '_audio_service_sys" autoplay></audio>\
- <audio id="' + parrot_id + '_audio_service_actions" autoplay></audio>\
- <audio id="' + parrot_id + '_audio_service_misc" autoplay></audio>';
+ __dynamic_object.innerHTML = '<audio id="' + parrot_id + '_audio_component_sys" autoplay></audio>\
+ <audio id="' + parrot_id + '_audio_component_actions" autoplay></audio>\
+ <audio id="' + parrot_id + '_audio_component_misc" autoplay></audio>';
  __container.appendChild(__dynamic_object);
- audio = new audio_service_model();
+ audio = new audio_component_model();
  audio.init();
- is_service_active = true;
+ is_component_active = true;
  return true;
  };
  this.draw = function()
  {
- if (is_service_active === false)
+ if (is_component_active === false)
  return false;
  audio.clear();
  var __parrot_div = utils_sys.objects.by_id(parrot_id);
@@ -13372,7 +13371,7 @@ function parrot()
  self.settings.id('parrot_' + random.generate());
  parrot_id = self.settings.id();
  if (utils_sys.validation.misc.is_undefined(container_id))
- return utils_int.start_service();
+ return utils_int.start_component();
  else
  return self.load(container_id);
  };
@@ -13386,7 +13385,7 @@ function parrot()
  return true;
  };
  var is_init = false,
- is_service_active = false,
+ is_component_active = false,
  parrot_id = null,
  cosmos = null,
  matrix = null,

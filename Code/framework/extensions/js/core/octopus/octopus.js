@@ -117,13 +117,13 @@ function octopus()
             nature.theme('octopus');
             nature.apply('new');
 
-            me.start_service();
+            me.start_component();
             me.draw();
         };
 
-        this.start_service = function()
+        this.start_component = function()
         {
-            if (is_service_active === true)
+            if (is_component_active === true)
                 return false;
 
             var __constraints =
@@ -143,16 +143,16 @@ function octopus()
             };
 
             //navigator.mediaDevices.getUserMedia(__constraints).then(() => { device_manager(); });
-            navigator.mediaDevices.ondevicechange = function() { device_manager(); }; // TODO: Make Device Managee a SERVICE!!!
+            navigator.mediaDevices.ondevicechange = function() { device_manager(); };
 
-            is_service_active = true;
+            is_component_active = true;
 
             return true;
         };
 
         this.draw = function()
         {
-            if (is_service_active === false)
+            if (is_component_active === false)
                 return false;
 
             var __dynamic_object = null,
@@ -270,7 +270,7 @@ function octopus()
         octopus_id = self.settings.id();
 
         if (utils_sys.validation.misc.is_undefined(container_id))
-            return utils_int.start_service();
+            return utils_int.start_component();
         else
         {
             if (utils_sys.validation.alpha.is_symbol(container_id))
@@ -299,7 +299,7 @@ function octopus()
     };
 
     var is_init = false,
-        is_service_active = false,
+        is_component_active = false,
         octopus_id = null,
         cosmos = null,
         matrix = null,

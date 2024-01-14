@@ -1,5 +1,5 @@
 /*
-    GreyOS - Parrot (Version: 1.1)
+    GreyOS - Parrot (Version: 1.2)
 
     File name: parrot.js
     Description: This file contains the Parrot - Sound module.
@@ -8,15 +8,15 @@
     Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
-// TODO: Create a SERVICE Parrot Manager component
+
 // Parrot
 function parrot()
 {
     var self = this;
 
-    function audio_service_model()
+    function audio_component_model()
     {
-        var __audio_service_init = false,
+        var __audio_component_init = false,
             __stream_contexts = ['sys', 'action', 'misc'],
             __sound_files = [],
             __stream_context_in_use = null,
@@ -30,7 +30,7 @@ function parrot()
             {
                 this.login = function(sound_file)
                 {
-                    if (__audio_service_init === false)
+                    if (__audio_component_init === false)
                         return false;
     
                     if (!utils_sys.validation.alpha.is_string(sound_file))
@@ -41,7 +41,7 @@ function parrot()
     
                 this.logout = function(sound_file)
                 {
-                    if (__audio_service_init === false)
+                    if (__audio_component_init === false)
                         return false;
     
                     if (!utils_sys.validation.alpha.is_string(sound_file))
@@ -52,7 +52,7 @@ function parrot()
 
                 this.click = function(sound_file)
                 {
-                    if (__audio_service_init === false)
+                    if (__audio_component_init === false)
                         return false;
     
                     if (!utils_sys.validation.alpha.is_string(sound_file))
@@ -66,7 +66,7 @@ function parrot()
             {
                 this.open = function(sound_file)
                 {
-                    if (__audio_service_init === false)
+                    if (__audio_component_init === false)
                         return false;
     
                     if (!utils_sys.validation.alpha.is_string(sound_file))
@@ -77,7 +77,7 @@ function parrot()
 
                 this.close = function(sound_file)
                 {
-                    if (__audio_service_init === false)
+                    if (__audio_component_init === false)
                         return false;
     
                     if (!utils_sys.validation.alpha.is_string(sound_file))
@@ -93,7 +93,7 @@ function parrot()
 
         this.volume = function(app_id)
         {
-            if (__audio_service_init === false)
+            if (__audio_component_init === false)
                 return false;
 
             if (utils_sys.validation.alpha.is_symbol(app_id))
@@ -104,7 +104,7 @@ function parrot()
 
         this.options = function(app_id)
         {
-            if (__audio_service_init === false)
+            if (__audio_component_init === false)
                 return false;
 
             if (utils_sys.validation.alpha.is_symbol(app_id))
@@ -115,7 +115,7 @@ function parrot()
 
         this.play = function(context, sound_file, list = false, replay = false)
         {
-            if (__audio_service_init === false)
+            if (__audio_component_init === false)
                 return false;
 
             if (utils_sys.validation.misc.is_undefined(context) || utils_sys.validation.alpha.is_symbol(context))
@@ -161,7 +161,7 @@ function parrot()
 
         this.pause = function()
         {
-            if (__audio_service_init === false)
+            if (__audio_component_init === false)
                 return false;
 
             if (__stream_context_in_use === null)
@@ -174,7 +174,7 @@ function parrot()
 
         this.stop = function()
         {
-            if (__audio_service_init === false)
+            if (__audio_component_init === false)
                 return false;
 
             if (__stream_context_in_use === null)
@@ -189,7 +189,7 @@ function parrot()
 
         this.clear = function()
         {
-            if (__audio_service_init === false)
+            if (__audio_component_init === false)
                 return false;
 
             audio.stop();
@@ -204,7 +204,7 @@ function parrot()
 
         this.files = function()
         {
-            if (__audio_service_init === false)
+            if (__audio_component_init === false)
                 return false;
 
             return __sound_files;
@@ -212,10 +212,10 @@ function parrot()
 
         this.init = function()
         {
-            if (__audio_service_init === true)
+            if (__audio_component_init === true)
                 return false;
 
-            __audio_service_init = true;
+            __audio_component_init = true;
 
             return true;
         };
@@ -232,13 +232,13 @@ function parrot()
             nature.theme('parrot');
             nature.apply('new');
 
-            me.start_service();
+            me.start_component();
             me.draw();
         };
 
-        this.start_service = function()
+        this.start_component = function()
         {
-            if (is_service_active === true)
+            if (is_component_active === true)
                 return false;
 
             var __dynamic_object = null,
@@ -252,24 +252,24 @@ function parrot()
             __dynamic_object.setAttribute('class', 'parrot');
             __dynamic_object.setAttribute('title', 'Manage system & apps sound');
 
-            __dynamic_object.innerHTML = '<audio id="' + parrot_id + '_audio_service_sys" autoplay></audio>\
-                                          <audio id="' + parrot_id + '_audio_service_actions" autoplay></audio>\
-                                          <audio id="' + parrot_id + '_audio_service_misc" autoplay></audio>';
+            __dynamic_object.innerHTML = '<audio id="' + parrot_id + '_audio_component_sys" autoplay></audio>\
+                                          <audio id="' + parrot_id + '_audio_component_actions" autoplay></audio>\
+                                          <audio id="' + parrot_id + '_audio_component_misc" autoplay></audio>';
 
             __container.appendChild(__dynamic_object);
 
-            audio = new audio_service_model();
+            audio = new audio_component_model();
 
             audio.init();
 
-            is_service_active = true;
+            is_component_active = true;
 
             return true;
         };
 
         this.draw = function()
         {
-            if (is_service_active === false)
+            if (is_component_active === false)
                 return false;
 
             audio.clear();
@@ -435,7 +435,7 @@ function parrot()
         parrot_id = self.settings.id();
 
         if (utils_sys.validation.misc.is_undefined(container_id))
-            return utils_int.start_service();
+            return utils_int.start_component();
         else
             return self.load(container_id);
     };
@@ -455,7 +455,7 @@ function parrot()
     };
 
     var is_init = false,
-        is_service_active = false,
+        is_component_active = false,
         parrot_id = null,
         cosmos = null,
         matrix = null,
