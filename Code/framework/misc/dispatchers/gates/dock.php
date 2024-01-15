@@ -30,7 +30,7 @@
             $all_system_apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/all_system_apps.json')), true);
 
             $index = 1;
-            $html = null;
+            $html = '';
 
             foreach ($user_system_apps as $allowed_app)
             {

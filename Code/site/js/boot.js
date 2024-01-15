@@ -33,7 +33,7 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '3.8 (alpha)');  // Meta-OS version
+    os_settings.set('version', '3.9 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
     os_settings.set('max_apps', 50);            // Maximum number of allowed active apps per session
     os_settings.set('max_services', 100)        // Maximum number of allowed active services per session
@@ -50,7 +50,7 @@ function boot_script()
         var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
         // List of system components
-        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, msgbox, 
+        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, 
                               octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
                               user_profile, tik_tok, eagle, nature, chameleon];
 
@@ -155,6 +155,12 @@ function boot_script()
             var new_nature = matrix_container.get('nature');
             var new_swarm = matrix_container.get('swarm');
 
+            // Preload MsgBox
+            var new_msgbox = new msgbox();
+
+            // Initialize MsgBox
+            new_msgbox.init('desktop');
+
             // Set the theme in use
             new_chameleon.set(os_settings.get('theme'));
 
@@ -166,7 +172,12 @@ function boot_script()
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
             // Store dynamic system settings
-            new_xenon.store({"os_name" : os_settings.get('name'), "os_version" : os_settings.get('version')});
+            new_xenon.store({
+                                "os_name"       :   os_settings.get('name'),
+                                "os_version"    :   os_settings.get('version'),
+                                "max_apps"      :   os_settings.get('max_apps'),
+                                "max_services"  :   os_settings.get('max_services')
+                            });
 
             // Initialize only the sound service (no UI)
             new_parrot.init();
@@ -195,13 +206,12 @@ function boot_script()
         function run_krator_app()
         {
             var cc_reload = new f5();
-            var new_msgbox = matrix_container.get('msgbox');
+            var new_msgbox = new msgbox();
             var krator_app = app_box_container.get('krator');
-
-            new_msgbox.init('desktop');
 
             if (!krator_app.init(login_success_callback))
             {
+                new_msgbox.init('desktop');
                 new_msgbox.show(os_settings.get('name'), 'A system error occurred. ' + os_settings.get('name') + ' will be reloaded!', 
                                 new_msgbox.types.OK, [() => { cc_reload.init(); }]);
 
@@ -283,6 +293,12 @@ function boot_script()
             var new_eagle = matrix_container.get('eagle');
             var new_tik_tok = matrix_container.get('tik_tok');
 
+            // Preload MsgBox
+            var new_msgbox = new msgbox();
+
+            // Initialize MsgBox
+            new_msgbox.init('desktop');
+
             // Set the theme in use
             new_chameleon.set(os_settings.get('theme'));
 
@@ -294,7 +310,12 @@ function boot_script()
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
             // Store dynamic system settings
-            new_xenon.store({"os_name" : os_settings.get('name'), "os_version" : os_settings.get('version')});
+            new_xenon.store({
+                                "os_name"       :   os_settings.get('name'),
+                                "os_version"    :   os_settings.get('version'),
+                                "max_apps"      :   os_settings.get('max_apps'),
+                                "max_services"  :   os_settings.get('max_services')
+                            });
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');
@@ -332,13 +353,12 @@ function boot_script()
         function init_environment()
         {
             var cc_reload = new f5();
-            var new_msgbox = matrix_container.get('msgbox');
-
-            new_msgbox.init('desktop');
+            var new_msgbox = new msgbox();
 
             os_utils.events.attach('greyos', window, 'resize', 
             function()
             {
+                new_msgbox.init('desktop');
                 new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
                                 new_msgbox.types.OK, [() => { cc_reload.init(); }]);
             });
@@ -443,7 +463,7 @@ function boot_script()
         var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
 
         // List of system components
-        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, msgbox, 
+        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, 
                               octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
                               user_profile, tik_tok, eagle, nature, chameleon];
 
@@ -543,6 +563,12 @@ function boot_script()
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
 
+            // Preload MsgBox
+            var new_msgbox = new msgbox();
+
+            // Initialize MsgBox
+            new_msgbox.init('desktop');
+
             // Set the theme in use
             new_chameleon.set(os_settings.get('theme'));
 
@@ -554,7 +580,12 @@ function boot_script()
             os_utils.graphics.apply_theme('/site/themes/' + new_chameleon.get(), new_chameleon.get());
 
             // Store dynamic system settings
-            new_xenon.store({"os_name" : os_settings.get('name'), "os_version" : os_settings.get('version')});
+            new_xenon.store({
+                                "os_name"       :   os_settings.get('name'),
+                                "os_version"    :   os_settings.get('version'),
+                                "max_apps"      :   os_settings.get('max_apps'),
+                                "max_services"  :   os_settings.get('max_services')
+                            });
 
             // Initialize the desktop UI
             new_ui_controls.init('action_icons');
@@ -603,13 +634,12 @@ function boot_script()
         function init_environment()
         {
             var cc_reload = new f5();
-            var new_msgbox = matrix_container.get('msgbox');
-
-            new_msgbox.init('desktop');
+            var new_msgbox = new msgbox();
 
             os_utils.events.attach('greyos', window, 'resize', 
             function()
             {
+                new_msgbox.init('desktop');
                 new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
                                 new_msgbox.types.OK, [() => { cc_reload.init(); }]);
             });

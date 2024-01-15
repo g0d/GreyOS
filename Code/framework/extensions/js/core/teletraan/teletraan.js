@@ -2,10 +2,10 @@
     GreyOS - Teletraan (Version: 1.2)
 
     File name: teletraan.js
-    Description: This file contains the Teletraan - Centralized settings module.
+    Description: This file contains the Teletraan - Centralized boot settings module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2022
+    Copyright © 2021 - 2023
     Open Software License (OSL 3.0)
 */
 

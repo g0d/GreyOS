@@ -42,10 +42,9 @@
                         return;
                     }
 
-                    $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/run/' . $_POST['x_id']  . '/' .  $_POST['x_id'] . '.js');
-                    $source = file_get_contents($file_path);
+                    $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/' .  $_POST['x_id'] . '.js');
 
-                    echo $source;
+                    echo file_get_contents(minify_source($file_path));
                 }
 
                 $counter++;
@@ -54,4 +53,26 @@
         else
             echo '-1';
     }
+
+    function minify_source($js_data)
+    {
+		$js_source = trim($js_data);
+
+		$js_source = str_replace("\t", " ", $js_data);
+
+        $js_source = preg_replace('/\n(\s+)?\/\/[^\n]*/', "", $js_source);
+        $js_source = preg_replace("!/\*[^*]*\*+([^/][^*]*\*+)*/!", "", $js_source);
+		$js_source = preg_replace("/\/\*[^\/]*\*\//", "", $js_source);
+		$js_source = preg_replace("/\/\*\*((\r\n|\n) \*[^\n]*)+(\r\n|\n) \*\//", "", $js_source);
+
+        $js_source = str_replace("\r", "", $js_source);
+
+		$js_source = preg_replace("/\s+\n/", "\n", $js_source);
+		$js_source = preg_replace("/\n\s+/", "\n ", $js_source);
+		$js_source = preg_replace("/ +/", " ", $js_source);
+
+		$js_source = preg_replace("/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/", "", $js_source);
+
+		return $js_source;
+	}
 ?>

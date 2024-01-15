@@ -1136,7 +1136,8 @@ function meta_script()
                                     "app_id"    :   me.get_system_id(),
                                     "name"      :   me.get_app_id(),
                                     "icon"      :   me.settings.icon(),
-                                    "type"      :   "app"
+                                    "type"      :   "app",
+                                    "error"     :   __new_app.error.last()
                                  };
 
                     program_config.meta_caller.telemetry(__data);
@@ -1265,7 +1266,8 @@ function meta_script()
                                     "svc_id"    :   me.config().sys_name,
                                     "name"      :   me.config().name,
                                     "icon"      :   me.config().icon,
-                                    "type"      :   "svc"
+                                    "type"      :   "svc",
+                                    "error"     :   null
                                  };
 
                     program_config.meta_caller.telemetry(__data);
@@ -1360,7 +1362,6 @@ function meta_script()
         dev_box = cosmos.hub.access('dev_box');
 
         xenon = matrix.get('xenon');
-        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         forest = matrix.get('forest');
@@ -1390,7 +1391,6 @@ function meta_script()
         svc_box = null,
         dev_box = null,
         xenon = null,
-        msg_win = null,
         swarm = null,
         hive = null,
         forest = null,
@@ -1407,6 +1407,7 @@ function meta_script()
         teal_fs = null,
         infinity = null,
         utils_sys = new vulcan(),
+        msg_win = new msgbox(),
         precise_timer = new stopwatch(),
         config_parser = new jap(),
         ajax = new taurus(),

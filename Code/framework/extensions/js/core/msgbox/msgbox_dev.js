@@ -1,21 +1,19 @@
 /*
-    MsgBox (Message Window)
+    GreyOS - MsgBox (Version: 3.6)
 
-    File name: msgbox.js (Version: 2.5)
-    Description: This file contains the MsgBox extension.
-    Dependencies: Vulcan.
+    File name: msgbox.js
+    Description: This file contains the MsgBox - Window messages module.
 
     Coded by George Delaportas (G0D) 
     Copyright (C) 2017 - 2024
     Open Software License (OSL 3.0)
 */
 
-// MsgBox 
+// MsgBox
 function msgbox()
 {
     var self = this;
 
-    // Types of MsgBox
     function types_model()
     {
         this.OK = 0;
@@ -24,20 +22,19 @@ function msgbox()
         this.YES_NO_CANCEL = 3;
     }
 
-    // General helpers
-    function general_helpers()
+    function utilities()
     {
         var me = this;
 
         this.draw_screen = function(container_id)
         {
-            var __container = utils.objects.by_id(container_id),
+            var __container = utils_sys.objects.by_id(container_id),
                 __html = null;
 
-            if (__container === false || utils.validation.misc.is_undefined(__container) || __container === null)
+            if (__container === false || utils_sys.validation.misc.is_undefined(__container) || __container === null)
                 return false;
 
-            msgbox_object = utils.objects.by_id('msgbox');
+            msgbox_object = utils_sys.objects.by_id('msgbox');
 
             if (msgbox_object !== null)
             {
@@ -65,7 +62,6 @@ function msgbox()
                      '  <div id="' + __win_title + '"></div>' + 
                      '  <div id="' + msgbox_object.id + '_content"></div>' + 
                      '  <div id="' + msgbox_object.id + '_buttons_area">' + 
-                     '      <div id="' + __button_title + '_1" class="msgbox_button">OK</div>' + 
                      '  </div>' + 
                      '</div>';
 
@@ -84,9 +80,10 @@ function msgbox()
             msgbox_object.childNodes[0].childNodes[1].innerHTML = title;
             msgbox_object.childNodes[0].childNodes[3].innerHTML = message;
 
-            var __container = utils.objects.by_id(msgbox_object.id + '_buttons_area'),
+            var __container = utils_sys.objects.by_id(msgbox_object.id + '_buttons_area'),
                 __var_dynamic_label_button_1 = 'OK',
                 __var_dynamic_label_button_2 = 'Cancel',
+                __handler = null,
                 __button_object = null;
 
             __container.innerHTML = '';
@@ -100,14 +97,14 @@ function msgbox()
 
             __container.appendChild(__button_object);
 
-            utils.events.attach(__button_object.id, __button_object, 'click', 
-            () => 
+            __handler = function()
             {
                 if (global_hide_callbacks.length > 0)
                     global_hide_callbacks[0].call(this);
 
                 me.hide_win();
-            });
+            };
+            morpheus.run('msgbox', 'mouse', 'click', __handler, __button_object);
 
             if (type === self.types.OK_CANCEL || type === self.types.YES_NO)
             {
@@ -129,14 +126,14 @@ function msgbox()
 
                 __container.appendChild(__button_object);
 
-                utils.events.attach(__button_object.id, __button_object, 'click', 
-                () => 
+                __handler = function()
                 {
                     if (global_hide_callbacks.length > 1)
                         global_hide_callbacks[1].call(this);
 
                     me.hide_win();
-                });    
+                };
+                morpheus.run('msgbox', 'mouse', 'click', __handler, __button_object); 
             }
             else if (type === self.types.YES_NO_CANCEL)
             {
@@ -153,14 +150,14 @@ function msgbox()
 
                 __container.appendChild(__button_object);
 
-                utils.events.attach(__button_object.id, __button_object, 'click', 
-                () => 
+                __handler = function()
                 {
                     if (global_hide_callbacks.length > 1)
                         global_hide_callbacks[1].call(this);
 
                     me.hide_win();
-                });
+                };
+                morpheus.run('msgbox', 'mouse', 'click', __handler, __button_object);
 
                 __button_object = document.createElement('div');
 
@@ -170,14 +167,14 @@ function msgbox()
 
                 __container.appendChild(__button_object);
 
-                utils.events.attach(__button_object.id, __button_object, 'click', 
-                () => 
+                __handler = function()
                 {
                     if (global_hide_callbacks.length > 2)
                         global_hide_callbacks[2].call(this);
 
                     me.hide_win();
-                });
+                };
+                morpheus.run('msgbox', 'mouse', 'click', __handler, __button_object);
             }
 
             msgbox_object.style.visibility = 'visible';
@@ -202,13 +199,11 @@ function msgbox()
 
             timer = setTimeout(function() { msgbox_object.style.visibility = 'hidden'; }, 250);
 
-            global_hide_callbacks = [];
-
-            is_open = false;
+            self.reset();
         };
     }
 
-    // Get status of MsgBox
+    // Get status
     this.is_open = function()
     {
         if (!is_init)
@@ -217,16 +212,16 @@ function msgbox()
         return is_open;
     };
 
-    // Show MsgBox (with type and optional callbacks on hide)
+    // Show (with type and optional callbacks on hide)
     this.show = function(title, message, type = self.types.OK, hide_callback_array = [])
     {
         if (!is_init || is_open || 
-            !utils.validation.alpha.is_string(title) || 
-            !utils.validation.alpha.is_string(message))
+            !utils_sys.validation.alpha.is_string(title) || 
+            !utils_sys.validation.alpha.is_string(message))
             return false;
-         
-        if (!utils.validation.misc.is_invalid(hide_callback_array) && 
-            !utils.validation.misc.is_array(hide_callback_array))
+
+        if (!utils_sys.validation.misc.is_invalid(hide_callback_array) && 
+            !utils_sys.validation.misc.is_array(hide_callback_array))
             return false;
 
         if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) || 
@@ -249,29 +244,27 @@ function msgbox()
         if (!__found)
             return false;
 
-        var i = 0;
-
-        for (i = 0; i < hide_callback_array.length; i++)
+        for (var i = 0; i < hide_callback_array.length; i++)
         {
-            if (!utils.validation.misc.is_function(hide_callback_array[i]))
+            if (!utils_sys.validation.misc.is_function(hide_callback_array[i]))
                 return false;
 
             global_hide_callbacks.push(hide_callback_array[i]);
         }
 
-        helpers.show_win(title, message, type);
+        utils_int.show_win(title, message, type);
 
         return true;
     };
 
-    // Hide MsgBox (with optional callbacks)
+    // Hide (with optional callbacks)
     this.hide = function(hide_callback_array = [])
     {
         if (!is_init || !is_open)
             return false;
 
-        if (!utils.validation.misc.is_invalid(hide_callback_array) && 
-            !utils.validation.misc.is_array(hide_callback_array))
+        if (!utils_sys.validation.misc.is_invalid(hide_callback_array) && 
+            !utils_sys.validation.misc.is_array(hide_callback_array))
             return false;
 
         if (hide_callback_array.length > 0 && ((global_type === self.types.OK && hide_callback_array.length > 1) || 
@@ -279,17 +272,30 @@ function msgbox()
             (global_type === self.types.YES_NO_CANCEL && hide_callback_array.length > 3)))
             return false;
 
-        for (i = 0; i < hide_callback_array.length; i++)
+        for (var i = 0; i < hide_callback_array.length; i++)
         {
-            if (!utils.validation.misc.is_function(hide_callback_array[i]))
+            if (!utils_sys.validation.misc.is_function(hide_callback_array[i]))
                 return false;
 
-            global_hide_callbacks.push(hide_callback_array[i]);
+            hide_callback_array[i].call(this);
         }
 
-        helpers.hide_win();
+        utils_int.hide_win();
 
         return true;
+    };
+
+    // Reset status
+    this.reset = function()
+    {
+        if (!is_init || !is_open)
+            return false;
+
+        morpheus.clear('msgbox');
+
+        global_hide_callbacks = [];
+
+        is_open = false;
     };
 
     // Initialize MsgBox in a HTML element
@@ -298,15 +304,32 @@ function msgbox()
         if (is_init)
             return false;
 
-        if (utils.validation.misc.is_invalid(container_id) || !utils.validation.alpha.is_string(container_id))
+        if (utils_sys.validation.misc.is_invalid(container_id) || !utils_sys.validation.alpha.is_string(container_id))
             return false;
 
-        utils.graphics.apply_theme('/framework/extensions/js/core/msgbox', 'msgbox');
-
-        if (!helpers.draw_screen(container_id))
+        if (!utils_int.draw_screen(container_id))
             return false;
+
+        nature.theme('msgbox');
+        nature.apply('new');
 
         is_init = true;
+
+        return true;
+    };
+
+    this.cosmos = function(cosmos_object)
+    {
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
+            return false;
+
+        cosmos = cosmos_object;
+
+        matrix = cosmos.hub.access('matrix');
+        dev_box = cosmos.hub.access('dev_box');
+
+        morpheus = matrix.get('morpheus');
+        nature = matrix.get('nature');
 
         return true;
     };
@@ -317,8 +340,12 @@ function msgbox()
         global_type = null,
         global_hide_callbacks = [],
         timer = null,
-        helpers = new general_helpers(),
-        utils = new vulcan();
+        cosmos = null,
+        matrix = null,
+        morpheus = null,
+        nature = null,
+        utils_sys = new vulcan(),
+        utils_int = new utilities();
 
     this.types = new types_model();
 }

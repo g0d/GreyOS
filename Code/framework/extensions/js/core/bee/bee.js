@@ -3745,8 +3745,10 @@ function bee()
 
                     if ((__window_pos_x + (__window_width + __casement_width )) >= swarm.settings.right())
                     {
-                        msg_win.init('desktop');
-                        msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
+                        var __msg_win = new msgbox();
+
+                        __msg_win.init('desktop');
+                        __msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
 
                         return false;
                     }
@@ -4011,7 +4013,14 @@ function bee()
                         for (__child_bee in my_child_bees)
                             __child_bee.close(null);
 
-                        morpheus.execute(my_bee_id, 'gui', 'close');
+                        try
+                        {
+                            morpheus.execute(my_bee_id, 'gui', 'close');
+                        }
+                        catch
+                        {
+                            // Nothing...
+                        }
 
                         if (utils_int.animating_events.in_progress())
                             setTimeout(function() { remove_me(self); }, utils_int.animating_events.duration());
@@ -5012,7 +5021,6 @@ function bee()
         xenon = matrix.get('xenon');
         morpheus = matrix.get('morpheus');
         owl = matrix.get('owl');
-        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         nature = matrix.get('nature');
@@ -5030,7 +5038,6 @@ function bee()
         xenon = null,
         morpheus = null,
         owl = null,
-        msg_win = null,
         swarm = null,
         hive = null,
         colony = null,

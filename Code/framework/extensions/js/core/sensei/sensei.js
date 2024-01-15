@@ -1,7 +1,7 @@
 /*
     Sensei (Logger & Informer)
 
-    File name: sensei.js (Version: 0.1)
+    File name: sensei.js (Version: 0.2)
     Description: This file contains the Sensei extension.
     Dependencies: Vulcan.
 

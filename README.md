@@ -1,4 +1,4 @@
-# GreyOS - Ver. 3.8 (alpha) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/889562a17e174c438fd56d35780822b0)](https://app.codacy.com/gh/g0d/GreyOS/dashboard)
+# GreyOS - Ver. 3.9 (alpha) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/889562a17e174c438fd56d35780822b0)](https://app.codacy.com/gh/g0d/GreyOS/dashboard)
 
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Logo.png)
 

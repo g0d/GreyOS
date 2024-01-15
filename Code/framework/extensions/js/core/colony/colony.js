@@ -99,14 +99,6 @@ function colony()
 
         if (__objects_num === 0 || (__objects_num > (bees.max - bees.num)))
         {
-            if (__objects_num > 0)
-            {
-                xenon = matrix.get('xenon');
-
-                msg_win.init('desktop');
-                msg_win.show(xenon.load('os_name'), 'Maximum apps for this session, reached! Please close a few apps in order to open others.');
-            }
-
             if (backtrace === true)
             {
                 if (__objects_num === 0)
@@ -114,6 +106,9 @@ function colony()
                 else
                     frog('COLONY', 'Objects :: Max limit reached: ', bees.max);
             }
+
+            if (__objects_num > 0)
+                return null;
 
             return false;
         }
@@ -263,18 +258,11 @@ function colony()
 
         cosmos = cosmos_object;
 
-        matrix = cosmos.hub.access('matrix');
-
-        msg_win = matrix.get('msgbox');
-
         return true;
     };
 
     var backtrace = false,
         cosmos = null,
-        matrix = null,
-        xenon = null,
-        msg_win = null,
         bees = new bees_model(),
         utils_sys = new vulcan();
 }

@@ -23,7 +23,9 @@
     clear: right;
     margin-left: 16px;
     margin-top: 2px;
-    min-width: 1000px;
+    height: 38px;
+    min-width: 1104x;
+    max-width: 1104px;
 }
 
 .favorites

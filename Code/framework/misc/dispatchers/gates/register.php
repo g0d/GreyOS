@@ -199,8 +199,6 @@
 		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Video', 0700);
 		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Other', 0700);
 		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/programs', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/programs/run', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/programs/source', 0700);
 
 		$result = ARKANGEL::Update_Profile($new_user_profile);
 

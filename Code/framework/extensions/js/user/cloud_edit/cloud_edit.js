@@ -64,6 +64,27 @@ function cloud_edit()
     {
         var me = this;
 
+        function check_system_run_limits()
+        {
+            var __apps_num = colony.num(),
+                __max_apps = colony.max(),
+                __svcs_num = roost.num(),
+                __max_svcs = roost.max();
+
+            var __msg_win = new msgbox();
+
+            __msg_win.init('desktop');
+
+            if (__apps_num === __max_apps)
+                __msg_win.show(xenon.load('os_name'), 'Maximum apps for this session, reached! Please close a few apps in order to open new ones.');
+            else if (__svcs_num === __max_svcs)
+                __msg_win.show(xenon.load('os_name'), 'Maximum services for this session, reached! Please stop a few to use others.');
+            else
+                return false;
+
+            return true;
+        }
+
         function run_code(event_object)
         {
             var __code = null;
@@ -90,30 +111,33 @@ function cloud_edit()
 
             if (meta_executor.process(ce_mc) !== true)
             {
-                if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
+                if (!check_system_run_limits())
                 {
-                    config.ce.status_label.innerHTML = '[INVALID]';
-                    config.ce.exec_button.value = 'Run';
-                    config.ce.exec_button.classList.remove('ce_stop');
+                    if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
+                    {
+                        config.ce.status_label.innerHTML = '[INVALID]';
+                        config.ce.exec_button.value = 'Run';
+                        config.ce.exec_button.classList.remove('ce_stop');
 
-                    frog('CLOUD EDIT', '% Invalid %', 
-                         meta_executor.error.last.message() + '\nPlease check the template...');
-                }
-                else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
-                {
-                    config.ce.status_label.innerHTML = '[ERROR]';
-                    config.ce.exec_button.value = 'Run';
-                    config.ce.exec_button.classList.remove('ce_stop');
+                        frog('CLOUD EDIT', '% Invalid %', 
+                             meta_executor.error.last.message() + '\nPlease check the template...');
+                    }
+                    else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
+                    {
+                        config.ce.status_label.innerHTML = '[ERROR]';
+                        config.ce.exec_button.value = 'Run';
+                        config.ce.exec_button.classList.remove('ce_stop');
 
-                    frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
-                }
-                else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
-                {
-                    config.ce.status_label.innerHTML = '[ERROR]';
-                    config.ce.exec_button.value = 'Run';
-                    config.ce.exec_button.classList.remove('ce_stop');
+                        frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+                    }
+                    else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
+                    {
+                        config.ce.status_label.innerHTML = '[ERROR]';
+                        config.ce.exec_button.value = 'Run';
+                        config.ce.exec_button.classList.remove('ce_stop');
 
-                    frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+                        frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+                    }
                 }
 
                 disable_deploy_button();
@@ -142,6 +166,8 @@ function cloud_edit()
 
         function deploy_program()
         {
+            var __msg_win = new msgbox();
+
             function save_program()
             {
                 user_prog_name = encodeURIComponent(utils_sys.objects.by_id('input_prog_name').value);
@@ -149,9 +175,11 @@ function cloud_edit()
 
                 if (user_prog_name.length === 0)
                 {
-                    msg_win.init('desktop');
-                    msg_win.show(os_name, 'Please enter a program name!', msg_win.types.OK,
-                                 [() => { user_prog_name = 'new_program'; deploy_program(); }]);
+                    __msg_win = new msgbox();
+
+                    __msg_win.init('desktop');
+                    __msg_win.show(os_name, 'Please enter a program name!', __msg_win.types.OK,
+                                   [() => { user_prog_name = 'new_program'; deploy_program(); }]);
 
                     return;
                 }
@@ -177,11 +205,13 @@ function cloud_edit()
                                     "ajax_mode"     :   "asynchronous",
                                     "on_success"    :   (result) => 
                                                         {
-                                                            msg_win.init('desktop');
+                                                            __msg_win = new msgbox();
+
+                                                            __msg_win.init('desktop');
 
                                                             if (result === '-1')
                                                             {
-                                                                msg_win.show(os_name, 'An error has occurred!');
+                                                                __msg_win.show(os_name, 'An error has occurred!');
 
                                                                 return;
                                                             }
@@ -192,12 +222,11 @@ function cloud_edit()
                                                                                        {
                                                                                             if (result === '-1')
                                                                                             {
-                                                                                                msg_win.init('desktop');
+                                                                                                __msg_win = new msgbox();
 
-                                                                                                msg_win.show(os_name, 'An error has occurred.\
-                                                                                                                       The program has not been saved!');
-
-                                                                                                return;
+                                                                                                __msg_win.init('desktop');
+                                                                                                __msg_win.show(os_name, 'An error has occurred.\
+                                                                                                                         The program has not been saved!');
                                                                                             }
                                                                                             else
                                                                                                 dock.refresh();
@@ -207,21 +236,22 @@ function cloud_edit()
                                                                 ajax.run(__ajax_config);
                                                             else
                                                             {
-                                                                msg_win.show(os_name, 'This program name already exists!<br>\
+                                                                __msg_win.show(os_name, 'This program name already exists!<br>\
                                                                                        Do you want to replace it with the current program?', 
-                                                                                       msg_win.types.YES_NO_CANCEL, 
-                                                                                       [() => { ajax.run(__ajax_config); }, 
-                                                                                        () => { deploy_program(); },
-                                                                                        () => {  }]);
+                                                                               __msg_win.types.YES_NO_CANCEL, 
+                                                                               [() => { ajax.run(__ajax_config); }, 
+                                                                                () => { deploy_program(); }]);
                                                             }
                                                         }
                                 };
 
-            msg_win.init('desktop');
-            msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
-                                   <input id="input_prog_name" class="ce_prog_name_input" value="' + decodeURIComponent(user_prog_name) + '"\
-                                   maxlength="40" placeholder="Enter program name...">', 
-                                   msg_win.types.OK_CANCEL, [() => { save_program(); }]);
+            __msg_win = new msgbox();
+
+            __msg_win.init('desktop');
+            __msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
+                                     <input id="input_prog_name" class="ce_prog_name_input" value="' + decodeURIComponent(user_prog_name) + '"\
+                                       maxlength="40" placeholder="Enter program name...">', 
+                           __msg_win.types.OK_CANCEL, [() => { save_program(); }]);
 
             __input_prog_name_object = utils_sys.objects.by_id('input_prog_name');
 
@@ -234,7 +264,7 @@ function cloud_edit()
                 if (key_control.get() === key_control.keys.ENTER)
                     save_program();
             };
-            morpheus.run(__input_prog_name_object.id, 'key', 'keydown', __handler, __input_prog_name_object);
+            morpheus.run(config.id, 'key', 'keydown', __handler, __input_prog_name_object);
 
             return true;
         }
@@ -329,13 +359,13 @@ function cloud_edit()
             var __handler = null;
 
             __handler = function(event) { side_panel(event); };
-            morpheus.run(config.ce.extra_button.id, 'mouse', 'click', __handler, config.ce.extra_button);
+            morpheus.run(config.id, 'mouse', 'click', __handler, config.ce.extra_button);
 
             __handler = function(event) { run_code(event); };
-            morpheus.run(config.ce.exec_button.id, 'mouse', 'click', __handler, config.ce.exec_button);
+            morpheus.run(config.id, 'mouse', 'click', __handler, config.ce.exec_button);
 
             __handler = function() { deploy_program(); };
-            morpheus.run(config.ce.deploy_button.id, 'mouse', 'click', __handler, config.ce.deploy_button);
+            morpheus.run(config.id, 'mouse', 'click', __handler, config.ce.deploy_button);
 
             return true;
         };
@@ -458,6 +488,8 @@ function cloud_edit()
                                    {
                                        cloud_edit_bee.gui.fx.fade.out();
 
+                                       morpheus.clear(config.id);
+
                                        meta_executor.terminate();
 
                                        utils_int.destroy_editor();
@@ -476,12 +508,12 @@ function cloud_edit()
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
         colony = cosmos.hub.access('colony');
+        roost = cosmos.hub.access('roost');
 
         morpheus = matrix.get('morpheus');
         xenon = matrix.get('xenon');
         nature = matrix.get('nature');
         dock = matrix.get('dock');
-        msg_win = matrix.get('msgbox');
         infinity = dev_box.get('infinity');
 
         meta_executor = dev_box.get('meta_executor');
@@ -497,11 +529,11 @@ function cloud_edit()
         matrix = null,
         dev_box = null,
         colony = null,
+        roost = null,
         morpheus = null,
         xenon = null,
         dock = null,
         nature = null,
-        msg_win = null,
         infinity = null,
         meta_executor = null,
         cloud_edit_bee = null,

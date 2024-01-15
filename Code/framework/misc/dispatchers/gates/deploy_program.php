@@ -82,8 +82,7 @@
 
 	$program_name = trim($_POST['program_name']);
 	$program_source = $_POST['program_source'];
-	$program_run = minify_source($_POST['program_source']);
-	$program = array($program_name, $program_model, $program_source, $program_run);
+	$program = array($program_name, $program_model, $program_source);
 
 	$user_profile = deploy_program($my_profile, $program);
 
@@ -95,28 +94,6 @@
 	}
 
 	echo '1';
-
-    function minify_source($js_data)
-    {
-		$js_source = trim($js_data);
-
-		$js_source = str_replace("\t", " ", $js_data);
-
-        $js_source = preg_replace('/\n(\s+)?\/\/[^\n]*/', "", $js_source);
-        $js_source = preg_replace("!/\*[^*]*\*+([^/][^*]*\*+)*/!", "", $js_source);
-		$js_source = preg_replace("/\/\*[^\/]*\*\//", "", $js_source);
-		$js_source = preg_replace("/\/\*\*((\r\n|\n) \*[^\n]*)+(\r\n|\n) \*\//", "", $js_source);
-
-        $js_source = str_replace("\r", "", $js_source);
-
-		$js_source = preg_replace("/\s+\n/", "\n", $js_source);
-		$js_source = preg_replace("/\n\s+/", "\n ", $js_source);
-		$js_source = preg_replace("/ +/", " ", $js_source);
-
-		$js_source = preg_replace("/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/", "", $js_source);
-
-		return $js_source;
-	}
 
 	function deploy_program($profile, $program)
 	{
@@ -144,11 +121,9 @@
 
 		$file_path = UTIL::Absolute_Path('fs/' . $uid);
 
-		mkdir($file_path . '/programs/source/' . $program[0], 0700);
-		mkdir($file_path . '/programs/run/' . $program[0], 0700);
+		mkdir($file_path . '/programs/' . $program[0], 0700);
 
-		file_put_contents($file_path . '/programs/source/' . $program[0] . '/' . $program[0] . '.js', $program[2]);
-		file_put_contents($file_path . '/programs/run/' . $program[0] . '/' . $program[0] . '.js', $program[3]);
+		file_put_contents($file_path . '/programs/' . $program[0] . '/' . $program[0] . '.js', $program[2]);
 
 		return $profile;
 	}

@@ -307,8 +307,10 @@ function hive()
         {
             if (self.status.bees.num() === self.status.bees.max())
             {
-                msg_win.init('desktop');
-                msg_win.show(xenon.load('os_name'), 'All stack views are full!');
+                var __msg_win = new msgbox();
+
+                __msg_win.init('desktop');
+                __msg_win.show(xenon.load('os_name'), 'All stack views are full!');
 
                 return false;
             }
@@ -1092,8 +1094,6 @@ function hive()
 
                             //__this_bee.settings.general.in_hive(false);
 
-                            console.log(swarm.bees.insert(__this_bee));
-    
                             swarm.settings.active_bee(__this_bee_id);
     
                             utils_int.set_z_index(__this_bee_id);
@@ -1415,7 +1415,6 @@ function hive()
         colony = cosmos.hub.access('colony');
 
         xenon = matrix.get('xenon');
-        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         forest = matrix.get('forest');
         morpheus = matrix.get('morpheus');
@@ -1430,7 +1429,6 @@ function hive()
         matrix = null,
         colony = null,
         xenon = null,
-        msg_win = null,
         swarm = null,
         forest = null,
         morpheus = null,

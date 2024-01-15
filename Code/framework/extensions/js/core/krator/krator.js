@@ -1,5 +1,5 @@
 /*
-    GreyOS - Krator :: Login & registration form (Version: 1.7)
+    GreyOS - Krator :: Login & registration form (Version: 1.8)
 
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
@@ -210,20 +210,22 @@ function krator()
                 login_button_object.disabled = true;
             }
 
-            msg_win.init('desktop');
-
             disable_controls();
+
+            var __msg_win = new msgbox();
+
+            __msg_win.init('desktop');
 
             if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
             {
-                msg_win.show(os_name, 'The email format is invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
+                __msg_win.show(os_name, 'The email format is invalid!', __msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
 
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show(os_name, 'Credentials are invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
+                __msg_win.show(os_name, 'Credentials are invalid!', __msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
@@ -238,7 +240,10 @@ function krator()
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Your credentials are wrong!', msg_win.types.OK, [() => { enable_controls(); }]);
+                                    var __msg_win = new msgbox();
+
+                                    __msg_win.init('desktop');
+                                    __msg_win.show(os_name, 'Your credentials are wrong!', __msg_win.types.OK, [() => { enable_controls(); }]);
                                },
                                function()
                                {
@@ -264,34 +269,36 @@ function krator()
                 register_button_object.disabled = true;
             }
 
-            msg_win.init('desktop');
-
             disable_controls();
+
+            var __msg_win = new msgbox();
+
+            __msg_win.init('desktop');
 
             if (!utils_sys.validation.utilities.is_email(username_object.value.trim()))
             {
-                msg_win.show(os_name, 'The email format is invalid!', msg_win.types.OK, [() => { enable_controls(); }]);
+                __msg_win.show(os_name, 'The email format is invalid!', __msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
 
             if (password_object.value.length === 0)
             {
-                msg_win.show(os_name, 'Please enter a password!', msg_win.types.OK, [() => { enable_controls(); }]);
+                __msg_win.show(os_name, 'Please enter a password!', __msg_win.types.OK, [() => { enable_controls(); }]);
     
                 return;
             }
 
             if (username_object.value.length < 3 || password_object.value.length < 8)
             {
-                msg_win.show(os_name, 'Please choose more complex credentials!', msg_win.types.OK, [() => { enable_controls(); }]);
+                __msg_win.show(os_name, 'Please choose more complex credentials!', __msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
 
             if (password_object.value !== password_comfirm_object.value)
             {
-                msg_win.show(os_name, 'Password confirmation failed!', msg_win.types.OK, [() => { enable_controls(); }]);
+                __msg_win.show(os_name, 'Password confirmation failed!', __msg_win.types.OK, [() => { enable_controls(); }]);
 
                 return;
             }
@@ -301,13 +308,13 @@ function krator()
             ajax_factory(data, function(result)
                                {
                                     if (result === '9')
-                                        msg_win.show(os_name, 'This account already exists!', msg_win.types.OK, [() => { enable_controls(); }]);
+                                        __msg_win.show(os_name, 'This account already exists!', __msg_win.types.OK, [() => { enable_controls(); }]);
                                     else
-                                        msg_win.show(os_name, 'Registration succeeded!', msg_win.types.OK, [() => { is_login_ok = true; close_krator(); }]);
+                                        __msg_win.show(os_name, 'Registration succeeded!', __msg_win.types.OK, [() => { is_login_ok = true; close_krator(); }]);
                                },
                                function()
                                {
-                                    msg_win.show(os_name, 'Registration failed!', msg_win.types.OK, [() => { enable_controls(); }]);
+                                    __msg_win.show(os_name, 'Registration failed!', __msg_win.types.OK, [() => { enable_controls(); }]);
                                },
                                function()
                                {
@@ -430,7 +437,6 @@ function krator()
         morpheus = matrix.get('morpheus');
         xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
-        msg_win = matrix.get('msgbox');
         nature = matrix.get('nature');
 
         return true;
@@ -446,7 +452,6 @@ function krator()
         xenon = null,
         swarm = null,
         nature = null,
-        msg_win = null,
         krator_bee = null,
         utils_sys = new vulcan(),
         key_control = new key_manager(),

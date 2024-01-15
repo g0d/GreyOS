@@ -30,10 +30,12 @@ function user_profile()
         {
             function abnormal_logout()
             {
-                msg_win.init('desktop');
-                msg_win.show(os_name, 'Your session has been terminated!', 
-                             msg_win.types.OK, 
-                             function() { setTimeout(function(){ location.reload(); }, 1000); });
+                var __msg_win = new msgbox();
+
+                __msg_win.init('desktop');
+                __msg_win.show(os_name, 'Your session has been terminated!', 
+                               __msg_win.types.OK, 
+                               [() => { setTimeout(function(){ location.reload(); }, 1000); }]);
             }
 
             function run_heartbeat()
@@ -105,10 +107,12 @@ function user_profile()
                                  },
                                  function()
                                  {
-                                     msg_win.init('desktop');
-                                     msg_win.show(os_name, 'Logout error!', 
-                                                  msg_win.types.OK, 
-                                                  function() { cc_reload.init(); });
+                                     var __msg_win = new msgbox();
+
+                                     __msg_win.init('desktop');
+                                     __msg_win.show(os_name, 'Logout error!', 
+                                                    __msg_win.types.OK, 
+                                                    [() => { cc_reload.init(); }]);
                                  },
                                  function()
                                  {
@@ -355,8 +359,6 @@ function user_profile()
 
         utils_int.draw_user_profile();
 
-        msg_win.init('desktop');
-
         return true;
     };
 
@@ -371,7 +373,6 @@ function user_profile()
         colony =  cosmos.hub.access('colony');
 
         xenon = matrix.get('xenon');
-        msg_win = matrix.get('msgbox');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
@@ -389,7 +390,6 @@ function user_profile()
         matrix = null,
         colony = null,
         xenon = null,
-        msg_win = null,
         swarm = null,
         hive = null,
         morpheus = null,

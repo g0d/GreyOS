@@ -5,7 +5,7 @@
     Description: This file contains the Xenon - System-wide information holder module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2022
+    Copyright © 2022 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -18,6 +18,8 @@ function xenon()
     {
         this.os_name = null;
         this.os_version = null;
+        this.max_apps = 10;
+        this.max_services = 10;
         this.cpu_cores = navigator.hardwareConcurrency;
         this.ram = navigator.deviceMemory;
     }
