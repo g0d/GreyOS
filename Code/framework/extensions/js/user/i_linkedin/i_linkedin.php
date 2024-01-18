@@ -25,15 +25,9 @@
     header('Cache-Control: no-cache, must-revalidate'); // HTTP 1.1
     header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');   // Date in the past
 
-    // Include ALPHA Framework class
-    require('../../../alpha.php');
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_linkedin/i_linkedin.php'));
 
-    // Include ALPHA CMS class
-    require('../../../../cms/alpha_cms.php');
-
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_linkedin/i_linkedin.php'));
-
-    $db = ALPHA_CMS::Use_DB_Connection();
+    $db = DB::Use_DB_Connection();
     // TODO: retrieve settings from elsewhere + set correct redirect URL
     $api_key = '75iirnbaknxwy5';
     $secret_key = 'HaRTv7EjJf9phNpG';
@@ -128,7 +122,7 @@
         if (Get_Access_Token() === false)
         {
 
-            $existing_tokens = ALPHA_CMS::Execute_SQL_Command(
+            $existing_tokens = DB::Execute_SQL_Command(
                 'SELECT * FROM `oauth_linkedin` WHERE `talos_id` = "' . $_SESSION['TALOS']['id'] . '"
                          AND `active` = 1
                          AND `expires` > NOW()'
@@ -161,7 +155,7 @@
     function Logout_Action()
     {
 
-        $counter = ALPHA_CMS::Execute_SQL_Command(
+        $counter = DB::Execute_SQL_Command(
             'SELECT COUNT(*) AS `num`
              FROM `oauth_linkedin`
              WHERE `talos_id` = "' . $_SESSION['TALOS']['id'] . '"'
@@ -170,7 +164,7 @@
         if ($counter[0]['num'] > 0)
         {
 
-            ALPHA_CMS::Execute_SQL_Command(
+            DB::Execute_SQL_Command(
                 'UPDATE `oauth_linkedin`
                  SET `active` = "0"
                  WHERE `talos_id` = "' . $_SESSION['TALOS']['id'] . '"',
@@ -600,7 +594,7 @@
 
             Set_Access_Token($access_token->access_token);
 
-            $counter = ALPHA_CMS::Execute_SQL_Command(
+            $counter = DB::Execute_SQL_Command(
                 'SELECT COUNT(*) AS `num`
                  FROM `oauth_linkedin`
                  WHERE `talos_id` = "' . $_SESSION['TALOS']['id'] . '"'
@@ -610,7 +604,7 @@
             {
 
                 // Store access_token in DB
-                ALPHA_CMS::Execute_SQL_Command(
+                DB::Execute_SQL_Command(
                     'UPDATE `oauth_linkedin`
                      SET `access_token` = "' . mysqli_real_escape_string($db_con, Get_Access_Token(), $db) . '",
                              `expires` = "' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'). ' +' . $access_token->expires_in . ' seconds')) . '"
@@ -625,7 +619,7 @@
             {
 
                 // Store access_token in DB
-                ALPHA_CMS::Execute_SQL_Command(
+                DB::Execute_SQL_Command(
                     'INSERT INTO `oauth_linkedin`
                      (`talos_id`, `ip`, `access_token`, `expires`, `active`)
                      VALUES ("' . $_SESSION['TALOS']['id'] . '", "' .

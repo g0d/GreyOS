@@ -17,25 +17,25 @@
     */
     
     // Include Twitter Oauth Library
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/oauth/twitter_oauth.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/oauth/twitter_oauth.php'));
 
     // Include Twitter Section Classes
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/timelines.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/tweets.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/search.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/streaming.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/direct_messages.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/friends.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/followers.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/users.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/suggested_users.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/favorites.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/lists.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/saved_searches.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/places_geo.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/trends.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/spam_reporting.php'));
-    require(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_twitter/classes/help.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/timelines.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/tweets.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/search.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/streaming.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/direct_messages.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/friends.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/followers.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/users.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/suggested_users.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/favorites.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/lists.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/saved_searches.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/places_geo.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/trends.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/spam_reporting.php'));
+    require(UTILS::Absolute_Path('framework/extensions/php/i_twitter/classes/help.php'));
 
     class API_WRAPPER
     {

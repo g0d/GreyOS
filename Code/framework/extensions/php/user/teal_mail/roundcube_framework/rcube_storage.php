@@ -633,7 +633,7 @@ abstract class rcube_storage
 
 
     /* --------------------------------
-     *        folder managment
+     *        folder management
      * --------------------------------*/
 
     /**

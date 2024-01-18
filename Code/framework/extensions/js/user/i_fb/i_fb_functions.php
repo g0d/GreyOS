@@ -17,15 +17,15 @@
     */
 
     // Include spl@sh extension in order to generate HTML
-    ALPHA_CMS::Load_Extension('splash', 'php');
+    UTILS::Load_Extension('splash', 'php');
 
     // Include Flora extension
-    ALPHA_CMS::Load_Extension('flora', 'php');
+    UTILS::Load_Extension('flora', 'php');
     
     // Include Thor extension in order to secure Facebook inputs.
-    ALPHA_CMS::Load_Extension('thor', 'php');
+    UTILS::Load_Extension('thor', 'php');
     
-    require_once(ALPHA_CMS::Absolute_Path('') . 'framework/extensions/php/i_fb/i_fb.php');
+    require_once(UTILS::Absolute_Path('') . 'framework/extensions/php/i_fb/i_fb.php');
     
     class I_FB_AJAX extends I_FB
     {
@@ -1080,7 +1080,7 @@
         public function Display_Inbox()
         {
             
-            $update_time = ALPHA_CMS::Execute_SQL_Command('UPDATE `oauth_facebook` 
+            $update_time = DB::Execute_SQL_Command('UPDATE `oauth_facebook` 
                                                           SET `message_check_time` = "' . time() . '"
                                                           WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"', 1);
             
@@ -1102,13 +1102,13 @@
                 if ($fql_inbox[$i]['unread'])
                 {
                     
-                    $counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+                    $counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                    FROM `fb_unread_messages` 
                                                    WHERE `message_id` = "' . $fql_inbox[$i]['thread_id'] . '"');
                     if ($counter[0]['num'] > 0)
                     {
                         
-                        $updated_time = ALPHA_CMS::Execute_SQL_Command('SELECT `updated_time` AS `time`
+                        $updated_time = DB::Execute_SQL_Command('SELECT `updated_time` AS `time`
                                                        FROM `fb_unread_messages` 
                                                        WHERE `message_id` = "' . $fql_inbox[$i]['thread_id'] . '"');
                         
@@ -1311,26 +1311,26 @@
             if ($fql_recipients[0]['unread'])
             {
                 
-                $counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+                $counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                    FROM `fb_unread_messages` 
                                                    WHERE `message_id` = "' . $id . '"');
                 
                 if ($counter[0]['num'])
                 {
                     
-                    $updated_time = ALPHA_CMS::Execute_SQL_Command('SELECT `updated_time` AS `time`
+                    $updated_time = DB::Execute_SQL_Command('SELECT `updated_time` AS `time`
                                                        FROM `fb_unread_messages` 
                                                        WHERE `message_id` = "' . $id . '"');
                     
                     if ($updated_time[0]['time'] < $fql_recipients[0]['updated_time'])
-                        $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `fb_unread_messages` 
+                        $result = DB::Execute_SQL_Command('UPDATE `fb_unread_messages` 
                                                           SET `updated_time` = "' . $fql_recipients[0]['updated_time'] . '"
                                                           WHERE `message_id` = "' . $id . '"', 1);
                     
                 }
                 
                 else
-                    $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `fb_unread_messages` (`user_id`, `message_id`, `updated_time`)
+                    $result = DB::Execute_SQL_Command('INSERT INTO `fb_unread_messages` (`user_id`, `message_id`, `updated_time`)
                                                               VALUES ("' . $_SESSION['TALOS']["id"] . '", "' . 
                                                                          $id . '", "' .
                                                                          $fql_recipients[0]['updated_time'] . '")', 1);   

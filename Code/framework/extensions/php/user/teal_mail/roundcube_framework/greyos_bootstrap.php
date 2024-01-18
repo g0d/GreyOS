@@ -348,7 +348,7 @@
 	function rcube_autoload($classname)
 	{
 
-			$filepath = ALPHA_CMS::Absolute_Path('framework/extensions/php/greyos_mail/roundcube_framework/'.$classname.'.php');
+			$filepath = UTILS::Absolute_Path('framework/extensions/php/greyos_mail/roundcube_framework/'.$classname.'.php');
 			if (is_readable($filepath)) {
 				include_once $filepath;
 				return true;

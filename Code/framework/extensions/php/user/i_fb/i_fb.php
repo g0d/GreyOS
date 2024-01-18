@@ -16,10 +16,10 @@
    
     */
     
-    require_once(ALPHA_CMS::Absolute_Path('') . 'framework/extensions/php/i_fb/fb/fb.php');
+    require_once(UTILS::Absolute_Path('') . 'framework/extensions/php/i_fb/fb/fb.php');
 
     // Include Thor extension in order to secure Facebook inputs.
-    ALPHA_CMS::Load_Extension('thor', 'php');
+    UTILS::Load_Extension('thor', 'php');
 
     class I_FB extends FB
     {
@@ -46,14 +46,14 @@
         public function Update_Database()
         {
             
-            $counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+            $counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                    FROM `oauth_facebook` 
                                                    WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
                 
             if ($counter[0]['num'] > 0)
             {
 
-                $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `oauth_facebook` 
+                $result = DB::Execute_SQL_Command('UPDATE `oauth_facebook` 
                                                           SET `facebook_access_token` = "' . $this->Get_Access_Token() . '", 
                                                               `active` = "1"
                                                           WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"', 1);
@@ -72,7 +72,7 @@
                 
                 $name = json_decode(file_get_contents('http://graph.facebook.com/' . $user .'?fields=name'))->name;
 
-                $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `oauth_facebook` (`user_id`, `facebook_access_token`, 
+                $result = DB::Execute_SQL_Command('INSERT INTO `oauth_facebook` (`user_id`, `facebook_access_token`, 
                                                                                         `facebook_id`, `facebook_name`,
                                                                                         `request_check_time`,
                                                                                         `message_check_time`,
@@ -100,13 +100,13 @@
         public function Update_Ids()
         {
             
-            $own_name = ALPHA_CMS::Execute_SQL_Command('SELECT `facebook_name` AS `fb_name`
+            $own_name = DB::Execute_SQL_Command('SELECT `facebook_name` AS `fb_name`
                                                        FROM `oauth_facebook` 
                                                        WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
             
            
                     
-            $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `facebook_ids` (`id`, `user_id`, `fb_id`, `fb_name`)
+            $result = DB::Execute_SQL_Command('INSERT INTO `facebook_ids` (`id`, `user_id`, `fb_id`, `fb_name`)
                                                           VALUES ("' . $_SESSION['TALOS']["id"] . '", "' . 
                                                                        $this->My_Id . '", "' . 
                                                                        $own_name[0]['fb_name'] . '")', 1);
@@ -121,7 +121,7 @@
             for ($i = 0; $i < $friendlist_size; $i++)
             {
                 
-                $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `facebook_ids` (`id`, `user_id`, `fb_id`, `fb_name`)
+                $result = DB::Execute_SQL_Command('INSERT INTO `facebook_ids` (`id`, `user_id`, `fb_id`, `fb_name`)
                                                           VALUES ("' . $_SESSION['TALOS']["id"] . '", "' . 
                                                                        $friendlist[$i]['uid'] . '", "' . 
                                                                        $friendlist[$i]['name'] . '")', 1);
@@ -337,7 +337,7 @@
         public function Get_User_By_Id($id)
         {
             
-            $user_name_by_id = ALPHA_CMS::Execute_SQL_Command('SELECT `fb_name` AS `name`
+            $user_name_by_id = DB::Execute_SQL_Command('SELECT `fb_name` AS `name`
                                                        FROM `facebook_ids` 
                                                        WHERE `fb_id` = "' . $id . '"');
             
@@ -613,7 +613,7 @@
         public function Clean_Unread_Message_Data()
         {
             
-            $unread_messages = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+            $unread_messages = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                    FROM `fb_unread_messages` 
                                                    WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
            
@@ -639,7 +639,7 @@
                     for ($j = 0; $j < $number_of_messages; $j++)
                     {
                         
-                       $delete_counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+                       $delete_counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                    FROM `fb_unread_messages` 
                                                    WHERE `message_id` = "' . $clean_messages[$j]['thread_id'] . '"');
                        
@@ -649,7 +649,7 @@
                     }
                     
                     if ($delete_id)
-                        $result = ALPHA_CMS::Execute_SQL_Command('DELETE FROM `fb_unread_messages` 
+                        $result = DB::Execute_SQL_Command('DELETE FROM `fb_unread_messages` 
                                                       WHERE `message_id` = "' . $clean_messages[$j]['thread_id'] . '"', 1);
                     
                 }   

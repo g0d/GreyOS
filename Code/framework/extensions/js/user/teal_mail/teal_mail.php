@@ -31,13 +31,10 @@
 	define('RCMAIL_CHARSET', 'UTF-8');
 	define('DEFAULT_MAIL_CHARSET', 'UTF-8');
 
-	require('../../../alpha.php');
-	require('../../../../cms/alpha_cms.php');
-
-	require_once ALPHA_CMS::Absolute_Path('framework/extensions/php/greyos_mail/roundcube_framework/greyos_bootstrap.php');
-	require_once ALPHA_CMS::Absolute_Path('framework/extensions/php/greyos_mail/include/greyos_mail_class.php');
-	require_once ALPHA_CMS::Absolute_Path('framework/extensions/php/greyos_mail/include/greyos_mail_output.php');
-	require_once ALPHA_CMS::Absolute_Path('framework/extensions/php/greyos_mail/include/greyos_mail_session_handler.php');
+	require_once UTILS::Absolute_Path('framework/extensions/php/greyos_mail/roundcube_framework/greyos_bootstrap.php');
+	require_once UTILS::Absolute_Path('framework/extensions/php/greyos_mail/include/greyos_mail_class.php');
+	require_once UTILS::Absolute_Path('framework/extensions/php/greyos_mail/include/greyos_mail_output.php');
+	require_once UTILS::Absolute_Path('framework/extensions/php/greyos_mail/include/greyos_mail_session_handler.php');
 
 	$output = new GREYOS_MAIL_OUTPUT();
 
@@ -86,7 +83,7 @@
 
 	if ($_POST['action'] === 'acc_settings')
 	{
-		$identity=ALPHA_CMS::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
+		$identity=DB::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
 												WHERE  `id`='.$_POST['identity_id'].'
 												AND `user_id`=\''.$user_id.'\'');
 
@@ -458,7 +455,7 @@
 				  FROM `mail_identities` 
 				  WHERE `user_id`='.$_POST['user_id'];
 
-		$result = ALPHA_CMS::Execute_SQL_Command($query);
+		$result = DB::Execute_SQL_Command($query);
 
 		foreach($result as $ident_id)
 			array_push($user_identities, $ident_id['id']);
@@ -467,7 +464,7 @@
 				  FROM `mail_sessions` 
 				  WHERE `identity_id` IN (' . implode(',', array_map('intval', $user_identities)) . ')';
 
-		$result = ALPHA_CMS::Execute_SQL_Command($query);
+		$result = DB::Execute_SQL_Command($query);
 
 		exit;
 	}

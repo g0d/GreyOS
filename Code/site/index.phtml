@@ -50,14 +50,16 @@
                     
                     MVC::Go_To($this_route, $args);
                 }
+                ?>
+                <script src="/framework/extensions/js/user/ace/src/ace-min.js"></script>
+                <script src="/framework/extensions/js/user/ace/src/ext-language_tools.js"></script>
+                <script src="/framework/extensions/js/user/ace/src/ext-settings_menu.js"></script>
+                <script src="/site/js/boot.js" defer></script>
+            <?php
             }
             
             unset($this_route);
         ?>
-            <script src="/framework/extensions/js/user/ace/src/ace-min.js"></script>
-            <script src="/framework/extensions/js/user/ace/src/ext-language_tools.js"></script>
-            <script src="/framework/extensions/js/user/ace/src/ext-settings_menu.js"></script>
-            <script src="/site/js/boot.js" defer></script>
         </div>
     </body>
 </html>

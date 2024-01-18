@@ -24,14 +24,8 @@
     header('Cache-Control: no-cache, must-revalidate'); // HTTP 1.1
     header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');   // Date in the past
 
-    // Include ALPHA Framework class
-    require('../../../alpha.php');
-
-    // Include ALPHA CMS class
-    require('../../../../cms/alpha_cms.php');
-
     // Include the Twitter API Response library
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/ajax/i_twitter/api_response.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/ajax/i_twitter/api_response.php'));
 
     if (isset($_POST))
     {
@@ -42,7 +36,7 @@
             if ($_POST['action'] === 'start')
             {
 
-                $result = ALPHA_CMS::Execute_SQL_Command('SELECT * FROM `oauth_twitter` WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
+                $result = DB::Execute_SQL_Command('SELECT * FROM `oauth_twitter` WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
 
                 $count = count($result);
 
@@ -98,14 +92,14 @@
             else if ($_POST['action'] === 'logout')
             {
 
-                $counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+                $counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                            FROM `oauth_twitter` 
                                                            WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
 
                 if ($counter[0]['num'] > 0)
                 {
 
-                    $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `oauth_twitter` 
+                    $result = DB::Execute_SQL_Command('UPDATE `oauth_twitter` 
                                                               SET `active` = "0" 
                                                               WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"', 1);
 
@@ -283,14 +277,14 @@
                 $api_response = new API_RESPONSE();    
                 $response = $api_response->Oauth_Verifier();
 
-                $counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+                $counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                            FROM `oauth_twitter` 
                                                            WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
 
                 if ($counter[0]['num'] > 0)
                 {
 
-                    $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `oauth_twitter` 
+                    $result = DB::Execute_SQL_Command('UPDATE `oauth_twitter` 
                                                               SET `oauth_token` = "' . $response['oauth_token'] . '", 
                                                                   `oauth_token_secret` = "' . $response['oauth_token_secret'] . '", 
                                                                   `twitter_user_id` = "' . $response['user_id'] . '", 
@@ -307,7 +301,7 @@
                 else
                 {
 
-                    $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `oauth_twitter` (`oauth_token`, `oauth_token_secret`, 
+                    $result = DB::Execute_SQL_Command('INSERT INTO `oauth_twitter` (`oauth_token`, `oauth_token_secret`, 
                                                                                            `twitter_user_id`, `screen_name`, 
                                                                                            `active`, `ip`, `user_id`)
                                                               VALUES ("' . $response['oauth_token'] . '", "' . 

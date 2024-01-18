@@ -84,7 +84,7 @@
 					WHERE identity_id=\''.$identity_id.'\'
 					AND id=\''.$id.'\'';
 
-			if ($result = ALPHA_CMS::Execute_SQL_Command($sql))
+			if ($result = DB::Execute_SQL_Command($sql))
 			{
 
 				if (count($result)>0)
@@ -104,7 +104,7 @@
 			$access = time();
 
 			// first checks if there is a session with this id
-			$result = ALPHA_CMS::Execute_SQL_Command('SELECT * FROM mail_sessions
+			$result = DB::Execute_SQL_Command('SELECT * FROM mail_sessions
 														WHERE identity_id = \''.$identity_id.'\'
 														AND id=\''.$id.'\'');
 
@@ -119,7 +119,7 @@
 						`identity_id` = \''.$identity_id.'\' 
 						AND `id` = \''.$id.'\'';
 
-				ALPHA_CMS::Execute_SQL_Command($sql);
+				DB::Execute_SQL_Command($sql);
 
 				// if anything happened
 				if (mysqli_affected_rows()) 
@@ -137,7 +137,7 @@
 						VALUES  
 						(\''.$id.'\', \''.$identity_id.'\', \''.$access.'\', \''.$data.'\')';
 
-				ALPHA_CMS::Execute_SQL_Command($sql);
+				DB::Execute_SQL_Command($sql);
 
 				// if anything happened
 				if (mysqli_affected_rows())
@@ -159,7 +159,7 @@
 					FROM   `mail_sessions`
 					WHERE  `identity_id`='.$identity_id;
 
-			if (ALPHA_CMS::Execute_SQL_Command($sql))
+			if (DB::Execute_SQL_Command($sql))
 				return true;
 
 			return false;
@@ -178,7 +178,7 @@
 					FROM   mail_sessions
 					WHERE  access < '.$old;
 
-			return ALPHA_CMS::Execute_SQL_Command($sql);
+			return DB::Execute_SQL_Command($sql);
 			*/
 
 			return true;

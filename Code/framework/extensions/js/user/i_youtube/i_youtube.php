@@ -53,20 +53,14 @@
 
     }
 
-    // Include ALPHA Framework class
-    require_once('../../../alpha.php');
-
-    // Include ALPHA CMS class
-    require_once('../../../../cms/alpha_cms.php');
-
     // Include Thor extension in order to secure Youtube Search Input.
-    ALPHA_CMS::Load_Extension('thor', 'php');
+    UTILS::Load_Extension('thor', 'php');
 
     // Include YouTube class
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_youtube/i_youtube.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_youtube/i_youtube.php'));
     
     // Include YouTube front class
-    require_once (ALPHA_CMS::Absolute_Path('framework/extensions/php/i_youtube/classes/front.php'));
+    require_once (UTILS::Absolute_Path('framework/extensions/php/i_youtube/classes/front.php'));
 
     $url = 'https://accounts.google.com/o/oauth2/auth';
     $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/framework/extensions/ajax/i_youtube/i_youtube.php';
@@ -105,7 +99,7 @@
                 {
 
                     // Check if the user is logged in through the database. 
-                    $counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+                    $counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                                FROM `oauth_youtube` 
                                                                WHERE `active` = "1" 
                                                                AND `user_id` = "' . $_SESSION["TALOS"]["id"] . '"');
@@ -134,7 +128,7 @@
 
                 $oauth_url = $url . '?' . http_build_query($params_request);
 
-                $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `oauth_youtube`
+                $result = DB::Execute_SQL_Command('UPDATE `oauth_youtube`
                                                           SET `active` = "0"
                                                           WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"', 1);
 
@@ -327,7 +321,7 @@
             else if ($_POST['action'] === 'send_email')
             {
 
-                $result = ALPHA_CMS::Execute_SQL_Command('SELECT `youtube_user_id`
+                $result = DB::Execute_SQL_Command('SELECT `youtube_user_id`
                         FROM `oauth_youtube`
                         WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
 
@@ -491,14 +485,14 @@
             $user_id = mb_substr($channel_id, 2);
 
             // Code that checks if the user has logged in at our database in the past. So either updates or inserts data.
-            $counter = ALPHA_CMS::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
+            $counter = DB::Execute_SQL_Command('SELECT COUNT(*) AS `num` 
                                                        FROM `oauth_youtube` 
                                                        WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
 
             if ($counter[0]['num'] > 0)
             {
 
-                $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `oauth_youtube` 
+                $result = DB::Execute_SQL_Command('UPDATE `oauth_youtube` 
                                                           SET `youtube_token` = "' . $get->access_token . '", 
                                                               `youtube_refresh_token` = "' . $get->refresh_token . '",
                                                               `youtube_expires_token` = "' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'). ' +' . $get->expires_in . ' seconds')) . '",
@@ -516,7 +510,7 @@
             else
             {
 
-                $result = ALPHA_CMS::Execute_SQL_Command('INSERT INTO `oauth_youtube` 
+                $result = DB::Execute_SQL_Command('INSERT INTO `oauth_youtube` 
                                                         (`youtube_token`, `youtube_refresh_token`, 
                                                          `youtube_expires_token`, `youtube_channel_id`,
                                                          `youtube_user_id`, `active`, `ip`, `user_id`)

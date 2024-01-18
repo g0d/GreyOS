@@ -202,7 +202,7 @@
 						  WHERE `email`=\'' . $email . '\' 
 						  AND `user_id`='.$user_id;
 
-				$result = ALPHA_CMS::Execute_SQL_Command($query);
+				$result = DB::Execute_SQL_Command($query);
 
 				//If there is no acc with same name
 				if (count($result) === 0)
@@ -220,7 +220,7 @@
 							\''.$host_config['imap_ssl'].'\', \''.$host_config['smtp_host'].'\', '.$host_config['smtp_port'].', \''
 							.$host_config['smtp_ssl'].'\', \''.$icon.'\' )';
 
-					ALPHA_CMS::Execute_SQL_Command($query);
+					DB::Execute_SQL_Command($query);
 
 					if (mysqli_affected_rows() === 1)
 						return mysqli_insert_id();
@@ -260,7 +260,7 @@
 		public static function Check_Ident_Id($id, $user_id)
 		{
 
-			$result = ALPHA_CMS::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
+			$result = DB::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
 													WHERE  `id`='.$id.'
 													AND `user_id`=\''.$user_id.'\'');
 
@@ -275,7 +275,7 @@
 		public function Delete_Mail_Account($id, $user_id)
 		{
 
-			$result = ALPHA_CMS::Execute_SQL_Command('DELETE 
+			$result = DB::Execute_SQL_Command('DELETE 
 													FROM  `mail_identities` 
 													WHERE  `id`=\''.$id.'\' 
 													AND `user_id`=\''.$user_id.'\'');
@@ -415,7 +415,7 @@
 		public function Login ($id, $pass)
 		{
 
-			$result = ALPHA_CMS::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
+			$result = DB::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
 													WHERE  `id`='.$id);
 
 			if (count($result) !== 1)
@@ -432,7 +432,7 @@
 			if ($this->storage->connect($login['imap_host'], $login['email'], $pass, $login['imap_port'], $login['imap_ssl']))
 			{
 
-				ALPHA_CMS::Execute_SQL_Command('UPDATE `mail_identities` SET
+				DB::Execute_SQL_Command('UPDATE `mail_identities` SET
 											   `password`=\''.$this->Encrypt_Decrypt('encrypt',$pass).'\'
 											   WHERE `id`='.$id);
 
@@ -478,11 +478,11 @@
 		{
 
 			if ($account_id === null)
-				$result = ALPHA_CMS::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
+				$result = DB::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
 														WHERE  `user_id`='.$user_id);
 			
 			else 
-				$result = ALPHA_CMS::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
+				$result = DB::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
 													WHERE  `id`='.$account_id.'
 													AND `user_id`=\''.$user_id.'\'');
 
@@ -573,7 +573,7 @@
 		private function Create_Files_Dir ($user_id, $identity_id)
 		{
 			
-			$files_folder = ALPHA_CMS::Absolute_Path('framework/extensions/php/greyos_mail/user_files/');
+			$files_folder = UTILS::Absolute_Path('framework/extensions/php/greyos_mail/user_files/');
 			$user_files_path = $files_folder . $user_id . '/' . $identity_id . '/';
 
 			if (!file_exists($user_files_path))
@@ -586,7 +586,7 @@
 		private function Get_Files_Dir_Path ($user_id, $identity_id)
 		{
 			
-			$files_folder = ALPHA_CMS::Absolute_Path('framework/extensions/php/greyos_mail/user_files/');
+			$files_folder = UTILS::Absolute_Path('framework/extensions/php/greyos_mail/user_files/');
 			$user_files_path = $files_folder . $user_id . '/' . $identity_id . '/';
 
 			return $user_files_path;
@@ -596,7 +596,7 @@
 		public function Log_Out ($identity_id)
 		{
 
-			$result = ALPHA_CMS::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
+			$result = DB::Execute_SQL_Command('SELECT * FROM  `mail_identities` 
 													WHERE  `id`='.$identity_id.' 
 													AND `email`=\''.$_SESSION['email'].'\'');
 
@@ -604,7 +604,7 @@
 			if (count($result) === 1)
 			{
 
-				ALPHA_CMS::Execute_SQL_Command('UPDATE `mail_identities` SET
+				DB::Execute_SQL_Command('UPDATE `mail_identities` SET
 												`password` = NULL
 												WHERE `id` ='.$identity_id);
 
@@ -700,7 +700,7 @@
 						VALUES 
 						( \''.$folder_data['name'].'\',  \''.$folder_data['display_name'].'\', '.$count.',  '.$identity_id.')'; 
 
-					ALPHA_CMS::Execute_SQL_Command($query);
+					DB::Execute_SQL_Command($query);
 
 					if (mysqli_affected_rows() !== 1)
 					{
@@ -2039,7 +2039,7 @@
 		public function Update_Timezone($timezone, $user_id)
 		{
 
-			ALPHA_CMS::Execute_SQL_Command('UPDATE `mail_identities` SET
+			DB::Execute_SQL_Command('UPDATE `mail_identities` SET
 											`timezone`=\''.$timezone.'\'
 											WHERE `user_id`='.$user_id);
 
@@ -2055,7 +2055,7 @@
 					  FROM `mail_identities` 
 					  WHERE `id`='.$ident_id;
 
-			$result = ALPHA_CMS::Execute_SQL_Command($query);
+			$result = DB::Execute_SQL_Command($query);
 
 			if (count($result)>0)
 				return $result[0]['timezone'];

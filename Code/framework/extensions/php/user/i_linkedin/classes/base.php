@@ -17,7 +17,7 @@
 
 
 
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_linkedin/classes/http.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_linkedin/classes/http.php'));
 
     /**
      * Class BASE

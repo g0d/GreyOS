@@ -1306,14 +1306,14 @@ Content-Transfer-Encoding: binary
 
             $current = date('Y-m-d H:i:s');
 
-            $select = ALPHA_CMS::Execute_SQL_Command('SELECT `youtube_expires_token`, `youtube_refresh_token`
+            $select = DB::Execute_SQL_Command('SELECT `youtube_expires_token`, `youtube_refresh_token`
                                                       FROM `oauth_youtube`
                                                       WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
 
             if ($current < $select[0]['youtube_expires_token'])
             {
 
-                $result = ALPHA_CMS::Execute_SQL_Command('SELECT `youtube_token`
+                $result = DB::Execute_SQL_Command('SELECT `youtube_token`
                                                           FROM `oauth_youtube`
                                                           WHERE `user_id` = "' . $_SESSION['TALOS']["id"] . '"');
 
@@ -1330,7 +1330,7 @@ Content-Transfer-Encoding: binary
                 $response = $this->Refresh_token($select[0]['youtube_refresh_token']);
                 $res = json_decode($response);
 
-                $result = ALPHA_CMS::Execute_SQL_Command('UPDATE `oauth_youtube` 
+                $result = DB::Execute_SQL_Command('UPDATE `oauth_youtube` 
                                                           SET `youtube_token` = "' . $res->access_token . '",
                                                               `youtube_expires_token` = "' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'). ' +' . $res->expires_in . ' seconds')) . '",
                                                               `active` = "1",

@@ -2517,7 +2517,7 @@ class rcube_imap extends rcube_storage
 
 
     /* --------------------------------
-     *        folder managment
+     *        folder management
      * --------------------------------*/
 
     /**

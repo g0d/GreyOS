@@ -1,9 +1,9 @@
 <?php
     /*
-        GreyOS - HYPERBEAM (Programmable gate for HYPERBEAM session managment)
+        GreyOS - HYPERBEAM (Programmable gate for HYPERBEAM session management)
 
         File name: hyperbeam.php
-        Description: This file contains the HYPERBEAM session managment gate (AJAX).
+        Description: This file contains the HYPERBEAM session management gate (AJAX).
 
         Coded by George Delaportas (G0D)
         Copyright © 2023

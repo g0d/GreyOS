@@ -163,6 +163,16 @@ body
     display: none;
 }
 
+.error
+{
+    color: #65c9c9;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    margin: auto;
+    margin-top: 250px;
+}
+
 ::selection
 {
     color: #FFFFFF;

@@ -18,7 +18,7 @@
     
 
 
-	require_once ALPHA_CMS::Absolute_Path('framework/extensions/php/splash/splash.php');
+	require_once UTILS::Absolute_Path('framework/extensions/php/splash/splash.php');
 
     class GREYOS_MAIL_OUTPUT
 	{

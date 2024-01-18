@@ -24,14 +24,5 @@
             
             return true;
         }
-        
-        // Test route
-        public static function test()
-        {
-            $result = TEST_MODEL::Get_Data();
-            MVC::Store_Content('test', $result);
-            
-            return true;
-        }
     }
 ?>

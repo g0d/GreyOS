@@ -16,18 +16,6 @@
 
     */
     
-    // Disable error reporting
-    error_reporting(0);
-
-    // Initialize session support
-    @session_start();
-   
-    // Include ALPHA Framework class
-    require('../../../alpha.php');
-
-    // Include ALPHA CMS class
-    require('../../../../cms/alpha_cms.php');
-    
     //Include AJAX functions file
     require('i_fb_functions.php');
     

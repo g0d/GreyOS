@@ -25,7 +25,7 @@
     date_default_timezone_set('UTC');
     
     // Include spl@sh extension in order to generate HTML
-    ALPHA_CMS::Load_Extension('splash', 'php');
+    UTILS::Load_Extension('splash', 'php');
 
     class FRONT
     {

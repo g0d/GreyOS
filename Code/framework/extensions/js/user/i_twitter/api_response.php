@@ -19,10 +19,10 @@
 
 
     // Include the Twitter SDK.
-    ALPHA_CMS::Load_Extension('i_twitter', 'php');
+    UTILS::Load_Extension('i_twitter', 'php');
 
     // Include the Twitter SDK.
-    ALPHA_CMS::Load_Extension('splash', 'php');
+    UTILS::Load_Extension('splash', 'php');
 
 	class API_RESPONSE
 	{

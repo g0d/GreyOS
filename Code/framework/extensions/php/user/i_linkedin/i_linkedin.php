@@ -15,11 +15,11 @@
 
     */
     
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_linkedin/classes/jobs.php'));
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_linkedin/classes/people.php'));
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_linkedin/classes/social.php'));
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_linkedin/classes/companies.php'));
-    require_once(ALPHA_CMS::Absolute_Path('framework/extensions/php/i_linkedin/classes/groups.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_linkedin/classes/jobs.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_linkedin/classes/people.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_linkedin/classes/social.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_linkedin/classes/companies.php'));
+    require_once(UTILS::Absolute_Path('framework/extensions/php/i_linkedin/classes/groups.php'));
 
     /**
      * Class I_LINKEDIN
