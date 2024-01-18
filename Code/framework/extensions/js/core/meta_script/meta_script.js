@@ -68,7 +68,7 @@ function meta_script()
                 return teal_fs;
             };
 
-            this.gaming_contollers = function()
+            this.gaming_controllers = function()
             {
                 return xgc;
             };
@@ -78,12 +78,17 @@ function meta_script()
                 return utils_sys;
             };
 
-            this.ajax = function()
+            this.random = function()
+            {
+                return random;
+            };
+
+            this.net = function()
             {
                 return ajax;
             };
 
-            this.ajax_factory = function(ajax_data, success_cb, failure_cb, default_cb)
+            this.remote_comm = function(ajax_data, success_cb, failure_cb, default_cb)
             {
                 return ajax_factory(ajax_data, success_cb, failure_cb, default_cb);
             };
@@ -1407,6 +1412,7 @@ function meta_script()
         teal_fs = null,
         infinity = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         msg_win = new msgbox(),
         precise_timer = new stopwatch(),
         config_parser = new jap(),

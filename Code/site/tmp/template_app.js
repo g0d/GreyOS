@@ -1,5 +1,5 @@
 /*
-    GreyOS - Template [App] (Version: 0.3)
+    GreyOS - Template [App] (Version: 0.4)
 
     File name: template_app.js
     Description: This file contains the Template App - Template application.
@@ -18,6 +18,8 @@ function template_app()
     function template_app_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
     {
         this.id = null; // Always have an "id" option to store the app name
+
+        // Your code...
 
         function test_object_model()
         {
@@ -59,6 +61,7 @@ function template_app()
         this.gui_init = function() // Always use a "gui_init" method
         {
             template_app_bee_id = template_app_bee.settings.general.id(); // It is good to reference the app ID this way
+            //template_app_bee_id = config.id // Or reference the app ID this way
 
             infinity.setup(template_app_bee_id + '_data'); // Always use this element to setup the progress indicator
             infinity.begin(); // Show the progress indicator
@@ -161,7 +164,7 @@ function template_app()
 
         template_app_bee = dev_box.get('bee'); // Get a "bee" application model from the development toolbox
 
-        config.id = 'template_app'; // Always set an app name
+        config.id = 'template_app_' + random.generate(); // Always set an app name combined with pythia
 
         nature.theme([config.id]); // Use the corresponding theme settings (See "nature" extension folder for themes)
         nature.apply('new'); // Apply the theme
@@ -249,9 +252,10 @@ function template_app()
         infinity = null, // Always have a "infinity" internal variable
         // Your code here...
         template_app_bee = null, // Always have a "xxx_bee" internal variable
-        template_app_bee_id = null, // Always have a "xxx_bee_id" internal variable
+        template_app_bee_id = null, // Always have a "xxx_bee_id" internal variable for ease of use
         // Your code here...
         utils_sys = new vulcan(), // Always have a "utils_sys" internal variable that utilizes "vulcan"
+        random = new pythia(), // Always have a "random" internal variable that utilizes "pythia"
         ajax = new taurus(), // Always have a "ajax" internal variable that utilizes "taurus"
         // Your code here...
         config = new template_app_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model

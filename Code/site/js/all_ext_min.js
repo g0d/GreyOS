@@ -1121,7 +1121,8 @@ function msgbox()
  global_hide_callbacks = [],
  timer = null,
  helpers = new general_helpers(),
- utils = new vulcan();
+ utils = new vulcan(),
+ random = new pythia();
  this.types = new types_model();
 }
 function pythia()
@@ -4623,7 +4624,8 @@ function workbox()
  global_hide_callback = null,
  timer = null,
  helpers = new general_helpers(),
- utils = new vulcan();
+ utils = new vulcan(),
+ random = new pythia();
 }
 function ultron(anonymous_function)
 {
@@ -4836,7 +4838,7 @@ function linux_mode()
  }
  this.init = function()
  {
- if (navigator.platform.indexOf('Linux') > -1)
+ if (navigator.userAgent.indexOf('Linux') > -1)
  {
  utils_int.apply_css_fix();
  return true;
@@ -7274,8 +7276,8 @@ function forest()
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),
- gfx = new fx(),
  random = new pythia(),
+ gfx = new fx(),
  key_control = new key_manager(),
  trace_keys = new trace_keys_model(),
  coords = new mouse_coords_model(),
@@ -8750,8 +8752,8 @@ function hive()
  max_stack_width = 0,
  last_mouse_button_clicked = 0,
  utils_sys = new vulcan(),
- gfx = new fx(),
  random = new pythia(),
+ gfx = new fx(),
  coords = new mouse_coords_model(),
  stack_trace = new stack_trace_model(),
  honeycomb_views = new honeycomb_view_model(),
@@ -9242,6 +9244,7 @@ function krator()
  nature = null,
  krator_bee = null,
  utils_sys = new vulcan(),
+ random = new pythia(),
  key_control = new key_manager(),
  config = new config_model(),
  utils_int = new utilities();
@@ -9730,8 +9733,8 @@ function dock()
  nature = null,
  last_button_clicked = 0,
  utils_sys = new vulcan(),
- ajax = new taurus(),
  random = new pythia(),
+ ajax = new taurus(),
  config = new config_model(),
  utils_int = new utilities();
  this.settings = new settings();
@@ -10218,7 +10221,7 @@ function eagle()
  var __key_code = key_control.get();
  if (trace_keys.modifier === __key_code)
  {
- var __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+ var __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
  __eagle_apps.scrollTo(0, 1);
  me.hide_eagle();
  trace_keys.modifier_set = false;
@@ -10233,7 +10236,7 @@ function eagle()
  __container_object = utils_sys.objects.by_id(self.settings.container());
  __eagle_interface.id = eagle_id;
  __eagle_interface.className = 'eagle';
- __eagle_interface.innerHTML = '<div id="eagle_apps"><br><br>No running apps...</div></div>';
+ __eagle_interface.innerHTML = '<div id="' + eagle_id + '_apps" class="eagle_apps"><br><br>No running apps...</div></div>';
  __container_object.appendChild(__eagle_interface);
  return true;
  };
@@ -10258,7 +10261,7 @@ function eagle()
  __eagle_apps = null,
  __this_picked_app = null,
  __this_app_title = null;
- __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+ __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
  __running_apps_num = __running_apps.length;
  if (__running_apps_num == 0)
  {
@@ -10301,7 +10304,7 @@ function eagle()
  __running_apps_num = __running_apps.length;
  if (__running_apps_num == 0)
  return false;
- __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+ __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
  if (picked_window > 0)
  {
  __previous_picked_win = __eagle_apps.childNodes[picked_window - 1];
@@ -10465,8 +10468,8 @@ function eagle()
  owl = null,
  nature = null,
  utils_sys = new vulcan(),
- key_control = new key_manager(),
  random = new pythia(),
+ key_control = new key_manager(),
  trace_keys = new trace_keys_model(),
  utils_int = new utilities();
  this.status = new status();
@@ -10791,7 +10794,7 @@ function meta_script()
  {
  return teal_fs;
  };
- this.gaming_contollers = function()
+ this.gaming_controllers = function()
  {
  return xgc;
  };
@@ -10799,11 +10802,15 @@ function meta_script()
  {
  return utils_sys;
  };
- this.ajax = function()
+ this.random = function()
+ {
+ return random;
+ };
+ this.net = function()
  {
  return ajax;
  };
- this.ajax_factory = function(ajax_data, success_cb, failure_cb, default_cb)
+ this.remote_comm = function(ajax_data, success_cb, failure_cb, default_cb)
  {
  return ajax_factory(ajax_data, success_cb, failure_cb, default_cb);
  };
@@ -11809,6 +11816,7 @@ function meta_script()
  teal_fs = null,
  infinity = null,
  utils_sys = new vulcan(),
+ random = new pythia(),
  msg_win = new msgbox(),
  precise_timer = new stopwatch(),
  config_parser = new jap(),
@@ -13989,6 +13997,7 @@ function scrollbar()
  matrix = null,
  morpheus = null,
  utils_sys = new vulcan(),
+ random = new pythia(),
  config = new config_model(),
  events = new events_manager(),
  utils = new utilities();
@@ -18501,6 +18510,7 @@ function coyote()
  hb_manager = null,
  init_url = 'https://www.bing.com/?setlang=en&cc=gb',
  utils_sys = new vulcan(),
+ random = new pythia(),
  ping_timer = new stopwatch(),
  config = new config_model(),
  utils_int = new utilities();
@@ -18951,7 +18961,7 @@ function cloud_edit()
  os_name = xenon.load('os_name');
  cloud_edit_bee = dev_box.get('bee');
  config.id = 'cloud_edit';
- config.content = `// Welcome to Cloud Edit!\n// Please load the test template from \
+ config.content = `// Welcome to Cloud Edit!\n// Please load the test template from\
  https://greyos.gr/framework/extensions/js/core/cloud_edit/my_ms_program.js\n`;
  nature.theme([config.id]);
  nature.apply('new');
@@ -19027,6 +19037,7 @@ function cloud_edit()
  ce_mc = new ce_meta_caller(),
  utils_int = new utilities(),
  utils_sys = new vulcan(),
+ random = new pythia(),
  key_control = new key_manager(),
  ajax = new taurus();
 }
@@ -19201,6 +19212,7 @@ function radio_dude()
  selected_stream = null,
  radio_dude_bee = null,
  utils_sys = new vulcan(),
+ random = new pythia(),
  config = new config_model(),
  utils_int = new utilities();
 }

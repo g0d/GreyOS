@@ -185,7 +185,7 @@ function scrollbar()
     
     function status()
     {
-
+        // TO DO:...
     }
 
     function side()
@@ -279,7 +279,7 @@ function scrollbar()
         if (vulcan.validation.alpha.is_symbol(container_id))
             return false;
 
-        // TODO
+        // TO DO:...
 
         return true;
     };
@@ -321,6 +321,7 @@ function scrollbar()
         matrix = null,
         morpheus = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         config = new config_model(),
         events = new events_manager(),
         utils = new utilities();

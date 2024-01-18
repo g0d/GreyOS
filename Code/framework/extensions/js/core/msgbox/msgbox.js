@@ -1,7 +1,7 @@
 /*
     MsgBox (Message Window)
 
-    File name: msgbox.js (Version: 2.5)
+    File name: msgbox.js (Version: 2.6)
     Description: This file contains the MsgBox extension.
     Dependencies: Vulcan.
 
@@ -318,7 +318,8 @@ function msgbox()
         global_hide_callbacks = [],
         timer = null,
         helpers = new general_helpers(),
-        utils = new vulcan();
+        utils = new vulcan(),
+        random = new pythia();
 
     this.types = new types_model();
 }

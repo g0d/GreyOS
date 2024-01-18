@@ -190,6 +190,7 @@ function i_webgl_preview()
         infinity = null,
         i_webgl_preview_bee = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         config = new config_model(),
         utils_int = new utilities();
 }

@@ -454,6 +454,7 @@ function krator()
         nature = null,
         krator_bee = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         key_control = new key_manager(),
         config = new config_model(),
         utils_int = new utilities();

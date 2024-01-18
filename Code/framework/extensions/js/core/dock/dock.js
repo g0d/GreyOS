@@ -389,8 +389,8 @@ function dock()
         nature = null,
         last_button_clicked = 0,
         utils_sys = new vulcan(),
-        ajax = new taurus(),
         random = new pythia(),
+        ajax = new taurus(),
         config = new config_model(),
         utils_int = new utilities();
 

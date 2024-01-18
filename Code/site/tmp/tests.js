@@ -111,8 +111,12 @@ navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
 navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
 
 // HID API - https://developer.mozilla.org/en-US/docs/Web/API/HID
+// Keyboard API - https://developer.mozilla.org/en-US/docs/Web/API/Keyboard
+// USB API - https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API
 // Bluetooth API - https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API (Bismuth)
+// Serial API - https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API
 // Battery API - https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API (Volta)
+// GPU API - https://developer.mozilla.org/en-US/docs/Web/API/Navigator/gpu [navigator.gpu]
 // Barcode - https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API (we will see...)
 // Notifications API - https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API (Iris)
 // Clipboard API - https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API (Consus)

@@ -186,6 +186,7 @@ function i_ganttio()
         infinity = null,
         i_ganttio_bee = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         config = new config_model(),
         utils_int = new utilities();
 }

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Eagle (Version: 2.1)
+    GreyOS - Eagle (Version: 2.2)
 
     File name: eagle.js
     Description: This file contains the Eagle - "Alt-Tab"-like keys facility module.
@@ -61,7 +61,7 @@ function eagle()
 
             if (trace_keys.modifier === __key_code)
             {
-                var __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+                var __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
 
                 __eagle_apps.scrollTo(0, 1);
 
@@ -83,7 +83,7 @@ function eagle()
 
             __eagle_interface.id = eagle_id;
             __eagle_interface.className = 'eagle';
-            __eagle_interface.innerHTML = '<div id="eagle_apps"><br><br>No running apps...</div></div>';
+            __eagle_interface.innerHTML = '<div id="' + eagle_id + '_apps" class="eagle_apps"><br><br>No running apps...</div></div>';
 
             __container_object.appendChild(__eagle_interface);
 
@@ -120,7 +120,7 @@ function eagle()
                 __this_picked_app = null,
                 __this_app_title = null;
 
-            __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+            __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
 
             __running_apps_num = __running_apps.length;
 
@@ -182,7 +182,7 @@ function eagle()
             if (__running_apps_num == 0)
                 return false;
 
-            __eagle_apps = utils_sys.objects.by_id('eagle_apps');
+            __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
 
             if (picked_window > 0)
             {
@@ -402,8 +402,8 @@ function eagle()
         owl = null,
         nature = null,
         utils_sys = new vulcan(),
-        key_control = new key_manager(),
         random = new pythia(),
+        key_control = new key_manager(),
         trace_keys = new trace_keys_model(),
         utils_int = new utilities();
 

@@ -450,8 +450,8 @@ function cloud_edit()
         cloud_edit_bee = dev_box.get('bee');
 
         config.id = 'cloud_edit';
-        config.content = `// Welcome to Cloud Edit!\n// Please load the test template from \
-                          https://greyos.gr/framework/extensions/js/core/cloud_edit/my_ms_program.js\n`;
+        config.content = `// Welcome to Cloud Edit!\n// Please load the test template from\
+                             https://greyos.gr/framework/extensions/js/core/cloud_edit/my_ms_program.js\n`;
 
         nature.theme([config.id]);
         nature.apply('new');
@@ -541,6 +541,7 @@ function cloud_edit()
         ce_mc = new ce_meta_caller(),
         utils_int = new utilities(),
         utils_sys = new vulcan(),
+        random = new pythia(),
         key_control = new key_manager(),
         ajax = new taurus();
 }

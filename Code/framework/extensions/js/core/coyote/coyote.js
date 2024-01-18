@@ -635,6 +635,7 @@ function coyote()
         hb_manager = null,
         init_url = 'https://www.bing.com/?setlang=en&cc=gb',
         utils_sys = new vulcan(),
+        random = new pythia(),
         ping_timer = new stopwatch(),
         config = new config_model(),
         utils_int = new utilities();

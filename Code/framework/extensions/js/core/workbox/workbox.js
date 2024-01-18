@@ -1,7 +1,7 @@
 /*
     WorkBox (Popup window)
 
-    File name: workbox.js (Version: 1.4)
+    File name: workbox.js (Version: 1.5)
     Description: This file contains the WorkBox extension.
     Dependencies: Vulcan and Content Fetcher.
 
@@ -191,5 +191,6 @@ function workbox()
         global_hide_callback = null,
         timer = null,
         helpers = new general_helpers(),
-        utils = new vulcan();
+        utils = new vulcan(),
+        random = new pythia();
 }

@@ -194,6 +194,7 @@ function i_mariojs()
         infinity = null,
         i_mariojs_bee = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         config = new config_model(),
         utils_int = new utilities();
 }

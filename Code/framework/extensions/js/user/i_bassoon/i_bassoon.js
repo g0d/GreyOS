@@ -187,6 +187,7 @@ function i_bassoon()
         infinity = null,
         i_bassoon_bee = null,
         utils_sys = new vulcan(),
+        random = new pythia(),
         config = new config_model(),
         utils_int = new utilities();
 }

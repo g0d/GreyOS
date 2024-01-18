@@ -1,5 +1,5 @@
 /*
-    GreyOS - Template [Service] (Version: 0.3)
+    GreyOS - Template [Service] (Version: 0.4)
 
     File name: template_service.js
     Description: This file contains the Template Service - Template service module.
@@ -17,6 +17,10 @@ function template_service()
 
     function template_service_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
     {
+        this.id = null; // Always have an "id" option to store the service name
+
+        // Your code...
+
         function test_object_model()
         {
             // Your code...
@@ -78,7 +82,7 @@ function template_service()
         if (!is_setup)
             return false;
 
-        return template_svc_bat.config();
+        return config;
     };
 
     this.on = function(event_name, event_handler) // Always have a public "on" method available with this code in the body
@@ -180,7 +184,7 @@ function template_service()
         utils_sys = new vulcan(), // Always have a "utils_sys" internal variable that utilizes "vulcan"
         ajax = new taurus(), // Always have a "ajax" internal variable that utilizes "taurus"
         // Your code here...
-        template_service_config = new template_service_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model
+        config = new template_service_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model
         // Your code here...
         utils_int = new utilities(); // Always have a "utils_int" internal variable that utilizes "utilities" model
 }

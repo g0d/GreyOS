@@ -24,7 +24,7 @@ function linux_mode()
 
     this.init = function()
     {
-        if (navigator.platform.indexOf('Linux') > -1)
+        if (navigator.userAgent.indexOf('Linux') > -1)
         {
             utils_int.apply_css_fix();
 
