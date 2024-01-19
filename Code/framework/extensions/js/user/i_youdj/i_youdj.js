@@ -186,7 +186,6 @@ function i_youdj()
         nature = null,
         i_youdj_bee = null,
         utils_sys = new vulcan(),
-        random = new pythia(),
         config = new config_model(),
         utils_int = new utilities();
 }

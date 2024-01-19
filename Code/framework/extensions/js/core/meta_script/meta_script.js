@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Script (Version: 1.7)
+    GreyOS - Meta-Script (Version: 1.8)
 
     File name: meta_script.js
     Description: This file contains the Meta-Script - Meta scripting language interface (wrapper) development module.

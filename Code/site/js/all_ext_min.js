@@ -18400,7 +18400,7 @@ function coyote()
  nature.theme(['coyote']);
  nature.apply('new');
  infinity.init();
- coyote_bee.init(config.id);
+ coyote_bee.init('coyote');
  coyote_bee.settings.data.window.labels.title('Coyote');
  coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
  coyote_bee.settings.data.casement.labels.title('Tools');
@@ -18729,7 +18729,7 @@ function cloud_edit()
  var __msg_win = new msgbox();
  function save_program()
  {
- user_prog_name = encodeURIComponent(utils_sys.objects.by_id('input_prog_name').value);
+ user_prog_name = encodeURIComponent(utils_sys.objects.by_id(config.id + '_input_prog_name').value);
  __prog_source = encodeURIComponent(config.ce.editor.getValue());
  if (user_prog_name.length === 0)
  {
@@ -18792,10 +18792,10 @@ function cloud_edit()
  __msg_win = new msgbox();
  __msg_win.init('desktop');
  __msg_win.show(os_name, 'Please save your program before deploying it.<br><br>\
- <input id="input_prog_name" class="ce_prog_name_input" value="' + decodeURIComponent(user_prog_name) + '"\
+ <input id="'+ config.id + '_input_prog_name" class="ce_prog_name_input" value="' + decodeURIComponent(user_prog_name) + '"\
  maxlength="40" placeholder="Enter program name...">',
  __msg_win.types.OK_CANCEL, [() => { save_program(); }]);
- __input_prog_name_object = utils_sys.objects.by_id('input_prog_name');
+ __input_prog_name_object = utils_sys.objects.by_id(config.id + '_input_prog_name');
  __input_prog_name_object.focus();
  __handler = function(event)
  {
@@ -18939,18 +18939,19 @@ function cloud_edit()
  is_init = true;
  os_name = xenon.load('os_name');
  cloud_edit_bee = dev_box.get('bee');
- config.id = 'cloud_edit';
+ config.id = 'cloud_edit_' + random.generate();
  config.content = `// Welcome to Cloud Edit!\n// Please load the test template from\
  https://greyos.gr/framework/extensions/js/core/cloud_edit/my_ms_program.js\n`;
- nature.theme([config.id]);
+ nature.theme(['cloud_edit']);
  nature.apply('new');
  infinity.init();
- cloud_edit_bee.init(config.id);
+ cloud_edit_bee.init('cloud_edit');
  cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
  cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
  cloud_edit_bee.settings.data.window.content(config.content);
  cloud_edit_bee.settings.data.casement.labels.title('Side Panel :: Utilities');
  cloud_edit_bee.settings.data.casement.labels.status('Ready');
+ cloud_edit_bee.settings.general.resizable(true);
  cloud_edit_bee.settings.actions.can_edit_title(false);
  cloud_edit_bee.settings.general.allowed_instances(4);
  cloud_edit_bee.settings.general.casement_width(40);
@@ -18958,6 +18959,8 @@ function cloud_edit()
  cloud_edit_bee.gui.position.top(80);
  cloud_edit_bee.gui.size.width(800);
  cloud_edit_bee.gui.size.height(530);
+ cloud_edit_bee.gui.size.min.width(800);
+ cloud_edit_bee.gui.size.min.height(530);
  cloud_edit_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
  cloud_edit_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
  cloud_edit_bee.on('open', function() { cloud_edit_bee.gui.fx.fade.into(); });
@@ -18968,6 +18971,11 @@ function cloud_edit()
  cloud_edit_bee.gui.fx.opacity.apply();
  });
  cloud_edit_bee.on('dragged', function() { cloud_edit_bee.gui.fx.opacity.reset(); });
+ cloud_edit_bee.on('resized', function()
+ {
+ config.ce.editor.resize();
+ config.ce.editor.renderer.updateFull();
+ });
  cloud_edit_bee.on('casement_deployed', function() { config.ce.extra_button.value = '<<'; });
  cloud_edit_bee.on('casement_retracted', function() { config.ce.extra_button.value = '>>'; });
  cloud_edit_bee.on('close', function()
@@ -19145,7 +19153,7 @@ function radio_dude()
  nature.apply('new');
  infinity.init();
  radio_dude_bee = dev_box.get('bee');
- radio_dude_bee.init(config.id);
+ radio_dude_bee.init('radio_dude');
  radio_dude_bee.settings.data.window.labels.title('Radio Dude');
  radio_dude_bee.settings.data.window.labels.status_bar('Music babe... [ M U S I C ]');
  radio_dude_bee.settings.data.casement.labels.title('Weather');

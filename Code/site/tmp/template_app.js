@@ -172,7 +172,7 @@ function template_app()
         infinity.init(); // It is a good practice to initialize the "infinity" service to show a loading progress indicator
 
         // Declare bee's settings
-        template_app_bee.init(config.id);
+        template_app_bee.init('template_app');
         template_app_bee.settings.data.window.labels.title('Template App');
         template_app_bee.settings.data.window.labels.status_bar('Ready');
         template_app_bee.settings.data.casement.labels.title('Tools');
