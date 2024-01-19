@@ -1,12 +1,12 @@
 /*
-    WorkBox (Popup window)
+    WorkBox (Content Window)
 
-    File name: workbox.js (Version: 1.5)
+    File name: workbox.js (Version: 1.6)
     Description: This file contains the WorkBox extension.
     Dependencies: Vulcan and Content Fetcher.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2017 - 2022
+    Copyright (C) 2017 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -35,7 +35,7 @@ function workbox()
 
             workbox_object = document.createElement('div');
 
-            workbox_object.id = 'workbox';
+            workbox_object.id = 'workbox_' + random.generate();
             workbox_object.className = 'wb_screen';
 
             var __win_title_id = workbox_object.id + '_title',

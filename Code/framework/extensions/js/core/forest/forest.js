@@ -1,5 +1,5 @@
 /*
-    GreyOS - Forest (Version: 2.2)
+    GreyOS - Forest (Version: 2.3)
 
     File name: forest.js
     Description: This file contains the Forest - Desktops manager module.
@@ -316,11 +316,11 @@ function forest()
             __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 87) + 'px;');
 
             __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' + 
-                                         '<div id="forest_top_list" class="top_list">' + 
+                                         '<div id="' + forest_id + '_forest_top_list" class="top_list">' + 
                                          '  <a href="#" class="create_cat">' + 
                                                       'Create new desktop</a>' + 
                                          '</div>' + 
-                                         '<div id="forest_cat_list" class="cat_list" style="height: ' + 
+                                         '<div id="' + forest_id + '_forest_cat_list" class="cat_list" style="height: ' + 
                                          (window.innerHeight - 260) + 'px;">' + 
                                          '  <div class="cat social">' + 
                                          '      <a href="#" style="background-color: #5C5C5C;" title="Sample desktop!">' + 
@@ -363,26 +363,6 @@ function forest()
                                          '  <div class="cat apps">' + 
                                          '      <a href="#" title="Sample desktop!">Healthcare' + 
                                          '          <span>1</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample desktop!">3D Modelling Tools' + 
-                                         '          <span>5</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat games">' + 
-                                         '      <a href="#" title="Sample desktop!">Games' + 
-                                         '          <span>12</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample desktop!">Sound Engineering' + 
-                                         '          <span>6</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample desktop!">Travel & Holidays' + 
-                                         '          <span>0</span>' + 
                                          '      </a>' + 
                                          '  </div>' + 
                                          '</div>' + 

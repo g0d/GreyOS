@@ -166,7 +166,7 @@ function template_app()
 
         config.id = 'template_app_' + random.generate(); // Always set an app name combined with pythia
 
-        nature.theme([config.id]); // Use the corresponding theme settings (See "nature" extension folder for themes)
+        nature.theme(['template_app']); // Use the corresponding theme settings (See "nature" extension folder for themes)
         nature.apply('new'); // Apply the theme
 
         infinity.init(); // It is a good practice to initialize the "infinity" service to show a loading progress indicator

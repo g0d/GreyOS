@@ -5,16 +5,16 @@
     Description: This file contains the WorkBox - CSS.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2017 - 2022
+    Copyright (C) 2017 - 2024
     Open Software License (OSL 3.0)
 */
 
-#workbox
+.workbox
 {
     visibility: hidden;
 }
 
-#workbox_title
+.workbox_title
 {
     font-weight: bold;
     text-align: center;
@@ -28,7 +28,7 @@
     padding-bottom: 6px;
 }
 
-#workbox_content
+.workbox_content
 {
     text-align: justify;
     background-color: #525154;
@@ -38,7 +38,7 @@
     overflow-y: hidden;
 }
 
-#workbox_button
+.workbox_button
 {
     color: #d8d8d8;
     background-color: #3e3737;
@@ -54,7 +54,7 @@
     transition: background .25s ease-in-out;
 }
 
-#workbox_button:hover
+.workbox_button:hover
 {
     background-color: #424040;
     -moz-transition: background .25s ease-in-out;

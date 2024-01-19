@@ -318,8 +318,7 @@ function msgbox()
         global_hide_callbacks = [],
         timer = null,
         helpers = new general_helpers(),
-        utils = new vulcan(),
-        random = new pythia();
+        utils = new vulcan();
 
     this.types = new types_model();
 }

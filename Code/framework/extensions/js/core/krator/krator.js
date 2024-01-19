@@ -1,11 +1,11 @@
 /*
-    GreyOS - Krator :: Login & registration form (Version: 1.8)
+    GreyOS - Krator :: Login & registration form (Version: 1.9)
 
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2023
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -49,25 +49,25 @@ function krator()
 
         this.load_forms = function()
         {
-            var __content = '<div id="login_control" class="krator_controls">\
+            var __content = '<div id="' + config.id + '_login_control" class="krator_controls">\
                                 <div class="controls">\
                                     <center>User Login</center>\
                                     <div class="controls">\
                                         <br>\
                                         <div class="control_item">\
-                                            <input id="login_username_text" class="text" placeholder="Please enter your e-mail...">\
+                                            <input id="' + config.id + '_login_username_text" class="text" placeholder="Please enter your e-mail...">\
                                         </div>\
                                         <div class="control_item">\
-                                            <input id="login_password_text" class="text" type="password" placeholder="Please enter your password...">\
+                                            <input id="' + config.id + '_login_password_text" class="text" type="password" placeholder="Please enter your password...">\
                                         </div>\
                                         <br>\
                                         <div class="control_item">\
-                                            <button id="login_button" class="button" type="button">\
+                                            <button id="' + config.id + '_login_button" class="button" type="button">\
                                                 Login\
                                             </button>\
                                         </div>\
                                         <div class="control_item">\
-                                            <div id="register_new_account">No account? Register!</div>\
+                                            <div id="' + config.id + '_register_new_account" class="register_new_account">No account? Register!</div>\
                                         </div>\
                                     </div>\
                                 </div>\
@@ -75,23 +75,23 @@ function krator()
 
             krator_bee.settings.data.window.content(__content);
 
-            __content = '<div id="registration_control" class="krator_controls">\
+            __content = '<div id="' + config.id + '_registration_control" class="registration_control krator_controls">\
                             <div class="content">\
                                 <center>Register Account</center>\
                                 <div class="controls">\
                                     <br>\
                                     <div class="control_item">\
-                                        <input id="register_username_text" class="text" placeholder="Please enter an e-mail...">\
+                                        <input id="' + config.id + '_register_username_text" class="text" placeholder="Please enter an e-mail...">\
                                     </div>\
                                     <div class="control_item">\
-                                        <input id="register_password_text" class="text" type="password" placeholder="Please enter a password...">\
+                                        <input id="' + config.id + '_register_password_text" class="text" type="password" placeholder="Please enter a password...">\
                                     </div>\
                                     <div class="control_item">\
-                                        <input id="register_password_confirm_text" class="text" type="password" placeholder="Please confirm password...">\
+                                        <input id="' + config.id + '_register_password_confirm_text" class="text" type="password" placeholder="Please confirm password...">\
                                     </div>\
                                     <br>\
                                     <div class="control_item">\
-                                        <button id="register_button" class="button" type="button">\
+                                        <button id="' + config.id + '_register_button" class="button" type="button">\
                                             Register\
                                         </button>\
                                     </div>\
@@ -104,14 +104,14 @@ function krator()
 
         this.attach_events = function()
         {
-            var __login_username = utils_sys.objects.by_id('login_username_text'),
-                __login_password = utils_sys.objects.by_id('login_password_text'),
-                __login_button = utils_sys.objects.by_id('login_button'),
-                __register_new_account =  utils_sys.objects.by_id('register_new_account'),
-                __register_username = utils_sys.objects.by_id('register_username_text'),
-                __register_password = utils_sys.objects.by_id('register_password_text'),
-                __register_password_confirm = utils_sys.objects.by_id('register_password_confirm_text'),
-                __register_button = utils_sys.objects.by_id('register_button'),
+            var __login_username = utils_sys.objects.by_id(config.id + '_login_username_text'),
+                __login_password = utils_sys.objects.by_id(config.id + '_login_password_text'),
+                __login_button = utils_sys.objects.by_id(config.id + '_login_button'),
+                __register_new_account =  utils_sys.objects.by_id(config.id + '_register_new_account'),
+                __register_username = utils_sys.objects.by_id(config.id + '_register_username_text'),
+                __register_password = utils_sys.objects.by_id(config.id + '_register_password_text'),
+                __register_password_confirm = utils_sys.objects.by_id(config.id + '_register_password_confirm_text'),
+                __register_button = utils_sys.objects.by_id(config.id + '_register_button'),
                 __handler = null,
                 __args_array = null;
 
@@ -390,9 +390,9 @@ function krator()
 
         krator_bee = dev_box.get('bee');
 
-        config.id = 'krator';
+        config.id = 'krator_' + random.generate();
 
-        nature.theme([config.id]);
+        nature.theme(['krator']);
         nature.apply('new');
 
         // Declare bee's settings

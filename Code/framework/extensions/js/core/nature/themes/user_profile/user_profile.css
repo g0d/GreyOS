@@ -5,7 +5,7 @@
     Description: This file contains the User Profile theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2022
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -36,7 +36,7 @@
     width: 0;
 }
 
-#notifications_num
+.notifications_num
 {
     cursor: pointer;
     background-color: #d54590;
@@ -50,12 +50,12 @@
     padding: 5px;
 }
 
-#profile_access
+.profile_access
 {
     float: left;
 }
 
-#small_avatar
+.small_avatar
 {
     float: left;
     clear: left;
@@ -66,7 +66,7 @@
     margin-top: 2px;
 }
 
-#my
+.my
 {
     float: left;
     clear: right;
@@ -77,25 +77,25 @@
     margin-top: 5px;
 }
 
-#my:hover
+.my:hover
 {
-    color: #55ffe7;
+    color: #55ffe7 !important;
 }
 
-#profile_left_side
+.profile_left_side
 {
     clear: left;
     float: left;
     height: 100%;
 }
 
-#profile_right_side
+.profile_right_side
 {
     clear: right;
     float: left;
 }
 
-#profile_info
+.profile_info
 {
     clear: left;
     float: left;
@@ -104,7 +104,7 @@
     padding: 25px;
 }
 
-#big_avatar
+.big_avatar
 {
     float: left;
     clear: left;
@@ -116,7 +116,7 @@
     margin-top: -2px;
 }
 
-#user_data
+.user_data
 {
     clear: right;
     float: left;
@@ -124,7 +124,7 @@
     margin-left: 10px;
 }
 
-#user_profile_name
+.user_profile_name
 {
     font-size: 14px;
     font-weight: bold;
@@ -136,7 +136,7 @@
     margin-bottom: 4px;
 }
 
-#user_email
+.user_email
 {
     color: #777777;
     font-size: 14px;
@@ -148,7 +148,7 @@
     margin-bottom: 7px;
 }
 
-#user_account
+.user_account
 {
     float: left;
     clear: left;
@@ -158,12 +158,12 @@
     margin-right: 5px;
 }
 
-#user_account:hover
+.user_account:hover
 {
     color: #5C5C5C;
 }
 
-#user_settings
+.user_settings
 {
     float: left;
     clear: right;
@@ -173,20 +173,20 @@
     margin-left: 5px;
 }
 
-#user_settings:hover
+.user_settings:hover
 {
     color: #5C5C5C;
 }
 
-#separator
+.profile_separator
 {
     float: left;
     clear: none;
-    color: #9C95A1;
+    color: #9b9b9bd1;
     margin-top: -2px;
 }
 
-#user_reboot
+.user_reboot
 {
     float: left;
     clear: both;
@@ -201,19 +201,19 @@
     padding: 6px 12px;
 }
 
-#user_reboot:hover
+.user_reboot:hover
 {
     background-color: #4AD7E5;
 }
 
-#notifications
+.notifications
 {
     clear: right;
     float: left;
     width: 210px;
 }
 
-#total_notifications
+.total_notifications
 {
     float: left;
     clear: both;
@@ -223,7 +223,7 @@
     padding: 4px;
 }
 
-#eye
+.eye
 {
     float: left;
     clear: left;
@@ -234,7 +234,7 @@
     margin-right: 10px;
 }
 
-#notifications_list
+.notifications_list
 {
     float: left;
     clear: both;
@@ -244,21 +244,21 @@
     overflow-y: scroll;
 }
 
-#messages_icon
+.messages_icon
 {
     background-image: url('pix/icons/profile/messages.png');
     width: 20px;
     height: 20px;
 }
 
-#alerts_icon
+.alerts_icon
 {
     background-image: url('pix/icons/profile/alerts.png');
     width: 20px;
     height: 20px;
 }
 
-#calendar_icon
+.calendar_icon
 {
     background-image: url('pix/icons/profile/calendar.png');
     width: 20px;
@@ -319,7 +319,7 @@
     margin-left: 5px;
 }
 
-#logout
+.logout
 {
     clear: left;
     float: right;
@@ -327,7 +327,7 @@
     margin-top: 4px;
 }
 
-#logout_icon
+.logout_icon
 {
     float: left;
     cursor: pointer;

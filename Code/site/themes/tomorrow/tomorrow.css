@@ -5,7 +5,7 @@
     Description: This file contains the GreyOS - Tomorrow CSS theme.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2023
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -121,12 +121,12 @@ option
     margin-top: 18px;
 }
 
-#notifications_num
+.notifications_num
 {
     background-color: #d54590a8 !important;
 }
 
-#my:hover
+.my:hover
 {
     color: #80caff !important;
 }
@@ -143,48 +143,48 @@ option
     border-color: #577b844a transparent !important;
 }
 
-#user_profile_name
+.user_profile_name
 {
     color: #ffffffd1 !important;
 }
 
-#user_email
+.user_email
 {
     color: #9b9b9bd1 !important;
 }
 
-#user_account, #user_settings
+.user_account, .user_settings
 {
     color: #90c486 !important;
 }
 
-#user_account:hover, #user_settings:hover
+.user_account:hover, .user_settings:hover
 {
     color: #a7e29b !important;
 }
 
-#separator
+.separator
 {
     color: #9b9b9bd1 !important;
 }
 
-#user_reboot
+.user_reboot
 {
     background-color: #ae373780 !important;
     margin-top: 5px !important;
 }
 
-#user_reboot:hover
+.user_reboot:hover
 {
     background-color: #ca424280 !important;
 }
 
-#total_notifications
+.total_notifications
 {
     border-bottom: none !important;
 }
 
-#notifications_list
+.notifications_list
 {
     height: 102px !important;
 }
@@ -207,7 +207,7 @@ option
     background: none repeat scroll 0 0 #43353ccc !important;
 }
 
-#logout_button
+.logout_button
 {
     border-radius: 6px;
     border: none;
@@ -217,7 +217,7 @@ option
     padding: 8px;
 }
 
-#logout_button:hover
+.logout_button:hover
 {
     color: #c58a8ad1 !important;
 }
@@ -508,7 +508,7 @@ option
 
 .widget_separator
 {
-    border-left: 1px solid #8d8d8db5 !important;
+    border-left: 1px solid #daeff34f !important;
 }
 
 .box_ctrl_bar
@@ -524,7 +524,7 @@ option
 
 .box_separator
 {
-    border-left: 1px solid #cfb5d3a1 !important;
+    border-left: 1px solid #9c88b55e !important;
 }
 
 .content

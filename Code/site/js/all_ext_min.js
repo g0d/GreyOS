@@ -1121,8 +1121,7 @@ function msgbox()
  global_hide_callbacks = [],
  timer = null,
  helpers = new general_helpers(),
- utils = new vulcan(),
- random = new pythia();
+ utils = new vulcan();
  this.types = new types_model();
 }
 function pythia()
@@ -4511,7 +4510,7 @@ function workbox()
  if (workbox_object !== null)
  __container.removeChild(workbox_object);
  workbox_object = document.createElement('div');
- workbox_object.id = 'workbox';
+ workbox_object.id = 'workbox_' + random.generate();
  workbox_object.className = 'wb_screen';
  var __win_title_id = workbox_object.id + '_title',
  __button_title_id = workbox_object.id + '_button';
@@ -6971,11 +6970,11 @@ function forest()
  __dynamic_object.setAttribute('class', 'forest');
  __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 87) + 'px;');
  __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' +
- '<div id="forest_top_list" class="top_list">' +
+ '<div id="' + forest_id + '_forest_top_list" class="top_list">' +
  ' <a href="#" class="create_cat">' +
  'Create new desktop</a>' +
  '</div>' +
- '<div id="forest_cat_list" class="cat_list" style="height: ' +
+ '<div id="' + forest_id + '_forest_cat_list" class="cat_list" style="height: ' +
  (window.innerHeight - 260) + 'px;">' +
  ' <div class="cat social">' +
  ' <a href="#" style="background-color: #5C5C5C;" title="Sample desktop!">' +
@@ -7018,26 +7017,6 @@ function forest()
  ' <div class="cat apps">' +
  ' <a href="#" title="Sample desktop!">Healthcare' +
  ' <span>1</span>' +
- ' </a>' +
- ' </div>' +
- ' <div class="cat apps">' +
- ' <a href="#" title="Sample desktop!">3D Modelling Tools' +
- ' <span>5</span>' +
- ' </a>' +
- ' </div>' +
- ' <div class="cat games">' +
- ' <a href="#" title="Sample desktop!">Games' +
- ' <span>12</span>' +
- ' </a>' +
- ' </div>' +
- ' <div class="cat apps">' +
- ' <a href="#" title="Sample desktop!">Sound Engineering' +
- ' <span>6</span>' +
- ' </a>' +
- ' </div>' +
- ' <div class="cat apps">' +
- ' <a href="#" title="Sample desktop!">Travel & Holidays' +
- ' <span>0</span>' +
  ' </a>' +
  ' </div>' +
  '</div>' +
@@ -8920,47 +8899,47 @@ function krator()
  };
  this.load_forms = function()
  {
- var __content = '<div id="login_control" class="krator_controls">\
+ var __content = '<div id="' + config.id + '_login_control" class="krator_controls">\
  <div class="controls">\
  <center>User Login</center>\
  <div class="controls">\
  <br>\
  <div class="control_item">\
- <input id="login_username_text" class="text" placeholder="Please enter your e-mail...">\
+ <input id="' + config.id + '_login_username_text" class="text" placeholder="Please enter your e-mail...">\
  </div>\
  <div class="control_item">\
- <input id="login_password_text" class="text" type="password" placeholder="Please enter your password...">\
+ <input id="' + config.id + '_login_password_text" class="text" type="password" placeholder="Please enter your password...">\
  </div>\
  <br>\
  <div class="control_item">\
- <button id="login_button" class="button" type="button">\
+ <button id="' + config.id + '_login_button" class="button" type="button">\
  Login\
  </button>\
  </div>\
  <div class="control_item">\
- <div id="register_new_account">No account? Register!</div>\
+ <div id="' + config.id + '_register_new_account" class="register_new_account">No account? Register!</div>\
  </div>\
  </div>\
  </div>\
  </div>';
  krator_bee.settings.data.window.content(__content);
- __content = '<div id="registration_control" class="krator_controls">\
+ __content = '<div id="' + config.id + '_registration_control" class="registration_control krator_controls">\
  <div class="content">\
  <center>Register Account</center>\
  <div class="controls">\
  <br>\
  <div class="control_item">\
- <input id="register_username_text" class="text" placeholder="Please enter an e-mail...">\
+ <input id="' + config.id + '_register_username_text" class="text" placeholder="Please enter an e-mail...">\
  </div>\
  <div class="control_item">\
- <input id="register_password_text" class="text" type="password" placeholder="Please enter a password...">\
+ <input id="' + config.id + '_register_password_text" class="text" type="password" placeholder="Please enter a password...">\
  </div>\
  <div class="control_item">\
- <input id="register_password_confirm_text" class="text" type="password" placeholder="Please confirm password...">\
+ <input id="' + config.id + '_register_password_confirm_text" class="text" type="password" placeholder="Please confirm password...">\
  </div>\
  <br>\
  <div class="control_item">\
- <button id="register_button" class="button" type="button">\
+ <button id="' + config.id + '_register_button" class="button" type="button">\
  Register\
  </button>\
  </div>\
@@ -8971,14 +8950,14 @@ function krator()
  };
  this.attach_events = function()
  {
- var __login_username = utils_sys.objects.by_id('login_username_text'),
- __login_password = utils_sys.objects.by_id('login_password_text'),
- __login_button = utils_sys.objects.by_id('login_button'),
- __register_new_account = utils_sys.objects.by_id('register_new_account'),
- __register_username = utils_sys.objects.by_id('register_username_text'),
- __register_password = utils_sys.objects.by_id('register_password_text'),
- __register_password_confirm = utils_sys.objects.by_id('register_password_confirm_text'),
- __register_button = utils_sys.objects.by_id('register_button'),
+ var __login_username = utils_sys.objects.by_id(config.id + '_login_username_text'),
+ __login_password = utils_sys.objects.by_id(config.id + '_login_password_text'),
+ __login_button = utils_sys.objects.by_id(config.id + '_login_button'),
+ __register_new_account = utils_sys.objects.by_id(config.id + '_register_new_account'),
+ __register_username = utils_sys.objects.by_id(config.id + '_register_username_text'),
+ __register_password = utils_sys.objects.by_id(config.id + '_register_password_text'),
+ __register_password_confirm = utils_sys.objects.by_id(config.id + '_register_password_confirm_text'),
+ __register_button = utils_sys.objects.by_id(config.id + '_register_button'),
  __handler = null,
  __args_array = null;
  __handler = function() { me.check_login_credentials(__login_username, __login_password, __login_button); };
@@ -9190,8 +9169,8 @@ function krator()
  is_init = true;
  os_name = xenon.load('os_name');
  krator_bee = dev_box.get('bee');
- config.id = 'krator';
- nature.theme([config.id]);
+ config.id = 'krator_' + random.generate();
+ nature.theme(['krator']);
  nature.apply('new');
  krator_bee.init(config.id);
  krator_bee.settings.data.window.labels.title('Login & Registration Form');
@@ -9794,8 +9773,8 @@ function user_profile()
  user_profile_data.email = __auth_details.email;
  user_profile_data.role = __auth_details.role;
  user_profile_data.wallpaper = __auth_details.ui.wallpaper;
- utils_sys.objects.by_id('user_profile_name').innerHTML = user_profile_data.full_name;
- utils_sys.objects.by_id('user_email').innerHTML = user_profile_data.email;
+ utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
+ utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
  if (user_profile_data.wallpaper === '')
  document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
  else
@@ -9843,56 +9822,56 @@ function user_profile()
  return false;
  __user_profile_div.style = 'width: 182px; margin-left: 25px;';
  __user_profile_div.innerHTML = '<div id="' + user_profile_id + '" title="Manage profile">\
- <div id="notifications_num">00</div>\
- <div id="profile_access">\
- <div id="small_avatar"></div>\
- <div id="my">My profile</div>\
+ <div id="' + user_profile_id + '_notifications_num" class="notifications_num">00</div>\
+ <div id="' + user_profile_id + '_profile_access" class="profile_access">\
+ <div id="' + user_profile_id + '_small_avatar" class="small_avatar"></div>\
+ <div id="' + user_profile_id + '_my" class="my">My profile</div>\
  </div>\
  </div>\
  <div id="' + user_profile_id + '_area" class="user_profile_area">\
- <div id="profile_left_side">\
- <div id="profile_info">\
- <div id="big_avatar"></div>\
- <div id="user_data">\
- <div id="user_profile_name"></div>\
- <div id="user_email"></div>\
- <div id="user_account">Account</div>\
- <div id="separator">|</div>\
- <div id="user_settings">Settings</div>\
- <div id="user_reboot">Reload Interface</div>\
+ <div id="' + user_profile_id + '_profile_left_side" class="profile_left_side">\
+ <div id="' + user_profile_id + '_profile_info" class="profile_info">\
+ <div id="' + user_profile_id + '_big_avatar" class="big_avatar"></div>\
+ <div id="' + user_profile_id + '_user_data" class="user_data">\
+ <div id="' + user_profile_id + '_user_profile_name" class="user_profile_name"></div>\
+ <div id="' + user_profile_id + '_user_email" class="user_email"></div>\
+ <div id="' + user_profile_id + '_user_account" class="user_account">Account</div>\
+ <div id="' + user_profile_id + '_separator" class="profile_separator">|</div>\
+ <div id="' + user_profile_id + '_user_settings" class="user_settings">Settings</div>\
+ <div id="' + user_profile_id + '_user_reboot" class="user_reboot">Reload Interface</div>\
  </div>\
  </div>\
  </div>\
- <div id="profile_right_side">\
- <div id="notifications">\
- <div id="total_notifications"></div>\
- <div id="notifications_list">\
- <div id="messages" class="notification_list_item">\
- <div class="item_details">\
- <div id="messages_icon" class="list_item_icon"></div>\
- <div id="messages_text" class="list_item_text">Messages</div>\
+ <div id="' + user_profile_id + '_profile_right_side" class="profile_right_side">\
+ <div id="' + user_profile_id + '_notifications" class="notifications">\
+ <div id="' + user_profile_id + '_total_notifications" class="total_notifications"></div>\
+ <div id="' + user_profile_id + '_notifications_list" class="notifications_list">\
+ <div id="' + user_profile_id + '_messages" class="notification_list_item">\
+ <div class="' + user_profile_id + '_item_details" class="items_details">\
+ <div id="' + user_profile_id + '_messages_icon" class="messages_icon list_item_icon"></div>\
+ <div id="' + user_profile_id + '_messages_text" class="list_item_text">Messages</div>\
  </div>\
- <div class="list_item_notifications">00</div>\
+ <div id="' + user_profile_id + '_messages_notifications" class="list_item_notifications">00</div>\
  </div>\
- <div id="alerts" class="notification_list_item">\
- <div class="item_details">\
- <div id="alerts_icon" class="list_item_icon"></div>\
- <div id="alerts_text" class="list_item_text">Alerts</div>\
+ <div id="' + user_profile_id + '_alerts" class="notification_list_item">\
+ <div class="' + user_profile_id + '_item_details" class="item_details">\
+ <div id="' + user_profile_id + '_alerts_icon" class="alerts_icon list_item_icon"></div>\
+ <div id="' + user_profile_id + '_alerts_text" class="list_item_text">Alerts</div>\
  </div>\
- <div class="list_item_notifications">00</div>\
+ <div id="' + user_profile_id + '_alerts_notifications" class="list_item_notifications">00</div>\
  </div>\
- <div id="calendar" class="notification_list_item">\
- <div class="item_details">\
- <div id="calendar_icon" class="list_item_icon"></div>\
- <div id="calendar_text" class="list_item_text">Calendar</div>\
+ <div id="' + user_profile_id + '_calendar" class="notification_list_item">\
+ <div class="' + user_profile_id + '_item_details" class="item_details">\
+ <div id="' + user_profile_id + '_calendar_icon" class="calendar_icon list_item_icon"></div>\
+ <div id="' + user_profile_id + '_calendar_text" class="list_item_text">Calendar</div>\
  </div>\
- <div class="list_item_notifications">00</div>\
+ <div id="' + user_profile_id + '_calendar_notifications" class="list_item_notifications">00</div>\
  </div>\
  </div>\
  </div>\
- <div id="logout">\
- <div id="logout_icon"></div>\
- <button id="logout_button" class="button" type="button">Logout</button>\
+ <div id="' + user_profile_id + '_logout" class="logout">\
+ <div id="' + user_profile_id + '_logout_icon" class="logout_icon"></div>\
+ <button id="' + user_profile_id + '_logout_button" class="button logout_button" type="button">Logout</button>\
  </div>\
  </div>\
  </div>';
@@ -9904,9 +9883,9 @@ function user_profile()
  __handler = function() { me.toggle_profile_area(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id));
  __handler = function() { me.reboot_os(); };
- morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('user_reboot'));
+ morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_user_reboot'));
  __handler = function() { me.logout(); };
- morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('logout'));
+ morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_logout'));
  __handler = function() { me.hide_profile_area(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
  __handler = function(event) { me.hide_profile_area_handler(event); };
@@ -9916,7 +9895,7 @@ function user_profile()
  this.toggle_profile_area = function()
  {
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
- __my_profile_label = utils_sys.objects.by_id('my');
+ __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
  if (is_profile_area_visible === true)
  {
  is_profile_area_visible = false;
@@ -9944,7 +9923,7 @@ function user_profile()
  this.hide_profile_area = function()
  {
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
- __my_profile_label = utils_sys.objects.by_id('my');
+ __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
  __user_profile_area.style.display = 'none';
  __my_profile_label.style.color = '#55b8ff';
  is_profile_area_visible = false;
@@ -18416,9 +18395,9 @@ function coyote()
  return false;
  is_init = true;
  coyote_bee = dev_box.get('bee');
- config.id = 'coyote';
+ config.id = 'coyote_' + random.generate();
  config.pages[0] = init_url;
- nature.theme([config.id]);
+ nature.theme(['coyote']);
  nature.apply('new');
  infinity.init();
  coyote_bee.init(config.id);
@@ -19059,7 +19038,7 @@ function radio_dude()
  infinity.begin();
  selected_stream = 'https://stream.zeno.fm/qmqe8k5e74zuv';
  me.draw();
- config.player = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_ctlr');
+ config.player = utils_sys.objects.by_id(config.id + '_ctlr');
  config.player.volume = 0.3;
  utils_int.attach_events();
  infinity.end();
@@ -19068,13 +19047,13 @@ function radio_dude()
  this.draw = function()
  {
  radio_dude_bee.settings.data.window.content('<div class="radio_dude_player">' +
- ' <audio id="' + radio_dude_bee.settings.general.id() + '_ctlr" width="300" height="32" ' +
+ ' <audio id="' + config.id + '_ctlr" width="300" height="32" ' +
  ' autoplay="false" controls="false" src="' + selected_stream + '">' +
  ' </audio>' +
  '</div>' +
  '<div class="radio_dude_list">' +
- ' <div id="radio_dude_streams">' +
- ' <div id="' + radio_dude_bee.settings.general.id() + '_stream_genres" class="stream_genres">' +
+ ' <div id="' + config.id + '_radio_dude_streams" class="radio_dude_streams">' +
+ ' <div id="' + config.id + '_stream_genres" class="stream_genres">' +
  ' <div data-stream="1" class="radio_dude_selected_stream">Pop/Rock</div>' +
  ' <div data-stream="2">Dance/House</div>' +
  ' <div data-stream="3">Jazz/Blues</div>' +
@@ -19104,7 +19083,7 @@ function radio_dude()
  {
  if (!utils_sys.validation.numerics.is_number(list_id))
  return false;
- var __streams_list = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_stream_genres'),
+ var __streams_list = utils_sys.objects.by_id(config.id + '_stream_genres'),
  __streams_list_num = __streams_list.children.length;
  for (var i = 0; i < __streams_list_num; i++)
  __streams_list.children[i].setAttribute('class', '');
@@ -19118,7 +19097,7 @@ function radio_dude()
  };
  this.attach_events = function()
  {
- var __streams_list = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_stream_genres'),
+ var __streams_list = utils_sys.objects.by_id(config.id + '_stream_genres'),
  __streams_list_num = __streams_list.children.length;
  for (var i = 0; i < __streams_list_num; i++)
  __streams_list.children[i].onclick = me.change_stream;
@@ -19161,8 +19140,8 @@ function radio_dude()
  if (is_init === true)
  return false;
  is_init = true;
- config.id = 'radio_dude';
- nature.theme([config.id]);
+ config.id = 'radio_dude_' + random.generate();
+ nature.theme(['radio_dude']);
  nature.apply('new');
  infinity.init();
  radio_dude_bee = dev_box.get('bee');

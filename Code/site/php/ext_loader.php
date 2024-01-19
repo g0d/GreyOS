@@ -1,12 +1,12 @@
 <?php
     /*
-        GreyOS - Extensions Loader (Version: 1.2)
+        GreyOS - Extensions Loader (Version: 1.3)
         
         File name: ext_loader.php
         Description: This file contains the Extensions Loader facility that manually loads non-essential or non-standard extensions for testing.
         
         Coded by George Delaportas (G0D)
-        Copyright © 2013 - 2023
+        Copyright © 2013 - 2024
         Open Software License (OSL 3.0)
     */
 

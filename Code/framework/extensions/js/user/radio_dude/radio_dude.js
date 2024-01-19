@@ -1,11 +1,11 @@
 /*
-    GreyOS - Radio Dude (Version: 2.7)
+    GreyOS - Radio Dude (Version: 2.8)
 
     File name: radio_dude.js
     Description: This file contains the Radio Dude - Radio player application.
 
     Coded by George Delaportas (G0D) and John Inglessis (negle)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -35,7 +35,7 @@ function radio_dude()
 
             me.draw();
 
-            config.player = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_ctlr');
+            config.player = utils_sys.objects.by_id(config.id + '_ctlr');
             config.player.volume = 0.3;
 
             utils_int.attach_events();
@@ -48,13 +48,13 @@ function radio_dude()
         this.draw = function()
         {
             radio_dude_bee.settings.data.window.content('<div class="radio_dude_player">' + 
-                                                        '  <audio id="' + radio_dude_bee.settings.general.id() + '_ctlr" width="300" height="32" ' + 
+                                                        '  <audio id="' + config.id + '_ctlr" width="300" height="32" ' + 
                                                         '         autoplay="false" controls="false" src="' + selected_stream + '">' + 
                                                         '  </audio>' + 
                                                         '</div>' + 
                                                         '<div class="radio_dude_list">' + 
-                                                        '  <div id="radio_dude_streams">' + 
-                                                        '      <div id="' + radio_dude_bee.settings.general.id() + '_stream_genres" class="stream_genres">' + 
+                                                        '  <div id="' + config.id + '_radio_dude_streams" class="radio_dude_streams">' + 
+                                                        '      <div id="' + config.id + '_stream_genres" class="stream_genres">' + 
                                                         '          <div data-stream="1" class="radio_dude_selected_stream">Pop/Rock</div>' + 
                                                         '          <div data-stream="2">Dance/House</div>' + 
                                                         '          <div data-stream="3">Jazz/Blues</div>' + 
@@ -94,7 +94,7 @@ function radio_dude()
             if (!utils_sys.validation.numerics.is_number(list_id))
                 return false;
 
-            var __streams_list = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_stream_genres'),
+            var __streams_list = utils_sys.objects.by_id(config.id + '_stream_genres'),
                 __streams_list_num = __streams_list.children.length;
 
             for (var i = 0; i < __streams_list_num; i++)
@@ -113,7 +113,7 @@ function radio_dude()
         
         this.attach_events = function()
         {
-            var __streams_list = utils_sys.objects.by_id(radio_dude_bee.settings.general.id() + '_stream_genres'),
+            var __streams_list = utils_sys.objects.by_id(config.id + '_stream_genres'),
                 __streams_list_num = __streams_list.children.length;
 
             for (var i = 0; i < __streams_list_num; i++)
@@ -171,9 +171,9 @@ function radio_dude()
 
         is_init = true;
 
-        config.id = 'radio_dude';
+        config.id = 'radio_dude_' + random.generate();
 
-        nature.theme([config.id]);
+        nature.theme(['radio_dude']);
         nature.apply('new');
 
         infinity.init();

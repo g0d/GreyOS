@@ -1,5 +1,5 @@
 /*
-    GreyOS - Coyote (Version: 3.1)
+    GreyOS - Coyote (Version: 3.2)
 
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
@@ -520,10 +520,10 @@ function coyote()
 
         coyote_bee = dev_box.get('bee');
 
-        config.id = 'coyote';
+        config.id = 'coyote_' + random.generate();
         config.pages[0] = init_url;
 
-        nature.theme([config.id]);
+        nature.theme(['coyote']);
         nature.apply('new');
 
         infinity.init();
