@@ -74,7 +74,7 @@ function i_ganttio()
         if (is_init === false)
             return false;
 
-        return cloud_edit_bee.on(event_name, event_handler);
+        return i_ganttio_bee.on(event_name, event_handler);
     };
 
     this.run = function()
