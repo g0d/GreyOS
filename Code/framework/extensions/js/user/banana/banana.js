@@ -53,25 +53,25 @@ function __Banana_Post()
     var utils = new vulcan(),
         data = 'gate=banana&suggestion=' + utils.objects.by_id('banana_suggestion').value;
 
-    ajax_factory(data, function(result)
-                       {
-                            utils.objects.by_id('banana_suggestion').value = '';
+    ajax_factory('post', data, function(result)
+                               {
+                                    utils.objects.by_id('banana_suggestion').value = '';
 
-                            if (result === '1')
-                                utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
-                            else
-                                utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
+                                    if (result === '1')
+                                        utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
+                                    else
+                                        utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
 
-                            setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
-                       },
-                       function()
-                       {
-                            // Nothing...
-                       },
-                       function()
-                       {
-                            // Nothing...
-                       });
+                                    setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
+                               },
+                               function()
+                               {
+                                    // Nothing...
+                               },
+                               function()
+                               {
+                                    // Nothing...
+                               });
 
     return true;
 }

@@ -1,5 +1,5 @@
 
-function ajax_factory(ajax_data, success_cb = null, failure_cb = null, default_cb = null)
+function ajax_factory(method = 'post', ajax_data, success_cb = null, failure_cb = null, default_cb = null)
 {
  var ajax = new bull(),
  utils = new vulcan(),
@@ -7,7 +7,7 @@ function ajax_factory(ajax_data, success_cb = null, failure_cb = null, default_c
  "type" : "request",
  "url" : "/",
  "data" : ajax_data,
- "method" : "post",
+ "method" : method,
  "ajax_mode" : "asynchronous",
  "on_success" : function(response)
  {
@@ -378,7 +378,7 @@ function content_fetcher(content_id, language_code, success_cb, failure_cb, defa
  data = "gate=content&content_id=" + content_id;
  if (!utils.validation.misc.is_nothing(language_code))
  data += '&language_code=' + language_code;
- ajax_factory(data, success_cb, failure_cb, default_cb);
+ ajax_factory('post', data, success_cb, failure_cb, default_cb);
  return true;
 }
 function heartbeat(user_config)
@@ -8795,7 +8795,7 @@ function trinity()
  {
  if (is_init === false)
  return false;
- return trinity_bee.close();
+ return trinity_bee.gui.actions.close(null);
  };
  this.error = function()
  {
@@ -9050,7 +9050,7 @@ function krator()
  return;
  }
  var data = 'gate=auth&mode=login&username=' + username_object.value + '&password=' + password_object.value;
- ajax_factory(data, function()
+ ajax_factory('post', data, function()
  {
  is_login_ok = true;
  close_krator();
@@ -9105,7 +9105,7 @@ function krator()
  return;
  }
  var data = 'gate=register&mode=reg&username=' + username_object.value.trim() + '&password=' + password_object.value;
- ajax_factory(data, function(result)
+ ajax_factory('post', data, function(result)
  {
  if (result === '9')
  __msg_win.show(os_name, 'This account already exists!', __msg_win.types.OK, [() => { enable_controls(); }]);
@@ -9150,7 +9150,7 @@ function krator()
  {
  if (is_init === false)
  return false;
- return krator_bee.close();
+ return krator_bee.gui.actions.close(null);
  };
  this.error = function()
  {
@@ -9766,7 +9766,7 @@ function user_profile()
  this.details = function()
  {
  var __data = 'gate=auth&mode=details';
- ajax_factory(__data, function(result)
+ ajax_factory('post', __data, function(result)
  {
  var __auth_details = JSON.parse(result);
  user_profile_data.full_name = __auth_details.profile;
@@ -9790,7 +9790,7 @@ function user_profile()
  this.logout = function()
  {
  var __data = 'gate=auth&mode=logout';
- ajax_factory(__data, function()
+ ajax_factory('post', __data, function()
  {
  cc_reload.init('Logging out...');
  },
@@ -10789,9 +10789,9 @@ function meta_script()
  {
  return ajax;
  };
- this.remote_comm = function(ajax_data, success_cb, failure_cb, default_cb)
+ this.remote_comm = function(method, ajax_data, success_cb, failure_cb, default_cb)
  {
- return ajax_factory(ajax_data, success_cb, failure_cb, default_cb);
+ return ajax_factory(method, ajax_data, success_cb, failure_cb, default_cb);
  };
  this.settings_validator = function()
  {
@@ -12206,9 +12206,15 @@ function x_runner()
  this.telemetry = function(data)
  {
  if (data.type === 'app')
- x_app = colony.get(data.app_id)
+ {
+ x_reference = colony.get(data.app_id)
+ x_is_app = true;
+ }
  else
- x_app = null;
+ {
+ x_reference = roost.get(data.name);
+ x_is_app = false;
+ }
  return true;
  };
  this.source = function()
@@ -12276,10 +12282,10 @@ function x_runner()
  return meta_executor.terminate();
  }
  utils_int.set_dock_icon_status(x_id);
- if (x_app !== null)
- utils_int.app_close_callback(x_app, x_id, false);
+ if (x_is_app === true)
+ utils_int.app_close_callback(x_reference, x_id, false);
  is_x_running = true;
- return true;
+ return x_reference;
  }
  function app()
  {
@@ -12304,7 +12310,7 @@ function x_runner()
  me.app_close_callback(__app, app_id, true);
  x_program = __app;
  is_x_running = true;
- return true;
+ return __app;
  }
  else
  {
@@ -12352,7 +12358,7 @@ function x_runner()
  return false;
  x_program = __bat;
  is_x_running = true;
- return true;
+ return __bat;
  }
  return false;
  }
@@ -12443,8 +12449,9 @@ function x_runner()
  };
  var is_x_running = false,
  x_mode = null,
- x_app = null,
  x_program = null,
+ x_reference = null,
+ x_is_app = null,
  cosmos = null,
  matrix = null,
  app_box = null,
@@ -13667,7 +13674,7 @@ function infinity()
  __infinity_object = null,
  __container = utils_sys.objects.by_id(self.settings.container()),
  __top_pos = 0;
- if (utils_sys.validation.misc.is_undefined(__container) || __container === false)
+ if (utils_sys.validation.misc.is_undefined(__container) || __container === false || __container === null)
  return false;
  __top_pos = (utils_sys.graphics.pixels_value(__container.style.height) / 2) - 25;
  __dynamic_object = document.createElement('div');
@@ -18085,7 +18092,14 @@ function coyote()
  if (full_url === false)
  self.browser_controls.refresh(true);
  else
+ {
+ if (hb_manager === null)
+ me.init_hyperbeam(config.pages[0], () =>
+ {
+ hb_manager.resize(1006, 545);
  hb_manager.tabs.update({ url: full_url });
+ });
+ }
  return true;
  };
  this.gui_init = function()
@@ -18094,7 +18108,7 @@ function coyote()
  me.draw_normal();
  me.draw_full_screen_layer();
  me.attach_events('normal_to_fullscreen');
- me.init_hyberbeam(config.pages[0], () => { hb_manager.resize(1006, 565); });
+ me.init_hyperbeam(config.pages[0], () => { hb_manager.resize(1006, 545); });
  return true;
  };
  this.draw_normal = function()
@@ -18170,8 +18184,10 @@ function coyote()
  morpheus.run(config.id, 'mouse', 'click', __handler, __tab_close);
  return true;
  };
- this.init_hyberbeam = function(url, callback)
+ this.init_hyperbeam = function(url, callback)
  {
+ if (is_init_hyperbeam)
+ return;
  var __on_success = async (hb_url) =>
  {
  if (utils_sys.validation.misc.is_nothing(hb_url))
@@ -18193,7 +18209,8 @@ function coyote()
  };
  infinity.setup(coyote_bee_id + '_data');
  infinity.begin();
- ajax_factory("gate=hyperbeam&config=" + JSON.stringify(config.hb_options), __on_success, null, null);
+ ajax_factory('post', 'gate=hyperbeam&config=' + JSON.stringify(config.hb_options), __on_success, null, null);
+ is_init_hyperbeam = true;
  };
  }
  function browser_ctrl()
@@ -18283,7 +18300,7 @@ function coyote()
  return false;
  if (utils_sys.validation.misc.is_nothing(url))
  return false;
- if (event_object === true)
+ if (event_object === null)
  utils_int.go_to(url);
  else
  {
@@ -18334,7 +18351,7 @@ function coyote()
  config.is_full_screen = false;
  }
  hb_manager.destroy();
- utils_int.init_hyberbeam(config.pages[config.index - 1], () =>
+ utils_int.init_hyperbeam(config.pages[config.index - 1], () =>
  {
  if (mode === 1)
  {
@@ -18356,6 +18373,12 @@ function coyote()
  };
  this.tabs = new tab_ctrl();
  this.go = new explore_ctrl();
+ };
+ this.browse = function(url)
+ {
+ if (is_init === false)
+ return false;
+ return self.browser_controls.address(url, null);
  };
  this.base = function()
  {
@@ -18379,7 +18402,7 @@ function coyote()
  {
  if (is_init === false)
  return false;
- return coyote_bee.close();
+ return coyote_bee.close(null);
  };
  this.error = function()
  {
@@ -18407,7 +18430,7 @@ function coyote()
  coyote_bee.settings.data.casement.labels.status('Feel the power of meta-integration.');
  coyote_bee.settings.general.resizable(true);
  coyote_bee.settings.general.casement_width(50);
- coyote_bee.settings.general.allowed_instances(1);
+ coyote_bee.settings.general.allowed_instances(5);
  coyote_bee.gui.position.left(70);
  coyote_bee.gui.position.top(10);
  coyote_bee.gui.size.width(1024);
@@ -18474,6 +18497,7 @@ function coyote()
  return true;
  };
  var is_init = false,
+ is_init_hyperbeam = false,
  is_browser_loading = true,
  cosmos = null,
  matrix = null,
@@ -18487,7 +18511,7 @@ function coyote()
  browser_frame = null,
  coyote_fs_layer = null,
  hb_manager = null,
- init_url = 'https://www.bing.com/?setlang=en&cc=gb',
+ init_url = 'https://probotek.eu/en/',
  utils_sys = new vulcan(),
  random = new pythia(),
  ping_timer = new stopwatch(),
@@ -19133,7 +19157,7 @@ function radio_dude()
  {
  if (is_init === false)
  return false;
- return radio_dude_bee.close();
+ return radio_dude_bee.gui.actions.close(null);
  };
  this.error = function()
  {

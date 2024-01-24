@@ -88,9 +88,9 @@ function meta_script()
                 return ajax;
             };
 
-            this.remote_comm = function(ajax_data, success_cb, failure_cb, default_cb)
+            this.remote_comm = function(method, ajax_data, success_cb, failure_cb, default_cb)
             {
-                return ajax_factory(ajax_data, success_cb, failure_cb, default_cb);
+                return ajax_factory(method, ajax_data, success_cb, failure_cb, default_cb);
             };
 
             this.settings_validator = function()

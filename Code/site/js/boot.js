@@ -123,18 +123,18 @@ function boot_script()
         {
             var data = 'gate=auth&mode=status';
     
-            ajax_factory(data, function()
-                               {
-                               	   load_desktop_ui();
-                               },
-                               function()
-                               {
-                                    load_login_ui();
-                               },
-                               function()
-                               {
-                                    // Nothing...
-                               });
+            ajax_factory('post', data, function()
+                                       {
+                                            load_desktop_ui();
+                                       },
+                                       function()
+                                       {
+                                            load_login_ui();
+                                       },
+                                       function()
+                                       {
+                                            // Nothing...
+                                       });
 
             return true;
         }

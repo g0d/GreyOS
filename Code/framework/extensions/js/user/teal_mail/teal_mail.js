@@ -5,7 +5,7 @@
     Description: This file contains the Teal Mail application.
 
     Coded by Mirko Lučić (mands) and George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -534,7 +534,7 @@ function teal_mail()
         {
 			this.button = function()
 			{
-				var __add_acc_btn = '<h3 class="add_acc_title" id="add_acc_form">+ Add new account<\/h3>';
+				var __add_acc_btn = '<h3 class="add_acc_title" id="' + id + '_add_acc_form">+ Add new account<\/h3>';
 
 				print.into_tag('add_acc_box', __add_acc_btn);
 
@@ -546,36 +546,36 @@ function teal_mail()
 			this.form = function()
 			{
 				var __add_acc_form= '<h4 class="pm_message">Add and Connect your mail account to GreyOS!<\/h4>' +
-									'<div class="pm_connect_body"><a class="pm_host_box" id="pm_host" data-id="gmail.com">' +
+									'<div class="pm_connect_body"><a class="pm_host_box" id="' + id + '_pm_host" data-id="gmail.com">' +
 									'<i class="pm_host_icon gmail_icon"><\/i>' +
 									'<span class="pm_host_name1">Connect and Add<\/span>' +
 									'<span class="pm_host_name">GMail<\/span><\/a>' +
 
-									'<a class="pm_host_box" id="pm_host" data-id="yahoo.com">' +
+									'<a class="pm_host_box" id="' + id + '_pm_host" data-id="yahoo.com">' +
 									'<i class="pm_host_icon yahoo_icon"><\/i>' +
 									'<span class="pm_host_name1">Connect and Add<\/span>' +
 									'<span class="pm_host_name">Yahoo Mail<\/span><\/a>' +
 
-									'<a class="pm_host_box" id="pm_host" data-id="Aol Mail">' +
+									'<a class="pm_host_box" id="' + id + '_pm_host" data-id="Aol Mail">' +
 									'<i class="pm_host_icon aol_icon"><\/i>' +
 									'<span class="pm_host_name1">Connect and Add<\/span>' +
 									'<span class="pm_host_name">Aol Mail<\/span><\/a>' +
 
-									'<a class="pm_host_box" id="pm_host" data-id="Zoho Mail">' +
+									'<a class="pm_host_box" id="' + id + '_pm_host" data-id="Zoho Mail">' +
 									'<i class="pm_host_icon zoho_icon"><\/i>' +
 									'<span class="pm_host_name1">Connect and Add<\/span>' +
 									'<span class="pm_host_name">Zoho Mail<\/span><\/a>' +
 									'<\/div>' +
 
 									'<br style="clear:both" \/><br>' +
-									'<div id="new_mail_account_set" style="display:none">' +
-									'<input type="hidden" id="gmail_auth" size="15" value="0"\/>' +
-									'<label>Account name:<\/label> <br> <input type="text" class="settings_form" id="pm_acc_name" size="15" \/><br>' +
-									'<label>Email:<\/label> <br> <input type="text" class="settings_form" id="pm_username" size="15" \/><br>' +
-									'<label>Password:<\/label> <br> <input type="password" class="settings_form" id="pm_password" size="15" ' +
+									'<div id="' + id + '_new_mail_account_set" style="display:none">' +
+									'<input type="hidden" id="' + id + '_gmail_auth" size="15" value="0"\/>' +
+									'<label>Account name:<\/label> <br> <input type="text" class="settings_form" id="' + id + '_pm_acc_name" size="15" \/><br>' +
+									'<label>Email:<\/label> <br> <input type="text" class="settings_form" id="' + id + '_pm_username" size="15" \/><br>' +
+									'<label>Password:<\/label> <br> <input type="password" class="settings_form" id="' + id + '_pm_password" size="15" ' +
 									'data-celement="add_mail_account"\/><br><br>' +
-									'<input type="submit" class="settings_form" id="add_mail_account" value="Add Account" \/><\/div>' +
-									'<div id="gmail_notification"><\/div>';
+									'<input type="submit" class="settings_form" id="' + id + '_add_mail_account" value="Add Account" \/><\/div>' +
+									'<div id="' + id + '_gmail_notification"><\/div>';
 
 				print.into_tag('pm_right', __add_acc_form);
 
@@ -587,8 +587,8 @@ function teal_mail()
 			this.gmail_auth = function()
 			{
 				var __auth_msg = 'In order to use GMail with Teal Mail, you need to allow GreyOS access to your Google account. <br><br><br>' +
-								'Click <a href="#" id="gmail_auth_open">HERE</a> to allow access.<br><br> ' +
-								'When you are done click <a href="#" id="continue_add_acc">HERE</a> to continue.<br><br>';
+								'Click <a href="#" id="' + id + '_gmail_auth_open">HERE</a> to allow access.<br><br> ' +
+								'When you are done click <a href="#" id="' + id + '_continue_add_acc">HERE</a> to continue.<br><br>';
 
 				print.into_tag('gmail_notification', __auth_msg);
 
@@ -1781,7 +1781,7 @@ function teal_mail()
 								'<tr>' +
 								'<td class="compose_title">From<\/td>' +
 								'<td class="editfield">' +
-								'<select name="_from" id="compose_from" class="compose_form">';
+								'<select name="_from" id="' + id + '_compose_from" class="compose_form">';
 
 			var __mail_acc_array = vulcan.objects.by_class('pm_account');
 
@@ -1802,63 +1802,63 @@ function teal_mail()
 							'<tr>' +
 								'<td class="compose_title top"><label for="_to">To<\/label><\/td>' +
 								'<td class="editfield">' + 
-								'<input name="compose_mail_to" id="compose_mail_to" class="compose_form" value="' + to + '"' + 
+								'<input name="compose_mail_to" id="' + id + '_compose_mail_to" class="compose_form" value="' + to + '"' + 
 								'type="text" placeholder="Example: mail@example.com, secondmail@example.com">' + 
 								'<\/td>' +
 							'<\/tr>' +
-							'<tr id="compose_cc" style="display: none;">' +
+							'<tr id="' + id + '_compose_cc" style="display: none;">' +
 								'<td class="compose_title top">' +
 								'<label for="_cc">Cc<\/label>' +
-								'<a href="#" id="cc-delete-link" class="delete_compose_row" title="Delete">x<\/a>' +
+								'<a href="#" id="' + id + '_cc-delete-link" class="delete_compose_row" title="Delete">x<\/a>' +
 								'<\/td>' +
 								'<td class="editfield">' +
-								'<input name="_cc" id="compose_mail_cc" class="compose_form" value="' + cc + '" type="text"><\/input>' +
+								'<input name="_cc" id="' + id + '_compose_mail_cc" class="compose_form" value="' + cc + '" type="text"><\/input>' +
 								'<\/td>' +
 							'<\/tr>' +
-							'<tr id="compose_bcc" style="display: none;">' +
+							'<tr id="' + id + '_compose_bcc" style="display: none;">' +
 								'<td class="compose_title top">' +
 								'<label for="_bcc">Bcc<\/label>' +
-								'<a href="#" id="bcc-delete-link" class="delete_compose_row" title="Delete">x<\/a>' +
+								'<a href="#" id="' + id + '_bcc-delete-link" class="delete_compose_row" title="Delete">x<\/a>' +
 								'<\/td>' +
 								'<td class="editfield">' +
-								'<input name="_bcc" id="compose_mail_bcc" class="compose_form" value="" type="text"><\/td>' +
+								'<input name="_bcc" id="' + id + '_compose_mail_bcc" class="compose_form" value="" type="text"><\/td>' +
 							'<\/tr>' +
-							'<tr id="compose_replyto" style="display: none;">' +
+							'<tr id="' + id + '_compose_replyto" style="display: none;">' +
 								'<td class="compose_title top">' +
 								'<label for="_replyto">Reply-To<\/label>' +
-								'<a href="#" id="replyto-delete-link"  class="delete_compose_row" title="Delete">x<\/a>' +
+								'<a href="#" id="' + id + '_replyto-delete-link"  class="delete_compose_row" title="Delete">x<\/a>' +
 								'<\/td>' +
 								'<td class="editfield">' +
-								'<input name="_replyto" id="compose_mail_replyto" class="compose_form" value="" type="text">' +
+								'<input name="_replyto" id="' + id + '_compose_mail_replyto" class="compose_form" value="" type="text">' +
 								'<\/td>' +
 							'<\/tr>' +
 							'<tr>' +
 								'<td><\/td>' +
 								'<td class="formlinks">' +
-								'<a href="#" id="cc-link" class="add_compose_row"' + 
+								'<a href="#" id="' + id + '_cc-link" class="add_compose_row"' + 
 								'style="display: inline-block;">' + 
 								'Add Cc  <\/a>' +
-								'<a href="#" id="bcc-link" class="add_compose_row"' + 
+								'<a href="#" id="' + id + '_bcc-link" class="add_compose_row"' + 
 								'style="display: inline-block;">' + 
 								'Add Bcc  <\/a>' +
-								'<a href="#" id="replyto-link" class="add_compose_row" >' + 
+								'<a href="#" id="' + id + '_replyto-link" class="add_compose_row" >' + 
 								'Add Reply-To<\/a>' +
 								'<\/td>' +
 							'<\/tr>' +
 							'<tr>' +
 								'<td class="compose_title"><label for="compose_mail_subject">Subject<\/label><\/td>' +
-								'<td class="editfield"><input name="_subject" id="compose_mail_subject"' + 
+								'<td class="editfield"><input name="_subject" id="' + id + '_compose_mail_subject"' + 
 								'class="compose_form" value="' + subject + '" type="text"><\/td>' +
 							'<\/tr>	' +
 							'<tr>' +
 								'<td class="compose_title"><label for="compose-msg_body">Message<\/label><\/td>' +
 								'<td class="editfield">' + 
-								'<textarea name="_message" id="composebody" class="compose_message" cols="70" rows="20"' + 
+								'<textarea name="_message" id="' + id + '_composebody" class="compose_message" cols="70" rows="20"' + 
 								'value="' + body + '"><\/textarea><\/td>' +
 							'<\/tr>	' +
 							'<tr>' +
 								'<td class="compose_title"><\/td>' +
-								'<td class="editfield"><input type="submit" id="send_email" value="Send"><\/td>' +
+								'<td class="editfield"><input type="submit" id="' + id + '_send_email" value="Send"><\/td>' +
 							'<\/tr>' +
 						'<\/tbody>' +
 					'<\/table>' +
@@ -1995,16 +1995,16 @@ function teal_mail()
     {
 		this.html_backbone = function()
 		{
-			var __html_backbone = '<div id="pm_progress_box"></div>' +
-					'<div id="pm_notifications_box"></div>' +
-					'<div id="teal_mail">' +
-					'   <div id="pm_left">' +
-					'       <div id="pm_accounts"></div>' +
-					'       <div class="pm_add_acc_box" id="add_acc_box"></div>' +
+			var __html_backbone = '<div id="' + id + '_pm_progress_box"></div>' +
+					'<div id="' + id + '_pm_notifications_box"></div>' +
+					'<div id="' + id + '_teal_mail">' +
+					'   <div id="' + id + '_pm_left">' +
+					'       <div id="' + id + '_pm_accounts"></div>' +
+					'       <div class="pm_add_acc_box" id="' + id + '_add_acc_box"></div>' +
 					'   </div>' +
-					'   <div id="pm_right"></div>' +
+					'   <div id="' + id + '_pm_right"></div>' +
 					'</div>' +
-					'<div id="teal_mail_ajax_result"></div>';
+					'<div id="' + id + '_teal_mail_ajax_result"></div>';
 
 			teal_mail_bee.settings.data.window.content(__html_backbone);
 
@@ -2015,44 +2015,44 @@ function teal_mail()
 
 		this.acc_actions = function()
 		{
-			var __acctions = '<div class="pm_account_options" id="pm_acc_actions_">' +
-								'<div id="pm_check_inbox" class="pm_icon_1 pm_refresh_loading" title="Chek new mails"></div>' +
-								'<div id="pm_compose_mail" class="pm_icon_1 pm_compose_icon" title="Compose new mail"></div>' +
-								'<div id="pm_acc_setting" class="pm_icon_1 pm_settings_icon" title="Settings"></div>' +
-								'<div id="pm_logout" class="pm_icon_1 pm_logout_icon" title="Logout"></div>' +
-								'<div id="pm_delete_acc" class="pm_icon_1 pm_delete_icon" title="Delete this account"></div>' +
+			var __acctions = '<div class="pm_account_options" id="' + id + '_pm_acc_actions_">' +
+								'<div id="' + id + '_pm_check_inbox" class="pm_icon_1 pm_refresh_loading" title="Chek new mails"></div>' +
+								'<div id="' + id + '_pm_compose_mail" class="pm_icon_1 pm_compose_icon" title="Compose new mail"></div>' +
+								'<div id="' + id + '_pm_acc_setting" class="pm_icon_1 pm_settings_icon" title="Settings"></div>' +
+								'<div id="' + id + '_pm_logout" class="pm_icon_1 pm_logout_icon" title="Logout"></div>' +
+								'<div id="' + id + '_pm_delete_acc" class="pm_icon_1 pm_delete_icon" title="Delete this account"></div>' +
 							'</div>';
 		};
 
 		this.msg_list_backbone = function()
 		{
-			var __msg_list_backbone = '<div id="pm_msg_list_header">' +
-										'<div id="msg_list_master_select">' +
+			var __msg_list_backbone = '<div id="' + id + '_pm_msg_list_header">' +
+										'<div id="' + id + '_msg_list_master_select">' +
 											'<div class="pm_checkbox">' +
 												'<input type="checkbox" name="check" value="None"' +
-												'class="pm_msg_cb" id="pm_msg_cb_master">' +
+												'class="pm_msg_cb" id="' + id + '_pm_msg_cb_master">' +
 												'<label for="pm_msg_cb_master">‌</label>' +
 											'</div>' +
 										'</div>' +
-										'<div id="pm_msg_list_actions" style="height: 0px; opacity: 0; top: -30px;">' +
-											'<div class="pm_msg_list_btn" id="msg_list_delete">' +
+										'<div id="' + id + '_pm_msg_list_actions" style="height: 0px; opacity: 0; top: -30px;">' +
+											'<div class="pm_msg_list_btn" id="' + id + '_msg_list_delete">' +
 												'<div class="pm_icon_2 pm_delete_icon2">Delete</div>' +
 											'</div>' +
-											'<div class="pm_msg_list_btn" id="change_msg_flag_s" data-flag="SEEN">' +
+											'<div class="pm_msg_list_btn" id="' + id + '_change_msg_flag_s" data-flag="SEEN">' +
 												'<div class="pm_icon_2 pm_mark_as_r">Mark as read</div>' +
 											'</div>' +
-											'<div class="pm_msg_list_btn" id="change_msg_flag_u" data-flag="UNSEEN">' +
+											'<div class="pm_msg_list_btn" id="' + id + '_change_msg_flag_u" data-flag="UNSEEN">' +
 												'<div class="pm_icon_2 pm_mark_as_u">Mark as unread</div>' +
 											'</div>' +
 										'</div>' +
-										'<div id="pm_search_form">' +
-											'<input type="text" id="pm_search_input" size="40" placeholder="Search...">' +
+										'<div id="' + id + '_pm_search_form">' +
+											'<input type="text" id="' + id + '_pm_search_input" size="40" placeholder="Search...">' +
 										'</div>' +
-										'<div id="pm_msg_list_pagination">' +
+										'<div id="' + id + '_pm_msg_list_pagination">' +
 										'</div>' +
 									'</div>' +
-									'<div id="pm_msg_list"></div>' +
-									'<div id="pm_msg_view"></div>';
+									'<div id="' + id + '_pm_msg_list"></div>' +
+									'<div id="' + id + '_pm_msg_view"></div>';
 
 			vulcan.objects.by_id('pm_right').innerHTML = __msg_list_backbone;
 		};
@@ -2359,7 +2359,7 @@ function teal_mail()
 			__notification.style.height = '100%';
 			__notification.style.opacity = 1;
 
-			__notification.innerHTML = '<div id="pm_notifications_msg">' + message + '</div>';
+			__notification.innerHTML = '<div id="' + id + '_pm_notifications_msg">' + message + '</div>';
 		};
 
 		this.hide_notification = function()
@@ -2529,6 +2529,8 @@ function teal_mail()
 
 		is_init = true;
 
+		id = 'teal_mail_' + random.generate();
+
 		teal_mail_bee = dev_box.get('bee');
 		fx = dev_box.get('fx');
 		infinity.init(cosmos);
@@ -2577,7 +2579,6 @@ function teal_mail()
 
         colony = matrix.get('colony');
         swarm = matrix.get('swarm');
-		pythia = matrix.get('pythia');
 
         infinity = dev_box.get('infinity');
 
@@ -2592,13 +2593,13 @@ function teal_mail()
 		vulcan = null,
         matrix = null,
         dev_box = null,
-		pythia = null,
         infinity = null,
         colony = null,
         swarm = null,
         fx = null,
 		teal_mail_bee = null,
-		id = 'teal_mail',
+		id = null,
+		random = new pythia(),
 		attach_events = new events(),
 		add_acc = new add_account_model(),
 		mail_accounts = new mail_accounts_model(),

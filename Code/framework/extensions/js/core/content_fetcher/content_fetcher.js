@@ -34,7 +34,7 @@ function content_fetcher(content_id, language_code, success_cb, failure_cb, defa
     if (!utils.validation.misc.is_nothing(language_code))
     	data += '&language_code=' + language_code;
 
-    ajax_factory(data, success_cb, failure_cb, default_cb);
+    ajax_factory('post', data, success_cb, failure_cb, default_cb);
 
     return true;
 }

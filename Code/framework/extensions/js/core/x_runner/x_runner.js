@@ -1,5 +1,5 @@
 /*
-    GreyOS - X-Runner (Version: 1.5)
+    GreyOS - X-Runner (Version: 1.6)
 
     File name: x_runner.js
     Description: This file contains the X-Runner - User-level programs execution module.
@@ -19,9 +19,17 @@ function x_runner()
         this.telemetry = function(data)
         {
             if (data.type === 'app')
-                x_app = colony.get(data.app_id)
+            {
+                x_reference = colony.get(data.app_id)
+
+                x_is_app = true;
+            }
             else
-                x_app = null;
+            {
+                x_reference = roost.get(data.name);
+
+                x_is_app = false;
+            }
 
             return true;
         };
@@ -112,12 +120,12 @@ function x_runner()
 
             utils_int.set_dock_icon_status(x_id);
 
-            if (x_app !== null)
-                utils_int.app_close_callback(x_app, x_id, false);
+            if (x_is_app === true)
+                utils_int.app_close_callback(x_reference, x_id, false);
 
             is_x_running = true;
 
-            return true;
+            return x_reference;
         }
 
         function app()
@@ -153,7 +161,7 @@ function x_runner()
 
                         is_x_running = true;
 
-                        return true;
+                        return __app;
                     }
                     else
                     {
@@ -215,7 +223,7 @@ function x_runner()
 
                         is_x_running = true;
 
-                        return true;
+                        return __bat;
                     }
 
                     return false;
@@ -335,8 +343,9 @@ function x_runner()
 
     var is_x_running = false,
         x_mode = null,
-        x_app = null,
         x_program = null,
+        x_reference = null,
+        x_is_app = null,
         cosmos = null,
         matrix = null,
         app_box = null,

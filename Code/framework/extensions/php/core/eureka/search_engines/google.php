@@ -1,5 +1,4 @@
 <?php
-
     /*
     
         GreyOS Inc. - Google Class
@@ -43,7 +42,7 @@
                specific number of pages. ( if possible for all the pages )
             */
 
-            $url  = 'http://www.google.com/search?hl=en&safe=active&tbo=d&site=&source=hp&q='.$query;
+            $url  = 'https://www.google.com/search?hl=en&safe=active&tbo=d&site=&source=hp&q='.$query;
             
             $html = file_get_html($url);
             
@@ -85,6 +84,5 @@
             // Code to write! 
                 
         }
-        
     }
 ?>

@@ -70,22 +70,22 @@ function user_profile()
         {
             var __data = 'gate=auth&mode=details';
 
-            ajax_factory(__data, function(result)
+            ajax_factory('post', __data, function(result)
                                  {
-                                    var __auth_details = JSON.parse(result);
+                                     var __auth_details = JSON.parse(result);
 
-                                    user_profile_data.full_name = __auth_details.profile;
-                                    user_profile_data.email = __auth_details.email;
-                                    user_profile_data.role = __auth_details.role;
-                                    user_profile_data.wallpaper = __auth_details.ui.wallpaper;
+                                     user_profile_data.full_name = __auth_details.profile;
+                                     user_profile_data.email = __auth_details.email;
+                                     user_profile_data.role = __auth_details.role;
+                                     user_profile_data.wallpaper = __auth_details.ui.wallpaper;
 
-                                    utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
-                                    utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
+                                     utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
+                                     utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
 
-                                    if (user_profile_data.wallpaper === '')
-                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
-                                    else
-                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
+                                     if (user_profile_data.wallpaper === '')
+                                         document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
+                                     else
+                                         document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
                                  },
                                  function()
                                  {
@@ -93,7 +93,7 @@ function user_profile()
                                  },
                                  function()
                                  {
-                                    // No need to use this
+                                     // No need to use this
                                  });
         };
 
@@ -101,23 +101,23 @@ function user_profile()
         {
             var __data = 'gate=auth&mode=logout';
 
-            ajax_factory(__data, function()
-                                 {
-                                     cc_reload.init('Logging out...');
-                                 },
-                                 function()
-                                 {
-                                     var __msg_win = new msgbox();
+            ajax_factory('post', __data, function()
+                                         {
+                                             cc_reload.init('Logging out...');
+                                         },
+                                         function()
+                                         {
+                                             var __msg_win = new msgbox();
 
-                                     __msg_win.init('desktop');
-                                     __msg_win.show(os_name, 'Logout error!', 
-                                                    __msg_win.types.OK, 
-                                                    [() => { cc_reload.init(); }]);
-                                 },
-                                 function()
-                                 {
-                                    // No need to use this
-                                 });
+                                             __msg_win.init('desktop');
+                                             __msg_win.show(os_name, 'Logout error!', 
+                                                            __msg_win.types.OK, 
+                                                            [() => { cc_reload.init(); }]);
+                                         },
+                                         function()
+                                         {
+                                             // No need to use this
+                                         });
 
             me.hide_profile_area();
         };

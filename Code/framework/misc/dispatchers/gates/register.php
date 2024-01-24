@@ -14,9 +14,6 @@
     if (!defined('micro_mvc'))
         exit();
 
-	// Load helper extensions
-    UTIL::Load_Extension('arkangel', 'php');
-
 	// Check for a valid mode (if invalid terminate)
 	if (empty($_POST['mode']))
 	{
@@ -26,6 +23,7 @@
 	}
 
     // Load extensions
+	UTIL::Load_Extension('arkangel', 'php');
 	UTIL::Load_Extension('woody', 'php');
 
 	/*

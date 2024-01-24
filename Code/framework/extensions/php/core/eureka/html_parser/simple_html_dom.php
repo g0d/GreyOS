@@ -1,5 +1,4 @@
 <?php
-
 define('HDOM_TYPE_ELEMENT', 1);
 define('HDOM_TYPE_COMMENT', 2);
 define('HDOM_TYPE_TEXT',    3);
@@ -1006,7 +1005,7 @@ class simple_html_dom
         $this->remove_noise("'<!--(.*?)-->'is");
         // strip out cdata
         $this->remove_noise("'<!\[CDATA\[(.*?)\]\]>'is", true);
-        // Per sourceforge http://sourceforge.net/tracker/?func=detail&aid=2949097&group_id=218559&atid=1044037
+        // Per sourceforge https://sourceforge.net/tracker/?func=detail&aid=2949097&group_id=218559&atid=1044037
         // Script tags removal now preceeds style tag removal.
         // strip out <script> tags
         $this->remove_noise("'<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>'is");
@@ -1440,7 +1439,7 @@ class simple_html_dom
     // parse attributes
     protected function parse_attr($node, $name, &$space)
     {
-        // Per sourceforge: http://sourceforge.net/tracker/?func=detail&aid=3061408&group_id=218559&atid=1044037
+        // Per sourceforge: https://sourceforge.net/tracker/?func=detail&aid=3061408&group_id=218559&atid=1044037
         // If the attribute is already defined inside a tag, only pay atetntion to the first one as opposed to the last one.
         if (isset($node->attr[$name]))
         {
@@ -1675,5 +1674,4 @@ class simple_html_dom
     function getElementsByTagName($name, $idx=-1) {return $this->find($name, $idx);}
     function loadFile() {$args = func_get_args();$this->load_file($args);}
 }
-
 ?>

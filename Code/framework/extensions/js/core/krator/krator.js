@@ -232,23 +232,23 @@ function krator()
 
             var data = 'gate=auth&mode=login&username=' + username_object.value + '&password=' + password_object.value;
 
-            ajax_factory(data, function()
-                               {
+            ajax_factory('post', data, function()
+                                {
                                    is_login_ok = true;
 
                                    close_krator();
-                               },
-                               function()
-                               {
+                                },
+                                function()
+                                {
                                     var __msg_win = new msgbox();
 
                                     __msg_win.init('desktop');
                                     __msg_win.show(os_name, 'Your credentials are wrong!', __msg_win.types.OK, [() => { enable_controls(); }]);
-                               },
-                               function()
-                               {
+                                },
+                                function()
+                                {
                                     // Nothing...
-                               });
+                                });
         };
 
         this.check_registration_credentials = function(username_object, password_object, password_comfirm_object, register_button_object)
@@ -305,21 +305,21 @@ function krator()
 
             var data = 'gate=register&mode=reg&username=' + username_object.value.trim() + '&password=' + password_object.value;
 
-            ajax_factory(data, function(result)
-                               {
+            ajax_factory('post', data, function(result)
+                                {
                                     if (result === '9')
                                         __msg_win.show(os_name, 'This account already exists!', __msg_win.types.OK, [() => { enable_controls(); }]);
                                     else
                                         __msg_win.show(os_name, 'Registration succeeded!', __msg_win.types.OK, [() => { is_login_ok = true; close_krator(); }]);
-                               },
-                               function()
-                               {
+                                },
+                                function()
+                                {
                                     __msg_win.show(os_name, 'Registration failed!', __msg_win.types.OK, [() => { enable_controls(); }]);
-                               },
-                               function()
-                               {
+                                },
+                                function()
+                                {
                                     // Nothing...
-                               });
+                                });
         };
 
         this.load_desktop_ui = function(script)
@@ -362,7 +362,7 @@ function krator()
         if (is_init === false)
             return false;
 
-        return krator_bee.close();
+        return krator_bee.gui.actions.close(null);
     };
 
     this.error = function()

@@ -14,7 +14,7 @@
     if (!defined('micro_mvc'))
         exit();
 
-	// Load helper extensions
+	// Load extensions
     UTIL::Load_Extension('arkangel', 'php');
 
 	// Check authentication mode (if invalid terminate)

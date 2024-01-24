@@ -1,5 +1,5 @@
 /*
-    GreyOS - Coyote (Version: 3.2)
+    GreyOS - Coyote (Version: 3.3)
 
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
@@ -85,7 +85,14 @@ function coyote()
             if (full_url === false)
                 self.browser_controls.refresh(true);
             else
-                hb_manager.tabs.update({ url: full_url });
+            {
+                if (hb_manager === null)
+                    me.init_hyperbeam(config.pages[0], () =>
+                    {
+                        hb_manager.resize(1006, 545);
+                        hb_manager.tabs.update({ url: full_url });
+                    });
+            }
 
             return true;
         };
@@ -97,7 +104,7 @@ function coyote()
             me.draw_normal();
             me.draw_full_screen_layer();
             me.attach_events('normal_to_fullscreen');
-            me.init_hyberbeam(config.pages[0], () => { hb_manager.resize(1006, 565); });
+            me.init_hyperbeam(config.pages[0], () => { hb_manager.resize(1006, 545); });
 
             return true;
         };
@@ -209,8 +216,11 @@ function coyote()
             return true;
         };
 
-        this.init_hyberbeam = function(url, callback)
+        this.init_hyperbeam = function(url, callback)
         {
+            if (is_init_hyperbeam)
+                return;
+
             var __on_success = async (hb_url) =>
             {
                 if (utils_sys.validation.misc.is_nothing(hb_url))
@@ -241,7 +251,9 @@ function coyote()
             infinity.setup(coyote_bee_id + '_data');
             infinity.begin();
 
-            ajax_factory("gate=hyperbeam&config=" + JSON.stringify(config.hb_options), __on_success, null, null);
+            ajax_factory('post', 'gate=hyperbeam&config=' + JSON.stringify(config.hb_options), __on_success, null, null);
+
+            is_init_hyperbeam = true;
         };
     }
 
@@ -371,7 +383,7 @@ function coyote()
             if (utils_sys.validation.misc.is_nothing(url))
                 return false;
 
-            if (event_object === true)
+            if (event_object === null)
                 utils_int.go_to(url);
             else
             {
@@ -437,7 +449,7 @@ function coyote()
 
             hb_manager.destroy();
 
-            utils_int.init_hyberbeam(config.pages[config.index - 1], () => 
+            utils_int.init_hyperbeam(config.pages[config.index - 1], () => 
             {
                 if (mode === 1)
                 {
@@ -466,6 +478,14 @@ function coyote()
 
         this.tabs = new tab_ctrl();
         this.go = new explore_ctrl();
+    };
+
+    this.browse = function(url)
+    {
+        if (is_init === false)
+            return false;
+
+        return self.browser_controls.address(url, null);
     };
 
     this.base = function()
@@ -497,7 +517,7 @@ function coyote()
         if (is_init === false)
             return false;
 
-        return coyote_bee.close();
+        return coyote_bee.close(null);
     };
 
     this.error = function()
@@ -536,7 +556,7 @@ function coyote()
         coyote_bee.settings.data.casement.labels.status('Feel the power of meta-integration.');
         coyote_bee.settings.general.resizable(true);
         coyote_bee.settings.general.casement_width(50);
-        coyote_bee.settings.general.allowed_instances(1);
+        coyote_bee.settings.general.allowed_instances(5);
         coyote_bee.gui.position.left(70);
         coyote_bee.gui.position.top(10);
         coyote_bee.gui.size.width(1024);
@@ -620,6 +640,7 @@ function coyote()
     };
 
     var is_init = false,
+        is_init_hyperbeam = false,
         is_browser_loading = true,
         cosmos = null,
         matrix = null,
@@ -633,7 +654,7 @@ function coyote()
         browser_frame = null,
         coyote_fs_layer = null,
         hb_manager = null,
-        init_url = 'https://www.bing.com/?setlang=en&cc=gb',
+        init_url = 'https://probotek.eu/en/',
         utils_sys = new vulcan(),
         random = new pythia(),
         ping_timer = new stopwatch(),
