@@ -66,11 +66,7 @@
             $user_profile = UTIL::Get_Session_Variable('auth');
             
             if (empty($user_profile))
-            {
-                echo '-1';
-                
                 return false;
-            }
             
             return self::Fetch_Profile($user_profile['uid']);
         }
