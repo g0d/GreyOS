@@ -3753,8 +3753,7 @@ function bee()
                         return false;
                     }
 
-                    ui_objects.window.ui.style.borderTopRightRadius = '0px';
-                    ui_objects.window.ui.style.borderBottomRightRadius = '0px';
+                    ui_objects.window.ui.classList.add('gui_casement_open');
 
                     __casement.style.left = __window_pos_x + 'px';
 
@@ -3780,8 +3779,7 @@ function bee()
                         {
                             gfx.visibility.toggle(ui_config.casement.id, 1);
 
-                            ui_objects.window.ui.style.borderTopRightRadius = '6px';
-                            ui_objects.window.ui.style.borderBottomRightRadius = '6px';
+                            ui_objects.window.ui.classList.remove('gui_casement_open');
 
                             __is_animating = false;
 

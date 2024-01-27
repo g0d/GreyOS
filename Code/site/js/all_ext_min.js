@@ -9183,7 +9183,7 @@ function krator()
  krator_bee.gui.size.height(400);
  krator_bee.gui.position.static(true);
  krator_bee.gui.position.left(swarm.settings.right() / 2 - 210);
- krator_bee.gui.position.top(100);
+ krator_bee.gui.position.top(250);
  krator_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
  krator_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
  krator_bee.on('open', function() { krator_bee.gui.fx.fade.into(); });
@@ -16878,8 +16878,7 @@ function bee()
  __msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
  return false;
  }
- ui_objects.window.ui.style.borderTopRightRadius = '0px';
- ui_objects.window.ui.style.borderBottomRightRadius = '0px';
+ ui_objects.window.ui.classList.add('gui_casement_open');
  __casement.style.left = __window_pos_x + 'px';
  if (self.status.gui.fx.fading.into.finished())
  animate_casement();
@@ -16898,8 +16897,7 @@ function bee()
  function()
  {
  gfx.visibility.toggle(ui_config.casement.id, 1);
- ui_objects.window.ui.style.borderTopRightRadius = '6px';
- ui_objects.window.ui.style.borderBottomRightRadius = '6px';
+ ui_objects.window.ui.classList.remove('gui_casement_open');
  __is_animating = false;
  bee_statuses.casement_deployed(false);
  bee_statuses.casement_retracted(true);

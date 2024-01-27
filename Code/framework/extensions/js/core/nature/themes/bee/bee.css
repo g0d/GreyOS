@@ -26,9 +26,10 @@
     box-shadow: 0 0 12px #585e5e;
 }
 
-.gui:hover
+.gui_casement_open
 {
-
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
 }
 
 .ctrl_bar

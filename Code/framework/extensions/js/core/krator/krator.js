@@ -407,7 +407,7 @@ function krator()
         krator_bee.gui.size.height(400);
         krator_bee.gui.position.static(true);
         krator_bee.gui.position.left(swarm.settings.right() / 2 - 210);
-        krator_bee.gui.position.top(100);
+        krator_bee.gui.position.top(250);
         krator_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         krator_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         krator_bee.on('open', function() { krator_bee.gui.fx.fade.into(); });

@@ -34,7 +34,7 @@ function boot_script()
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
     os_settings.set('version', '4.0 (alpha)');  // Meta-OS version
-    os_settings.set('theme', 'tomorrow');       // Themes: 'bubble_gum', 'tomorrow'
+    os_settings.set('theme', 'morph');          // Themes: 'bubble_gum', 'tomorrow', 'morph'
     os_settings.set('max_apps', 50);            // Maximum number of allowed active apps per session
     os_settings.set('max_services', 100)        // Maximum number of allowed active services per session
     os_settings.set('apps_per_view', 18);       // Apps per stack bar view (This is buggy / Stackbar tries to resize automatically but usually fails)
