@@ -451,7 +451,7 @@ function cloud_edit()
 
         config.id = 'cloud_edit_' + random.generate();
         config.content = `// Welcome to Cloud Edit!\n// Please load the test template from\
-        https://raw.githubusercontent.com/g0d/GreyOS/7bf4698e2c0543ffb4511a761bac7c64128e5471/Code/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
+        https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
 
         nature.theme(['cloud_edit']);
         nature.apply('new');
