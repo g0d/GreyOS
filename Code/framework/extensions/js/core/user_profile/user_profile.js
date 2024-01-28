@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 2.2)
+    GreyOS - User Profile (Version: 2.3)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -35,7 +35,12 @@ function user_profile()
                 __msg_win.init('desktop');
                 __msg_win.show(os_name, 'Your session has been terminated!', 
                                __msg_win.types.OK, 
-                               [() => { setTimeout(function(){ location.reload(); }, 1000); }]);
+                               [() =>
+                                {
+                                    parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout_fresh.mp3');
+
+                                    setTimeout(function(){ location.reload();
+                                }, 1000); }]);
             }
 
             function run_heartbeat()
@@ -103,6 +108,8 @@ function user_profile()
 
             ajax_factory('post', __data, function()
                                          {
+                                             parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout_fresh.mp3');
+
                                              cc_reload.init('Logging out...');
                                          },
                                          function()
@@ -376,6 +383,8 @@ function user_profile()
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
+        parrot = matrix.get('parrot');
+        chameleon = matrix.get('chameleon');
         nature = matrix.get('nature');
 
         return true;
@@ -393,6 +402,8 @@ function user_profile()
         swarm = null,
         hive = null,
         morpheus = null,
+        morpheus = null,
+        chameleon = null,
         nature = null,
         utils_sys = new vulcan(),
         random = new pythia(),

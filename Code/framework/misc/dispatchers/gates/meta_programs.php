@@ -42,7 +42,7 @@
                         return;
                     }
 
-                    $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/' .  $_POST['x_id'] . '.js');
+                    $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/' .  $_POST['x_id'] . '.ms');
 
                     echo file_get_contents(minify_source($file_path));
                 }
@@ -54,25 +54,25 @@
             echo '-1';
     }
 
-    function minify_source($js_data)
+    function minify_source($ms_data)
     {
-		$js_source = trim($js_data);
+		$ms_source = trim($ms_data);
 
-		$js_source = str_replace("\t", " ", $js_data);
+		$ms_source = str_replace("\t", " ", $ms_data);
 
-        $js_source = preg_replace('/\n(\s+)?\/\/[^\n]*/', "", $js_source);
-        $js_source = preg_replace("!/\*[^*]*\*+([^/][^*]*\*+)*/!", "", $js_source);
-		$js_source = preg_replace("/\/\*[^\/]*\*\//", "", $js_source);
-		$js_source = preg_replace("/\/\*\*((\r\n|\n) \*[^\n]*)+(\r\n|\n) \*\//", "", $js_source);
+        $ms_source = preg_replace('/\n(\s+)?\/\/[^\n]*/', "", $ms_source);
+        $ms_source = preg_replace("!/\*[^*]*\*+([^/][^*]*\*+)*/!", "", $ms_source);
+		$ms_source = preg_replace("/\/\*[^\/]*\*\//", "", $ms_source);
+		$ms_source = preg_replace("/\/\*\*((\r\n|\n) \*[^\n]*)+(\r\n|\n) \*\//", "", $ms_source);
 
-        $js_source = str_replace("\r", "", $js_source);
+        $ms_source = str_replace("\r", "", $ms_source);
 
-		$js_source = preg_replace("/\s+\n/", "\n", $js_source);
-		$js_source = preg_replace("/\n\s+/", "\n ", $js_source);
-		$js_source = preg_replace("/ +/", " ", $js_source);
+		$ms_source = preg_replace("/\s+\n/", "\n", $ms_source);
+		$ms_source = preg_replace("/\n\s+/", "\n ", $ms_source);
+		$ms_source = preg_replace("/ +/", " ", $ms_source);
 
-		$js_source = preg_replace("/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/", "", $js_source);
+		$ms_source = preg_replace("/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/", "", $ms_source);
 
-		return $js_source;
+		return $ms_source;
 	}
 ?>

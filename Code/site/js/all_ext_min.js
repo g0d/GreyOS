@@ -9739,7 +9739,11 @@ function user_profile()
  __msg_win.init('desktop');
  __msg_win.show(os_name, 'Your session has been terminated!',
  __msg_win.types.OK,
- [() => { setTimeout(function(){ location.reload(); }, 1000); }]);
+ [() =>
+ {
+ parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout_fresh.mp3');
+ setTimeout(function(){ location.reload();
+ }, 1000); }]);
  }
  function run_heartbeat()
  {
@@ -9792,6 +9796,7 @@ function user_profile()
  var __data = 'gate=auth&mode=logout';
  ajax_factory('post', __data, function()
  {
+ parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout_fresh.mp3');
  cc_reload.init('Logging out...');
  },
  function()
@@ -10004,6 +10009,8 @@ function user_profile()
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
  morpheus = matrix.get('morpheus');
+ parrot = matrix.get('parrot');
+ chameleon = matrix.get('chameleon');
  nature = matrix.get('nature');
  return true;
  };
@@ -10019,6 +10026,8 @@ function user_profile()
  swarm = null,
  hive = null,
  morpheus = null,
+ morpheus = null,
+ chameleon = null,
  nature = null,
  utils_sys = new vulcan(),
  random = new pythia(),
@@ -10913,6 +10922,13 @@ function meta_script()
  {
  return uniplex.list();
  };
+ this.end_on_app_close = function(choice)
+ {
+ if (!utils_sys.validation.misc.is_bool(choice))
+ return false;
+ end_on_app_close = choice;
+ return true;
+ };
  }
  this.app = function()
  {
@@ -11597,6 +11613,10 @@ function meta_script()
  me.on('close', function()
  {
  app_box.remove(program_config.model.name);
+ uniplex.clear(program_config.model.name);
+ if (end_on_app_close)
+ program_config.meta_caller.reset();
+ end_on_app_close = true;
  });
  return __result;
  };
@@ -11739,7 +11759,6 @@ function meta_script()
  program_config.apps[i].close(null);
  for (i = 0; i < __svcs_num; i++)
  program_config.svcs[i].terminate();
- uniplex.clear(program_config.model.name);
  is_program_loaded = false;
  return true;
  };
@@ -11771,6 +11790,7 @@ function meta_script()
  return true;
  };
  var is_program_loaded = false,
+ end_on_app_close = true,
  global_app_index = -1,
  global_svc_index = -1,
  cosmos = null,
@@ -14439,7 +14459,7 @@ function bee()
  ui_objects.window.status_bar.resize.style.width = 19 + 'px';
  ui_objects.window.status_bar.resize.style.height = 19 + 'px';
  }
- ui_objects.casement.ui.style.width = __bee_gui.size.width() * (__bee_settings.general.casement_width() / 100) + 'px';
+ ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __bee_settings.general.casement_width()) + 'px';
  __bee_gui.actions.set_top();
  attach_events();
  bee_statuses.open(true);
@@ -15068,7 +15088,7 @@ function bee()
  __resizable = false,
  __resize_tooltip = false,
  __icon = 'app_default',
- __casement_width = 100,
+ __casement_width = 1,
  __backtrace = false;
  this.app_id = function()
  {
@@ -15229,7 +15249,7 @@ function bee()
  return false;
  if (!utils_sys.validation.numerics.is_integer(val) || val < 20 || val > 100)
  return false;
- __casement_width = val;
+ __casement_width = val / 100;
  return true;
  };
  this.backtrace = function(val)
@@ -16871,7 +16891,7 @@ function bee()
  __casement_offset = __window_width - __casement_width,
  __step = Math.ceil(__casement_width / 23),
  __speed = Math.ceil(__step / 3);
- if ((__window_pos_x + (__window_width + __casement_width )) >= swarm.settings.right())
+ if ((__window_pos_x + __window_width + __casement_width) >= swarm.settings.right())
  {
  var __msg_win = new msgbox();
  __msg_win.init('desktop');
@@ -17449,7 +17469,7 @@ function bee()
  ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
  }
  ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
- ui_objects.casement.ui.style.width = __final_window_width * (self.settings.general.casement_width() / 100) + 'px';
+ ui_objects.casement.ui.style.width = (__final_window_width * self.settings.general.casement_width()) + 'px';
  ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
  }
  if (self.settings.general.resize_tooltip())
@@ -18963,7 +18983,7 @@ function cloud_edit()
  cloud_edit_bee = dev_box.get('bee');
  config.id = 'cloud_edit_' + random.generate();
  config.content = `// Welcome to Cloud Edit!\n// Please load the test template from\
- https://greyos.gr/framework/extensions/js/core/cloud_edit/my_ms_program.js\n`;
+ https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
  nature.theme(['cloud_edit']);
  nature.apply('new');
  infinity.init();

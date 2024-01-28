@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.2)
+    GreyOS - Bee (Version: 5.3)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -534,7 +534,7 @@ function bee()
                 ui_objects.window.status_bar.resize.style.height = 19 + 'px';
             }
 
-            ui_objects.casement.ui.style.width = __bee_gui.size.width() * (__bee_settings.general.casement_width() / 100) + 'px';
+            ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __bee_settings.general.casement_width()) + 'px';
 
             __bee_gui.actions.set_top();
 
@@ -1348,7 +1348,7 @@ function bee()
                 __resizable = false,
                 __resize_tooltip = false,
                 __icon = 'app_default',
-                __casement_width = 100,
+                __casement_width = 1,
                 __backtrace = false;
 
             this.app_id = function()
@@ -1586,7 +1586,7 @@ function bee()
                 if (!utils_sys.validation.numerics.is_integer(val) || val < 20 || val > 100)
                     return false;
 
-                __casement_width = val;
+                __casement_width = val / 100;
 
                 return true;
             };
@@ -3743,7 +3743,7 @@ function bee()
                         __step = Math.ceil(__casement_width / 23),
                         __speed = Math.ceil(__step / 3);
 
-                    if ((__window_pos_x + (__window_width + __casement_width )) >= swarm.settings.right())
+                    if ((__window_pos_x + __window_width + __casement_width) >= swarm.settings.right())
                     {
                         var __msg_win = new msgbox();
 
@@ -4509,7 +4509,7 @@ function bee()
                         }
 
                         ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
-                        ui_objects.casement.ui.style.width = __final_window_width * (self.settings.general.casement_width() / 100) + 'px';
+                        ui_objects.casement.ui.style.width = (__final_window_width * self.settings.general.casement_width()) + 'px';
                         ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
                     }
 

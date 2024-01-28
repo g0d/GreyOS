@@ -123,7 +123,7 @@
 
 		mkdir($file_path . '/programs/' . $program[0], 0700);
 
-		file_put_contents($file_path . '/programs/' . $program[0] . '/' . $program[0] . '.js', $program[2]);
+		file_put_contents($file_path . '/programs/' . $program[0] . '/' . $program[0] . '.ms', $program[2]);
 
 		return $profile;
 	}

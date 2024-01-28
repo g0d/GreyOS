@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 3.7)
+    GreyOS - Bootstrap facility (Version: 3.8)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -195,7 +195,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the splash screen sound
-                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/splash.mp3');
+                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/splash_fresh.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -262,7 +262,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                matrix_container.get('parrot').play('sys', '/site/themes/' + os_settings.get('theme') + '/sounds/login.mp3');
+                matrix_container.get('parrot').play('sys', '/site/themes/' + os_settings.get('theme') + '/sounds/login_fresh.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -342,7 +342,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login.mp3');
+                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login_fresh.mp3');
 
                 load_screen.hide();
             }, 3000);
@@ -623,7 +623,7 @@ function boot_script()
             setTimeout(function()
             {
                 // Play the login sound
-                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login.mp3');
+                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login_fresh.mp3');
 
                 load_screen.hide();
             }, 3000);

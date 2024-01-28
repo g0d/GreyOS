@@ -258,6 +258,16 @@ function meta_script()
             {
                 return uniplex.list();
             };
+
+            this.end_on_app_close = function(choice)
+            {
+                if (!utils_sys.validation.misc.is_bool(choice))
+                    return false;
+
+                end_on_app_close = choice;
+
+                return true;
+            };
         }
 
         this.app = function()
@@ -1149,9 +1159,14 @@ function meta_script()
 
                     me.on('close', function()
                                    {
-                                       app_box.remove(program_config.model.name);
+                                        app_box.remove(program_config.model.name);
 
-                                       //program_config.meta_caller.reset();
+                                        uniplex.clear(program_config.model.name);
+
+                                        if (end_on_app_close)
+                                            program_config.meta_caller.reset();
+
+                                        end_on_app_close = true;
                                    });
 
                     return __result;
@@ -1347,8 +1362,6 @@ function meta_script()
         for (i = 0; i < __svcs_num; i++)
             program_config.svcs[i].terminate();
 
-        uniplex.clear(program_config.model.name);
-
         is_program_loaded = false;
 
         return true;
@@ -1388,6 +1401,7 @@ function meta_script()
     };
 
     var is_program_loaded = false,
+        end_on_app_close = true,
         global_app_index = -1,
         global_svc_index = -1,
         cosmos = null,
