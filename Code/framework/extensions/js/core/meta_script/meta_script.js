@@ -1172,14 +1172,14 @@ function meta_script()
                     return __result;
                 };
 
-                this.init = function(app_id)
+                this.init = function(app_id, icon)
                 {
                     if (__is_init === true)
                         return false;
 
                     __new_app = dev_box.get('bee');
 
-                    __result = __new_app.init(app_id);
+                    __result = __new_app.init(app_id, icon);
 
                     if (__result === true)
                         __is_init = true;

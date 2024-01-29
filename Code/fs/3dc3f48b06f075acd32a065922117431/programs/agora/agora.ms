@@ -54,7 +54,7 @@ function gui()
     ms.program.expose_api([test_function]);
 }
 
-ms_app.init('agora');
+ms_app.init('agora', '/framework/extensions/js/core/nature/themes/dock/pix/favorites/hover/icon_app.png');
 ms_app.main.set_title('AGORA :: Marketplace for Apps & Services');
 ms_app.settings.single_instance(true);
 ms_app.settings.resizable(true);
@@ -63,6 +63,15 @@ ms_app.position.left(100);
 ms_app.position.top(100);
 ms_app.size.width(1200);
 ms_app.size.height(720);
-ms_app.on('opened', function() { gui(); });
-ms_app.on('close', function() { });
+ms_app.fx.fade.settings.into.set(0.07, 25, 100);
+ms_app.fx.fade.settings.out.set(0.07, 25, 100);
+ms_app.on('open', () => { ms_app.fx.fade.into(); });
+ms_app.on('opened', () => { gui(); });
+ms_app.on('dragging', () =>
+                      {
+                          ms_app.fx.opacity.settings.set(0.7);
+                          ms_app.fx.opacity.apply();
+                      });
+ms_app.on('dragged', () => { ms_app.fx.opacity.reset(); });
+ms_app.on('close', () => { ms_app.fx.fade.out(); });
 ms_app.run();

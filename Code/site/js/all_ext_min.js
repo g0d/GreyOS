@@ -9615,9 +9615,10 @@ function dock()
  };
  this.clear = function()
  {
+ config.dock_array = [];
+ morpheus.clear(dock_id);
  var __dock = utils_sys.objects.by_class('favorites');
  __dock.innerHTML = '';
- morpheus.clear(dock_id);
  return true;
  };
  }
@@ -11620,12 +11621,12 @@ function meta_script()
  });
  return __result;
  };
- this.init = function(app_id)
+ this.init = function(app_id, icon)
  {
  if (__is_init === true)
  return false;
  __new_app = dev_box.get('bee');
- __result = __new_app.init(app_id);
+ __result = __new_app.init(app_id, icon);
  if (__result === true)
  __is_init = true;
  return __result;
@@ -14459,6 +14460,9 @@ function bee()
  ui_objects.window.status_bar.resize.style.width = 19 + 'px';
  ui_objects.window.status_bar.resize.style.height = 19 + 'px';
  }
+ var __custom_icon = __bee_settings.general.icon();
+ if (__custom_icon)
+ ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + __custom_icon + ')';
  ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __bee_settings.general.casement_width()) + 'px';
  __bee_gui.actions.set_top();
  attach_events();
@@ -15087,7 +15091,7 @@ function bee()
  __status_bar_marquee = false,
  __resizable = false,
  __resize_tooltip = false,
- __icon = 'app_default',
+ __icon = null,
  __casement_width = 1,
  __backtrace = false;
  this.app_id = function()
@@ -15250,6 +15254,8 @@ function bee()
  if (!utils_sys.validation.numerics.is_integer(val) || val < 20 || val > 100)
  return false;
  __casement_width = val / 100;
+ if (ui_objects.casement.ui !== null)
+ ui_objects.casement.ui.style.width = (self.gui.size.width() * __casement_width) + 'px';
  return true;
  };
  this.backtrace = function(val)
@@ -17837,7 +17843,7 @@ function bee()
  utils_int.log('Run', 'OK');
  return true;
  };
- this.init = function(bee_id)
+ this.init = function(bee_id, icon = null)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
@@ -17845,6 +17851,8 @@ function bee()
  return false;
  is_init = true;
  if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id))
+ return false;
+ if (icon !== null && !self.settings.general.icon(icon))
  return false;
  my_bee_id = self.settings.general.id();
  self.gui.size.max.width(swarm.settings.right());

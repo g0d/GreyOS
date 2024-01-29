@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.3)
+    GreyOS - Bee (Version: 5.4)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -533,6 +533,11 @@ function bee()
                 ui_objects.window.status_bar.resize.style.width = 19 + 'px';
                 ui_objects.window.status_bar.resize.style.height = 19 + 'px';
             }
+
+            var __custom_icon = __bee_settings.general.icon();
+
+            if (__custom_icon)
+                ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + __custom_icon + ')';
 
             ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __bee_settings.general.casement_width()) + 'px';
 
@@ -1347,7 +1352,7 @@ function bee()
                 __status_bar_marquee = false,
                 __resizable = false,
                 __resize_tooltip = false,
-                __icon = 'app_default',
+                __icon = null,
                 __casement_width = 1,
                 __backtrace = false;
 
@@ -1587,6 +1592,9 @@ function bee()
                     return false;
 
                 __casement_width = val / 100;
+
+                if (ui_objects.casement.ui !== null)
+                    ui_objects.casement.ui.style.width = (self.gui.size.width() * __casement_width) + 'px';
 
                 return true;
             };
@@ -4978,7 +4986,7 @@ function bee()
         return true;
     };
 
-    this.init = function(bee_id)
+    this.init = function(bee_id, icon = null)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
@@ -4989,6 +4997,9 @@ function bee()
         is_init = true;
 
         if (utils_sys.validation.misc.is_undefined(bee_id) || !self.settings.general.id(bee_id))
+            return false;
+
+        if (icon !== null && !self.settings.general.icon(icon))
             return false;
 
         my_bee_id = self.settings.general.id();
