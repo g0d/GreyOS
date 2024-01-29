@@ -95,7 +95,7 @@ function infinity()
             if (utils_sys.validation.misc.is_undefined(__container) || __container === false || __container === null)
                 return false;
 
-             __top_pos = (utils_sys.graphics.pixels_value(__container.style.height) / 2) - 25;
+            __top_pos = (utils_sys.graphics.pixels_value(__container.style.height) / 2) - 25;
 
             __dynamic_object = document.createElement('div');
 

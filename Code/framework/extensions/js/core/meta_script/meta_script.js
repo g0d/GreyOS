@@ -115,7 +115,7 @@ function meta_script()
             this.reboot = function()
             {
                 // TODO: Inform user and check for his/her prompt
-    
+
                 cc_reload.init();
 
                 return true;

@@ -571,6 +571,7 @@ option
 .casement_data
 {
     background-color: #337e9f66 !important;
+    padding: 0px;
 }
 
 .casement_status

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Executor (Version: 1.6)
+    GreyOS - Meta-Executor (Version: 1.7)
 
     File name: meta_executor.js
     Description: This file contains the Meta-Executor - Meta-Script program execution module.
@@ -92,7 +92,7 @@ function meta_executor()
             __random_program_id = null,
             __this_program = null;
 
-        __random_program_id = 'user_program_' + random.generate();
+        __random_program_id = 'meta_program_' + random.generate();
 
         __dynamic_program_model = new Function('return function ' + __random_program_id + '()\
         {\

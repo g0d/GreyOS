@@ -11890,7 +11890,7 @@ function meta_executor()
  var __dynamic_program_model = null,
  __random_program_id = null,
  __this_program = null;
- __random_program_id = 'user_program_' + random.generate();
+ __random_program_id = 'meta_program_' + random.generate();
  __dynamic_program_model = new Function('return function ' + __random_program_id + '()\
  {\
  this.cosmos = (cosmos_object) => { return true; };\
@@ -18078,6 +18078,32 @@ function coyote()
  function utilities()
  {
  var me = this;
+ function load_meta_info(results)
+ {
+ var __json_data = JSON.parse(results),
+ __meta_results = __json_data.webPages.value,
+ __meta_results_container_object = null,
+ __meta_result = null,
+ __handler = null,
+ __index = 0;
+ meta_information_div.innerHTML = '<div id="' + coyote_bee_id + '_meta_results" class="coyote_meta_results"></div>';
+ __meta_results_container_object = utils_sys.objects.by_id(coyote_bee_id + '_meta_results');
+ for (__meta_result of __meta_results)
+ {
+ ((meta_result, index) =>
+ {
+ __meta_results_container_object.innerHTML +=
+ `<div class="coyote_meta_info_result">
+ <div class="meta_info_name">` + meta_result.name + `</div>
+ <div class="meta_info_snippet">` + meta_result.snippet + `</div>
+ <div class="meta_info_url">` + meta_result.url + `</div>
+ </div>`;
+ __handler = function() { self.browse(this.innerHTML); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __meta_results_container_object.childNodes[index].children[2]);
+ })(__meta_result, __index);
+ __index++;
+ }
+ }
  this.close_new_user_tab = function()
  {
  var __all_tabs_promise = hb_manager.tabs.query({ active: true, title : "New Tab" });
@@ -18106,18 +18132,22 @@ function coyote()
  };
  this.go_to = function(url)
  {
- var full_url = me.update_browsing_controls(url);
- if (full_url === false)
+ var __full_url = me.update_browsing_controls(url);
+ if (__full_url === false)
  self.browser_controls.refresh(true);
  else
  {
  if (hb_manager === null)
+ {
  me.init_hyperbeam(config.pages[0], () =>
  {
- hb_manager.resize(1006, 545);
- hb_manager.tabs.update({ url: full_url });
+ hb_manager.tabs.update({ url: __full_url });
  });
  }
+ else
+ hb_manager.tabs.update({ url: __full_url });
+ }
+ ajax_factory('post', 'gate=meta_info&url=' + url, (results) => { load_meta_info(results); }, null, null);
  return true;
  };
  this.gui_init = function()
@@ -18126,7 +18156,7 @@ function coyote()
  me.draw_normal();
  me.draw_full_screen_layer();
  me.attach_events('normal_to_fullscreen');
- me.init_hyperbeam(config.pages[0], () => { hb_manager.resize(1006, 545); });
+ me.init_hyperbeam(config.pages[0], () => { hb_manager.resize(1006, 566); });
  return true;
  };
  this.draw_normal = function()
@@ -18154,9 +18184,13 @@ function coyote()
  ' </div>' +
  '</div>' +
  '<div id="' + coyote_bee_id + '_frame" class="coyote_frame"></div>');
+ coyote_bee.settings.data.casement.content('<div id="' + coyote_bee_id + '_meta_info_div" \
+ class="coyote_meta_info"><br><br><br><br><br>No meta-information available...</div>');
  browser_address_box = utils_sys.objects.by_id(coyote_bee_id + '_address_box');
+ meta_information_div = utils_sys.objects.by_id(coyote_bee_id + '_meta_info_div');
  browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');
  browser_frame.style.width = (coyote_bee.status.gui.size.width() - 18) + 'px';
+ meta_information_div.style.height = (coyote_bee.status.gui.size.height() - 48) + 'px';
  return true;
  };
  this.draw_full_screen_layer = function()
@@ -18169,13 +18203,14 @@ function coyote()
  };
  this.browser_frame_size = function()
  {
- var browser_frame_width, browser_frame_height;
+ var __browser_frame_width = null,
+ __browser_frame_height = null;
  browser_address_box.style.width =
  (coyote_bee.status.gui.size.width() - 185) + 'px';
- browser_frame_width = (coyote_bee.status.gui.size.width() - 18);
- browser_frame.style.width = browser_frame_width + 'px';
- browser_frame_height = (coyote_bee.status.gui.size.height() - 155);
- browser_frame.style.height = browser_frame_height + 'px';
+ __browser_frame_width = (coyote_bee.status.gui.size.width() - 18);
+ browser_frame.style.width = __browser_frame_width + 'px';
+ __browser_frame_height = (coyote_bee.status.gui.size.height() - 155);
+ browser_frame.style.height = __browser_frame_height + 'px';
  };
  this.attach_events = function(mode)
  {
@@ -18222,12 +18257,19 @@ function coyote()
  setTimeout(function()
  {
  is_browser_loading = false;
+ ajax_factory('post', 'gate=meta_info&url=' + url, (results) => { load_meta_info(results); }, null, null);
  infinity.end();
  }, 8000);
+ },
+ __on_fail = () =>
+ {
+ var __msg_win = new msgbox();
+ __msg_win.init('desktop');
+ __msg_win.show(xenon.load('os_name'), 'Coyote encountered an error!')
  };
  infinity.setup(coyote_bee_id + '_data');
  infinity.begin();
- ajax_factory('post', 'gate=hyperbeam&config=' + JSON.stringify(config.hb_options), __on_success, null, null);
+ ajax_factory('post', 'gate=hyperbeam&config=' + JSON.stringify(config.hb_options), __on_success, __on_fail, null);
  is_init_hyperbeam = true;
  };
  }
@@ -18248,7 +18290,11 @@ function coyote()
  browser_address_box.value = '';
  __tabs_bar.addChild(__greyos_tab);
  if (__tabs_bar.childNodes.length === 10)
- ;
+ {
+ var __msg_win = new msgbox();
+ __msg_win.init('desktop');
+ __msg_win.show(xenon.load('os_name'), 'Maximum tabs allowance is 10!')
+ }
  return true;
  };
  this.destroy = function(event_object)
@@ -18379,9 +18425,9 @@ function coyote()
  else
  {
  utils_int.attach_events('normal_to_fullscreen');
- var browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
- browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
- hb_manager.resize(browser_frame_width, browser_frame_height);
+ var __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
+ __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
+ hb_manager.resize(__browser_frame_width, __browser_frame_height);
  }
  });
  return true;
@@ -18444,8 +18490,8 @@ function coyote()
  coyote_bee.init('coyote');
  coyote_bee.settings.data.window.labels.title('Coyote');
  coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
- coyote_bee.settings.data.casement.labels.title('Tools');
- coyote_bee.settings.data.casement.labels.status('Feel the power of meta-integration.');
+ coyote_bee.settings.data.casement.labels.title('Meta-information');
+ coyote_bee.settings.data.casement.labels.status('');
  coyote_bee.settings.general.resizable(true);
  coyote_bee.settings.general.casement_width(50);
  coyote_bee.settings.general.allowed_instances(5);
@@ -18478,14 +18524,15 @@ function coyote()
  infinity.begin();
  browser_frame.style.visibility = 'hidden';
  }
+ meta_information_div.style.height = (coyote_bee.status.gui.size.height() - 48) + 'px';
  });
  coyote_bee.on('resized', function()
  {
- var browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
- browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
- if (hb_manager !== null && browser_frame_height !== false)
+ var __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
+ __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
+ if (hb_manager !== null && __browser_frame_height !== false)
  {
- hb_manager.resize(browser_frame_width, browser_frame_height);
+ hb_manager.resize(__browser_frame_width, __browser_frame_height);
  if (is_browser_loading)
  return;
  browser_frame.style.visibility = 'visible';
@@ -18509,6 +18556,7 @@ function coyote()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  dev_box = cosmos.hub.access('dev_box');
+ xenon = matrix.get('xenon');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
  infinity = dev_box.get('infinity');
@@ -18520,6 +18568,7 @@ function coyote()
  cosmos = null,
  matrix = null,
  dev_box = null,
+ xenon = null,
  morpheus = null,
  nature = null,
  infinity = null,
@@ -18527,6 +18576,7 @@ function coyote()
  coyote_bee_id = null,
  browser_address_box = null,
  browser_frame = null,
+ meta_information_div = null,
  coyote_fs_layer = null,
  hb_manager = null,
  init_url = 'https://probotek.eu/en/',

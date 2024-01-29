@@ -5,7 +5,7 @@
     Description: This file contains the Coyote theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -205,4 +205,48 @@
     width: 100%;
     height: 100%;
     z-index: 2147483646;
+}
+
+.casement_data, .casement_status
+{
+    color: #333333;
+}
+
+.coyote_meta_info
+{
+    background-color: #FFFFFF;
+    text-align: center;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.coyote_meta_info_result
+{
+    background-color: #DFDFDF;
+    margin-bottom: 10px;
+    padding: 4px;
+}
+
+.meta_info_name
+{
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.meta_info_snippet
+{
+    text-align: justify;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.meta_info_url
+{
+    cursor: pointer;
+    color: deeppink;
+    overflow: hidden;
+    margin-bottom: 5px;
 }
