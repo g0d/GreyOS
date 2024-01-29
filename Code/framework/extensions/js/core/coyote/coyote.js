@@ -57,18 +57,21 @@ function coyote()
 
             for (__meta_result of __meta_results)
             {
-                ((meta_result, index) =>
-                {
-                    __meta_results_container_object.innerHTML += 
-                    `<div class="coyote_meta_info_result">
-                        <div class="meta_info_name">` + meta_result.name + `</div>
-                        <div class="meta_info_snippet">` + meta_result.snippet + `</div>
-                        <div class="meta_info_url">` + meta_result.url + `</div>
-                     </div>`;
+                __meta_results_container_object.innerHTML += 
+                `<div class="coyote_meta_info_result">
+                    <div class="meta_info_name">` + __meta_result.name + `</div>
+                    <div class="meta_info_snippet">` + __meta_result.snippet + `</div>
+                    <div class="meta_info_url">` + __meta_result.url + `</div>
+                 </div>`;
+            }
 
-                    __handler = function() { self.browse(this.innerHTML); };
-                    morpheus.run(config.id, 'mouse', 'click', __handler, __meta_results_container_object.childNodes[index].children[2]);
-                })(__meta_result, __index);
+            for (__meta_result of __meta_results)
+            {
+                var __this_meta_info_result = __meta_results_container_object.childNodes[__index],
+                    __this_meta_info_url_object = __this_meta_info_result.children[2];
+
+                __handler = function() { self.browse(__this_meta_info_url_object.innerHTML); };
+                morpheus.run(config.id, 'mouse', 'click', __handler, __this_meta_info_url_object);
 
                 __index++;
             }
@@ -162,7 +165,7 @@ function coyote()
                                                     '  <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' + 
                                                     '       title="Sorry, settings are not available yet...">' + 
                                                     '</div>' + 
-                                                    '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode is not available in the demo..."></div>' + 
+                                                    '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode is still buggy..."></div>' + 
                                                     '  <div class="adress_bar">' + 
                                                     '      <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' + 
                                                     '           title="Sorry, page information is not available yet...">' + 
@@ -242,7 +245,7 @@ function coyote()
 
             __handler = function(event) { self.browser_controls.tabs.destroy(event); };
             morpheus.run(config.id, 'mouse', 'click', __handler, __tab_close);
-/*
+
             if (mode === 'normal_to_fullscreen')
             {
                 morpheus.delete('click', config.id, __full_screen);
@@ -257,7 +260,7 @@ function coyote()
                 __handler = function(event) { self.browser_controls.full_screen(event, 2); };
                 morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
             }
-*/
+
             return true;
         };
 
@@ -523,7 +526,8 @@ function coyote()
                     var __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
                         __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
 
-                    hb_manager.resize(__browser_frame_width, __browser_frame_height);
+                    //hb_manager.resize(__browser_frame_width, __browser_frame_height);
+                    hb_manager.resize(1920, 1080);
                 }
             });
 
@@ -614,7 +618,7 @@ function coyote()
         coyote_bee.settings.data.casement.labels.title('Meta-information');
         coyote_bee.settings.data.casement.labels.status('');
         coyote_bee.settings.general.resizable(true);
-        coyote_bee.settings.general.casement_width(50);
+        coyote_bee.settings.general.casement_width(50, 'fixed');
         coyote_bee.settings.general.allowed_instances(5);
         coyote_bee.gui.position.left(70);
         coyote_bee.gui.position.top(10);

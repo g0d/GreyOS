@@ -1023,12 +1023,12 @@ function meta_script()
                         return __new_app.settings.general.resizable(val);
                     };
 
-                    this.casement_width = function(val)
+                    this.casement_width = function(val, type = 'relative')
                     {
                         if (__new_app === null)
                             return false;
 
-                        return __new_app.settings.general.casement_width(val);
+                        return __new_app.settings.general.casement_width(val, type);
                     };
 
                     this.status_bar_marquee = function(val)

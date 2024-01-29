@@ -539,7 +539,9 @@ function bee()
             if (__custom_icon)
                 ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + __custom_icon + ')';
 
-            ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __bee_settings.general.casement_width()) + 'px';
+            var __casement_width_settings = __bee_settings.general.casement_width();
+
+            ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __casement_width_settings[0]) + 'px';
 
             __bee_gui.actions.set_top();
 
@@ -1354,6 +1356,7 @@ function bee()
                 __resize_tooltip = false,
                 __icon = null,
                 __casement_width = 1,
+                __casement_width_type = 'relative',
                 __backtrace = false;
 
             this.app_id = function()
@@ -1397,9 +1400,6 @@ function bee()
 
                 if (utils_sys.validation.misc.is_undefined(val))
                     return __resizable;
-
-                if (bee_statuses.running())
-                    return false;
 
                 if (!utils_sys.validation.misc.is_bool(val))
                     return false;
@@ -1486,9 +1486,6 @@ function bee()
                 if (!utils_sys.validation.misc.is_bool(val))
                     return false;
 
-                if (bee_statuses.running())
-                    return false;
-
                 bee_statuses.topmost(val);
 
                 if (val === true)
@@ -1528,9 +1525,6 @@ function bee()
                 if (utils_sys.validation.misc.is_undefined(val))
                     return __status_bar_marquee;
 
-                if (bee_statuses.running())
-                    return false;
-
                 if (!utils_sys.validation.misc.is_bool(val))
                     return false;
 
@@ -1546,9 +1540,6 @@ function bee()
 
                 if (utils_sys.validation.misc.is_undefined(val))
                     return __resize_tooltip;
-
-                if (bee_statuses.running())
-                    return false;
 
                 if (!utils_sys.validation.misc.is_bool(val))
                     return false;
@@ -1577,22 +1568,23 @@ function bee()
                 return true;
             };
 
-            this.casement_width = function(val)
+            this.casement_width = function(val, type = 'relative')
             {
                 if (is_init === false)
                     return false;
 
-                if (utils_sys.validation.misc.is_undefined(val))
-                    return __casement_width;
-
-                if (bee_statuses.running())
+                if (type !== 'relative' && type !== 'fixed')
                     return false;
+
+                if (utils_sys.validation.misc.is_undefined(val))
+                    return [__casement_width, __casement_width_type];
 
                 if (!utils_sys.validation.numerics.is_integer(val) || val < 20 || val > 100)
                     return false;
 
                 __casement_width = val / 100;
-
+                __casement_width_type = type;
+  
                 if (ui_objects.casement.ui !== null)
                     ui_objects.casement.ui.style.width = (self.gui.size.width() * __casement_width) + 'px';
 
@@ -1638,7 +1630,7 @@ function bee()
                 this.can_restore = true;
                 this.can_maximize = true;
                 this.can_touch = true;
-                this.can_edit_title = true;
+                this.can_edit_title = false;
                 this.can_select_text = true;
                 this.can_use_menu = true;
                 this.can_use_casement = true;
@@ -4516,9 +4508,15 @@ function bee()
                                 ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
                         }
 
-                        ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
-                        ui_objects.casement.ui.style.width = (__final_window_width * self.settings.general.casement_width()) + 'px';
+                        var __casement_width_settings = self.settings.general.casement_width();
+
+                        if (__casement_width_settings[1] === 'relative')
+                            ui_objects.casement.ui.style.width = (__final_window_width * __casement_width_settings[0]) + 'px';
+                        else
+                            ui_objects.casement.ui.style.width = (self.gui.size.width() * __casement_width_settings[0]) + 'px';
+
                         ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
+                        ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
                     }
 
                     if (self.settings.general.resize_tooltip())

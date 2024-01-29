@@ -26,7 +26,7 @@ function gui()
         </div>
     </div>`;
 
-    ms_app.settings.casement_width(40);
+    ms_app.settings.casement_width(40, 'fixed');
 
     ms_app.main.set_content(main_content);
     ms_app.main.set_status('Loading...');

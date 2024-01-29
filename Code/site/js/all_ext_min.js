@@ -11511,11 +11511,11 @@ function meta_script()
  return false;
  return __new_app.settings.general.resizable(val);
  };
- this.casement_width = function(val)
+ this.casement_width = function(val, type = 'relative')
  {
  if (__new_app === null)
  return false;
- return __new_app.settings.general.casement_width(val);
+ return __new_app.settings.general.casement_width(val, type);
  };
  this.status_bar_marquee = function(val)
  {
@@ -14463,7 +14463,8 @@ function bee()
  var __custom_icon = __bee_settings.general.icon();
  if (__custom_icon)
  ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + __custom_icon + ')';
- ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __bee_settings.general.casement_width()) + 'px';
+ var __casement_width_settings = __bee_settings.general.casement_width();
+ ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __casement_width_settings[0]) + 'px';
  __bee_gui.actions.set_top();
  attach_events();
  bee_statuses.open(true);
@@ -15093,6 +15094,7 @@ function bee()
  __resize_tooltip = false,
  __icon = null,
  __casement_width = 1,
+ __casement_width_type = 'relative',
  __backtrace = false;
  this.app_id = function()
  {
@@ -15123,8 +15125,6 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(val))
  return __resizable;
- if (bee_statuses.running())
- return false;
  if (!utils_sys.validation.misc.is_bool(val))
  return false;
  __resizable = val;
@@ -15181,8 +15181,6 @@ function bee()
  return false;
  if (!utils_sys.validation.misc.is_bool(val))
  return false;
- if (bee_statuses.running())
- return false;
  bee_statuses.topmost(val);
  if (val === true)
  morpheus.execute(my_bee_id, 'gui', 'topmost');
@@ -15210,8 +15208,6 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(val))
  return __status_bar_marquee;
- if (bee_statuses.running())
- return false;
  if (!utils_sys.validation.misc.is_bool(val))
  return false;
  __status_bar_marquee = val;
@@ -15223,8 +15219,6 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(val))
  return __resize_tooltip;
- if (bee_statuses.running())
- return false;
  if (!utils_sys.validation.misc.is_bool(val))
  return false;
  __resize_tooltip = val;
@@ -15243,17 +15237,18 @@ function bee()
  __icon = val;
  return true;
  };
- this.casement_width = function(val)
+ this.casement_width = function(val, type = 'relative')
  {
  if (is_init === false)
  return false;
- if (utils_sys.validation.misc.is_undefined(val))
- return __casement_width;
- if (bee_statuses.running())
+ if (type !== 'relative' && type !== 'fixed')
  return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return [__casement_width, __casement_width_type];
  if (!utils_sys.validation.numerics.is_integer(val) || val < 20 || val > 100)
  return false;
  __casement_width = val / 100;
+ __casement_width_type = type;
  if (ui_objects.casement.ui !== null)
  ui_objects.casement.ui.style.width = (self.gui.size.width() * __casement_width) + 'px';
  return true;
@@ -15290,7 +15285,7 @@ function bee()
  this.can_restore = true;
  this.can_maximize = true;
  this.can_touch = true;
- this.can_edit_title = true;
+ this.can_edit_title = false;
  this.can_select_text = true;
  this.can_use_menu = true;
  this.can_use_casement = true;
@@ -17474,9 +17469,13 @@ function bee()
  else
  ui_objects.window.status_bar.message.childNodes[1].classList.add('marquee');
  }
- ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
- ui_objects.casement.ui.style.width = (__final_window_width * self.settings.general.casement_width()) + 'px';
+ var __casement_width_settings = self.settings.general.casement_width();
+ if (__casement_width_settings[1] === 'relative')
+ ui_objects.casement.ui.style.width = (__final_window_width * __casement_width_settings[0]) + 'px';
+ else
+ ui_objects.casement.ui.style.width = (self.gui.size.width() * __casement_width_settings[0]) + 'px';
  ui_objects.casement.ui.style.height = ui_objects.window.ui.style.height;
+ ui_objects.casement.ui.style.left = me.position.left() + __final_window_width + 'px';
  }
  if (self.settings.general.resize_tooltip())
  swarm.resize_tooltip(self, true);
@@ -18098,17 +18097,19 @@ function coyote()
  __meta_results_container_object = utils_sys.objects.by_id(coyote_bee_id + '_meta_results');
  for (__meta_result of __meta_results)
  {
- ((meta_result, index) =>
- {
  __meta_results_container_object.innerHTML +=
  `<div class="coyote_meta_info_result">
- <div class="meta_info_name">` + meta_result.name + `</div>
- <div class="meta_info_snippet">` + meta_result.snippet + `</div>
- <div class="meta_info_url">` + meta_result.url + `</div>
+ <div class="meta_info_name">` + __meta_result.name + `</div>
+ <div class="meta_info_snippet">` + __meta_result.snippet + `</div>
+ <div class="meta_info_url">` + __meta_result.url + `</div>
  </div>`;
- __handler = function() { self.browse(this.innerHTML); };
- morpheus.run(config.id, 'mouse', 'click', __handler, __meta_results_container_object.childNodes[index].children[2]);
- })(__meta_result, __index);
+ }
+ for (__meta_result of __meta_results)
+ {
+ var __this_meta_info_result = __meta_results_container_object.childNodes[__index],
+ __this_meta_info_url_object = __this_meta_info_result.children[2];
+ __handler = function() { self.browse(__this_meta_info_url_object.innerHTML); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __this_meta_info_url_object);
  __index++;
  }
  }
@@ -18183,7 +18184,7 @@ function coyote()
  ' <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' +
  ' title="Sorry, settings are not available yet...">' +
  '</div>' +
- '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode is not available in the demo..."></div>' +
+ '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode is still buggy..."></div>' +
  ' <div class="adress_bar">' +
  ' <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' +
  ' title="Sorry, page information is not available yet...">' +
@@ -18243,6 +18244,18 @@ function coyote()
  morpheus.run(config.id, 'mouse', 'click', __handler, __forward);
  __handler = function(event) { self.browser_controls.tabs.destroy(event); };
  morpheus.run(config.id, 'mouse', 'click', __handler, __tab_close);
+ if (mode === 'normal_to_fullscreen')
+ {
+ morpheus.delete('click', config.id, __full_screen);
+ __handler = function(event) { self.browser_controls.full_screen(event, 1); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
+ }
+ else
+ {
+ morpheus.delete('click', config.id, __full_screen);
+ __handler = function(event) { self.browser_controls.full_screen(event, 2); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
+ }
  return true;
  };
  this.init_hyperbeam = function(url, callback)
@@ -18435,7 +18448,7 @@ function coyote()
  utils_int.attach_events('normal_to_fullscreen');
  var __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
  __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
- hb_manager.resize(__browser_frame_width, __browser_frame_height);
+ hb_manager.resize(1920, 1080);
  }
  });
  return true;
@@ -18501,7 +18514,7 @@ function coyote()
  coyote_bee.settings.data.casement.labels.title('Meta-information');
  coyote_bee.settings.data.casement.labels.status('');
  coyote_bee.settings.general.resizable(true);
- coyote_bee.settings.general.casement_width(50);
+ coyote_bee.settings.general.casement_width(50, 'fixed');
  coyote_bee.settings.general.allowed_instances(5);
  coyote_bee.gui.position.left(70);
  coyote_bee.gui.position.top(10);
