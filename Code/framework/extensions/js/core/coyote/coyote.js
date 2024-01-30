@@ -1,5 +1,5 @@
 /*
-    GreyOS - Coyote (Version: 3.4)
+    GreyOS - Coyote (Version: 3.5)
 
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
@@ -55,6 +55,9 @@ function coyote()
 
             __meta_results_container_object = utils_sys.objects.by_id(coyote_bee_id + '_meta_results');
 
+            if (!__meta_results_container_object)
+                return;
+
             for (__meta_result of __meta_results)
             {
                 __meta_results_container_object.innerHTML += 
@@ -70,8 +73,11 @@ function coyote()
                 var __this_meta_info_result = __meta_results_container_object.childNodes[__index],
                     __this_meta_info_url_object = __this_meta_info_result.children[2];
 
-                __handler = function() { self.browse(__this_meta_info_url_object.innerHTML); };
-                morpheus.run(config.id, 'mouse', 'click', __handler, __this_meta_info_url_object);
+                ((meta_result_url, this_meta_info_url_object) =>
+                {
+                    __handler = function() { self.browse(meta_result_url); };
+                    morpheus.run(config.id, 'mouse', 'click', __handler, this_meta_info_url_object);
+                })(__meta_result.url, __this_meta_info_url_object);
 
                 __index++;
             }
@@ -673,13 +679,16 @@ function coyote()
                                  });
         coyote_bee.on('close', function()
                                {
+                                    morpheus.clear(config.id);
+
                                     browser_frame.innerHTML = '';
 
                                     document.body.removeChild(coyote_fs_layer);
 
                                     ping_timer.stop();
 
-                                    hb_manager.destroy();
+                                    if (hb_manager !== null)
+                                        hb_manager.destroy();
 
                                     coyote_bee.gui.fx.fade.out();
                                });

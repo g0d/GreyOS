@@ -9194,7 +9194,11 @@ function krator()
  krator_bee.gui.fx.opacity.apply();
  });
  krator_bee.on('dragged', function() { krator_bee.gui.fx.opacity.reset(); });
- krator_bee.on('close', function() { krator_bee.gui.fx.fade.out(); });
+ krator_bee.on('close', function()
+ {
+ morpheus.clear(config.id);
+ krator_bee.gui.fx.fade.out();
+ });
  krator_bee.on('closed', function() { utils_int.load_desktop_ui(script); });
  return true;
  };
@@ -11839,9 +11843,9 @@ function meta_executor()
  {
  function codes()
  {
- this.INVALID = 0xC1;
- this.MISMATCH = 0xC2;
- this.OTHER = 0xC3;
+ this.INVALID_CODE = 0xC1;
+ this.RUN_FAIL = 0xC2;
+ this.ERROR = 0xC3;
  }
  function last()
  {
@@ -11882,7 +11886,7 @@ function meta_executor()
  program.indexOf('alert') >= 0 || program.indexOf('eval') >= 0 ||
  program.indexOf('this') >= 0)
  {
- error_details.code = self.error.codes.INVALID;
+ error_details.code = self.error.codes.INVALID_CODE;
  error_details.message = 'Invalid keywords detected!\n\n' +
  'The following are not allowed:\n' +
  '{ "navigator", "window", "document", "location", "alert", "eval", "this" }\n';
@@ -11904,15 +11908,15 @@ function meta_executor()
  return false;
  if (!__this_program.main(meta_script.ms_object))
  {
- error_details.code = self.error.codes.MISMATCH;
- error_details.message = 'Program is incomplete!';
+ error_details.code = self.error.codes.RUN_FAIL;
+ error_details.message = 'Program is incomplete or blocked by a condition!';
  return error_details.code;
  }
  }
  catch(e)
  {
  self.terminate();
- error_details.code = self.error.codes.OTHER;
+ error_details.code = self.error.codes.ERROR;
  error_details.message = e;
  return error_details.code;
  }
@@ -12293,11 +12297,11 @@ function x_runner()
  {
  if (!check_system_run_limits(true))
  {
- if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
- frog('X-RUNNER', '% Invalid %', meta_executor.error.last.message());
- else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
- frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
- else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
+ if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+ frog('X-RUNNER', '% Invalid Code %', meta_executor.error.last.message());
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
+ frog('X-RUNNER', '[!] Run Fail [!]', meta_executor.error.last.message());
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
  frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
  }
  return meta_executor.terminate();
@@ -17995,6 +17999,7 @@ function bat()
  return false;
  }
  morpheus.execute(service_config.sys_name, 'main', 'unregister');
+ morpheus.clear(service_config.sys_name);
  owl.status.services.set(service_config.sys_name, service_config.name, 'END');
  if (backtrace === true)
  frog('BAT', 'Services :: Unregister', service_config);
@@ -18095,6 +18100,8 @@ function coyote()
  __index = 0;
  meta_information_div.innerHTML = '<div id="' + coyote_bee_id + '_meta_results" class="coyote_meta_results"></div>';
  __meta_results_container_object = utils_sys.objects.by_id(coyote_bee_id + '_meta_results');
+ if (!__meta_results_container_object)
+ return;
  for (__meta_result of __meta_results)
  {
  __meta_results_container_object.innerHTML +=
@@ -18108,8 +18115,11 @@ function coyote()
  {
  var __this_meta_info_result = __meta_results_container_object.childNodes[__index],
  __this_meta_info_url_object = __this_meta_info_result.children[2];
- __handler = function() { self.browse(__this_meta_info_url_object.innerHTML); };
- morpheus.run(config.id, 'mouse', 'click', __handler, __this_meta_info_url_object);
+ ((meta_result_url, this_meta_info_url_object) =>
+ {
+ __handler = function() { self.browse(meta_result_url); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, this_meta_info_url_object);
+ })(__meta_result.url, __this_meta_info_url_object);
  __index++;
  }
  }
@@ -18562,9 +18572,11 @@ function coyote()
  });
  coyote_bee.on('close', function()
  {
+ morpheus.clear(config.id);
  browser_frame.innerHTML = '';
  document.body.removeChild(coyote_fs_layer);
  ping_timer.stop();
+ if (hb_manager !== null)
  hb_manager.destroy();
  coyote_bee.gui.fx.fade.out();
  });
@@ -18797,22 +18809,22 @@ function cloud_edit()
  {
  if (!check_system_run_limits())
  {
- if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
+ if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
  {
  config.ce.status_label.innerHTML = '[INVALID]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
- frog('CLOUD EDIT', '% Invalid %',
+ frog('CLOUD EDIT', '% Invalid Code %',
  meta_executor.error.last.message() + '\nPlease check the template...');
  }
- else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
  {
- config.ce.status_label.innerHTML = '[ERROR]';
+ config.ce.status_label.innerHTML = '[FAIL]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
- frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+ frog('CLOUD EDIT', '[!] Run Fail [!]', meta_executor.error.last.message());
  }
- else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
  {
  config.ce.status_label.innerHTML = '[ERROR]';
  config.ce.exec_button.value = 'Run';
@@ -19067,7 +19079,7 @@ function cloud_edit()
  cloud_edit_bee.settings.general.resizable(true);
  cloud_edit_bee.settings.actions.can_edit_title(false);
  cloud_edit_bee.settings.general.allowed_instances(4);
- cloud_edit_bee.settings.general.casement_width(40);
+ cloud_edit_bee.settings.general.casement_width(60, 'fixed');
  cloud_edit_bee.gui.position.left(330);
  cloud_edit_bee.gui.position.top(80);
  cloud_edit_bee.gui.size.width(800);
@@ -19093,10 +19105,10 @@ function cloud_edit()
  cloud_edit_bee.on('casement_retracted', function() { config.ce.extra_button.value = '>>'; });
  cloud_edit_bee.on('close', function()
  {
- cloud_edit_bee.gui.fx.fade.out();
  morpheus.clear(config.id);
  meta_executor.terminate();
  utils_int.destroy_editor();
+ cloud_edit_bee.gui.fx.fade.out();
  });
  return true;
  };

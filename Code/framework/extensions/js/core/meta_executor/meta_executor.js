@@ -24,9 +24,9 @@ function meta_executor()
     {
         function codes()
         {
-            this.INVALID = 0xC1;
-            this.MISMATCH = 0xC2;
-            this.OTHER = 0xC3;
+            this.INVALID_CODE = 0xC1;
+            this.RUN_FAIL = 0xC2;
+            this.ERROR = 0xC3;
         }
 
         function last()
@@ -80,7 +80,7 @@ function meta_executor()
             program.indexOf('alert') >= 0 || program.indexOf('eval') >= 0 || 
             program.indexOf('this') >= 0)
         {
-            error_details.code = self.error.codes.INVALID;
+            error_details.code = self.error.codes.INVALID_CODE;
             error_details.message = 'Invalid keywords detected!\n\n' + 
                                     'The following are not allowed:\n' + 
                                     '{ "navigator", "window", "document", "location", "alert", "eval", "this" }\n';
@@ -109,8 +109,8 @@ function meta_executor()
 
             if (!__this_program.main(meta_script.ms_object))
             {
-                error_details.code = self.error.codes.MISMATCH;
-                error_details.message = 'Program is incomplete!';
+                error_details.code = self.error.codes.RUN_FAIL;
+                error_details.message = 'Program is incomplete or blocked by a condition!';
 
                 return error_details.code;
             }
@@ -119,7 +119,7 @@ function meta_executor()
         {
             self.terminate();
 
-            error_details.code = self.error.codes.OTHER;
+            error_details.code = self.error.codes.ERROR;
             error_details.message = e;
 
             return error_details.code;

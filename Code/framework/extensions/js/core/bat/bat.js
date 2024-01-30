@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bat (Version: 1.7)
+    GreyOS - Bat (Version: 1.8)
 
     File name: bat.js
     Description: This file contains the Bat - System services development module.
@@ -134,6 +134,7 @@ function bat()
         }
 
         morpheus.execute(service_config.sys_name, 'main', 'unregister');
+        morpheus.clear(service_config.sys_name);
 
         owl.status.services.set(service_config.sys_name, service_config.name, 'END');
 

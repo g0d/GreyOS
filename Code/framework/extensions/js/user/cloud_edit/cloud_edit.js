@@ -113,24 +113,24 @@ function cloud_edit()
             {
                 if (!check_system_run_limits())
                 {
-                    if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
+                    if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
                     {
                         config.ce.status_label.innerHTML = '[INVALID]';
                         config.ce.exec_button.value = 'Run';
                         config.ce.exec_button.classList.remove('ce_stop');
 
-                        frog('CLOUD EDIT', '% Invalid %', 
+                        frog('CLOUD EDIT', '% Invalid Code %', 
                              meta_executor.error.last.message() + '\nPlease check the template...');
                     }
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
+                    else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
                     {
-                        config.ce.status_label.innerHTML = '[ERROR]';
+                        config.ce.status_label.innerHTML = '[FAIL]';
                         config.ce.exec_button.value = 'Run';
                         config.ce.exec_button.classList.remove('ce_stop');
 
-                        frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+                        frog('CLOUD EDIT', '[!] Run Fail [!]', meta_executor.error.last.message());
                     }
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
+                    else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
                     {
                         config.ce.status_label.innerHTML = '[ERROR]';
                         config.ce.exec_button.value = 'Run';
@@ -468,7 +468,7 @@ function cloud_edit()
         cloud_edit_bee.settings.general.resizable(true);
         cloud_edit_bee.settings.actions.can_edit_title(false);
         cloud_edit_bee.settings.general.allowed_instances(4);
-        cloud_edit_bee.settings.general.casement_width(40);
+        cloud_edit_bee.settings.general.casement_width(60, 'fixed');
         cloud_edit_bee.gui.position.left(330);
         cloud_edit_bee.gui.position.top(80);
         cloud_edit_bee.gui.size.width(800);
@@ -494,13 +494,13 @@ function cloud_edit()
         cloud_edit_bee.on('casement_retracted', function() { config.ce.extra_button.value = '>>'; });
         cloud_edit_bee.on('close', function()
                                    {
-                                       cloud_edit_bee.gui.fx.fade.out();
-
                                        morpheus.clear(config.id);
 
                                        meta_executor.terminate();
 
                                        utils_int.destroy_editor();
+
+                                       cloud_edit_bee.gui.fx.fade.out();
                                    });
 
         return true;

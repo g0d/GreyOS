@@ -418,7 +418,11 @@ function krator()
                                       krator_bee.gui.fx.opacity.apply();
                                   });
         krator_bee.on('dragged', function() { krator_bee.gui.fx.opacity.reset(); });
-        krator_bee.on('close', function() { krator_bee.gui.fx.fade.out(); });
+        krator_bee.on('close', function()
+                               {
+                                    morpheus.clear(config.id);
+                                    krator_bee.gui.fx.fade.out();
+                               });
         krator_bee.on('closed', function() { utils_int.load_desktop_ui(script); });
 
         return true;

@@ -107,11 +107,11 @@ function x_runner()
             {
                 if (!check_system_run_limits(true))
                 {
-                    if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID)
-                        frog('X-RUNNER', '% Invalid %', meta_executor.error.last.message());
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.MISMATCH)
-                        frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.OTHER)
+                    if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+                        frog('X-RUNNER', '% Invalid Code %', meta_executor.error.last.message());
+                    else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
+                        frog('X-RUNNER', '[!] Run Fail [!]', meta_executor.error.last.message());
+                    else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
                         frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
                 }
 
