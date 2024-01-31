@@ -10,28 +10,25 @@
 */
 
 var ms = meta_script,
-    ms_app = ms.app();
+    ms_app = ms.app(),
+    ms_utils = ms.os.utilities();
+console.log(ms);
 console.log(ms_app);
 function gui()
 {
-    var ms_app_id = ms_app.get_system_id(),
-        css_style = ``,
-        main_content = `
-    <div id="` + ms_app_id + `_data">
-        <div id="` + ms_app_id + `_marketplace">
-            
-        </div>
-        <div id="` + ms_app_id + `_categories">
-            
-        </div>
-    </div>`;
+    var ms_app_sys_id = ms_app.get_system_id(),
+        ms_app_id = ms_app.get_app_id(),
+        main_content = '';
 
+    ms_utils.graphics.apply_theme('.', ms_app_id + '.css');
+
+    ms_app.settings.icon('/framework/extensions/js/core/nature/themes/dock/pix/favorites/hover/icon_app.png');
     ms_app.settings.casement_width(40, 'fixed');
 
     ms_app.main.set_content(main_content);
     ms_app.main.set_status('Loading...');
 
-    ms_app.casement.set_title('Search');
+    ms_app.casement.set_title('Search for programs');
     ms_app.casement.set_content(main_content);
     ms_app.casement.set_status('Ready');
 
@@ -54,7 +51,7 @@ function gui()
     ms.program.expose_api([test_function]);
 }
 
-ms_app.init('agora', '/framework/extensions/js/core/nature/themes/dock/pix/favorites/hover/icon_app.png');
+ms_app.init('agora');
 ms_app.main.set_title('AGORA :: Marketplace for Apps & Services');
 ms_app.settings.single_instance(true);
 ms_app.settings.resizable(true);

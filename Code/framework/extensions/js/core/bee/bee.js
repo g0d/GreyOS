@@ -1557,13 +1557,13 @@ function bee()
                 if (utils_sys.validation.misc.is_undefined(val))
                     return __icon;
 
-                if (bee_statuses.running())
-                    return false;
-
                 if (!utils_sys.validation.alpha.is_string(val))
                     return false;
 
                 __icon = val;
+
+                if (ui_objects.window !== null)
+                    ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + val + ')';
 
                 return true;
             };

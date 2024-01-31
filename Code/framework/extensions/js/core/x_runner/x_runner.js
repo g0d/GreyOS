@@ -87,8 +87,8 @@ function x_runner()
                                     "type"          :   "request",
                                     "method"        :   "post",
                                     "url"           :   "/",
-                                    "data"          :   "gate=meta_programs&action=code&mode=" + mode + "&x_id=" + x_id,
-                                    "ajax_mode"     :   "synchronous",
+                                    "data"          :   "gate=meta_programs&action=load_ms&mode=" + mode + "&x_id=" + x_id,
+                                    "ajax_mode"     :   "synchronous"
                                 };
 
             meta_executor = dev_box.get('meta_executor');

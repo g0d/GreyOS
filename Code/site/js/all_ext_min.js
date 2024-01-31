@@ -12282,8 +12282,8 @@ function x_runner()
  "type" : "request",
  "method" : "post",
  "url" : "/",
- "data" : "gate=meta_programs&action=code&mode=" + mode + "&x_id=" + x_id,
- "ajax_mode" : "synchronous",
+ "data" : "gate=meta_programs&action=load_ms&mode=" + mode + "&x_id=" + x_id,
+ "ajax_mode" : "synchronous"
  };
  meta_executor = dev_box.get('meta_executor');
  __code = ajax.run(__ajax_config);
@@ -15234,11 +15234,11 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(val))
  return __icon;
- if (bee_statuses.running())
- return false;
  if (!utils_sys.validation.alpha.is_string(val))
  return false;
  __icon = val;
+ if (ui_objects.window !== null)
+ ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + val + ')';
  return true;
  };
  this.casement_width = function(val, type = 'relative')
