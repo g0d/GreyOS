@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Program Config (Version: 1.0)
+    GreyOS - Meta-Program Config (Version: 1.1)
 
     File name: meta_program_config.js
     Description: This file contains the Meta-Program Config validator development module.
@@ -22,7 +22,8 @@ function meta_program_config()
 
             if (meta_script.indexOf('navigator') >= 0 || meta_script.indexOf('window') >= 0 || 
                 meta_script.indexOf('document') >= 0 || meta_script.indexOf('location') >= 0 || 
-                meta_script.indexOf('eval') >= 0 || meta_script.indexOf('this') >= 0)
+                meta_script.indexOf('alert') >= 0 || meta_script.indexOf('eval') >= 0 || 
+                meta_script.indexOf('this') >= 0)
                 return false;
 
             if (program_config.type === 'app')

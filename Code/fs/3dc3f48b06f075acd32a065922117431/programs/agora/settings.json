@@ -2,6 +2,18 @@
     "id"        :   "agora",
     "name"      :   "AGORA",
     "hint"      :   "AGORA :: Marketplace for Apps & Services",
-    "icon"      :   "/framework/extensions/js/core/nature/themes/dock/pix/favorites/hover/icon_app.png",
+    "icon"      :   "agora.png",
+    "data"      :   {
+                        "window"    :   {
+                                            "title"     :   false,
+                                            "content"   :   true,
+                                            "status"    :   false
+                                        },
+                        "casement"  :   {
+                                            "title"     :   false,
+                                            "content"   :   true,
+                                            "status"    :   false
+                                        }
+                    },
     "extra"     :   ""
 }

@@ -10682,7 +10682,8 @@ function meta_program_config()
  var meta_script = program_config.script;
  if (meta_script.indexOf('navigator') >= 0 || meta_script.indexOf('window') >= 0 ||
  meta_script.indexOf('document') >= 0 || meta_script.indexOf('location') >= 0 ||
- meta_script.indexOf('eval') >= 0 || meta_script.indexOf('this') >= 0)
+ meta_script.indexOf('alert') >= 0 || meta_script.indexOf('eval') >= 0 ||
+ meta_script.indexOf('this') >= 0)
  return false;
  if (program_config.type === 'app')
  {
@@ -12232,7 +12233,7 @@ function x_runner()
  {
  if (data.type === 'app')
  {
- x_reference = colony.get(data.app_id)
+ x_reference = colony.get(data.app_id);
  x_is_app = true;
  }
  else
@@ -12240,7 +12241,7 @@ function x_runner()
  x_reference = roost.get(data.name);
  x_is_app = false;
  }
- return true;
+ return;
  };
  this.source = function()
  {
@@ -12275,35 +12276,67 @@ function x_runner()
  return false;
  return true;
  }
+ function check_single_instance_app(id)
+ {
+ var __app_id = id.toLowerCase();
+ if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+ {
+ var __msg_win = new msgbox();
+ __msg_win.init('desktop');
+ __msg_win.show(xenon.load('os_name'), 'This is a single instance app!');
+ return true;
+ }
+ return false;
+ }
  function execute_meta_program(mode, x_id)
  {
  var __code = null,
+ __ajax_config = null;
  __ajax_config = {
  "type" : "request",
  "method" : "post",
  "url" : "/",
- "data" : "gate=meta_programs&action=load_ms&mode=" + mode + "&x_id=" + x_id,
+ "data" : "gate=meta_programs&action=load_settings&x_id=" + x_id,
+ "ajax_mode" : "synchronous"
+ },
+ settings = ajax.run(__ajax_config);
+ __ajax_config = {
+ "type" : "request",
+ "method" : "post",
+ "url" : "/",
+ "data" : "gate=meta_programs&action=load_phtml&x_id=" + x_id,
+ "ajax_mode" : "synchronous"
+ },
+ phtml = ajax.run(__ajax_config);
+ __ajax_config = {
+ "type" : "request",
+ "method" : "post",
+ "url" : "/",
+ "data" : "gate=meta_programs&action=load_ms_code&mode=" + mode + "&x_id=" + x_id,
  "ajax_mode" : "synchronous"
  };
- meta_executor = dev_box.get('meta_executor');
  __code = ajax.run(__ajax_config);
+ meta_executor = dev_box.get('meta_executor');
  if (!meta_executor.load(__code))
  {
- frog('X-RUNNER', '% Empty %',
- 'No code detected!');
+ frog('X-RUNNER', '% Empty %', 'No code detected!');
  return false;
  }
  if (meta_executor.process(x_mc) !== true)
  {
  if (!check_system_run_limits(true))
  {
+ if (!check_single_instance_app(x_id))
+ {
  if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
- frog('X-RUNNER', '% Invalid Code %', meta_executor.error.last.message());
+ frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
  else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
- frog('X-RUNNER', '[!] Run Fail [!]', meta_executor.error.last.message());
+ frog('X-RUNNER', '[*] Run Fail [*]', meta_executor.error.last.message());
  else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
  frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
  }
+ }
+ x_reference = null;
  return meta_executor.terminate();
  }
  utils_int.set_dock_icon_status(x_id);
@@ -12318,7 +12351,7 @@ function x_runner()
  {
  if (is_sys_level)
  {
- if (owl.status.applications.get.by_proc_id(app_id, 'RUN') && colony.is_single_instance(app_id))
+ if (check_single_instance_app(app_id))
  return false;
  var __app = app_box.get(app_id),
  __bee = null;
@@ -12454,6 +12487,7 @@ function x_runner()
  if (!is_x_running)
  return false;
  is_x_running = false;
+ x_reference = null;
  return utils_int[x_mode].stop();
  };
  this.cosmos = function(cosmos_object)
@@ -18788,6 +18822,18 @@ function cloud_edit()
  return false;
  return true;
  }
+ function check_single_instance_app(id)
+ {
+ var __app_id = id.toLowerCase();
+ if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+ {
+ var __msg_win = new msgbox();
+ __msg_win.init('desktop');
+ __msg_win.show(xenon.load('os_name'), 'This is a single instance app!');
+ return true;
+ }
+ return false;
+ }
  function run_code(event_object)
  {
  var __code = null;
@@ -18801,28 +18847,28 @@ function cloud_edit()
  config.ce.status_label.innerHTML = '[EMPTY]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
- frog('CLOUD EDIT', '% Empty %',
- 'No code detected!');
+ frog('CLOUD EDIT', '% Empty %', 'No code detected!');
  return false;
  }
  if (meta_executor.process(ce_mc) !== true)
  {
  if (!check_system_run_limits())
  {
+ if (!check_single_instance_app(config.program.name))
+ {
  if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
  {
  config.ce.status_label.innerHTML = '[INVALID]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
- frog('CLOUD EDIT', '% Invalid Code %',
- meta_executor.error.last.message() + '\nPlease check the template...');
+ frog('CLOUD EDIT', '# Invalid Code #', meta_executor.error.last.message() + '\nPlease check the template...');
  }
  else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
  {
  config.ce.status_label.innerHTML = '[FAIL]';
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
- frog('CLOUD EDIT', '[!] Run Fail [!]', meta_executor.error.last.message());
+ frog('CLOUD EDIT', '[*] Run Fail [*]', meta_executor.error.last.message());
  }
  else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
  {
@@ -18830,6 +18876,7 @@ function cloud_edit()
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
  frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+ }
  }
  }
  disable_deploy_button();
@@ -18931,6 +18978,23 @@ function cloud_edit()
  morpheus.run(config.id, 'key', 'keydown', __handler, __input_prog_name_object);
  return true;
  }
+ function trigger_buttons()
+ {
+ disable_deploy_button();
+ if (config.ce.editor.getValue() === '')
+ {
+ config.ce.exec_button.style.color = '#7b7f8d';
+ config.ce.exec_button.style.backgroundColor = '#97a6ad';
+ config.ce.exec_button.disabled = true;
+ config.ce.status_label.innerHTML = '[READY]';
+ }
+ else
+ {
+ config.ce.exec_button.style.color = '#ffffff';
+ config.ce.exec_button.style.backgroundColor = '#3d9aff';
+ config.ce.exec_button.disabled = false;
+ }
+ }
  function disable_deploy_button()
  {
  config.ce.deploy_button.style.color = '';
@@ -18993,7 +19057,7 @@ function cloud_edit()
  });
  config.ce.editor.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'},
  exec: function(this_editor) { this_editor.showSettingsMenu(); } } ]);
- config.ce.editor.getSession().on('change', () => { disable_deploy_button(); });
+ config.ce.editor.getSession().on('change', () => { trigger_buttons(); });
  return true;
  };
  this.attach_events = function()
@@ -19123,6 +19187,7 @@ function cloud_edit()
  roost = cosmos.hub.access('roost');
  morpheus = matrix.get('morpheus');
  xenon = matrix.get('xenon');
+ owl = matrix.get('owl');
  nature = matrix.get('nature');
  dock = matrix.get('dock');
  infinity = dev_box.get('infinity');
@@ -19140,6 +19205,7 @@ function cloud_edit()
  roost = null,
  morpheus = null,
  xenon = null,
+ owl = null,
  dock = null,
  nature = null,
  infinity = null,

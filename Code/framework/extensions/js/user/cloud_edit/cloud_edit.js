@@ -1,5 +1,5 @@
 /*
-    GreyOS - Cloud Edit (Version: 2.5)
+    GreyOS - Cloud Edit (Version: 2.6)
 
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
@@ -85,6 +85,23 @@ function cloud_edit()
             return true;
         }
 
+        function check_single_instance_app(id)
+        {
+            var __app_id = id.toLowerCase();
+
+            if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+            {
+                var __msg_win = new msgbox();
+
+                __msg_win.init('desktop');
+                __msg_win.show(xenon.load('os_name'), 'This is a single instance app!');
+
+                return true;
+            }
+
+            return false;
+        }
+
         function run_code(event_object)
         {
             var __code = null;
@@ -103,8 +120,7 @@ function cloud_edit()
                 config.ce.exec_button.value = 'Run';
                 config.ce.exec_button.classList.remove('ce_stop');
 
-                frog('CLOUD EDIT', '% Empty %', 
-                     'No code detected!');
+                frog('CLOUD EDIT', '% Empty %', 'No code detected!');
 
                 return false;
             }
@@ -113,30 +129,32 @@ function cloud_edit()
             {
                 if (!check_system_run_limits())
                 {
-                    if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+                    if (!check_single_instance_app(config.program.name))
                     {
-                        config.ce.status_label.innerHTML = '[INVALID]';
-                        config.ce.exec_button.value = 'Run';
-                        config.ce.exec_button.classList.remove('ce_stop');
+                        if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+                        {
+                            config.ce.status_label.innerHTML = '[INVALID]';
+                            config.ce.exec_button.value = 'Run';
+                            config.ce.exec_button.classList.remove('ce_stop');
 
-                        frog('CLOUD EDIT', '% Invalid Code %', 
-                             meta_executor.error.last.message() + '\nPlease check the template...');
-                    }
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
-                    {
-                        config.ce.status_label.innerHTML = '[FAIL]';
-                        config.ce.exec_button.value = 'Run';
-                        config.ce.exec_button.classList.remove('ce_stop');
+                            frog('CLOUD EDIT', '# Invalid Code #', meta_executor.error.last.message() + '\nPlease check the template...');
+                        }
+                        else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
+                        {
+                            config.ce.status_label.innerHTML = '[FAIL]';
+                            config.ce.exec_button.value = 'Run';
+                            config.ce.exec_button.classList.remove('ce_stop');
 
-                        frog('CLOUD EDIT', '[!] Run Fail [!]', meta_executor.error.last.message());
-                    }
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
-                    {
-                        config.ce.status_label.innerHTML = '[ERROR]';
-                        config.ce.exec_button.value = 'Run';
-                        config.ce.exec_button.classList.remove('ce_stop');
+                            frog('CLOUD EDIT', '[*] Run Fail [*]', meta_executor.error.last.message());
+                        }
+                        else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
+                        {
+                            config.ce.status_label.innerHTML = '[ERROR]';
+                            config.ce.exec_button.value = 'Run';
+                            config.ce.exec_button.classList.remove('ce_stop');
 
-                        frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+                            frog('CLOUD EDIT', '[!] Error [!]', meta_executor.error.last.message());
+                        }
                     }
                 }
 
@@ -269,6 +287,26 @@ function cloud_edit()
             return true;
         }
 
+        function trigger_buttons()
+        {
+            disable_deploy_button();
+
+            if (config.ce.editor.getValue() === '')
+            {
+                config.ce.exec_button.style.color = '#7b7f8d';
+                config.ce.exec_button.style.backgroundColor = '#97a6ad';
+                config.ce.exec_button.disabled = true;
+
+                config.ce.status_label.innerHTML = '[READY]';
+            }
+            else
+            {
+                config.ce.exec_button.style.color = '#ffffff';
+                config.ce.exec_button.style.backgroundColor = '#3d9aff';
+                config.ce.exec_button.disabled = false;
+            }
+        }
+
         function disable_deploy_button()
         {
             config.ce.deploy_button.style.color = '';
@@ -349,7 +387,7 @@ function cloud_edit()
                                         });
             config.ce.editor.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'}, 
                                                       exec: function(this_editor) { this_editor.showSettingsMenu(); } } ]);
-            config.ce.editor.getSession().on('change', () => { disable_deploy_button(); });
+            config.ce.editor.getSession().on('change', () => { trigger_buttons(); });
 
             return true;
         };
@@ -520,6 +558,7 @@ function cloud_edit()
 
         morpheus = matrix.get('morpheus');
         xenon = matrix.get('xenon');
+        owl = matrix.get('owl');
         nature = matrix.get('nature');
         dock = matrix.get('dock');
         infinity = dev_box.get('infinity');
@@ -540,6 +579,7 @@ function cloud_edit()
         roost = null,
         morpheus = null,
         xenon = null,
+        owl = null,
         dock = null,
         nature = null,
         infinity = null,

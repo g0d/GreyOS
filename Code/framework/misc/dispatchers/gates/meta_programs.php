@@ -23,7 +23,7 @@
 
         $uid = $user_profile['uid'];
 
-        if ($_POST['action'] === 'load_ms' && !empty($_POST['mode']) && !empty($_POST['x_id']))
+        if ($_POST['action'] === 'load_ms_code' && !empty($_POST['mode']) && !empty($_POST['x_id']))
         {
             $user_programs = $user_profile['user_programs'][$_POST['mode'] . 's'];
 
@@ -53,6 +53,12 @@
         else if ($_POST['action'] === 'load_phtml' && !empty($_POST['x_id']))
         {
             $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/' .  $_POST['x_id'] . '.phtml');
+
+            echo file_get_contents($file_path);
+        }
+        else if ($_POST['action'] === 'load_settings' && !empty($_POST['x_id']))
+        {
+            $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/settings.json');
 
             echo file_get_contents($file_path);
         }

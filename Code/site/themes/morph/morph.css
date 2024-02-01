@@ -473,6 +473,7 @@ option
 {
     color: white;
     background-color: #2885834f;
+    border-radius: 2px;
 }
 
 .menu_option:hover

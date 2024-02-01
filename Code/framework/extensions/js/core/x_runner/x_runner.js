@@ -1,5 +1,5 @@
 /*
-    GreyOS - X-Runner (Version: 1.6)
+    GreyOS - X-Runner (Version: 1.7)
 
     File name: x_runner.js
     Description: This file contains the X-Runner - User-level programs execution module.
@@ -20,7 +20,7 @@ function x_runner()
         {
             if (data.type === 'app')
             {
-                x_reference = colony.get(data.app_id)
+                x_reference = colony.get(data.app_id);
 
                 x_is_app = true;
             }
@@ -31,7 +31,7 @@ function x_runner()
                 x_is_app = false;
             }
 
-            return true;
+            return;
         };
 
         this.source = function()
@@ -80,25 +80,60 @@ function x_runner()
             return true;
         }
 
+        function check_single_instance_app(id)
+        {
+            var __app_id = id.toLowerCase();
+
+            if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+            {
+                var __msg_win = new msgbox();
+
+                __msg_win.init('desktop');
+                __msg_win.show(xenon.load('os_name'), 'This is a single instance app!');
+
+                return true;
+            }
+
+            return false;
+        }
+
         function execute_meta_program(mode, x_id)
         {
             var __code = null,
-                __ajax_config = {
-                                    "type"          :   "request",
-                                    "method"        :   "post",
-                                    "url"           :   "/",
-                                    "data"          :   "gate=meta_programs&action=load_ms&mode=" + mode + "&x_id=" + x_id,
-                                    "ajax_mode"     :   "synchronous"
-                                };
+                __ajax_config = null;
+
+            __ajax_config = {
+                                "type"          :   "request",
+                                "method"        :   "post",
+                                "url"           :   "/",
+                                "data"          :   "gate=meta_programs&action=load_settings&x_id=" + x_id,
+                                "ajax_mode"     :   "synchronous"
+                            },
+            settings = ajax.run(__ajax_config);
+
+            __ajax_config = {
+                                "type"          :   "request",
+                                "method"        :   "post",
+                                "url"           :   "/",
+                                "data"          :   "gate=meta_programs&action=load_phtml&x_id=" + x_id,
+                                "ajax_mode"     :   "synchronous"
+                            },
+            phtml = ajax.run(__ajax_config);
+
+            __ajax_config = {
+                                "type"          :   "request",
+                                "method"        :   "post",
+                                "url"           :   "/",
+                                "data"          :   "gate=meta_programs&action=load_ms_code&mode=" + mode + "&x_id=" + x_id,
+                                "ajax_mode"     :   "synchronous"
+                            };
+            __code = ajax.run(__ajax_config);
 
             meta_executor = dev_box.get('meta_executor');
 
-            __code = ajax.run(__ajax_config);
-
             if (!meta_executor.load(__code))
             {
-                frog('X-RUNNER', '% Empty %', 
-                     'No code detected!');
+                frog('X-RUNNER', '% Empty %', 'No code detected!');
 
                 return false;
             }
@@ -107,13 +142,18 @@ function x_runner()
             {
                 if (!check_system_run_limits(true))
                 {
-                    if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
-                        frog('X-RUNNER', '% Invalid Code %', meta_executor.error.last.message());
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
-                        frog('X-RUNNER', '[!] Run Fail [!]', meta_executor.error.last.message());
-                    else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
-                        frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+                    if (!check_single_instance_app(x_id))
+                    {
+                        if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+                            frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
+                        else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
+                            frog('X-RUNNER', '[*] Run Fail [*]', meta_executor.error.last.message());
+                        else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
+                            frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+                    }
                 }
+
+                x_reference = null;
 
                 return meta_executor.terminate();
             }
@@ -134,7 +174,7 @@ function x_runner()
             {
                 if (is_sys_level)
                 {
-                    if (owl.status.applications.get.by_proc_id(app_id, 'RUN') && colony.is_single_instance(app_id))
+                    if (check_single_instance_app(app_id))
                         return false;
 
                     var __app = app_box.get(app_id),
@@ -316,6 +356,7 @@ function x_runner()
             return false;
 
         is_x_running = false;
+        x_reference = null;
 
         return utils_int[x_mode].stop();
     };
