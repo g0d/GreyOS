@@ -26,7 +26,8 @@ function meta_executor()
         {
             this.INVALID_CODE = 0xC1;
             this.RUN_FAIL = 0xC2;
-            this.ERROR = 0xC3;
+            this.RUN_BLOCK = 0xC3
+            this.ERROR = 0xC4;
         }
 
         function last()
@@ -90,7 +91,8 @@ function meta_executor()
 
         var __dynamic_program_model = null,
             __random_program_id = null,
-            __this_program = null;
+            __this_program = null,
+            __run_result = null;
 
         __random_program_id = 'meta_program_' + random.generate();
 
@@ -107,10 +109,20 @@ function meta_executor()
             if (!meta_script.start(__dynamic_program_model, meta_caller))
                 return false;
 
-            if (!__this_program.main(meta_script.ms_object))
+            __run_result = __this_program.main(meta_script.ms_object);
+
+            if (!__run_result)
             {
-                error_details.code = self.error.codes.RUN_FAIL;
-                error_details.message = 'Program is incomplete or blocked by a condition!';
+                if (__run_result === null)
+                {
+                    error_details.code = self.error.codes.RUN_BLOCK;
+                    error_details.message = 'Program is blocked by another instance!';
+                }
+                else
+                {
+                    error_details.code = self.error.codes.RUN_FAIL;
+                    error_details.message = 'Program is incomplete!';
+                }
 
                 return error_details.code;
             }

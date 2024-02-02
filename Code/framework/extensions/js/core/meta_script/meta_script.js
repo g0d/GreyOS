@@ -1139,7 +1139,7 @@ function meta_script()
                         return false;
 
                     if (!swarm.bees.insert(__new_app))
-                        return false;
+                        return null;
 
                     var __result = __new_app.run(child_apps_array, headless);
 

@@ -11601,7 +11601,7 @@ function meta_script()
  if (!app_box.replace([program_config.model]))
  return false;
  if (!swarm.bees.insert(__new_app))
- return false;
+ return null;
  var __result = __new_app.run(child_apps_array, headless);
  if (__result === true)
  __is_run = true;
@@ -11844,7 +11844,8 @@ function meta_executor()
  {
  this.INVALID_CODE = 0xC1;
  this.RUN_FAIL = 0xC2;
- this.ERROR = 0xC3;
+ this.RUN_BLOCK = 0xC3
+ this.ERROR = 0xC4;
  }
  function last()
  {
@@ -11893,7 +11894,8 @@ function meta_executor()
  }
  var __dynamic_program_model = null,
  __random_program_id = null,
- __this_program = null;
+ __this_program = null,
+ __run_result = null;
  __random_program_id = 'meta_program_' + random.generate();
  __dynamic_program_model = new Function('return function ' + __random_program_id + '()\
  {\
@@ -11905,10 +11907,19 @@ function meta_executor()
  __this_program = eval('new ' + __dynamic_program_model);
  if (!meta_script.start(__dynamic_program_model, meta_caller))
  return false;
- if (!__this_program.main(meta_script.ms_object))
+ __run_result = __this_program.main(meta_script.ms_object);
+ if (!__run_result)
+ {
+ if (__run_result === null)
+ {
+ error_details.code = self.error.codes.RUN_BLOCK;
+ error_details.message = 'Program is blocked by another instance!';
+ }
+ else
  {
  error_details.code = self.error.codes.RUN_FAIL;
- error_details.message = 'Program is incomplete or blocked by a condition!';
+ error_details.message = 'Program is incomplete!';
+ }
  return error_details.code;
  }
  }
@@ -18767,7 +18778,6 @@ function cloud_edit()
  {
  function program_model()
  {
- this.icon = '';
  this.name = '';
  this.type = null;
  }
@@ -18788,8 +18798,7 @@ function cloud_edit()
  {
  this.telemetry = function(data)
  {
- config.program.icon = encodeURIComponent(data.icon);
- config.program.name = encodeURIComponent(data.name);
+ config.program.name = data.name;
  config.program.type = data.type;
  return true;
  };
@@ -18823,12 +18832,13 @@ function cloud_edit()
  }
  function check_single_instance_app(id)
  {
- var __app_id = id.toLowerCase();
- if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+ if (owl.status.applications.get.by_proc_id(id, 'RUN') && colony.is_single_instance(id))
  {
  var __msg_win = new msgbox();
  __msg_win.init('desktop');
- __msg_win.show(xenon.load('os_name'), 'This is a single instance app!');
+ __msg_win.show(xenon.load('os_name'),
+ `Your program contains a single instance app.<br>
+ A running instance blocks the execution!`);
  return true;
  }
  return false;
@@ -18868,6 +18878,18 @@ function cloud_edit()
  config.ce.exec_button.value = 'Run';
  config.ce.exec_button.classList.remove('ce_stop');
  frog('CLOUD EDIT', '[*] Run Fail [*]', meta_executor.error.last.message());
+ }
+ else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_BLOCK)
+ {
+ config.ce.status_label.innerHTML = '[BLOCK]';
+ config.ce.exec_button.value = 'Run';
+ config.ce.exec_button.classList.remove('ce_stop');
+ frog('CLOUD EDIT', '[*] Run Block [*]', meta_executor.error.last.message());
+ var __msg_win = new msgbox();
+ __msg_win.init('desktop');
+ __msg_win.show(xenon.load('os_name'),
+ `Your program contains a single instance app.<br>
+ A running instance blocks the execution!`);
  }
  else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
  {

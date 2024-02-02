@@ -18,7 +18,6 @@ function cloud_edit()
     {
         function program_model()
         {
-            this.icon = '';
             this.name = '';
             this.type = null;
         }
@@ -42,8 +41,7 @@ function cloud_edit()
     {
         this.telemetry = function(data)
         {
-            config.program.icon = encodeURIComponent(data.icon);
-            config.program.name = encodeURIComponent(data.name);
+            config.program.name = data.name;
             config.program.type = data.type;
 
             return true;
@@ -87,14 +85,14 @@ function cloud_edit()
 
         function check_single_instance_app(id)
         {
-            var __app_id = id.toLowerCase();
-
-            if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+            if (owl.status.applications.get.by_proc_id(id, 'RUN') && colony.is_single_instance(id))
             {
                 var __msg_win = new msgbox();
 
                 __msg_win.init('desktop');
-                __msg_win.show(xenon.load('os_name'), 'This is a single instance app!');
+                __msg_win.show(xenon.load('os_name'), 
+                               `Your program contains a single instance app.<br>
+                                A running instance blocks the execution!`);
 
                 return true;
             }
@@ -146,6 +144,21 @@ function cloud_edit()
                             config.ce.exec_button.classList.remove('ce_stop');
 
                             frog('CLOUD EDIT', '[*] Run Fail [*]', meta_executor.error.last.message());
+                        }
+                        else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_BLOCK)
+                        {
+                            config.ce.status_label.innerHTML = '[BLOCK]';
+                            config.ce.exec_button.value = 'Run';
+                            config.ce.exec_button.classList.remove('ce_stop');
+
+                            frog('CLOUD EDIT', '[*] Run Block [*]', meta_executor.error.last.message());
+
+                            var __msg_win = new msgbox();
+
+                            __msg_win.init('desktop');
+                            __msg_win.show(xenon.load('os_name'), 
+                                           `Your program contains a single instance app.<br>
+                                            A running instance blocks the execution!`);
                         }
                         else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
                         {
