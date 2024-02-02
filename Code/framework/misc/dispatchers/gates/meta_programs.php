@@ -31,7 +31,7 @@
 
             foreach ($user_programs as $program)
             {
-                if ($program['name'] === $_POST['x_id'])
+                if ($program['id'] === $_POST['x_id'])
                 {
                     $user_profile['user_programs'][$_POST['mode'] . 's'][$counter]['last_run'] = time();
 
@@ -50,13 +50,13 @@
                 $counter++;
             }
         }
-        else if ($_POST['action'] === 'load_phtml' && !empty($_POST['x_id']))
+        else if ($_POST['action'] === 'load_ms_phtml' && !empty($_POST['x_id']) && !empty($_POST['data_id']))
         {
-            $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/' .  $_POST['x_id'] . '.phtml');
+            $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/' .  $_POST['data_id'] . '.phtml');
 
             echo file_get_contents($file_path);
         }
-        else if ($_POST['action'] === 'load_settings' && !empty($_POST['x_id']))
+        else if ($_POST['action'] === 'load_ms_settings' && !empty($_POST['x_id']))
         {
             $file_path = UTIL::Absolute_Path('fs/' . $uid . '/programs/' . $_POST['x_id']  . '/settings.json');
 

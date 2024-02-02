@@ -1,8 +1,8 @@
 {
-    "id"        :   "agora",
-    "name"      :   "AGORA",
-    "hint"      :   "AGORA :: Marketplace for Apps & Services",
-    "icon"      :   "agora",
+    "id"        :   "new_program",
+    "name"      :   "New Program",
+    "hint"      :   "",
+    "icon"      :   "",
     "data"      :   {
                         "window"    :   {
                                             "title"     :   false,

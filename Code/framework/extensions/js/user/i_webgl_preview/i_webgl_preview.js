@@ -129,7 +129,7 @@ function i_webgl_preview()
 
         infinity.init();
 
-        i_webgl_preview_bee.init(config.id);
+        i_webgl_preview_bee.init(config.id, 'i_webgl_preview_icon');
         i_webgl_preview_bee.settings.data.window.labels.title('iWebGL (Preview) :: BMW showcase');
         i_webgl_preview_bee.settings.data.window.labels.status_bar('The car, the style...');
         i_webgl_preview_bee.settings.general.single_instance(true);

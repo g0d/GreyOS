@@ -9,6 +9,14 @@
     Open Software License (OSL 3.0)
 */
 
+.i_quakejs_icon
+{
+    background-image: url('pix/icon_games.png') !important;
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+}
+
 .i_quakejs
 {
     height: inherit;

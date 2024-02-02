@@ -22,29 +22,29 @@
         $user_profile = ARKANGEL::Fetch_My_Profile();
 
         $uid = $user_profile['uid'];
-        $user_system_apps = $user_profile['system_apps'];
+        $user_standard_apps = $user_profile['standard_apps'];
         $user_apps = $user_profile['user_programs']['apps'];
 
         if ($_POST['action'] === 'load')
         {
-            $all_system_apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/all_system_apps.json')), true);
+            $standard_apps = json_decode(file_get_contents(UTIL::Absolute_Path('framework/misc/data/standard_apps.json')), true);
 
             $index = 1;
             $html = '';
 
-            foreach ($user_system_apps as $allowed_app)
+            foreach ($user_standard_apps as $allowed_app)
             {
-                foreach ($all_system_apps as $app)
+                foreach ($standard_apps as $app)
                 {
-                    if ($allowed_app === $app['app_id'])
+                    if ($allowed_app === $app['id'])
                     {
-                        $html .= '<div id="app_' . $app['app_id'] . '" 
+                        $html .= '<div id="app_' . $app['id'] . '" 
                                        draggable="true" 
                                        data-position="' . $index . '" 
                                        data-system="true" 
                                        data-icon="' . $app['icon'] . '" 
                                        class="favorites ' . $app['icon'] . '" 
-                                       title="' . $app['title'] . '"></div>';
+                                       title="' . $app['hint'] . '"></div>';
 
                         $index++;
                     }
@@ -53,7 +53,7 @@
 
             foreach ($user_apps as $app)
             {
-                $html .= '<div id="app_' . $app['name'] . '" 
+                $html .= '<div id="app_' . $app['id'] . '" 
                                draggable="true" 
                                data-position="' . $index . '" 
                                data-system="false" 
@@ -76,7 +76,7 @@
                     return false;
 
                 $position = 1;
-                $dock_system_apps = [];
+                $dock_standard_apps = [];
                 $dock_user_apps = [];
 
                 foreach ($dock_apps as $app)
@@ -84,15 +84,15 @@
                     $app['position'] = strval($position);
 
                     if ($app['system'])
-                        array_push($dock_system_apps, $app['app_id']);
+                        array_push($dock_standard_apps, $app['id']);
                     else
-                        array_push($dock_user_apps, $app['app_id']);
+                        array_push($dock_user_apps, $app['id']);
 
                     $position++;
                 }
 
-                if (!empty($dock_system_apps))
-                    $user_profile['system_apps'] = $dock_system_apps;
+                if (!empty($dock_standard_apps))
+                    $user_profile['standard_apps'] = $dock_standard_apps;
 
                 if (!empty($dock_user_apps))
                     $user_profile['user_programs']['apps'] = $dock_user_apps;

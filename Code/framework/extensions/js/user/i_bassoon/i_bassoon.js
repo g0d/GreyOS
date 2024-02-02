@@ -120,7 +120,7 @@ function i_bassoon()
 
         infinity.init();
 
-        i_bassoon_bee.init(config.id);
+        i_bassoon_bee.init(config.id, 'i_bassoon_icon');
         i_bassoon_bee.settings.data.window.labels.title('iBassoon (Integrated Bassoon Tracker)');
         i_bassoon_bee.settings.data.window.labels.status_bar('Online DAW for fun!');
         i_bassoon_bee.settings.general.single_instance(true);

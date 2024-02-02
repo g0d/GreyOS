@@ -5,9 +5,17 @@
     Description: This file contains the iWebGL (Preview) theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
+
+.i_webgl_preview_icon
+{
+    background-image: url('pix/i_webgl.png') !important;
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+}
 
 .i_webgl_preview
 {

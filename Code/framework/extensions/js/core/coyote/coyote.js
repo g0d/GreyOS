@@ -618,7 +618,7 @@ function coyote()
         infinity.init();
 
         // Declare bee's settings
-        coyote_bee.init('coyote');
+        coyote_bee.init('coyote', 'coyote_icon');
         coyote_bee.settings.data.window.labels.title('Coyote');
         coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
         coyote_bee.settings.data.casement.labels.title('Meta-information');

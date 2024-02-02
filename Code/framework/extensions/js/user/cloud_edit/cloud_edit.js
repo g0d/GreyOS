@@ -497,7 +497,7 @@ function cloud_edit()
         infinity.init();
 
         // Declare bee's settings
-        cloud_edit_bee.init('cloud_edit');
+        cloud_edit_bee.init('cloud_edit', 'cloud_edit_icon');
         cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
         cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
         cloud_edit_bee.settings.data.window.content(config.content);

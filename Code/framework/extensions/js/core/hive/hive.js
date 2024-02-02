@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 3.6)
+    GreyOS - Hive (Version: 3.7)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -373,9 +373,9 @@ function hive()
                                 __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
                                 __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
                                 __stack_offset_x_space = self.settings.left() + 
-                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 190,
-                                __stack_offset_y_space = self.settings.top() + 
-                                                         utils_sys.graphics.pixels_value(__hive_object.style.height);
+                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 190;
+                                //__stack_offset_y_space = self.settings.top() + 
+                                //                         utils_sys.graphics.pixels_value(__hive_object.style.height);
 
                             if (mode === 1)
                             {

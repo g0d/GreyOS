@@ -188,15 +188,16 @@
 			return false;
 
 		$dir_path = UTIL::Absolute_Path('fs');
+		$final_path = $dir_path . '/' . $new_user_profile['uid'];
 
-		mkdir($dir_path . '/' . $new_user_profile['uid'], 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Docs', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Pictures', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Music', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Video', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/disk/Other', 0700);
-		mkdir($dir_path . '/' . $new_user_profile['uid'] . '/programs', 0700);
+		mkdir($final_path, 0700);
+		mkdir($final_path . '/disk', 0700);
+		mkdir($final_path . '/disk/Docs', 0700);
+		mkdir($final_path . '/disk/Pictures', 0700);
+		mkdir($final_path . '/disk/Music', 0700);
+		mkdir($final_path . '/disk/Video', 0700);
+		mkdir($final_path . '/disk/Other', 0700);
+		mkdir($final_path . '/programs', 0700);
 
 		$result = ARKANGEL::Update_Profile($new_user_profile);
 

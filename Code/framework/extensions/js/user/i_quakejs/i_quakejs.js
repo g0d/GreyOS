@@ -129,7 +129,7 @@ function i_quakejs()
 
         infinity.init();
 
-        i_quakejs_bee.init(config.id);
+        i_quakejs_bee.init(config.id, 'i_quakejs_icon');
         i_quakejs_bee.settings.data.window.labels.title('iQuakeJS (Integrated Online Multiplayer Game)');
         i_quakejs_bee.settings.data.window.labels.status_bar('Frag the hell out of them all!');
         i_quakejs_bee.settings.general.single_instance(true);

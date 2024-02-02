@@ -84,9 +84,9 @@
 	$program_source = $_POST['program_source'];
 	$program = array($program_name, $program_model, $program_source);
 
-	$user_profile = deploy_program($my_profile, $program);
+	$new_profile = deploy_program($my_profile, $program);
 
-	if (!ARKANGEL::Update_Profile($user_profile))
+	if (!ARKANGEL::Update_Profile($new_profile))
 	{
 		echo '-1';
 
@@ -97,33 +97,60 @@
 
 	function deploy_program($profile, $program)
 	{
+		$index = 0;
 		$uid = $profile['uid'];
 		$is_match_found = false;
+		$program_id = str_replace(' ', '_', strtolower($program[0]));
+		$program_icon = ($program[1]['icon'] === "null") ? 'app_default' : $program[1]['icon'];
+		$new_program = array('id' 			=>	$program_id,
+							 'name' 		=> 	$program[0],
+							 'icon' 		=> 	$program_icon,
+							 'last_run' 	=> 	null);
 
 		foreach ($profile['user_programs'][$program[1]['type'] . 's'] as $this_program)
 		{
 			if ($program[0] === $this_program['name'])
 			{
+				$profile['user_programs'][$program[1]['type'] . 's'][$index] = $new_program;
+
 				$is_match_found = true;
 
 				break;
 			}
+
+			$index++;
 		}
 
 		if (!$is_match_found)
-		{
-			$new_program = array('name' 		=> 	$program[0],
-								 'icon' 		=> 	$program[1]['icon'],
-								 'last_run' 	=> 	null);
-
 			array_push($profile['user_programs'][$program[1]['type'] . 's'], $new_program);
-		}
 
 		$file_path = UTIL::Absolute_Path('fs/' . $uid);
+		$final_path = $file_path . '/programs/' . $program_id;
+		$program_settings_path = UTIL::Absolute_Path('framework/misc/data/default_program_settings.json');
+		$program_settings = json_decode(file_get_contents($program_settings_path), true);
 
-		mkdir($file_path . '/programs/' . $program[0], 0700);
+		$program_settings['id'] = $program_id;
+		$program_settings['name'] = $program[0];
+		$program_settings['icon'] = $program_icon;
 
-		file_put_contents($file_path . '/programs/' . $program[0] . '/' . $program[0] . '.ms', $program[2]);
+		mkdir($final_path, 0700);
+		mkdir($final_path . '/data', 0700);
+		mkdir($final_path . '/data/window', 0700);
+		mkdir($final_path . '/data/casement', 0700);
+		mkdir($final_path . '/graphics', 0700);
+		mkdir($final_path . '/graphics/pix', 0700);
+		mkdir($final_path . '/graphics/icons', 0700);
+		mkdir($final_path . '/misc', 0700);
+
+		file_put_contents($final_path . '/data/window/title.phtml', '');
+		file_put_contents($final_path . '/data/window/content.phtml', '');
+		file_put_contents($final_path . '/data/window/status.phtml', '');
+		file_put_contents($final_path . '/data/casement/title.phtml', '');
+		file_put_contents($final_path . '/data/casement/content.phtml', '');
+		file_put_contents($final_path . '/data/casement/status.phtml', '');
+		file_put_contents($final_path . '/graphics/' . $program_id . '.css', '');
+		file_put_contents($final_path . '/settings.json', json_encode($program_settings));
+		file_put_contents($final_path . '/' . $program_id . '.ms', $program[2]);
 
 		return $profile;
 	}

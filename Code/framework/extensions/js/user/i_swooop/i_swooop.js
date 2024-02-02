@@ -129,7 +129,7 @@ function i_swooop()
 
         infinity.init();
 
-        i_swooop_bee.init(config.id);
+        i_swooop_bee.init(config.id, 'i_swooop_icon');
         i_swooop_bee.settings.data.window.labels.title('iSwooop (Integrated Online Game)');
         i_swooop_bee.settings.data.window.labels.status_bar('Fly like an acrobat...');
         i_swooop_bee.settings.general.single_instance(true);

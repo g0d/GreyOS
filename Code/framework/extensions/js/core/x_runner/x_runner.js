@@ -1,5 +1,5 @@
 /*
-    GreyOS - X-Runner (Version: 1.7)
+    GreyOS - X-Runner (Version: 1.8)
 
     File name: x_runner.js
     Description: This file contains the X-Runner - User-level programs execution module.
@@ -16,36 +16,31 @@ function x_runner()
 
     function x_meta_caller()
     {
+        var __id = null;
+
         this.telemetry = function(data)
         {
             if (data.type === 'app')
-            {
                 x_reference = colony.get(data.app_id);
-
-                x_is_app = true;
-            }
             else
-            {
                 x_reference = roost.get(data.name);
 
-                x_is_app = false;
-            }
-
-            return;
+            __id = data.name;
         };
 
         this.source = function()
         {
             // TODO: Ideas?
-
-            return;
         };
 
         this.reset = function()
         {
             // TODO: System calls maybe?
+        };
 
-            return;
+        this.program_id = function()
+        {
+            return __id;
         };
     }
 
@@ -82,9 +77,7 @@ function x_runner()
 
         function check_single_instance_app(id)
         {
-            var __app_id = id.toLowerCase();
-
-            if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+            if (owl.status.applications.get.by_proc_id(id, 'RUN') && colony.is_single_instance(id))
             {
                 var __msg_win = new msgbox();
 
@@ -99,26 +92,28 @@ function x_runner()
 
         function execute_meta_program(mode, x_id)
         {
-            var __code = null,
+            var __settings = null,
+                __phtml = null,
+                __code = null,
                 __ajax_config = null;
 
             __ajax_config = {
                                 "type"          :   "request",
                                 "method"        :   "post",
                                 "url"           :   "/",
-                                "data"          :   "gate=meta_programs&action=load_settings&x_id=" + x_id,
+                                "data"          :   "gate=meta_programs&action=load_ms_settings&x_id=" + x_id,
                                 "ajax_mode"     :   "synchronous"
                             },
-            settings = ajax.run(__ajax_config);
+            __settings = ajax.run(__ajax_config);
 
             __ajax_config = {
                                 "type"          :   "request",
                                 "method"        :   "post",
                                 "url"           :   "/",
-                                "data"          :   "gate=meta_programs&action=load_phtml&x_id=" + x_id,
+                                "data"          :   "gate=meta_programs&action=load_ms_phtml&x_id=" + x_id,
                                 "ajax_mode"     :   "synchronous"
                             },
-            phtml = ajax.run(__ajax_config);
+            __phtml = ajax.run(__ajax_config);
 
             __ajax_config = {
                                 "type"          :   "request",
@@ -142,7 +137,7 @@ function x_runner()
             {
                 if (!check_system_run_limits(true))
                 {
-                    if (!check_single_instance_app(x_id))
+                    if (mode === 'app' && !check_single_instance_app(x_mc.program_id()))
                     {
                         if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
                             frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
@@ -160,7 +155,7 @@ function x_runner()
 
             utils_int.set_dock_icon_status(x_id);
 
-            if (x_is_app === true)
+            if (mode === 'app')
                 utils_int.app_close_callback(x_reference, x_id, false);
 
             is_x_running = true;
@@ -386,7 +381,6 @@ function x_runner()
         x_mode = null,
         x_program = null,
         x_reference = null,
-        x_is_app = null,
         cosmos = null,
         matrix = null,
         app_box = null,

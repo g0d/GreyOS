@@ -537,7 +537,7 @@ function bee()
             var __custom_icon = __bee_settings.general.icon();
 
             if (__custom_icon)
-                ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + __custom_icon + ')';
+                ui_objects.window.control_bar.icon.classList.add(__custom_icon);
 
             var __casement_width_settings = __bee_settings.general.casement_width();
 
@@ -1562,8 +1562,8 @@ function bee()
 
                 __icon = val;
 
-                if (ui_objects.window !== null)
-                    ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + val + ')';
+                if (ui_objects.window.control_bar.icon !== null)
+                    ui_objects.window.control_bar.icon.classList.add(val);
 
                 return true;
             };
@@ -4528,7 +4528,12 @@ function bee()
                     hive.stack.toggle('off');
                 }
                 else
+                {
+                    if (bee_statuses.casement_deployed())
+                        hive.stack.toggle('off');
+
                     return false;
+                }
 
                 return true;
             };

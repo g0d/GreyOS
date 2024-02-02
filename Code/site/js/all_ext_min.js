@@ -7989,9 +7989,7 @@ function hive()
  __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
  __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
  __stack_offset_x_space = self.settings.left() +
- utils_sys.graphics.pixels_value(__hive_object.style.width) + 190,
- __stack_offset_y_space = self.settings.top() +
- utils_sys.graphics.pixels_value(__hive_object.style.height);
+ utils_sys.graphics.pixels_value(__hive_object.style.width) + 190;
  if (mode === 1)
  {
  self.stack.bees.expel(event_object);
@@ -9491,7 +9489,7 @@ function dock()
  __position = __dock_app.getAttribute('data-position'),
  __system = __dock_app.getAttribute('data-system'),
  __title = __dock_app.getAttribute('title');
- config.dock_array.push({ "app_id" : __app_id, "icon" : __app_icon,
+ config.dock_array.push({ "id" : __app_id, "icon" : __app_icon,
  "position" : __position, "system" : __system, "title" : __title });
  }
  return true;
@@ -9525,7 +9523,7 @@ function dock()
  return false;
  if (is_dragging)
  return false;
- var __app_id = dock_app['app_id'],
+ var __app_id = dock_app['id'],
  __system_app = dock_app['system'],
  __sys_theme = chameleon.get(),
  __is_sys_level = true;
@@ -9536,7 +9534,7 @@ function dock()
  __is_sys_level = false;
  x_runner.start('app', __app_id, __is_sys_level);
  };
- morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['app_id']));
+ morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['id']));
  }
  function enable_drag()
  {
@@ -12229,27 +12227,24 @@ function x_runner()
  var self = this;
  function x_meta_caller()
  {
+ var __id = null;
  this.telemetry = function(data)
  {
  if (data.type === 'app')
- {
  x_reference = colony.get(data.app_id);
- x_is_app = true;
- }
  else
- {
  x_reference = roost.get(data.name);
- x_is_app = false;
- }
- return;
+ __id = data.name;
  };
  this.source = function()
  {
- return;
  };
  this.reset = function()
  {
- return;
+ };
+ this.program_id = function()
+ {
+ return __id;
  };
  }
  function utilities()
@@ -12278,8 +12273,7 @@ function x_runner()
  }
  function check_single_instance_app(id)
  {
- var __app_id = id.toLowerCase();
- if (owl.status.applications.get.by_proc_id(__app_id, 'RUN') && colony.is_single_instance(__app_id))
+ if (owl.status.applications.get.by_proc_id(id, 'RUN') && colony.is_single_instance(id))
  {
  var __msg_win = new msgbox();
  __msg_win.init('desktop');
@@ -12290,24 +12284,26 @@ function x_runner()
  }
  function execute_meta_program(mode, x_id)
  {
- var __code = null,
+ var __settings = null,
+ __phtml = null,
+ __code = null,
  __ajax_config = null;
  __ajax_config = {
  "type" : "request",
  "method" : "post",
  "url" : "/",
- "data" : "gate=meta_programs&action=load_settings&x_id=" + x_id,
+ "data" : "gate=meta_programs&action=load_ms_settings&x_id=" + x_id,
  "ajax_mode" : "synchronous"
  },
- settings = ajax.run(__ajax_config);
+ __settings = ajax.run(__ajax_config);
  __ajax_config = {
  "type" : "request",
  "method" : "post",
  "url" : "/",
- "data" : "gate=meta_programs&action=load_phtml&x_id=" + x_id,
+ "data" : "gate=meta_programs&action=load_ms_phtml&x_id=" + x_id,
  "ajax_mode" : "synchronous"
  },
- phtml = ajax.run(__ajax_config);
+ __phtml = ajax.run(__ajax_config);
  __ajax_config = {
  "type" : "request",
  "method" : "post",
@@ -12326,7 +12322,7 @@ function x_runner()
  {
  if (!check_system_run_limits(true))
  {
- if (!check_single_instance_app(x_id))
+ if (mode === 'app' && !check_single_instance_app(x_mc.program_id()))
  {
  if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
  frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
@@ -12340,7 +12336,7 @@ function x_runner()
  return meta_executor.terminate();
  }
  utils_int.set_dock_icon_status(x_id);
- if (x_is_app === true)
+ if (mode === 'app')
  utils_int.app_close_callback(x_reference, x_id, false);
  is_x_running = true;
  return x_reference;
@@ -12510,7 +12506,6 @@ function x_runner()
  x_mode = null,
  x_program = null,
  x_reference = null,
- x_is_app = null,
  cosmos = null,
  matrix = null,
  app_box = null,
@@ -14500,7 +14495,7 @@ function bee()
  }
  var __custom_icon = __bee_settings.general.icon();
  if (__custom_icon)
- ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + __custom_icon + ')';
+ ui_objects.window.control_bar.icon.classList.add(__custom_icon);
  var __casement_width_settings = __bee_settings.general.casement_width();
  ui_objects.casement.ui.style.width = (__bee_gui.size.width() * __casement_width_settings[0]) + 'px';
  __bee_gui.actions.set_top();
@@ -15271,8 +15266,8 @@ function bee()
  if (!utils_sys.validation.alpha.is_string(val))
  return false;
  __icon = val;
- if (ui_objects.window !== null)
- ui_objects.window.control_bar.icon.style.backgroundImage = 'url(' + val + ')';
+ if (ui_objects.window.control_bar.icon !== null)
+ ui_objects.window.control_bar.icon.classList.add(val);
  return true;
  };
  this.casement_width = function(val, type = 'relative')
@@ -17522,7 +17517,11 @@ function bee()
  hive.stack.toggle('off');
  }
  else
+ {
+ if (bee_statuses.casement_deployed())
+ hive.stack.toggle('off');
  return false;
+ }
  return true;
  };
  this.release = function(event_object)
@@ -18552,7 +18551,7 @@ function coyote()
  nature.theme(['coyote']);
  nature.apply('new');
  infinity.init();
- coyote_bee.init('coyote');
+ coyote_bee.init('coyote', 'coyote_icon');
  coyote_bee.settings.data.window.labels.title('Coyote');
  coyote_bee.settings.data.window.labels.status_bar('Howling under the Internet moon light...');
  coyote_bee.settings.data.casement.labels.title('Meta-information');
@@ -19134,7 +19133,7 @@ function cloud_edit()
  nature.theme(['cloud_edit']);
  nature.apply('new');
  infinity.init();
- cloud_edit_bee.init('cloud_edit');
+ cloud_edit_bee.init('cloud_edit', 'cloud_edit_icon');
  cloud_edit_bee.settings.data.window.labels.title('Cloud Edit');
  cloud_edit_bee.settings.data.window.labels.status_bar('Integrated code editor for GreyOS');
  cloud_edit_bee.settings.data.window.content(config.content);
@@ -19344,7 +19343,7 @@ function radio_dude()
  nature.apply('new');
  infinity.init();
  radio_dude_bee = dev_box.get('bee');
- radio_dude_bee.init('radio_dude');
+ radio_dude_bee.init('radio_dude', 'radio_dude_icon');
  radio_dude_bee.settings.data.window.labels.title('Radio Dude');
  radio_dude_bee.settings.data.window.labels.status_bar('Music babe... [ M U S I C ]');
  radio_dude_bee.settings.data.casement.labels.title('Weather');

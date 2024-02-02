@@ -324,9 +324,10 @@ option
 
 .tik_tok
 {
-    background-color: #0b3d3c8f !important;
+    background-color: #4349488f !important;
     height: 37px !important;
     border: none !important;
+    border-radius: 12px;
     margin-top: 0px !important;
 }
 

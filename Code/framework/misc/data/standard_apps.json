@@ -1,0 +1,72 @@
+[
+    {
+        "id"        :   "coyote",
+        "icon"      :   "app_coyote",
+        "hint"      :   "Coyote :: A Web browser inside the browser ;-) Click me!"
+    },
+    {
+        "id"        :   "radio_dude",
+        "icon"      :   "app_radio_dude",
+        "hint"      :   "Radio Dude :: Put some tunes in your life. Click me!"
+    },
+    {
+        "id"        :   "i_bassoon",
+        "icon"      :   "app_i_bassoon",
+        "hint"      :   "iBassoon :: 3rd-party integrated DAW for fun. Click me!"
+    },
+    {
+        "id"        :   "cloud_edit",
+        "icon"      :   "app_cloud_edit",
+        "hint"      :   "Cloud Edit :: Integrated code editor for GreyOS. Click me!"
+    },
+    {
+        "id"        :   "i_youdj",
+        "icon"      :   "app_i_youdj",
+        "hint"      :   "iYouDJ :: 3rd-party integrated DJ studio. Click me!"
+    },
+    {
+        "id"        :   "i_audiomass",
+        "icon"      :   "app_i_audiomass",
+        "hint"      :   "iAudioMass :: 3rd-party integrated audio editor. Click me!"
+    },
+    {
+        "id"        :   "i_soundtrap",
+        "icon"      :   "app_i_soundtrap",
+        "hint"      :   "iSoundTrap :: 3rd-party integrated DAW. Click me!"
+    },
+    {
+        "id"        :   "i_ampedstudio",
+        "icon"      :   "app_i_ampedstudio",
+        "hint"      :   "iAmpedStudio :: 3rd-party integrated DAW. Click me!"
+    },
+    {
+        "id"        :   "i_vectorink",
+        "icon"      :   "app_i_vectorink",
+        "hint"      :   "iVectorInk :: 3rd-party integrated vector graphics designer. Click me!"
+    },
+    {
+        "id"        :   "i_ganttio",
+        "icon"      :   "app_i_ganttio",
+        "hint"      :   "iGanttIO :: 3rd-party integrated Gantt charts creator. Click me!"
+    },
+    {
+        "id"        :   "i_quakejs",
+        "icon"      :   "app_i_quakejs",
+        "hint"      :   "iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"
+    },
+    {
+        "id"        :   "i_mariojs",
+        "icon"      :   "app_i_mariojs",
+        "hint"      :   "iMarioJS :: 3rd-party integrated Mario game. Click me!"
+    },
+    {
+        "id"        :   "i_swooop",
+        "icon"      :   "app_i_swooop",
+        "hint"      :   "iSwooop :: 3rd-party integrated flight game. Click me!"
+    },
+    {
+        "id"        :   "i_webgl_preview",
+        "icon"      :   "app_i_webgl_preview",
+        "hint"      :   "iWebGL (Preview) :: 3rd-party integrated showcase. Click me!"
+    }
+]

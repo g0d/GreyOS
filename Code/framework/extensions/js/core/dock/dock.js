@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 2.4)
+    GreyOS - Dock (Version: 2.5)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -86,7 +86,7 @@ function dock()
                 __system = __dock_app.getAttribute('data-system'),
                 __title = __dock_app.getAttribute('title');
 
-                config.dock_array.push({ "app_id" : __app_id, "icon" : __app_icon, 
+                config.dock_array.push({ "id" : __app_id, "icon" : __app_icon, 
                                          "position" : __position, "system" : __system, "title" : __title });
             }
 
@@ -132,7 +132,7 @@ function dock()
                                 if (is_dragging)
                                     return false;
 
-                                var __app_id = dock_app['app_id'],
+                                var __app_id = dock_app['id'],
                                     __system_app = dock_app['system'],
                                     __sys_theme = chameleon.get(),
                                     __is_sys_level = true;
@@ -146,7 +146,7 @@ function dock()
 
                                 x_runner.start('app', __app_id, __is_sys_level);
                             };
-            morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['app_id']));
+            morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['id']));
         }
 
         function enable_drag()
