@@ -1,9 +1,9 @@
 <?php
     /*
-        GreyOS - Meta-Info (Programmable gate for getting Google search results)
+        GreyOS - Meta-Info (Programmable gate for getting Bing search results)
 
         File name: meta_info.php
-        Description: This file contains the Meta-Info Google search results gate (AJAX).
+        Description: This file contains the Meta-Info Bing search results gate (AJAX).
 
         Coded by George Delaportas (G0D)
         Copyright © 2024

@@ -17529,7 +17529,7 @@ function bee()
  }
  else
  {
- if (bee_statuses.casement_deployed())
+ if (bee_statuses.resize() && bee_statuses.casement_deployed())
  hive.stack.toggle('off');
  return false;
  }

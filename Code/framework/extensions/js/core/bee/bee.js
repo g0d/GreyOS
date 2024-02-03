@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.4)
+    GreyOS - Bee (Version: 5.5)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -4529,7 +4529,7 @@ function bee()
                 }
                 else
                 {
-                    if (bee_statuses.casement_deployed())
+                    if (bee_statuses.resize() && bee_statuses.casement_deployed())
                         hive.stack.toggle('off');
 
                     return false;
