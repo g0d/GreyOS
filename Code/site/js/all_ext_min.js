@@ -10999,7 +10999,7 @@ function meta_script()
  event = null;
  return __new_app.gui.actions.casement.retract(event, callback);
  };
- this.trigger = function(event, callback)
+ this.toggle = function(event, callback)
  {
  if (__new_app === null)
  return false;
@@ -14249,7 +14249,7 @@ function bee()
  this.touched = false;
  this.menu_activated = false;
  this.casement_deployed = false;
- this.casement_retracted = false;
+ this.casement_retracted = true;
  this.resize_enabled = false;
  this.key_pressed = false;
  this.mouse_clicked = false;
@@ -14713,7 +14713,7 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
  return false;
- self.gui.actions.casement.trigger(event_object);
+ self.gui.actions.casement.toggle(event_object);
  return true;
  }
  this.gui_init = function()
@@ -16989,7 +16989,7 @@ function bee()
  ui_objects.window.menu.manage_casement.innerHTML = 'Show casement';
  return true;
  };
- this.trigger = function(event_object, callback)
+ this.toggle = function(event_object, callback)
  {
  if (is_init === false)
  return false;

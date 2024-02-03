@@ -354,7 +354,7 @@ function meta_script()
                         return __new_app.gui.actions.casement.retract(event, callback);
                     };
 
-                    this.trigger = function(event, callback)
+                    this.toggle = function(event, callback)
                     {
                         if (__new_app === null)
                             return false;
