@@ -33,7 +33,7 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '4.2 (alpha)');  // Meta-OS version
+    os_settings.set('version', '4.3 (alpha)');  // Meta-OS version
     os_settings.set('theme', 'morph');          // Themes: 'bubble_gum', 'tomorrow', 'morph'
     os_settings.set('max_apps', 50);            // Maximum number of allowed active apps per session
     os_settings.set('max_services', 100)        // Maximum number of allowed active services per session
@@ -165,7 +165,7 @@ function boot_script()
             new_chameleon.set(os_settings.get('theme'));
 
             // Preload (cache) Bee theme for better graphics performance on load
-            new_nature.theme(['bee']);
+            new_nature.themes.store('bee');
             new_nature.apply('new');
 
             // Apply desktop theme
@@ -236,7 +236,7 @@ function boot_script()
             load_screen.show();
 
             // Remove Krator theme
-            matrix_container.get('nature').remove('krator');
+            matrix_container.get('nature').themes.clear('krator');
 
             // Load the full dektop UI infrastructure
             matrix_container.get('ui_controls').init('action_icons');
@@ -303,7 +303,7 @@ function boot_script()
             new_chameleon.set(os_settings.get('theme'));
 
             // Preload (cache) Bee theme for better graphics performance on load
-            new_nature.theme(['bee']);
+            new_nature.themes.store('bee');
             new_nature.apply('new');
 
             // Apply desktop theme
@@ -573,7 +573,7 @@ function boot_script()
             new_chameleon.set(os_settings.get('theme'));
 
             // Preload (cache) Bee theme for better graphics performance on load
-            new_nature.theme(['bee']);
+            new_nature.themes.store('bee');
             new_nature.apply('new');
 
             // Apply desktop theme

@@ -556,7 +556,7 @@ function swarm()
 
             swarm_id = self.settings.id();
 
-            nature.theme(['swarm']);
+            nature.themes.store('swarm');
             nature.apply('new');
 
             utils_int.draw(left, top, right, bottom);

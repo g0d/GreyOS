@@ -124,7 +124,7 @@ function i_quakejs()
 
         config.id = 'i_quakejs';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -143,27 +143,22 @@ function i_quakejs()
         i_quakejs_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_quakejs_bee.on('open', function() { i_quakejs_bee.gui.fx.fade.into(); });
         i_quakejs_bee.on('opened', function() { utils_int.gui_init(); });
-        i_quakejs_bee.on('drag', function()
-                                 {
-                                     utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'block';
-                                 });
-        i_quakejs_bee.on('dragging', function()
-                                    {
-                                        i_quakejs_bee.gui.fx.opacity.settings.set(0.7);
-                                        i_quakejs_bee.gui.fx.opacity.apply();
-                                    });
-        i_quakejs_bee.on('dragged', function()
-                                    {
-                                        i_quakejs_bee.gui.fx.opacity.reset();
-                                    });
-        i_quakejs_bee.on('close', function()
-                                  {
-                                      i_quakejs_bee.gui.fx.fade.out();
-                                  });
         i_quakejs_bee.on('keydown', function()
                                     {
                                         console.log('QUAKE JS');
                                     });
+        i_quakejs_bee.on('drag', function()
+                                 {
+                                    utils_sys.objects.by_id(i_quakejs_bee.settings.general.id() + '_overlay').style.display = 'block';
+                                 });
+        i_quakejs_bee.on('dragging', function()
+                                     {
+                                        i_quakejs_bee.gui.fx.opacity.settings.set(0.7);
+                                        i_quakejs_bee.gui.fx.opacity.apply();
+                                     });
+        i_quakejs_bee.on('dragged', function() { i_quakejs_bee.gui.fx.opacity.reset(); });
+        i_quakejs_bee.on('close', function() { i_quakejs_bee.gui.fx.fade.out(); });
+        i_quakejs_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

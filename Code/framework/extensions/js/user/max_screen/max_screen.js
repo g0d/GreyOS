@@ -5,7 +5,7 @@
     Description: This file contains the Max Screen - App size manager module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -26,8 +26,6 @@ function max_screen()
 
             if (__element.requestFullscreen)
                 __element.requestFullscreen();
-            else if (__element.mozRequestFullScreen)
-                __element.mozRequestFullScreen();
             else if (__element.webkitRequestFullscreen)
                 __element.webkitRequestFullscreen();
             else
@@ -115,7 +113,8 @@ function max_screen()
             return false;
 
         if (vulcan.validation.misc.is_undefined(container_id) || 
-            vulcan.validation.alpha.is_symbol(container_id) || vulcan.objects.by_id(container_id) === null || 
+            vulcan.validation.alpha.is_symbol(container_id) || 
+            vulcan.objects.by_id(container_id) === null || 
             !vulcan.validation.misc.is_function(func))
             return false;
 

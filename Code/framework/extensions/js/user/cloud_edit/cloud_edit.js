@@ -19,6 +19,7 @@ function cloud_edit()
         function program_model()
         {
             this.name = '';
+            this.icon = '';
             this.type = null;
         }
 
@@ -42,6 +43,7 @@ function cloud_edit()
         this.telemetry = function(data)
         {
             config.program.name = data.name;
+            config.program.icon = data.icon;
             config.program.type = data.type;
 
             return true;
@@ -504,7 +506,7 @@ function cloud_edit()
         config.content = `// Welcome to Cloud Edit!\n// Please load the test template from\
                              https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
 
-        nature.theme(['cloud_edit']);
+        nature.themes.store('cloud_edit');
         nature.apply('new');
 
         infinity.init();
@@ -545,14 +547,19 @@ function cloud_edit()
         cloud_edit_bee.on('casement_retracted', function() { config.ce.extra_button.value = '>>'; });
         cloud_edit_bee.on('close', function()
                                    {
-                                       morpheus.clear(config.id);
+                                        morpheus.clear(config.id);
 
-                                       meta_executor.terminate();
+                                        meta_executor.terminate();
 
-                                       utils_int.destroy_editor();
+                                        utils_int.destroy_editor();
 
-                                       cloud_edit_bee.gui.fx.fade.out();
+                                        cloud_edit_bee.gui.fx.fade.out();
                                    });
+        cloud_edit_bee.on('closed', function()
+                                    {
+                                        if (!owl.status.applications.get.by_proc_id(cloud_edit_bee.settings.general.app_id(), 'RUN'))
+                                            nature.themes.clear('cloud_edit');
+                                    });
 
         return true;
     };

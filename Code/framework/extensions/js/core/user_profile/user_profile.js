@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 2.3)
+    GreyOS - User Profile (Version: 2.5)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -25,6 +25,21 @@ function user_profile()
     function utilities()
     {
         var me = this;
+
+        function hide_profile_area_on_key(event)
+        {
+            if (utils_sys.validation.misc.is_undefined(event))
+                return false;
+
+            key_control.scan(event);
+
+            if (key_control.get() !== key_control.keys.ESCAPE)
+                return false;
+
+            me.hide_profile_area();
+
+            return true;
+        }
 
         this.session_watchdog = function()
         {
@@ -76,30 +91,30 @@ function user_profile()
             var __data = 'gate=auth&mode=details';
 
             ajax_factory('post', __data, function(result)
-                                 {
-                                     var __auth_details = JSON.parse(result);
+                                         {
+                                            var __auth_details = JSON.parse(result);
 
-                                     user_profile_data.full_name = __auth_details.profile;
-                                     user_profile_data.email = __auth_details.email;
-                                     user_profile_data.role = __auth_details.role;
-                                     user_profile_data.wallpaper = __auth_details.ui.wallpaper;
+                                            user_profile_data.full_name = __auth_details.profile;
+                                            user_profile_data.email = __auth_details.email;
+                                            user_profile_data.role = __auth_details.role;
+                                            user_profile_data.wallpaper = __auth_details.ui.wallpaper;
 
-                                     utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
-                                     utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
+                                            utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
+                                            utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
 
-                                     if (user_profile_data.wallpaper === '')
-                                         document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
-                                     else
-                                         document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
-                                 },
-                                 function()
-                                 {
-                                     // Nothing...
-                                 },
-                                 function()
-                                 {
-                                     // No need to use this
-                                 });
+                                            if (user_profile_data.wallpaper === '')
+                                                document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
+                                            else
+                                                document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
+                                         },
+                                         function()
+                                         {
+                                            // Nothing...
+                                         },
+                                         function()
+                                         {
+                                            // No need to use this
+                                         });
         };
 
         this.logout = function()
@@ -221,46 +236,23 @@ function user_profile()
             __handler = function() {  me.hide_profile_area(); };
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
 
-            __handler = function(event) {  me.hide_profile_area_handler(event); };
+            __handler = function(event) {  hide_profile_area_on_key(event); };
             morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
 
             return true;
         };
 
-        this.toggle_profile_area = function()
+        this.show_profile_area = function()
         {
             var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
                 __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
 
-            if (is_profile_area_visible === true)
-            {
-                is_profile_area_visible = false;
+            __user_profile_area.style.display = 'block';
+            __my_profile_label.style.color = '#55ffe7';
 
-                __user_profile_area.style.display = 'none';
-                __my_profile_label.style.color = '#55b8ff';
-            }
-            else
-            {
-                is_profile_area_visible = true;
+            is_profile_area_visible = true;
 
-                __user_profile_area.style.display = 'block';
-                __my_profile_label.style.color = '#55ffe7';
-            }
-
-            return true;
-        };
-
-        this.hide_profile_area_handler = function(event)
-        {
-            if (utils_sys.validation.misc.is_undefined(event))
-                return false;
-
-            key_control.scan(event);
-
-            if (key_control.get() !== key_control.keys.ESCAPE)
-                return false;
-
-            me.hide_profile_area();
+            super_tray.hide();
 
             return true;
         };
@@ -274,6 +266,18 @@ function user_profile()
             __my_profile_label.style.color = '#55b8ff';
 
             is_profile_area_visible = false;
+
+            super_tray.hide();
+
+            return true;
+        };
+
+        this.toggle_profile_area = function()
+        {
+            if (is_profile_area_visible)
+                me.hide_profile_area();
+            else
+                me.show_profile_area();
 
             return true;
         };
@@ -324,6 +328,30 @@ function user_profile()
         };
     }
 
+    this.show = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return utils_int.show_profile_area();
+    };
+
+    this.hide = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return utils_int.hide_profile_area();
+    };
+
+    this.toggle = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return utils_int.toggle_profile_area();
+    };
+
     this.details = function()
     {
         if (is_init === false)
@@ -361,7 +389,7 @@ function user_profile()
 
         user_profile_id = self.settings.id();
 
-        nature.theme('user_profile');
+        nature.themes.store('user_profile');
         nature.apply('new');
 
         utils_int.draw_user_profile();
@@ -383,6 +411,7 @@ function user_profile()
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
+        super_tray = matrix.get('super_tray');
         parrot = matrix.get('parrot');
         chameleon = matrix.get('chameleon');
         nature = matrix.get('nature');
@@ -397,12 +426,11 @@ function user_profile()
         os_name = null,
         cosmos = null,
         matrix = null,
-        colony = null,
         xenon = null,
         swarm = null,
         hive = null,
         morpheus = null,
-        morpheus = null,
+        super_tray = null,
         chameleon = null,
         nature = null,
         utils_sys = new vulcan(),

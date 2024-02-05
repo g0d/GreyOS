@@ -173,7 +173,7 @@ function radio_dude()
 
         config.id = 'radio_dude_' + random.generate();
 
-        nature.theme(['radio_dude']);
+        nature.themes.store('radio_dude');
         nature.apply('new');
 
         infinity.init();
@@ -203,6 +203,7 @@ function radio_dude()
                                       });
         radio_dude_bee.on('dragged', function() { radio_dude_bee.gui.fx.opacity.reset(); });
         radio_dude_bee.on('close', function() { radio_dude_bee.gui.fx.fade.out(); });
+        radio_dude_bee.on('closed', function() { nature.themes.clear('radio_dude'); });
 
         return true;
     };
@@ -217,7 +218,6 @@ function radio_dude()
         matrix = cosmos.hub.access('matrix');
         dev_box = cosmos.hub.access('dev_box');
 
-        swarm = matrix.get('swarm');
         nature = matrix.get('nature');
 
         infinity = dev_box.get('infinity');
@@ -229,7 +229,6 @@ function radio_dude()
         cosmos = null,
         matrix = null,
         dev_box = null,
-        swarm = null,
         nature = null,
         infinity = null,
         selected_stream = null,

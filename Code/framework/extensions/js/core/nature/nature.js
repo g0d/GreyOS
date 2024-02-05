@@ -1,11 +1,11 @@
 /*
-    GreyOS - N@TuRe (Version: 3.0)
+    GreyOS - N@TuRe (Version: 4.0)
 
     File name: nature.js
     Description: This file contains the N@TuRe - Themes manager module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -14,78 +14,94 @@ function nature()
 {
     var self = this;
 
-    this.theme = function(themes)
+    function utilities()
     {
-        if (utils_sys.validation.misc.is_nothing(cosmos))
+        this.search = function(theme)
+        {
+            var __theme_links = document.head.getElementsByTagName('link');
+
+            if (!__theme_links)
+                return false;
+
+            var __theme_links_num = __theme_links.length;
+
+            for (var i = 0; i < __theme_links_num; i++)
+            {
+                if (__theme_links[i].attributes.rel.value === 'stylesheet')
+                {
+                    if (__theme_links[i].attributes.href.value.indexOf(theme) > -1)
+                        return __theme_links[i];
+                }
+            }
+
             return false;
+        };
+    }
 
-        if (utils_sys.validation.misc.is_object(themes) && !utils_sys.validation.misc.is_array(themes))
-            return false;
+    function themes()
+    {
+        this.store = function(theme)
+        {
+            if (utils_sys.validation.misc.is_nothing(cosmos))
+                return false;
 
-        if (utils_sys.validation.misc.is_undefined(themes))
-            return themes_in_use;
+            if (!utils_sys.validation.alpha.is_string(theme))
+                return false;
 
-        if (themes === '')
-            return false;
+            theme_in_use = theme;
 
-        themes_in_use = themes;
+            return true;
+        };
 
-        return true;
-    };
+        this.clear = function(theme)
+        {
+            if (utils_sys.validation.misc.is_nothing(cosmos))
+                return false;
+
+            if (utils_sys.validation.misc.is_invalid(theme))
+                return false;
+
+            var __theme_link = self.scan(theme);
+
+            if (!__theme_link)
+                return false;
+
+            document.head.removeChild(__theme_link);
+
+            if (theme === theme_in_use)
+                theme_in_use = null;
+
+            return true;
+        };
+    }
 
     this.apply = function(mode)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (!utils_sys.validation.alpha.is_string(mode))
+        if (theme_in_use === null)
             return false;
 
         if (mode !== 'new' && mode !== 'replace')
             return false;
 
-        var __themes_array = [];
-
-        if (utils_sys.validation.alpha.is_string(themes_in_use))
-            __themes_array[0] = themes_in_use;
-        else
+        if (mode === 'new')
         {
-            if (!utils_sys.validation.misc.is_array(themes_in_use))
+            if (self.scan(theme_in_use))
                 return false;
 
-            __themes_array = themes_in_use;
+            return utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + theme_in_use, theme_in_use);
         }
-
-        var __themes_num = __themes_array.length;
-
-        if (__themes_num === 0)
-            return false;
-
-        for (var i = 0; i < __themes_num; i++)
+        else if (mode === 'replace')
         {
-            if (mode === 'new')
-            {
-                if (self.exists(__themes_array[i]))
-                    return true;
+            self.themes.clear(theme_in_use);
 
-                var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + 
-                                                              __themes_array[i], __themes_array[i]);
-
-                return __result;
-            }
-            else if (mode === 'replace')
-            {
-                self.remove(__themes_array[i]);
-
-                var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + 
-                                                              __themes_array[i], __themes_array[i]);
-
-                return __result;
-            }
+            return utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + theme_in_use, theme_in_use);
         }
     };
 
-    this.exists = function(theme)
+    this.scan = function(theme)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
@@ -93,33 +109,7 @@ function nature()
         if (!utils_sys.validation.alpha.is_string(theme))
             return false;
 
-        var __theme_links = document.head.getElementsByTagName('link');
-
-        for (var i = 0; i < __theme_links.length; i++)
-        {
-            if (__theme_links[i].attributes.rel.value === "stylesheet")
-            {
-                if (__theme_links[i].attributes.href.value.indexOf(theme) > -1)
-                    return __theme_links[i];
-            }
-        }
-
-        return false;
-    };
-
-    this.remove = function(theme)
-    {
-        if (utils_sys.validation.misc.is_nothing(cosmos))
-            return false;
-
-        var __theme_link = self.exists(theme);
-
-        if (__theme_link === false)
-            return false;
-
-        document.head.removeChild(__theme_link);
-
-        return true;
+        return utils_int.search(theme);
     };
 
     this.cosmos = function(cosmos_object)
@@ -133,6 +123,9 @@ function nature()
     };
 
     var cosmos = null,
-        themes_in_use = null,
-        utils_sys = new vulcan();
+        theme_in_use = null,
+        utils_sys = new vulcan(),
+        utils_int = new utilities();
+
+    this.themes = new themes();
 }

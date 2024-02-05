@@ -115,7 +115,7 @@ function i_audiomass()
 
         config.id = 'i_audiomass';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -154,10 +154,8 @@ function i_audiomass()
                                       });
         i_audiomass_bee.on('resize', function() { utils_sys.objects.by_id(i_audiomass_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_audiomass_bee.on('resized', function() { utils_sys.objects.by_id(i_audiomass_bee.settings.general.id() + '_overlay').style.display = 'none'; });
-        i_audiomass_bee.on('close', function()
-                                    {
-                                        i_audiomass_bee.gui.fx.fade.out();
-                                    });
+        i_audiomass_bee.on('close', function() { i_audiomass_bee.gui.fx.fade.out(); });
+        i_audiomass_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

@@ -916,10 +916,10 @@ function msgbox()
  {
  var __container = utils.objects.by_id(container_id),
  __html = null;
- if (__container === false || utils.validation.misc.is_undefined(__container) || __container === null)
+ if (!__container || utils.validation.misc.is_undefined(__container))
  return false;
  msgbox_object = utils.objects.by_id('msgbox');
- if (msgbox_object !== null)
+ if (msgbox_object)
  {
  try
  {
@@ -1621,14 +1621,16 @@ function vulcan()
  return false;
  return __result;
  };
- this.apply_theme = function(directory, theme, clear_cache = true)
+ this.apply_theme = function(directory, theme, fail_on_existing = true, clear_cache = true)
  {
- if (self.validation.misc.is_invalid(directory) || self.validation.alpha.is_symbol(theme) || !self.validation.misc.is_bool(clear_cache))
+ if (self.validation.misc.is_invalid(directory) || self.validation.alpha.is_symbol(theme) ||
+ !self.validation.misc.is_bool(fail_on_existing) || !self.validation.misc.is_bool(clear_cache))
  return false;
  if (self.validation.misc.is_undefined(theme))
  theme = 'default';
- if (self.system.source_exists(theme, 'link', 'href'))
+ if (fail_on_existing && self.system.source_exists(theme, 'link', 'href'))
  return false;
+ self.graphics.clear_theme(theme);
  var __dynamic_object = null,
  __cache_reset = '';
  if (clear_cache)
@@ -1640,6 +1642,10 @@ function vulcan()
  __dynamic_object.setAttribute('href', directory + '/' + theme + '.css' + __cache_reset);
  self.objects.by_tag('head')[0].appendChild(__dynamic_object);
  return true;
+ };
+ this.clear_theme = function(theme)
+ {
+ return self.system.remove_source(theme, 'link', 'href');
  };
  }
  function misc()
@@ -1720,8 +1726,7 @@ function vulcan()
  self.validation.misc.is_invalid(js_file_name) || self.validation.alpha.is_symbol(js_file_name) ||
  !self.validation.misc.is_bool(clear_cache))
  return false;
- if (__self.source_exists(js_file_name, 'script', 'src'))
- return false;
+ self.system.remove_source(js_file_name, 'script', 'src');
  var __dynamic_object = null,
  __cache_reset = '';
  if (clear_cache)
@@ -1743,6 +1748,22 @@ function vulcan()
  {
  if (__sources[__counter_i].attributes[attribute].value.indexOf(file_name) > -1)
  return true;
+ }
+ return false;
+ };
+ this.remove_source = function(file_name, tag_type, attribute)
+ {
+ if (!self.system.source_exists(file_name, tag_type, attribute))
+ return false;
+ var __counter_i = 0,
+ __sources = document.head.getElementsByTagName(tag_type);
+ for (__counter_i = 0; __counter_i < __sources.length; __counter_i++)
+ {
+ if (__sources[__counter_i].attributes[attribute].value.indexOf(file_name) > -1)
+ {
+ __sources[__counter_i].remove();
+ return true;
+ }
  }
  return false;
  };
@@ -3312,7 +3333,7 @@ function fx()
  if (utils.validation.misc.is_object(name))
  __element = name;
  }
- if (__element === null)
+ if (!__element)
  return false;
  return __element;
  }
@@ -4504,10 +4525,10 @@ function workbox()
  __button_object = null,
  __container = utils.objects.by_id(container_id),
  __html = null;
- if (__container === false || utils.validation.misc.is_invalid(__container))
+ if (!__container || utils.validation.misc.is_invalid(__container))
  return false;
  workbox_object = utils.objects.by_id('workbox');
- if (workbox_object !== null)
+ if (!workbox_object)
  __container.removeChild(workbox_object);
  workbox_object = document.createElement('div');
  workbox_object.id = 'workbox_' + random.generate();
@@ -7226,7 +7247,7 @@ function forest()
  self.settings.id('forest_' + random.generate());
  self.settings.container(container_id);
  forest_id = self.settings.id();
- nature.theme(['forest']);
+ nature.themes.store('forest');
  nature.apply('new');
  utils_int.draw_forest();
  utils_int.init_trace_keys();
@@ -7677,7 +7698,7 @@ function swarm()
  self.settings.right(right);
  self.settings.bottom(bottom);
  swarm_id = self.settings.id();
- nature.theme(['swarm']);
+ nature.themes.store('swarm');
  nature.apply('new');
  utils_int.draw(left, top, right, bottom);
  }
@@ -8696,7 +8717,7 @@ function hive()
  self.settings.left(left);
  self.settings.top(top);
  hive_id = self.settings.id();
- nature.theme(['hive']);
+ nature.themes.store('hive');
  nature.apply('new');
  utils_int.prepare_draw(left, top, honeycombs_num, 1);
  }
@@ -8809,7 +8830,7 @@ function trinity()
  return false;
  is_init = true;
  config.id = 'trinity';
- nature.theme([config.id]);
+ nature.themes.store(config.id);
  nature.apply('new');
  infinity.init();
  trinity_bee = dev_box.get('bee');
@@ -9118,7 +9139,7 @@ function krator()
  {
  });
  };
- this.load_desktop_ui = function(script)
+ this.close_callback = function(script)
  {
  if (!is_login_ok)
  return false;
@@ -9168,7 +9189,7 @@ function krator()
  os_name = xenon.load('os_name');
  krator_bee = dev_box.get('bee');
  config.id = 'krator_' + random.generate();
- nature.theme(['krator']);
+ nature.themes.store('krator');
  nature.apply('new');
  krator_bee.init(config.id);
  krator_bee.settings.data.window.labels.title('Login & Registration Form');
@@ -9197,7 +9218,11 @@ function krator()
  morpheus.clear(config.id);
  krator_bee.gui.fx.fade.out();
  });
- krator_bee.on('closed', function() { utils_int.load_desktop_ui(script); });
+ krator_bee.on('closed', function()
+ {
+ krator_bee.on('closed', function() { nature.themes.clear('krator'); });
+ utils_int.close_callback(script);
+ });
  return true;
  };
  this.cosmos = function(cosmos_object)
@@ -9390,7 +9415,7 @@ function ui_controls()
  self.settings.id('ui_controls_' + random.generate());
  self.settings.container(container_id);
  ui_controls_id = self.settings.id();
- nature.theme('ui_controls');
+ nature.themes.store('ui_controls');
  nature.apply('new');
  utils_int.draw_ui_controls();
  return true;
@@ -9685,7 +9710,7 @@ function dock()
  self.settings.id('dock_' + random.generate());
  self.settings.container(container_id);
  dock_id = self.settings.id();
- nature.theme('dock');
+ nature.themes.store('dock');
  nature.apply('new');
  utils_int.draw();
  return true;
@@ -9734,6 +9759,16 @@ function user_profile()
  function utilities()
  {
  var me = this;
+ function hide_profile_area_on_key(event)
+ {
+ if (utils_sys.validation.misc.is_undefined(event))
+ return false;
+ key_control.scan(event);
+ if (key_control.get() !== key_control.keys.ESCAPE)
+ return false;
+ me.hide_profile_area();
+ return true;
+ }
  this.session_watchdog = function()
  {
  function abnormal_logout()
@@ -9896,36 +9931,18 @@ function user_profile()
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_logout'));
  __handler = function() { me.hide_profile_area(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
- __handler = function(event) { me.hide_profile_area_handler(event); };
+ __handler = function(event) { hide_profile_area_on_key(event); };
  morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
  return true;
  };
- this.toggle_profile_area = function()
+ this.show_profile_area = function()
  {
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
  __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
- if (is_profile_area_visible === true)
- {
- is_profile_area_visible = false;
- __user_profile_area.style.display = 'none';
- __my_profile_label.style.color = '#55b8ff';
- }
- else
- {
- is_profile_area_visible = true;
  __user_profile_area.style.display = 'block';
  __my_profile_label.style.color = '#55ffe7';
- }
- return true;
- };
- this.hide_profile_area_handler = function(event)
- {
- if (utils_sys.validation.misc.is_undefined(event))
- return false;
- key_control.scan(event);
- if (key_control.get() !== key_control.keys.ESCAPE)
- return false;
- me.hide_profile_area();
+ is_profile_area_visible = true;
+ super_tray.hide();
  return true;
  };
  this.hide_profile_area = function()
@@ -9935,6 +9952,15 @@ function user_profile()
  __user_profile_area.style.display = 'none';
  __my_profile_label.style.color = '#55b8ff';
  is_profile_area_visible = false;
+ super_tray.hide();
+ return true;
+ };
+ this.toggle_profile_area = function()
+ {
+ if (is_profile_area_visible)
+ me.hide_profile_area();
+ else
+ me.show_profile_area();
  return true;
  };
  this.reboot_os = function()
@@ -9970,6 +9996,24 @@ function user_profile()
  return true;
  };
  }
+ this.show = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.show_profile_area();
+ };
+ this.hide = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.hide_profile_area();
+ };
+ this.toggle = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.toggle_profile_area();
+ };
  this.details = function()
  {
  if (is_init === false)
@@ -9996,7 +10040,7 @@ function user_profile()
  self.settings.id('user_profile_' + random.generate());
  self.settings.container(container_id);
  user_profile_id = self.settings.id();
- nature.theme('user_profile');
+ nature.themes.store('user_profile');
  nature.apply('new');
  utils_int.draw_user_profile();
  return true;
@@ -10012,6 +10056,7 @@ function user_profile()
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
  morpheus = matrix.get('morpheus');
+ super_tray = matrix.get('super_tray');
  parrot = matrix.get('parrot');
  chameleon = matrix.get('chameleon');
  nature = matrix.get('nature');
@@ -10024,12 +10069,11 @@ function user_profile()
  os_name = null,
  cosmos = null,
  matrix = null,
- colony = null,
  xenon = null,
  swarm = null,
  hive = null,
  morpheus = null,
- morpheus = null,
+ super_tray = null,
  chameleon = null,
  nature = null,
  utils_sys = new vulcan(),
@@ -10084,68 +10128,17 @@ function chameleon()
 function nature()
 {
  var self = this;
- this.theme = function(themes)
+ function utilities()
  {
- if (utils_sys.validation.misc.is_nothing(cosmos))
- return false;
- if (utils_sys.validation.misc.is_object(themes) && !utils_sys.validation.misc.is_array(themes))
- return false;
- if (utils_sys.validation.misc.is_undefined(themes))
- return themes_in_use;
- if (themes === '')
- return false;
- themes_in_use = themes;
- return true;
- };
- this.apply = function(mode)
+ this.search = function(theme)
  {
- if (utils_sys.validation.misc.is_nothing(cosmos))
- return false;
- if (!utils_sys.validation.alpha.is_string(mode))
- return false;
- if (mode !== 'new' && mode !== 'replace')
- return false;
- var __themes_array = [];
- if (utils_sys.validation.alpha.is_string(themes_in_use))
- __themes_array[0] = themes_in_use;
- else
- {
- if (!utils_sys.validation.misc.is_array(themes_in_use))
- return false;
- __themes_array = themes_in_use;
- }
- var __themes_num = __themes_array.length;
- if (__themes_num === 0)
- return false;
- for (var i = 0; i < __themes_num; i++)
- {
- if (mode === 'new')
- {
- if (self.exists(__themes_array[i]))
- return true;
- var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' +
- __themes_array[i], __themes_array[i]);
- return __result;
- }
- else if (mode === 'replace')
- {
- self.remove(__themes_array[i]);
- var __result = utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' +
- __themes_array[i], __themes_array[i]);
- return __result;
- }
- }
- };
- this.exists = function(theme)
- {
- if (utils_sys.validation.misc.is_nothing(cosmos))
- return false;
- if (!utils_sys.validation.alpha.is_string(theme))
- return false;
  var __theme_links = document.head.getElementsByTagName('link');
- for (var i = 0; i < __theme_links.length; i++)
+ if (!__theme_links)
+ return false;
+ var __theme_links_num = __theme_links.length;
+ for (var i = 0; i < __theme_links_num; i++)
  {
- if (__theme_links[i].attributes.rel.value === "stylesheet")
+ if (__theme_links[i].attributes.rel.value === 'stylesheet')
  {
  if (__theme_links[i].attributes.href.value.indexOf(theme) > -1)
  return __theme_links[i];
@@ -10153,15 +10146,60 @@ function nature()
  }
  return false;
  };
- this.remove = function(theme)
+ }
+ function themes()
+ {
+ this.store = function(theme)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
- var __theme_link = self.exists(theme);
- if (__theme_link === false)
+ if (!utils_sys.validation.alpha.is_string(theme))
+ return false;
+ theme_in_use = theme;
+ return true;
+ };
+ this.clear = function(theme)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.misc.is_invalid(theme))
+ return false;
+ var __theme_link = self.scan(theme);
+ if (!__theme_link)
  return false;
  document.head.removeChild(__theme_link);
+ if (theme === theme_in_use)
+ theme_in_use = null;
  return true;
+ };
+ }
+ this.apply = function(mode)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (theme_in_use === null)
+ return false;
+ if (mode !== 'new' && mode !== 'replace')
+ return false;
+ if (mode === 'new')
+ {
+ if (self.scan(theme_in_use))
+ return false;
+ return utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + theme_in_use, theme_in_use);
+ }
+ else if (mode === 'replace')
+ {
+ self.themes.clear(theme_in_use);
+ return utils_sys.graphics.apply_theme('/framework/extensions/js/core/nature/themes/' + theme_in_use, theme_in_use);
+ }
+ };
+ this.scan = function(theme)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.alpha.is_string(theme))
+ return false;
+ return utils_int.search(theme);
  };
  this.cosmos = function(cosmos_object)
  {
@@ -10171,8 +10209,10 @@ function nature()
  return true;
  };
  var cosmos = null,
- themes_in_use = null,
- utils_sys = new vulcan();
+ theme_in_use = null,
+ utils_sys = new vulcan(),
+ utils_int = new utilities();
+ this.themes = new themes();
 }
 function eagle()
 {
@@ -10263,7 +10303,7 @@ function eagle()
  for (var i = 1; i <= __running_apps_num; i++)
  {
  __this_picked_app = colony.get(__running_apps[i - 1].sys_id);
- if (__this_picked_app === null || __this_picked_app === false)
+ if (!__this_picked_app)
  continue;
  if (i === 1)
  picked_app = __this_picked_app;
@@ -10426,7 +10466,7 @@ function eagle()
  self.settings.id('eagle_' + random.generate());
  self.settings.container(container_id);
  eagle_id = self.settings.id();
- nature.theme('eagle');
+ nature.themes.store('eagle');
  nature.apply('new');
  utils_int.draw_eagle();
  utils_int.init_trace_keys();
@@ -10644,7 +10684,7 @@ function tik_tok()
  is_init = true;
  self.settings.id('tik_tok_' + random.generate());
  self.settings.container(container_id);
- nature.theme('tik_tok');
+ nature.themes.store('tik_tok');
  nature.apply('new');
  clock = new time_date_model();
  utils_int.draw();
@@ -11705,11 +11745,12 @@ function meta_script()
  var __result = __new_svc.register(action);
  if (__result === true)
  __is_run = true;
- var __data = {
+ var __svc_config = me.config(),
+ __data = {
  "ms_id" : program_config.model.name,
- "svc_id" : me.config().sys_name,
- "name" : me.config().name,
- "icon" : me.config().icon,
+ "svc_id" : __svc_config.sys_name,
+ "name" : __svc_config.name,
+ "icon" : __svc_config.icon,
  "type" : "svc",
  "error" : null
  };
@@ -12676,7 +12717,7 @@ function octopus()
  }
  this.load_ui = function()
  {
- nature.theme('octopus');
+ nature.themes.store('octopus');
  nature.apply('new');
  me.start_component();
  me.draw();
@@ -12834,7 +12875,7 @@ function super_tray()
  this.sys_id = null;
  this.id = null;
  this.name = null;
- this.icon = 'default';
+ this.icon = null;
  this.visible = true;
  this.action = null;
  }
@@ -12846,6 +12887,16 @@ function super_tray()
  function utilities()
  {
  var me = this;
+ function hide_tray_area_on_key(event)
+ {
+ if (utils_sys.validation.misc.is_undefined(event))
+ return false;
+ key_control.scan(event);
+ if (key_control.get() !== key_control.keys.ESCAPE)
+ return false;
+ me.hide_tray_area();
+ return true;
+ }
  this.service_exists = function(sys_service_id)
  {
  for (var i = 0; i < tray_services.num; i++)
@@ -12883,7 +12934,7 @@ function super_tray()
  };
  this.load_ui = function()
  {
- nature.theme('super_tray');
+ nature.themes.store('super_tray');
  nature.apply('new');
  me.draw();
  me.attach_events();
@@ -12907,33 +12958,15 @@ function super_tray()
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
  __handler = function() { me.hide_tray_area(); };
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
- __handler = function(event) { me.hide_tray_area_handler(event); };
+ __handler = function(event) { hide_tray_area_on_key(event); };
  morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
  return true;
  };
- this.toggle_tray_area = function()
+ this.show_tray_area = function()
  {
  var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
- if (is_super_tray_visible === true)
- {
- is_super_tray_visible = false;
- __service_icons_tray.style.display = 'none';
- }
- else
- {
- is_super_tray_visible = true;
  __service_icons_tray.style.display = 'block';
- }
- return true;
- };
- this.hide_tray_area_handler = function(event)
- {
- if (utils_sys.validation.misc.is_undefined(event))
- return false;
- key_control.scan(event);
- if (key_control.get() !== key_control.keys.ESCAPE)
- return false;
- me.hide_tray_area();
+ is_super_tray_visible = true;
  return true;
  };
  this.hide_tray_area = function()
@@ -12941,6 +12974,14 @@ function super_tray()
  var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
  __service_icons_tray.style.display = 'none';
  is_super_tray_visible = false;
+ return true;
+ };
+ this.toggle_tray_area = function()
+ {
+ if (is_super_tray_visible)
+ me.hide_tray_area();
+ else
+ me.show_tray_area();
  return true;
  };
  this.add_service_icon = function(index)
@@ -12954,8 +12995,7 @@ function super_tray()
  __dynamic_object.setAttribute('class', 'super_tray_service');
  __dynamic_object.setAttribute('data-id', __new_service.sys_id);
  __dynamic_object.setAttribute('title', __new_service.name);
- __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/core/nature/themes/super_tray/pix/' +
- __new_service.icon + '.png")';
+ __dynamic_object.classList.add(__new_service.icon);
  __service_icons_tray.appendChild(__dynamic_object);
  if (__new_service.action !== null)
  {
@@ -13040,7 +13080,6 @@ function super_tray()
  __new_tray_service.sys_id = __service_config.sys_name;
  __new_tray_service.id = __service_config.name;
  __new_tray_service.name = __service_config.name;
- if (__service_config.icon !== 'svc_default')
  __new_tray_service.icon = __service_config.icon;
  __new_tray_service.visible = visible_in_super_tray;
  if (action !== null)
@@ -13067,18 +13106,24 @@ function super_tray()
  {
  if (tray_services.list[i].sys_id === sys_service_id)
  {
- var __common_svc_id = tray_services.list[i].id;
+ var __common_svc_id = tray_services.list[i].id,
+ __svc_found = false;
  if (tray_services.list[i].visible)
  {
  for (var j = 0; j < tray_services.num; j++)
  {
  if (tray_services.list[j].id === __common_svc_id)
- utils_int.fix_service_icon_names(tray_services.list[j].id);
+ {
+ __svc_found = true;
+ break;
+ }
  }
  utils_int.remove_service_icon(i);
  }
  tray_services.list.splice(i, 1);
  tray_services.num--;
+ if (__svc_found)
+ utils_int.fix_service_icon_names(__common_svc_id);
  return true;
  }
  }
@@ -13097,6 +13142,24 @@ function super_tray()
  tray_services.list = [];
  utils_int.clear_service_icons();
  return true;
+ };
+ this.show = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.show_tray_area();
+ };
+ this.hide = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.hide_tray_area();
+ };
+ this.toggle = function()
+ {
+ if (is_init === false)
+ return false;
+ return utils_int.toggle_tray_area();
  };
  this.init = function(container_id)
  {
@@ -13132,6 +13195,7 @@ function super_tray()
  svc_box = null,
  roost = null,
  morpheus = null,
+ user_profile = null,
  nature = null,
  utils_sys = new vulcan(),
  random = new pythia(),
@@ -13304,7 +13368,7 @@ function parrot()
  var me = this;
  this.load_ui = function()
  {
- nature.theme('parrot');
+ nature.themes.store('parrot');
  nature.apply('new');
  me.start_component();
  me.draw();
@@ -13739,7 +13803,7 @@ function infinity()
  __infinity_object = null,
  __container = utils_sys.objects.by_id(self.settings.container()),
  __top_pos = 0;
- if (utils_sys.validation.misc.is_undefined(__container) || __container === false || __container === null)
+ if (utils_sys.validation.misc.is_undefined(__container) || !__container)
  return false;
  __top_pos = (utils_sys.graphics.pixels_value(__container.style.height) / 2) - 25;
  __dynamic_object = document.createElement('div');
@@ -13800,7 +13864,7 @@ function infinity()
  if (is_init === true)
  return false;
  is_init = true;
- nature.theme(['infinity']);
+ nature.themes.store('infinity');
  nature.apply('new');
  self.settings.id('infinity_' + random.generate());
  return true;
@@ -15136,7 +15200,7 @@ function bee()
  __status_bar_marquee = false,
  __resizable = false,
  __resize_tooltip = false,
- __icon = null,
+ __icon = 'app_default_icon',
  __casement_width = 1,
  __casement_width_type = 'relative',
  __backtrace = false;
@@ -15276,9 +15340,17 @@ function bee()
  return __icon;
  if (!utils_sys.validation.alpha.is_string(val))
  return false;
- __icon = val;
  if (ui_objects.window.control_bar.icon !== null)
+ {
+ if (val !== null)
  ui_objects.window.control_bar.icon.classList.add(val);
+ else
+ ui_objects.window.control_bar.icon.classList.remove(__icon);
+ }
+ if (val !== null)
+ __icon = val;
+ else
+ __icon = 'app_default_icon';
  return true;
  };
  this.casement_width = function(val, type = 'relative')
@@ -17904,7 +17976,7 @@ function bee()
  my_bee_id = self.settings.general.id();
  self.gui.size.max.width(swarm.settings.right());
  self.gui.size.max.height(swarm.settings.bottom());
- nature.theme(['bee']);
+ nature.themes.store('bee');
  nature.apply('new');
  bee_statuses.initialized(true);
  morpheus.execute(my_bee_id, 'system', 'initialized');
@@ -18166,6 +18238,8 @@ function coyote()
  })(__meta_result.url, __this_meta_info_url_object);
  __index++;
  }
+ if (coyote_bee.status.gui.casement_retracted())
+ coyote_bee.gui.actions.casement.deploy(null);
  }
  this.close_new_user_tab = function()
  {
@@ -18238,12 +18312,14 @@ function coyote()
  ' <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' +
  ' title="Sorry, settings are not available yet...">' +
  '</div>' +
- '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode is still buggy..."></div>' +
+ '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" ' +
+ ' title="Full screen mode is still buggy..."></div>' +
  ' <div class="adress_bar">' +
  ' <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' +
  ' title="Sorry, page information is not available yet...">' +
  ' </div>' +
- ' <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" value="' + init_url + '" placeholder="Enter a web address...">' +
+ ' <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" ' +
+ ' value="' + init_url + '" placeholder="Enter a web address...">' +
  ' </div>' +
  '</div>' +
  '<div id="' + coyote_bee_id + '_frame" class="coyote_frame"></div>');
@@ -18559,7 +18635,7 @@ function coyote()
  coyote_bee = dev_box.get('bee');
  config.id = 'coyote_' + random.generate();
  config.pages[0] = init_url;
- nature.theme(['coyote']);
+ nature.themes.store('coyote');
  nature.apply('new');
  infinity.init();
  coyote_bee.init('coyote', 'coyote_icon');
@@ -18624,6 +18700,11 @@ function coyote()
  hb_manager.destroy();
  coyote_bee.gui.fx.fade.out();
  });
+ coyote_bee.on('closed', function()
+ {
+ if (!owl.status.applications.get.by_proc_id(coyote_bee.settings.general.app_id(), 'RUN'))
+ nature.themes.clear('coyote');
+ });
  return true;
  };
  this.cosmos = function(cosmos_object)
@@ -18635,6 +18716,7 @@ function coyote()
  dev_box = cosmos.hub.access('dev_box');
  xenon = matrix.get('xenon');
  morpheus = matrix.get('morpheus');
+ owl = matrix.get('owl');
  nature = matrix.get('nature');
  infinity = dev_box.get('infinity');
  return true;
@@ -18647,6 +18729,7 @@ function coyote()
  dev_box = null,
  xenon = null,
  morpheus = null,
+ owl = null,
  nature = null,
  infinity = null,
  coyote_bee = null,
@@ -18676,8 +18759,6 @@ function max_screen()
  vulcan.objects.by_id('max_screen_splash').style.display = 'none';
  if (__element.requestFullscreen)
  __element.requestFullscreen();
- else if (__element.mozRequestFullScreen)
- __element.mozRequestFullScreen();
  else if (__element.webkitRequestFullscreen)
  __element.webkitRequestFullscreen();
  else
@@ -18741,7 +18822,8 @@ function max_screen()
  if (is_init === true)
  return false;
  if (vulcan.validation.misc.is_undefined(container_id) ||
- vulcan.validation.alpha.is_symbol(container_id) || vulcan.objects.by_id(container_id) === null ||
+ vulcan.validation.alpha.is_symbol(container_id) ||
+ vulcan.objects.by_id(container_id) === null ||
  !vulcan.validation.misc.is_function(func))
  return false;
  if (!self.settings.container(container_id))
@@ -18779,6 +18861,7 @@ function cloud_edit()
  function program_model()
  {
  this.name = '';
+ this.icon = '';
  this.type = null;
  }
  function ce_model()
@@ -18799,6 +18882,7 @@ function cloud_edit()
  this.telemetry = function(data)
  {
  config.program.name = data.name;
+ config.program.icon = data.icon;
  config.program.type = data.type;
  return true;
  };
@@ -19152,7 +19236,7 @@ function cloud_edit()
  config.id = 'cloud_edit_' + random.generate();
  config.content = `// Welcome to Cloud Edit!\n// Please load the test template from\
  https://greyos.gr/framework/extensions/js/user/cloud_edit/my_ms_program.js\n`;
- nature.theme(['cloud_edit']);
+ nature.themes.store('cloud_edit');
  nature.apply('new');
  infinity.init();
  cloud_edit_bee.init('cloud_edit', 'cloud_edit_icon');
@@ -19194,6 +19278,11 @@ function cloud_edit()
  meta_executor.terminate();
  utils_int.destroy_editor();
  cloud_edit_bee.gui.fx.fade.out();
+ });
+ cloud_edit_bee.on('closed', function()
+ {
+ if (!owl.status.applications.get.by_proc_id(cloud_edit_bee.settings.general.app_id(), 'RUN'))
+ nature.themes.clear('cloud_edit');
  });
  return true;
  };
@@ -19361,7 +19450,7 @@ function radio_dude()
  return false;
  is_init = true;
  config.id = 'radio_dude_' + random.generate();
- nature.theme(['radio_dude']);
+ nature.themes.store('radio_dude');
  nature.apply('new');
  infinity.init();
  radio_dude_bee = dev_box.get('bee');
@@ -19387,6 +19476,7 @@ function radio_dude()
  });
  radio_dude_bee.on('dragged', function() { radio_dude_bee.gui.fx.opacity.reset(); });
  radio_dude_bee.on('close', function() { radio_dude_bee.gui.fx.fade.out(); });
+ radio_dude_bee.on('closed', function() { nature.themes.clear('radio_dude'); });
  return true;
  };
  this.cosmos = function(cosmos_object)
@@ -19396,7 +19486,6 @@ function radio_dude()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  dev_box = cosmos.hub.access('dev_box');
- swarm = matrix.get('swarm');
  nature = matrix.get('nature');
  infinity = dev_box.get('infinity');
  return true;
@@ -19405,7 +19494,6 @@ function radio_dude()
  cosmos = null,
  matrix = null,
  dev_box = null,
- swarm = null,
  nature = null,
  infinity = null,
  selected_stream = null,

@@ -1,11 +1,11 @@
 /*
     Vulcan (General JS Programming Utilities)
 
-    File name: vulcan.js (Version: 2.5)
+    File name: vulcan.js (Version: 2.6)
     Description: This file contains the Vulcan extension.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2014 - 2023
+    Copyright (C) 2014 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -481,16 +481,19 @@ function vulcan()
             return __result;
         };
 
-        this.apply_theme = function(directory, theme, clear_cache = true)
+        this.apply_theme = function(directory, theme, fail_on_existing = true, clear_cache = true)
         {
-            if (self.validation.misc.is_invalid(directory) || self.validation.alpha.is_symbol(theme) || !self.validation.misc.is_bool(clear_cache))
+            if (self.validation.misc.is_invalid(directory) || self.validation.alpha.is_symbol(theme) || 
+                !self.validation.misc.is_bool(fail_on_existing) || !self.validation.misc.is_bool(clear_cache))
                 return false;
 
             if (self.validation.misc.is_undefined(theme))
                 theme = 'default';
 
-            if (self.system.source_exists(theme, 'link', 'href'))
+            if (fail_on_existing && self.system.source_exists(theme, 'link', 'href'))
                 return false;
+
+            self.graphics.clear_theme(theme);
 
             var __dynamic_object = null,
                 __cache_reset = '';
@@ -507,6 +510,11 @@ function vulcan()
             self.objects.by_tag('head')[0].appendChild(__dynamic_object);
 
             return true;
+        };
+
+        this.clear_theme = function(theme)
+        {
+            return self.system.remove_source(theme, 'link', 'href');
         };
     }
 
@@ -610,8 +618,7 @@ function vulcan()
                 !self.validation.misc.is_bool(clear_cache))
                 return false;
 
-            if (__self.source_exists(js_file_name, 'script', 'src'))
-                return false;
+            self.system.remove_source(js_file_name, 'script', 'src');
 
             var __dynamic_object = null,
                 __cache_reset = '';
@@ -641,6 +648,27 @@ function vulcan()
             {
                 if (__sources[__counter_i].attributes[attribute].value.indexOf(file_name) > -1)
                     return true;
+            }
+
+            return false;
+        };
+
+        this.remove_source = function(file_name, tag_type, attribute)
+        {
+            if (!self.system.source_exists(file_name, tag_type, attribute))
+                return false;
+
+            var __counter_i = 0,
+                __sources = document.head.getElementsByTagName(tag_type);
+
+            for (__counter_i = 0; __counter_i < __sources.length; __counter_i++)
+            {
+                if (__sources[__counter_i].attributes[attribute].value.indexOf(file_name) > -1)
+                {
+                    __sources[__counter_i].remove();
+
+                    return true;
+                }
             }
 
             return false;

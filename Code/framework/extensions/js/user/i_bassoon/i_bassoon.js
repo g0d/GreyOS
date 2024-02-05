@@ -115,7 +115,7 @@ function i_bassoon()
 
         config.id = 'i_bassoon';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -155,10 +155,8 @@ function i_bassoon()
                                     });
         i_bassoon_bee.on('resize', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_bassoon_bee.on('resized', function() { utils_sys.objects.by_id(i_bassoon_bee.settings.general.id() + '_overlay').style.display = 'none'; });
-        i_bassoon_bee.on('close', function()
-                                  {
-                                    i_bassoon_bee.gui.fx.fade.out();
-                                  });
+        i_bassoon_bee.on('close', function() { i_bassoon_bee.gui.fx.fade.out(); });
+        i_bassoon_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

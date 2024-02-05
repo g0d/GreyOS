@@ -71,7 +71,7 @@
 		return;
 	}
 
-	if (!isset($program_model['icon']) || !isset($program_model['name']) || !isset($program_model['type']))
+	if (!isset($program_model['name']) || !isset($program_model['type']))
 	{
 		echo '-1';
 
@@ -101,7 +101,7 @@
 		$uid = $profile['uid'];
 		$is_match_found = false;
 		$program_id = str_replace(' ', '_', strtolower($program[0]));
-		$program_icon = ($program[1]['icon'] === "null") ? 'app_default' : $program[1]['icon'];
+		$program_icon = $program[1]['icon'];
 		$new_program = array('id' 			=>	$program_id,
 							 'name' 		=> 	$program[0],
 							 'icon' 		=> 	$program_icon,
@@ -121,11 +121,31 @@
 			$index++;
 		}
 
-		if (!$is_match_found)
-			array_push($profile['user_programs'][$program[1]['type'] . 's'], $new_program);
-
 		$file_path = UTIL::Absolute_Path('fs/' . $uid);
 		$final_path = $file_path . '/programs/' . $program_id;
+
+		if (!$is_match_found)
+		{
+			array_push($profile['user_programs'][$program[1]['type'] . 's'], $new_program);
+
+			mkdir($final_path, 0700);
+			mkdir($final_path . '/data', 0700);
+			mkdir($final_path . '/data/window', 0700);
+			mkdir($final_path . '/data/casement', 0700);
+			mkdir($final_path . '/graphics', 0700);
+			mkdir($final_path . '/graphics/pix', 0700);
+			mkdir($final_path . '/graphics/icons', 0700);
+			mkdir($final_path . '/misc', 0700);
+
+			file_put_contents($final_path . '/data/window/title.phtml', '');
+			file_put_contents($final_path . '/data/window/content.phtml', '');
+			file_put_contents($final_path . '/data/window/status.phtml', '');
+			file_put_contents($final_path . '/data/casement/title.phtml', '');
+			file_put_contents($final_path . '/data/casement/content.phtml', '');
+			file_put_contents($final_path . '/data/casement/status.phtml', '');
+			file_put_contents($final_path . '/graphics/' . $program_id . '.css', '');
+		}
+
 		$program_settings_path = UTIL::Absolute_Path('framework/misc/data/default_program_settings.json');
 		$program_settings = json_decode(file_get_contents($program_settings_path), true);
 
@@ -133,22 +153,6 @@
 		$program_settings['name'] = $program[0];
 		$program_settings['icon'] = $program_icon;
 
-		mkdir($final_path, 0700);
-		mkdir($final_path . '/data', 0700);
-		mkdir($final_path . '/data/window', 0700);
-		mkdir($final_path . '/data/casement', 0700);
-		mkdir($final_path . '/graphics', 0700);
-		mkdir($final_path . '/graphics/pix', 0700);
-		mkdir($final_path . '/graphics/icons', 0700);
-		mkdir($final_path . '/misc', 0700);
-
-		file_put_contents($final_path . '/data/window/title.phtml', '');
-		file_put_contents($final_path . '/data/window/content.phtml', '');
-		file_put_contents($final_path . '/data/window/status.phtml', '');
-		file_put_contents($final_path . '/data/casement/title.phtml', '');
-		file_put_contents($final_path . '/data/casement/content.phtml', '');
-		file_put_contents($final_path . '/data/casement/status.phtml', '');
-		file_put_contents($final_path . '/graphics/' . $program_id . '.css', '');
 		file_put_contents($final_path . '/settings.json', json_encode($program_settings));
 		file_put_contents($final_path . '/' . $program_id . '.ms', $program[2]);
 

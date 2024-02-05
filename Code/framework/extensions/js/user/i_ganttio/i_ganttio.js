@@ -115,7 +115,7 @@ function i_ganttio()
 
         config.id = 'i_ganttio';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -154,10 +154,8 @@ function i_ganttio()
                                     });
         i_ganttio_bee.on('resize', function() { utils_sys.objects.by_id(i_ganttio_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_ganttio_bee.on('resized', function() { utils_sys.objects.by_id(i_ganttio_bee.settings.general.id() + '_overlay').style.display = 'none'; });
-        i_ganttio_bee.on('close', function()
-                                  {
-                                    i_ganttio_bee.gui.fx.fade.out();
-                                  });
+        i_ganttio_bee.on('close', function() { i_ganttio_bee.gui.fx.fade.out(); });
+        i_ganttio_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

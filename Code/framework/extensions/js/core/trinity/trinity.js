@@ -109,7 +109,7 @@ function trinity()
 
         config.id = 'trinity';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();

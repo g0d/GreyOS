@@ -1395,7 +1395,7 @@ function hive()
 
             hive_id = self.settings.id();
 
-            nature.theme(['hive']);
+            nature.themes.store('hive');
             nature.apply('new');
 
             utils_int.prepare_draw(left, top, honeycombs_num, 1);

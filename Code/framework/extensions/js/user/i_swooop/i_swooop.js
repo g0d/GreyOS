@@ -124,7 +124,7 @@ function i_swooop()
 
         config.id = 'i_swooop';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -143,27 +143,22 @@ function i_swooop()
         i_swooop_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_swooop_bee.on('open', function() { i_swooop_bee.gui.fx.fade.into(); });
         i_swooop_bee.on('opened', function() { utils_int.gui_init(); });
+        i_swooop_bee.on('keydown', function()
+                                   {
+                                        console.log('iSwooop');
+                                   });
         i_swooop_bee.on('drag', function()
-                                 {
-                                     utils_sys.objects.by_id(i_swooop_bee.settings.general.id() + '_overlay').style.display = 'block';
-                                 });
+                                {
+                                    utils_sys.objects.by_id(i_swooop_bee.settings.general.id() + '_overlay').style.display = 'block';
+                                });
         i_swooop_bee.on('dragging', function()
                                     {
                                         i_swooop_bee.gui.fx.opacity.settings.set(0.7);
                                         i_swooop_bee.gui.fx.opacity.apply();
                                     });
-        i_swooop_bee.on('dragged', function()
-                                    {
-                                        i_swooop_bee.gui.fx.opacity.reset();
-                                    });
-        i_swooop_bee.on('close', function()
-                                  {
-                                      i_swooop_bee.gui.fx.fade.out();
-                                  });
-        i_swooop_bee.on('keydown', function()
-                                    {
-                                        console.log('iSwooop');
-                                    });
+        i_swooop_bee.on('dragged', function() { i_swooop_bee.gui.fx.opacity.reset(); });
+        i_swooop_bee.on('close', function() { i_swooop_bee.gui.fx.fade.out(); });
+        i_swooop_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

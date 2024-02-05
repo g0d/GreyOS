@@ -20,9 +20,9 @@ function gui()
         ms_app_id = ms_app.get_app_id(),
         main_content = '';
 
-    ms_utils.graphics.apply_theme('', ms_app_id + '.css');
+    /* ms_utils.graphics.apply_theme('graphics', 'agora'); - This will be applied by the Cloud Edit/Cloud IDE */
 
-    ms_app.settings.icon('agora.png');
+    //ms_app.settings.icon('agora_icon');
     ms_app.settings.casement_width(40, 'fixed');
 
     ms_app.main.set_content(main_content);
@@ -70,5 +70,5 @@ ms_app.on('dragging', () =>
                           ms_app.fx.opacity.apply();
                       });
 ms_app.on('dragged', () => { ms_app.fx.opacity.reset(); });
-ms_app.on('close', () => { ms_app.fx.fade.out(); });
+ms_app.on('close', () => { ms_app.fx.fade.out(); });    /* ms_utils.graphics.clear_theme('test'); -  This will be applied by the Cloud Edit/Cloud IDE */
 ms_app.run();

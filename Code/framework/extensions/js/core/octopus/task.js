@@ -107,7 +107,7 @@ function octopus_task()
 
         this.load_ui = function()
         {
-            nature.theme('octopus');
+            nature.themes.store('octopus');
             nature.apply('new');
 
             me.start_service();

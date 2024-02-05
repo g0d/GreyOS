@@ -32,7 +32,7 @@ function fx()
                 __element = name;
         }
 
-        if (__element === null)
+        if (!__element)
             return false;
 
         return __element;

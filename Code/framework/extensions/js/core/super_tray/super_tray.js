@@ -1,5 +1,5 @@
 /*
-    GreyOS - Super Tray (Version: 1.7)
+    GreyOS - Super Tray (Version: 1.8)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area module.
@@ -19,7 +19,7 @@ function super_tray()
         this.sys_id = null;
         this.id = null;
         this.name = null;
-        this.icon = 'default';
+        this.icon = null;
         this.visible = true;
         this.action = null;
     }
@@ -33,6 +33,21 @@ function super_tray()
     function utilities()
     {
         var me = this;
+
+        function hide_tray_area_on_key(event)
+        {
+            if (utils_sys.validation.misc.is_undefined(event))
+                return false;
+
+            key_control.scan(event);
+
+            if (key_control.get() !== key_control.keys.ESCAPE)
+                return false;
+
+            me.hide_tray_area();
+
+            return true;
+        }
 
         this.service_exists = function(sys_service_id)
         {
@@ -82,7 +97,7 @@ function super_tray()
 
         this.load_ui = function()
         {
-            nature.theme('super_tray');
+            nature.themes.store('super_tray');
             nature.apply('new');
 
             me.draw();
@@ -117,43 +132,21 @@ function super_tray()
             __handler = function() {  me.hide_tray_area(); };
             morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
 
-            __handler = function(event) {  me.hide_tray_area_handler(event); };
+            __handler = function(event) {  hide_tray_area_on_key(event); };
             morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
 
             return true;
         };
 
-        this.toggle_tray_area = function()
+        this.show_tray_area = function()
         {
             var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
 
-            if (is_super_tray_visible === true)
-            {
-                is_super_tray_visible = false;
+            __service_icons_tray.style.display = 'block';
 
-                __service_icons_tray.style.display = 'none';
-            }
-            else
-            {
-                is_super_tray_visible = true;
+            is_super_tray_visible = true;
 
-                __service_icons_tray.style.display = 'block';
-            }
-
-            return true;
-        };
-
-        this.hide_tray_area_handler = function(event)
-        {
-            if (utils_sys.validation.misc.is_undefined(event))
-                return false;
-
-            key_control.scan(event);
-
-            if (key_control.get() !== key_control.keys.ESCAPE)
-                return false;
-
-            me.hide_tray_area();
+            //user_profile.hide();
 
             return true;
         };
@@ -165,6 +158,18 @@ function super_tray()
             __service_icons_tray.style.display = 'none';
 
             is_super_tray_visible = false;
+
+            //user_profile.hide();
+
+            return true;
+        };
+
+        this.toggle_tray_area = function()
+        {
+            if (is_super_tray_visible)
+                me.hide_tray_area();
+            else
+                me.show_tray_area();
 
             return true;
         };
@@ -183,8 +188,7 @@ function super_tray()
             __dynamic_object.setAttribute('data-id', __new_service.sys_id);
             __dynamic_object.setAttribute('title', __new_service.name);
 
-            __dynamic_object.style.backgroundImage = 'url("/framework/extensions/js/core/nature/themes/super_tray/pix/' + 
-                                                     __new_service.icon + '.png")';
+            __dynamic_object.classList.add(__new_service.icon);
 
             __service_icons_tray.appendChild(__dynamic_object);
 
@@ -304,10 +308,7 @@ function super_tray()
         __new_tray_service.sys_id = __service_config.sys_name;
         __new_tray_service.id = __service_config.name;
         __new_tray_service.name = __service_config.name;
-
-        if (__service_config.icon !== 'svc_default')
-            __new_tray_service.icon = __service_config.icon;
-
+        __new_tray_service.icon = __service_config.icon;
         __new_tray_service.visible = visible_in_super_tray;
 
         if (action !== null)
@@ -343,14 +344,19 @@ function super_tray()
         {
             if (tray_services.list[i].sys_id === sys_service_id)
             {
-                var __common_svc_id = tray_services.list[i].id;
+                var __common_svc_id = tray_services.list[i].id,
+                    __svc_found = false;
 
                 if (tray_services.list[i].visible)
                 {
                     for (var j = 0; j < tray_services.num; j++)
                     {
                         if (tray_services.list[j].id === __common_svc_id)
-                            utils_int.fix_service_icon_names(tray_services.list[j].id);
+                        {
+                            __svc_found = true;
+
+                            break;
+                        }
                     }
 
                     utils_int.remove_service_icon(i);
@@ -358,6 +364,9 @@ function super_tray()
 
                 tray_services.list.splice(i, 1);
                 tray_services.num--;
+
+                if (__svc_found)
+                    utils_int.fix_service_icon_names(__common_svc_id);
 
                 return true;
             }
@@ -384,6 +393,30 @@ function super_tray()
         utils_int.clear_service_icons();
 
         return true;
+    };
+
+    this.show = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return utils_int.show_tray_area();
+    };
+
+    this.hide = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return utils_int.hide_tray_area();
+    };
+
+    this.toggle = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return utils_int.toggle_tray_area();
     };
 
     this.init = function(container_id)
@@ -419,6 +452,7 @@ function super_tray()
         roost = cosmos.hub.access('roost');
 
         morpheus = matrix.get('morpheus');
+        //user_profile = matrix.get('user_profile');
         nature = matrix.get('nature');
 
         return true;
@@ -432,6 +466,7 @@ function super_tray()
         svc_box = null,
         roost = null,
         morpheus = null,
+        user_profile = null,
         nature = null,
         utils_sys = new vulcan(),
         random = new pythia(),

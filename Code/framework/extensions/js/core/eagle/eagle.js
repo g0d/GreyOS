@@ -137,7 +137,7 @@ function eagle()
             {
                 __this_picked_app = colony.get(__running_apps[i - 1].sys_id);
 
-                if (__this_picked_app === null || __this_picked_app === false)
+                if (!__this_picked_app)
                     continue;
 
                 if (i === 1)
@@ -361,7 +361,7 @@ function eagle()
 
         eagle_id = self.settings.id();
 
-        nature.theme('eagle');
+        nature.themes.store('eagle');
         nature.apply('new');
 
         utils_int.draw_eagle();

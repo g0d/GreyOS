@@ -115,7 +115,7 @@ function i_youdj()
 
         config.id = 'i_youdj';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -154,10 +154,8 @@ function i_youdj()
                                   });
         i_youdj_bee.on('resize', function() { utils_sys.objects.by_id(i_youdj_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_youdj_bee.on('resized', function() { utils_sys.objects.by_id(i_youdj_bee.settings.general.id() + '_overlay').style.display = 'none'; });
-        i_youdj_bee.on('close', function()
-                                {
-                                    i_youdj_bee.gui.fx.fade.out();
-                                });
+        i_youdj_bee.on('close', function() { i_youdj_bee.gui.fx.fade.out(); });
+        i_youdj_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

@@ -229,7 +229,7 @@ function parrot()
 
         this.load_ui = function()
         {
-            nature.theme('parrot');
+            nature.themes.store('parrot');
             nature.apply('new');
 
             me.start_component();

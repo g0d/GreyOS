@@ -310,7 +310,7 @@ function msgbox()
         if (!utils_int.draw_screen(container_id))
             return false;
 
-        nature.theme('msgbox');
+        nature.themes.store('msgbox');
         nature.apply('new');
 
         is_init = true;

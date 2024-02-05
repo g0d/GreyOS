@@ -254,7 +254,7 @@ function tik_tok()
         self.settings.id('tik_tok_' + random.generate());
         self.settings.container(container_id);
 
-        nature.theme('tik_tok');
+        nature.themes.store('tik_tok');
         nature.apply('new');
 
         clock = new time_date_model();

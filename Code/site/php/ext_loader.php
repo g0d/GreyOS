@@ -29,5 +29,4 @@
     //UTIL::Load_Extension('i_twitter', 'js');
     //UTIL::Load_Extension('i_linkedin', 'js');
     //UTIL::Load_Extension('i_youtube', 'js');
-    //UTIL::Load_Extension('e_games', 'js');
 ?>

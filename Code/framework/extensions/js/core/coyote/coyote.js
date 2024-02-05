@@ -81,6 +81,9 @@ function coyote()
 
                 __index++;
             }
+
+            if (coyote_bee.status.gui.casement_retracted())
+                coyote_bee.gui.actions.casement.deploy(null);
         }
 
         this.close_new_user_tab = function()
@@ -171,12 +174,14 @@ function coyote()
                                                     '  <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' + 
                                                     '       title="Sorry, settings are not available yet...">' + 
                                                     '</div>' + 
-                                                    '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" title="Full screen mode is still buggy..."></div>' + 
+                                                    '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" ' + 
+                                                    '     title="Full screen mode is still buggy..."></div>' + 
                                                     '  <div class="adress_bar">' + 
                                                     '      <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' + 
                                                     '           title="Sorry, page information is not available yet...">' + 
                                                     '      </div>' + 
-                                                    '      <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" value="' + init_url + '" placeholder="Enter a web address...">' + 
+                                                    '      <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" ' + 
+                                                    '             value="' + init_url + '" placeholder="Enter a web address...">' + 
                                                     '  </div>' + 
                                                     '</div>' +  
                                                     '<div id="' + coyote_bee_id + '_frame" class="coyote_frame"></div>');
@@ -612,7 +617,7 @@ function coyote()
         config.id = 'coyote_' + random.generate();
         config.pages[0] = init_url;
 
-        nature.theme(['coyote']);
+        nature.themes.store('coyote');
         nature.apply('new');
 
         infinity.init();
@@ -692,6 +697,11 @@ function coyote()
 
                                     coyote_bee.gui.fx.fade.out();
                                });
+        coyote_bee.on('closed', function()
+                                {
+                                    if (!owl.status.applications.get.by_proc_id(coyote_bee.settings.general.app_id(), 'RUN'))
+                                        nature.themes.clear('coyote');
+                                });
 
         return true;
     };
@@ -708,6 +718,7 @@ function coyote()
 
         xenon = matrix.get('xenon');
         morpheus = matrix.get('morpheus');
+        owl = matrix.get('owl');
         nature = matrix.get('nature');
         infinity = dev_box.get('infinity');
 
@@ -722,6 +733,7 @@ function coyote()
         dev_box = null,
         xenon = null,
         morpheus = null,
+        owl = null,
         nature = null,
         infinity = null,
         coyote_bee = null,

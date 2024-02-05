@@ -1,11 +1,11 @@
 /*
-    GreyOS - Template [Service] (Version: 0.4)
+    GreyOS - Template [Service] (Version: 0.5)
 
     File name: template_service.js
     Description: This file contains the Template Service - Template service module.
     Notes: Low Level API
 
-    Coded by [Name Surname]
+    Coded by [Name Surname] ([Nickname])
     Copyright © [Year]
     Open Software License (OSL 3.0)
 */

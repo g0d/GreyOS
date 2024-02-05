@@ -115,7 +115,7 @@ function i_vectorink()
 
         config.id = 'i_vectorink';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -154,10 +154,8 @@ function i_vectorink()
                                       });
         i_vectorink_bee.on('resize', function() { utils_sys.objects.by_id(i_vectorink_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_vectorink_bee.on('resized', function() { utils_sys.objects.by_id(i_vectorink_bee.settings.general.id() + '_overlay').style.display = 'none'; });
-        i_vectorink_bee.on('close', function()
-                                    {
-                                        i_vectorink_bee.gui.fx.fade.out();
-                                    });
+        i_vectorink_bee.on('close', function() { i_vectorink_bee.gui.fx.fade.out(); });
+        i_vectorink_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

@@ -353,7 +353,7 @@ function dock()
 
         dock_id = self.settings.id();
 
-        nature.theme('dock');
+        nature.themes.store('dock');
         nature.apply('new');
 
         utils_int.draw();

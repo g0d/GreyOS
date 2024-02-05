@@ -1281,11 +1281,12 @@ function meta_script()
                     if (__result === true)
                         __is_run = true;
 
-                    var __data = {
+                    var __svc_config = me.config(),
+                        __data = {
                                     "ms_id"     :   program_config.model.name,
-                                    "svc_id"    :   me.config().sys_name,
-                                    "name"      :   me.config().name,
-                                    "icon"      :   me.config().icon,
+                                    "svc_id"    :   __svc_config.sys_name,
+                                    "name"      :   __svc_config.name,
+                                    "icon"      :   __svc_config.icon,
                                     "type"      :   "svc",
                                     "error"     :   null
                                  };

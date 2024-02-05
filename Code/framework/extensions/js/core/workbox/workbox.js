@@ -25,12 +25,12 @@ function workbox()
                 __container = utils.objects.by_id(container_id),
                 __html = null;
 
-            if (__container === false || utils.validation.misc.is_invalid(__container))
+            if (!__container || utils.validation.misc.is_invalid(__container))
                 return false;
 
             workbox_object = utils.objects.by_id('workbox');
 
-            if (workbox_object !== null)
+            if (!workbox_object)
                 __container.removeChild(workbox_object);
 
             workbox_object = document.createElement('div');

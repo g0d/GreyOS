@@ -1354,7 +1354,7 @@ function bee()
                 __status_bar_marquee = false,
                 __resizable = false,
                 __resize_tooltip = false,
-                __icon = null,
+                __icon = 'app_default_icon',
                 __casement_width = 1,
                 __casement_width_type = 'relative',
                 __backtrace = false;
@@ -1560,10 +1560,18 @@ function bee()
                 if (!utils_sys.validation.alpha.is_string(val))
                     return false;
 
-                __icon = val;
-
                 if (ui_objects.window.control_bar.icon !== null)
-                    ui_objects.window.control_bar.icon.classList.add(val);
+                {
+                    if (val !== null)
+                        ui_objects.window.control_bar.icon.classList.add(val);
+                    else
+                        ui_objects.window.control_bar.icon.classList.remove(__icon);
+                }
+
+                if (val !== null)
+                    __icon = val;
+                else
+                    __icon = 'app_default_icon';
 
                 return true;
             };
@@ -5010,7 +5018,7 @@ function bee()
         self.gui.size.max.width(swarm.settings.right());
         self.gui.size.max.height(swarm.settings.bottom());
 
-        nature.theme(['bee']);
+        nature.themes.store('bee');
         nature.apply('new');
 
         bee_statuses.initialized(true);

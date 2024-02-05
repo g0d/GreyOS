@@ -324,10 +324,9 @@ option
 
 .tik_tok
 {
-    background-color: #4349488f !important;
+    background-color: #39393942 !important;
     height: 37px !important;
     border: none !important;
-    border-radius: 12px;
     margin-top: 0px !important;
 }
 
@@ -578,6 +577,7 @@ option
 
 .casement_status
 {
+    color: #FFFFFF;
     background-color: transparent !important;
 }
 
@@ -624,7 +624,8 @@ option
 
 .stream_genres div:hover
 {
-    background-color: #1a525796 !important;
+    background-color: #571a3f96 !important;
+    border-radius: 4px;
 }
 
 .radio_dude_selected_stream
@@ -651,7 +652,7 @@ option
 .msgbox_button
 {
     background-color: #45454acf !important;
-    border: solid 1px #596b69 !important;
+    border: solid 1px #778b8b73 !important;
 }
 
 .msgbox_button:hover

@@ -124,7 +124,7 @@ function i_webgl_preview()
 
         config.id = 'i_webgl_preview';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -144,22 +144,20 @@ function i_webgl_preview()
         i_webgl_preview_bee.on('open', function() { i_webgl_preview_bee.gui.fx.fade.into(); });
         i_webgl_preview_bee.on('opened', function() { utils_int.gui_init(); });
         i_webgl_preview_bee.on('drag', function()
-                                 {
-                                     utils_sys.objects.by_id(i_webgl_preview_bee.settings.general.id() + '_overlay').style.display = 'block';
-                                 });
+                                       {
+                                            utils_sys.objects.by_id(i_webgl_preview_bee.settings.general.id() + '_overlay').style.display = 'block';
+                                       });
         i_webgl_preview_bee.on('dragging', function()
-                                    {
-                                        i_webgl_preview_bee.gui.fx.opacity.settings.set(0.7);
-                                        i_webgl_preview_bee.gui.fx.opacity.apply();
-                                    });
+                                           {
+                                                i_webgl_preview_bee.gui.fx.opacity.settings.set(0.7);
+                                                i_webgl_preview_bee.gui.fx.opacity.apply();
+                                           });
         i_webgl_preview_bee.on('dragged', function()
-                                    {
-                                        i_webgl_preview_bee.gui.fx.opacity.reset();
-                                    });
-        i_webgl_preview_bee.on('close', function()
-                                  {
-                                      i_webgl_preview_bee.gui.fx.fade.out();
-                                  });
+                                          {
+                                                i_webgl_preview_bee.gui.fx.opacity.reset();
+                                          });
+        i_webgl_preview_bee.on('close', function() { i_webgl_preview_bee.gui.fx.fade.out(); });
+        i_webgl_preview_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

@@ -124,7 +124,7 @@ function i_mariojs()
 
         config.id = 'i_mariojs';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -143,27 +143,22 @@ function i_mariojs()
         i_mariojs_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_mariojs_bee.on('open', function() { i_mariojs_bee.gui.fx.fade.into(); });
         i_mariojs_bee.on('opened', function() { utils_int.gui_init(); });
+        i_mariojs_bee.on('keydown', function()
+                                    {
+                                        console.log('mario JS');
+                                    });
         i_mariojs_bee.on('drag', function()
                                  {
                                      utils_sys.objects.by_id(i_mariojs_bee.settings.general.id() + '_overlay').style.display = 'block';
                                  });
         i_mariojs_bee.on('dragging', function()
-                                    {
+                                     {
                                         i_mariojs_bee.gui.fx.opacity.settings.set(0.7);
                                         i_mariojs_bee.gui.fx.opacity.apply();
-                                    });
-        i_mariojs_bee.on('dragged', function()
-                                    {
-                                        i_mariojs_bee.gui.fx.opacity.reset();
-                                    });
-        i_mariojs_bee.on('close', function()
-                                  {
-                                      i_mariojs_bee.gui.fx.fade.out();
-                                  });
-        i_mariojs_bee.on('keydown', function()
-                                    {
-                                        console.log('mario JS');
-                                    });
+                                     });
+        i_mariojs_bee.on('dragged', function() { i_mariojs_bee.gui.fx.opacity.reset(); });
+        i_mariojs_bee.on('close', function() { i_mariojs_bee.gui.fx.fade.out(); });
+        i_mariojs_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

@@ -115,7 +115,7 @@ function i_soundtrap()
 
         config.id = 'i_soundtrap';
 
-        nature.theme([config.id]);
+        nature.themes.store(config.id);
         nature.apply('new');
 
         infinity.init();
@@ -154,10 +154,8 @@ function i_soundtrap()
                                       });
         i_soundtrap_bee.on('resize', function() { utils_sys.objects.by_id(i_soundtrap_bee.settings.general.id() + '_overlay').style.display = 'block'; });
         i_soundtrap_bee.on('resized', function() { utils_sys.objects.by_id(i_soundtrap_bee.settings.general.id() + '_overlay').style.display = 'none'; });
-        i_soundtrap_bee.on('close', function()
-                                    {
-                                        i_soundtrap_bee.gui.fx.fade.out();
-                                    });
+        i_soundtrap_bee.on('close', function() { i_soundtrap_bee.gui.fx.fade.out(); });
+        i_soundtrap_bee.on('closed', function() { nature.themes.clear(config.id); });
 
         return true;
     };

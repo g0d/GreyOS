@@ -226,7 +226,7 @@ function ui_controls()
 
         ui_controls_id = self.settings.id();
 
-        nature.theme('ui_controls');
+        nature.themes.store('ui_controls');
         nature.apply('new');
 
         utils_int.draw_ui_controls();

@@ -1,11 +1,11 @@
 /*
-    GreyOS - Template [App] (Version: 0.4)
+    GreyOS - Template [App] (Version: 0.5)
 
     File name: template_app.js
     Description: This file contains the Template App - Template application.
     Notes: Low Level API
 
-    Coded by [Name Surname]
+    Coded by [Name Surname] ([Nickname])
     Copyright © [Year]
     Open Software License (OSL 3.0)
 */
@@ -166,7 +166,7 @@ function template_app()
 
         config.id = 'template_app_' + random.generate(); // Always set an app name combined with pythia
 
-        nature.theme(['template_app']); // Use the corresponding theme settings (See "nature" extension folder for themes)
+        nature.themes.store('template_app'); // Use the corresponding theme settings (See "nature" extension folder for themes)
         nature.apply('new'); // Apply the theme
 
         infinity.init(); // It is a good practice to initialize the "infinity" service to show a loading progress indicator
@@ -218,6 +218,12 @@ function template_app()
                                 // Your code...
 
                                 template_app_bee.gui.fx.fade.out();
+                            });
+        template_app_bee.on('closed', function() // Event
+                            {
+                                // Your code...
+
+                                nature.themes.clear('template_app');
                             });
 
         // You code...

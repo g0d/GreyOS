@@ -1,7 +1,7 @@
 /*
     MsgBox (Message Window)
 
-    File name: msgbox.js (Version: 2.6)
+    File name: msgbox.js (Version: 2.7)
     Description: This file contains the MsgBox extension.
     Dependencies: Vulcan.
 
@@ -34,12 +34,12 @@ function msgbox()
             var __container = utils.objects.by_id(container_id),
                 __html = null;
 
-            if (__container === false || utils.validation.misc.is_undefined(__container) || __container === null)
+            if (!__container || utils.validation.misc.is_undefined(__container))
                 return false;
 
             msgbox_object = utils.objects.by_id('msgbox');
 
-            if (msgbox_object !== null)
+            if (msgbox_object)
             {
                 try
                 {

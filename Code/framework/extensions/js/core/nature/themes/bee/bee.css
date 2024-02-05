@@ -9,6 +9,21 @@
     Open Software License (OSL 3.0)
 */
 
+.app_default_icon
+{
+    background-image: url('pix/apps/app.png');
+}
+
+.app_default_icon:hover
+{
+    background-image: url('pix/apps/app_hover.png');
+}
+
+.app_default_icon_on
+{
+    background-image: url('pix/apps/app_on.png');
+}
+
 .gui
 {
     position: absolute;
@@ -71,9 +86,10 @@
     float: left;
     clear: left;
     cursor: pointer;
-    background-image: url('pix/window/cube_white.png');
+    background-position: center;
+    background-repeat: no-repeat;
     min-width: 30px;
-    height: 30px;
+    height: 27px;
     margin-left: 0px;
     margin-top: 0px;
 }

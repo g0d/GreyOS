@@ -1,5 +1,5 @@
 /*
-    GreyOS - Infinity (Version: 2.4)
+    GreyOS - Infinity (Version: 2.5)
 
     File name: infinity.js
     Description: This file contains the Infinity - Progress indicator development module.
@@ -92,7 +92,7 @@ function infinity()
                 __container = utils_sys.objects.by_id(self.settings.container()),
                 __top_pos = 0;
 
-            if (utils_sys.validation.misc.is_undefined(__container) || __container === false || __container === null)
+            if (utils_sys.validation.misc.is_undefined(__container) || !__container)
                 return false;
 
             __top_pos = (utils_sys.graphics.pixels_value(__container.style.height) / 2) - 25;
@@ -181,7 +181,7 @@ function infinity()
 
         is_init = true;
 
-        nature.theme(['infinity']);
+        nature.themes.store('infinity');
         nature.apply('new');
 
         self.settings.id('infinity_' + random.generate());

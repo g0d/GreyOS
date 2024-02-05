@@ -690,7 +690,7 @@ function forest()
 
             forest_id = self.settings.id();
 
-            nature.theme(['forest']);
+            nature.themes.store('forest');
             nature.apply('new');
 
             utils_int.draw_forest();

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Teal Mail (Version: 1.4)
+    GreyOS - Teal Mail (Version: 1.5)
 
     File name: teal_mail.js
     Description: This file contains the Teal Mail application.
@@ -2552,13 +2552,18 @@ function teal_mail()
 		teal_mail_bee.on('open', function() { teal_mail_bee.gui.fx.fade.into(); });
 		teal_mail_bee.on('opened', function() { return gui_init(); });
 		teal_mail_bee.on('dragging', function()
-										{
-											teal_mail_bee.gui.fx.opacity.settings.set(0.7);
-											teal_mail_bee.gui.fx.opacity.apply();
-										});
+									 {
+										teal_mail_bee.gui.fx.opacity.settings.set(0.7);
+										teal_mail_bee.gui.fx.opacity.apply();
+									 });
 		teal_mail_bee.on('dragged', function() { teal_mail_bee.gui.fx.opacity.reset(); });
 		teal_mail_bee.on('in_hive', function() { utils.update_unread_in_hive(); });
-		teal_mail_bee.on('close', function() { teal_mail_bee.gui.fx.fade.out(); });
+		teal_mail_bee.on('close', function()
+								  {
+									vulcan.graphics.clear_theme('teal_mail');
+
+									teal_mail_bee.gui.fx.fade.out();
+								  });
 
 		return true;
 	};
