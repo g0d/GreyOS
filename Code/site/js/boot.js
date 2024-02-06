@@ -359,8 +359,11 @@ function boot_script()
             function()
             {
                 new_msgbox.init('desktop');
+                /*
                 new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
                                 new_msgbox.types.OK, [() => { cc_reload.init(); }]);
+                */
+                new_msgbox.show(os_settings.get('name'), 'Screen size changed. You may have to reload so that the interface adapts to the new dimensions!');
             });
 
             os_utils.events.attach('greyos', document, 'keydown', 

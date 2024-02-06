@@ -62,7 +62,7 @@ function dock()
                                     "method"        :   "post",
                                     "url"           :   "/",
                                     "data"          :   "gate=dock&action=save&apps=" + apps_array,
-                                    "ajax_mode"     :   "synchronous",
+                                    "ajax_mode"     :   "asynchronous",
                                 };
 
             return ajax.run(__ajax_config);

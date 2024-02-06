@@ -2564,6 +2564,7 @@ function teal_mail()
 
 									teal_mail_bee.gui.fx.fade.out();
 								  });
+		teal_mail_bee.on('closed', function() { });
 
 		return true;
 	};

@@ -95,6 +95,11 @@
     padding-top: 3px;
 }
 
+.honeycomb .icon
+{
+    background-image: url('pix/app.png');
+}
+
 .ghost_bee
 {
     display: none;
@@ -104,4 +109,9 @@
     height: 42px;
     opacity: 0.7;
     z-index: 2147483645;
+}
+
+.ghost_bee .icon
+{
+    background-image: url('pix/app.png');
 }

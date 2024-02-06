@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 3.7)
+    GreyOS - Hive (Version: 3.8)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -670,6 +670,7 @@ function hive()
         {
             var __dynamic_object = null,
                 __bee_object = colony.get(bee_id),
+                __app_id = __bee_object.settings.general.app_id(),
                 __ghost_object = null,
                 __ctrl_bar_class = null,
                 __ctrl_bar_icon_class = null,
@@ -680,17 +681,17 @@ function hive()
             if (__bee_object.settings.general.resizable() === true)
             {
                 __ctrl_bar_class = 'ctrl_bar box_ctrl_bar ' + bee_id + '_ctrl_bar box_ctrl_border';
-                __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';
                 __ctrl_bar_title_class = 'title box_title ' + bee_id + '_box_title';
                 __ctrl_bar_close_class = 'close box_close ' + bee_id + '_box_close';
             }
             else
             {
                 __ctrl_bar_class = 'ctrl_bar widget_ctrl_bar ' + bee_id + '_ctrl_bar';
-                __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';
                 __ctrl_bar_title_class = 'title widget_title ' + bee_id + '_widget_title';
                 __ctrl_bar_close_class = 'close widget_close ' + bee_id + '_widget_close';
             }
+
+            __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon ' + __app_id + '_icon';
 
             __dynamic_object = document.createElement('div');
 

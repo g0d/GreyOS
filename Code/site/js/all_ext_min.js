@@ -8180,6 +8180,7 @@ function hive()
  {
  var __dynamic_object = null,
  __bee_object = colony.get(bee_id),
+ __app_id = __bee_object.settings.general.app_id(),
  __ghost_object = null,
  __ctrl_bar_class = null,
  __ctrl_bar_icon_class = null,
@@ -8189,17 +8190,16 @@ function hive()
  if (__bee_object.settings.general.resizable() === true)
  {
  __ctrl_bar_class = 'ctrl_bar box_ctrl_bar ' + bee_id + '_ctrl_bar box_ctrl_border';
- __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';
  __ctrl_bar_title_class = 'title box_title ' + bee_id + '_box_title';
  __ctrl_bar_close_class = 'close box_close ' + bee_id + '_box_close';
  }
  else
  {
  __ctrl_bar_class = 'ctrl_bar widget_ctrl_bar ' + bee_id + '_ctrl_bar';
- __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon';
  __ctrl_bar_title_class = 'title widget_title ' + bee_id + '_widget_title';
  __ctrl_bar_close_class = 'close widget_close ' + bee_id + '_widget_close';
  }
+ __ctrl_bar_icon_class = 'icon ' + bee_id + '_icon ' + __app_id + '_icon';
  __dynamic_object = document.createElement('div');
  __dynamic_object.setAttribute('id', 'hive_bee_' + bee_id);
  __dynamic_object.setAttribute('class', __ctrl_bar_class + ' hive_bee');
@@ -9494,7 +9494,7 @@ function dock()
  "method" : "post",
  "url" : "/",
  "data" : "gate=dock&action=save&apps=" + apps_array,
- "ajax_mode" : "synchronous",
+ "ajax_mode" : "asynchronous",
  };
  return ajax.run(__ajax_config);
  }
@@ -16996,10 +16996,12 @@ function bee()
  }
  if (is_init === false)
  return false;
- if (utils_sys.validation.misc.is_undefined(event_object) ||
- !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
+ if (bee_statuses.in_hive())
  return false;
  if (__is_animating === true || !self.settings.actions.can_use_casement())
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) ||
+ !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
  return false;
  var __window_pos_x = me.position.left(),
  __window_width = utils_sys.graphics.pixels_value(ui_objects.window.ui.style.width),
@@ -17044,10 +17046,10 @@ function bee()
  }
  if (is_init === false)
  return false;
+ if (__is_animating === true)
+ return false;
  if (utils_sys.validation.misc.is_undefined(event_object) ||
  !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
- return false;
- if (__is_animating === true)
  return false;
  var __casement = ui_objects.casement.ui,
  __casement_width = utils_sys.graphics.pixels_value(__casement.style.width),

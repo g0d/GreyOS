@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.5)
+    GreyOS - Bee (Version: 5.6)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -3736,11 +3736,14 @@ function bee()
                     if (is_init === false)
                         return false;
 
-                    if (utils_sys.validation.misc.is_undefined(event_object) || 
-                        !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
+                    if (bee_statuses.in_hive())
                         return false;
 
                     if (__is_animating === true || !self.settings.actions.can_use_casement())
+                        return false;
+
+                    if (utils_sys.validation.misc.is_undefined(event_object) || 
+                        !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
                         return false;
 
                     var __window_pos_x = me.position.left(),
@@ -3803,11 +3806,11 @@ function bee()
                     if (is_init === false)
                         return false;
 
-                    if (utils_sys.validation.misc.is_undefined(event_object) || 
-                        !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
+                    if (__is_animating === true)
                         return false;
 
-                    if (__is_animating === true)
+                    if (utils_sys.validation.misc.is_undefined(event_object) || 
+                        !utils_sys.validation.misc.is_undefined(callback) && !utils_sys.validation.misc.is_function(callback))
                         return false;
 
                     var __casement = ui_objects.casement.ui,
