@@ -1,5 +1,5 @@
 /*
-    GreyOS - X-Runner (Version: 1.8)
+    GreyOS - X-Runner (Version: 2.0)
 
     File name: x_runner.js
     Description: This file contains the X-Runner - User-level programs execution module.
@@ -66,9 +66,9 @@ function x_runner()
             __msg_win.init('desktop');
 
             if (__apps_num >= __max_apps)
-                __msg_win.show(xenon.load('os_name'), 'Maximum apps for this session, reached! Please close a few apps in order to open new ones.');
+                __msg_win.show(xenon.load('os_name'), 'Maximum apps for this session reached! Please quit a few apps in order to run new ones.');
             else if (__svcs_num >= __max_svcs)
-                __msg_win.show(xenon.load('os_name'), 'Maximum services for this session, reached! Please stop a few to use others.');
+                __msg_win.show(xenon.load('os_name'), 'Maximum services for this session reached! Please stop a few services to use others.');
             else
                 return false;
 
@@ -88,6 +88,34 @@ function x_runner()
             }
 
             return false;
+        }
+
+        function check_app_errors(app)
+        {
+            var __bee = app.base(),
+                __app_error = app.error(),
+                __msg_win = new msgbox();
+
+            swarm.bees.remove(__bee);
+
+            __msg_win.init('desktop');
+
+            if (__app_error.last() === __app_error.codes.POSITION || 
+                __app_error.last() === __app_error.codes.SIZE)
+                __msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. You need a larger screen or higher resolution to run it!');
+            else if (__app_error.last() === __app_error.codes.INSTANCE_NUM_LIMIT)
+                __msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
+
+            return true;
+        }
+
+        function general_error()
+        {
+            var __msg_win = new msgbox();
+
+            __msg_win.show(xenon.load('os_name'), 'A general program error occurred!');
+
+            return true;
         }
 
         function execute_meta_program(mode, x_id)
@@ -137,14 +165,19 @@ function x_runner()
             {
                 if (!check_system_run_limits(true))
                 {
-                    if (mode === 'app' && !check_single_instance_app(x_mc.program_id()))
+                    if (mode === 'app')
                     {
-                        if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
-                            frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
-                        else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
-                            frog('X-RUNNER', '[*] Run Fail [*]', meta_executor.error.last.message());
-                        else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
-                            frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+                        if (!check_single_instance_app(x_mc.program_id()))
+                        {
+                            if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+                                frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
+                            else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
+                                frog('X-RUNNER', '[*] Run Fail [*]', meta_executor.error.last.message());
+                            else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
+                                frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+                        }
+                        else
+                            nature.themes.clear(x_mc.program_id());
                     }
                 }
 
@@ -175,16 +208,14 @@ function x_runner()
                     var __app = app_box.get(app_id),
                         __bee = null;
 
-                    __app.init();
-
-                    __bee = __app.base();
-
-                    if (!swarm.bees.insert(__bee))
+                    if (!__app.init())
                     {
-                        check_system_run_limits();
+                        general_error();
 
                         return false;
                     }
+
+                    __bee = __app.base();
 
                     if (__app.run())
                     {
@@ -200,25 +231,8 @@ function x_runner()
                     }
                     else
                     {
-                        var __app_error = __app.error(),
-                            __msg_win = new msgbox();
-
-                        __msg_win.init('desktop');
-
-                        if (__app_error.last() === __app_error.codes.POSITION || 
-                            __app_error.last() === __app_error.codes.SIZE)
-                        {
-                            swarm.bees.remove(__bee);
-
-                            __msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
-                                                                   You need a larger screen or higher resolution to run it!');
-                        }
-                        else if (__app_error.last() === __app_error.codes.INSTANCE_NUM_LIMIT)
-                        {
-                            swarm.bees.remove(__bee);
-
-                            __msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
-                        }
+                        if (!check_system_run_limits())
+                            check_app_errors(__app);
 
                         return false;
                     }
@@ -246,6 +260,13 @@ function x_runner()
                         __bat = null;
 
                     __svc.init();
+
+                    if (!__svc.init())
+                    {
+                        general_error();
+
+                        return false;
+                    }
 
                     __bat = __svc.base();
 
@@ -373,6 +394,7 @@ function x_runner()
         xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         owl = matrix.get('owl');
+        nature = matrix.get('nature');
 
         return true;
     };
@@ -391,6 +413,7 @@ function x_runner()
         xenon = null,
         swarm = null,
         owl = null,
+        nature = null,
         meta_executor = null,
         modes_list = ['app', 'svc'],
         utils_sys = new vulcan(),

@@ -1138,9 +1138,6 @@ function meta_script()
                     if (!app_box.replace([program_config.model]))
                         return false;
 
-                    if (!swarm.bees.insert(__new_app))
-                        return null;
-
                     var __result = __new_app.run(child_apps_array, headless);
 
                     if (__result === true)

@@ -204,7 +204,8 @@ function colony()
         if (!utils_sys.validation.misc.is_object(object))
             return false;
 
-        if (utils_sys.validation.misc.is_undefined(object.init) || utils_sys.validation.misc.is_undefined(object.run) || 
+        if (utils_sys.validation.misc.is_undefined(object.init) || 
+            utils_sys.validation.misc.is_undefined(object.run) || utils_sys.validation.misc.is_undefined(object.quit) || 
             utils_sys.validation.misc.is_undefined(object.on) || utils_sys.validation.misc.is_undefined(object.settings) || 
             utils_sys.validation.misc.is_undefined(object.gui) || utils_sys.validation.misc.is_undefined(object.status) || 
             utils_sys.validation.misc.is_undefined(object.drone))
@@ -212,7 +213,7 @@ function colony()
 
         var bee_length = Object.keys(object).length;
 
-        if (bee_length !== 9)
+        if (bee_length !== 10)
             return false;
 
         return true;

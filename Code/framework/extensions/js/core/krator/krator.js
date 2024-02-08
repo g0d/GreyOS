@@ -362,7 +362,7 @@ function krator()
         if (is_init === false)
             return false;
 
-        return krator_bee.gui.actions.close(null);
+        return krator_bee.quit();
     };
 
     this.error = function()
@@ -421,6 +421,7 @@ function krator()
         krator_bee.on('close', function()
                                {
                                     morpheus.clear(config.id);
+
                                     krator_bee.gui.fx.fade.out();
                                });
         krator_bee.on('closed', function()

@@ -86,7 +86,7 @@ function trinity()
         if (is_init === false)
             return false;
 
-        return trinity_bee.gui.actions.close(null);
+        return trinity_bee.quit();
     };
 
     this.error = function()

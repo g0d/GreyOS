@@ -6091,13 +6091,14 @@ function colony()
  return false;
  if (!utils_sys.validation.misc.is_object(object))
  return false;
- if (utils_sys.validation.misc.is_undefined(object.init) || utils_sys.validation.misc.is_undefined(object.run) ||
+ if (utils_sys.validation.misc.is_undefined(object.init) ||
+ utils_sys.validation.misc.is_undefined(object.run) || utils_sys.validation.misc.is_undefined(object.quit) ||
  utils_sys.validation.misc.is_undefined(object.on) || utils_sys.validation.misc.is_undefined(object.settings) ||
  utils_sys.validation.misc.is_undefined(object.gui) || utils_sys.validation.misc.is_undefined(object.status) ||
  utils_sys.validation.misc.is_undefined(object.drone))
  return false;
  var bee_length = Object.keys(object).length;
- if (bee_length !== 9)
+ if (bee_length !== 10)
  return false;
  return true;
  };
@@ -8416,7 +8417,6 @@ function hive()
  {
  honeycomb_views.list(i).bees.add(__bee_id);
  colony.get(__bee_id).settings.general.in_hive(true);
- swarm.bees.remove(__bee_id);
  utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
  break;
  }
@@ -8425,7 +8425,6 @@ function hive()
  else
  {
  honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id);
- swarm.bees.remove(__bee_id);
  utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
  }
  swarm.settings.active_bee(null);
@@ -8465,7 +8464,6 @@ function hive()
  var __active_bee_id = swarm.status.active_bee();
  honeycomb_views.list(i).bees.add(__active_bee_id);
  colony.get(__active_bee_id).settings.general.in_hive(true);
- swarm.bees.remove(__active_bee_id);
  utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
  swarm.settings.active_bee(null);
  return true;
@@ -8814,7 +8812,7 @@ function trinity()
  {
  if (is_init === false)
  return false;
- return trinity_bee.gui.actions.close(null);
+ return trinity_bee.quit();
  };
  this.error = function()
  {
@@ -9169,7 +9167,7 @@ function krator()
  {
  if (is_init === false)
  return false;
- return krator_bee.gui.actions.close(null);
+ return krator_bee.quit();
  };
  this.error = function()
  {
@@ -11640,8 +11638,6 @@ function meta_script()
  return false;
  if (!app_box.replace([program_config.model]))
  return false;
- if (!swarm.bees.insert(__new_app))
- return null;
  var __result = __new_app.run(child_apps_array, headless);
  if (__result === true)
  __is_run = true;
@@ -11910,7 +11906,7 @@ function meta_executor()
  return false;
  if (utils_sys.validation.misc.is_nothing(new_program) || !utils_sys.validation.alpha.is_string(new_program))
  return false;
- program = new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
+ program = '"use strict";\r\n' + new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
  is_program_loaded = true;
  return true;
  };
@@ -12316,9 +12312,9 @@ function x_runner()
  var __msg_win = new msgbox();
  __msg_win.init('desktop');
  if (__apps_num >= __max_apps)
- __msg_win.show(xenon.load('os_name'), 'Maximum apps for this session, reached! Please close a few apps in order to open new ones.');
+ __msg_win.show(xenon.load('os_name'), 'Maximum apps for this session reached! Please quit a few apps in order to run new ones.');
  else if (__svcs_num >= __max_svcs)
- __msg_win.show(xenon.load('os_name'), 'Maximum services for this session, reached! Please stop a few to use others.');
+ __msg_win.show(xenon.load('os_name'), 'Maximum services for this session reached! Please stop a few services to use others.');
  else
  return false;
  return true;
@@ -12333,6 +12329,26 @@ function x_runner()
  return true;
  }
  return false;
+ }
+ function check_app_errors(app)
+ {
+ var __bee = app.base(),
+ __app_error = app.error(),
+ __msg_win = new msgbox();
+ swarm.bees.remove(__bee);
+ __msg_win.init('desktop');
+ if (__app_error.last() === __app_error.codes.POSITION ||
+ __app_error.last() === __app_error.codes.SIZE)
+ __msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. You need a larger screen or higher resolution to run it!');
+ else if (__app_error.last() === __app_error.codes.INSTANCE_NUM_LIMIT)
+ __msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
+ return true;
+ }
+ function general_error()
+ {
+ var __msg_win = new msgbox();
+ __msg_win.show(xenon.load('os_name'), 'A general program error occurred!');
+ return true;
  }
  function execute_meta_program(mode, x_id)
  {
@@ -12374,7 +12390,9 @@ function x_runner()
  {
  if (!check_system_run_limits(true))
  {
- if (mode === 'app' && !check_single_instance_app(x_mc.program_id()))
+ if (mode === 'app')
+ {
+ if (!check_single_instance_app(x_mc.program_id()))
  {
  if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
  frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
@@ -12382,6 +12400,9 @@ function x_runner()
  frog('X-RUNNER', '[*] Run Fail [*]', meta_executor.error.last.message());
  else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
  frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+ }
+ else
+ nature.themes.clear(x_mc.program_id());
  }
  }
  x_reference = null;
@@ -12403,13 +12424,12 @@ function x_runner()
  return false;
  var __app = app_box.get(app_id),
  __bee = null;
- __app.init();
- __bee = __app.base();
- if (!swarm.bees.insert(__bee))
+ if (!__app.init())
  {
- check_system_run_limits();
+ general_error();
  return false;
  }
+ __bee = __app.base();
  if (__app.run())
  {
  me.set_dock_icon_status(app_id)
@@ -12420,21 +12440,8 @@ function x_runner()
  }
  else
  {
- var __app_error = __app.error(),
- __msg_win = new msgbox();
- __msg_win.init('desktop');
- if (__app_error.last() === __app_error.codes.POSITION ||
- __app_error.last() === __app_error.codes.SIZE)
- {
- swarm.bees.remove(__bee);
- __msg_win.show(xenon.load('os_name'), 'The app is overflowing your screen. \
- You need a larger screen or higher resolution to run it!');
- }
- else if (__app_error.last() === __app_error.codes.INSTANCE_NUM_LIMIT)
- {
- swarm.bees.remove(__bee);
- __msg_win.show(xenon.load('os_name'), 'The app reached its configured instances limit!');
- }
+ if (!check_system_run_limits())
+ check_app_errors(__app);
  return false;
  }
  }
@@ -12457,6 +12464,11 @@ function x_runner()
  var __svc = svc_box.get(service_id),
  __bat = null;
  __svc.init();
+ if (!__svc.init())
+ {
+ general_error();
+ return false;
+ }
  __bat = __svc.base();
  if (__bat.run())
  {
@@ -12552,6 +12564,7 @@ function x_runner()
  xenon = matrix.get('xenon');
  swarm = matrix.get('swarm');
  owl = matrix.get('owl');
+ nature = matrix.get('nature');
  return true;
  };
  var is_x_running = false,
@@ -12568,6 +12581,7 @@ function x_runner()
  xenon = null,
  swarm = null,
  owl = null,
+ nature = null,
  meta_executor = null,
  modes_list = ['app', 'svc'],
  utils_sys = new vulcan(),
@@ -17128,6 +17142,8 @@ function bee()
  return false;
  if (bee_statuses.running())
  return false;
+ if (!swarm.bees.insert(self))
+ return false;
  if (utils_int.is_lonely_bee(my_bee_id))
  return false;
  var __app_id = self.settings.general.app_id(),
@@ -17198,7 +17214,7 @@ function bee()
  {
  var __child_bee = null;
  for (__child_bee in my_child_bees)
- __child_bee.close(null);
+ __child_bee.quit(null);
  try
  {
  morpheus.execute(my_bee_id, 'gui', 'close');
@@ -17947,7 +17963,7 @@ function bee()
  if (__this_bee.settings.general.app_id() === __app_id)
  {
  __currrent_running_instances_num++;
- if (__currrent_running_instances_num > __max_allowed_instances)
+ if (__currrent_running_instances_num > __max_allowed_instances - 1)
  {
  error_code = self.error.codes.INSTANCE_NUM_LIMIT;
  owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
@@ -17964,6 +17980,12 @@ function bee()
  utils_int.log('Run', 'OK');
  return true;
  };
+ this.quit = function()
+ {
+ if (is_init === false)
+ return false;
+ return self.gui.actions.close(null);
+ };
  this.init = function(bee_id, icon = null)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
@@ -17978,8 +18000,6 @@ function bee()
  my_bee_id = self.settings.general.id();
  self.gui.size.max.width(swarm.settings.right());
  self.gui.size.max.height(swarm.settings.bottom());
- nature.themes.store('bee');
- nature.apply('new');
  bee_statuses.initialized(true);
  morpheus.execute(my_bee_id, 'system', 'initialized');
  return true;
@@ -17996,7 +18016,6 @@ function bee()
  owl = matrix.get('owl');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
- nature = matrix.get('nature');
  return true;
  };
  var is_init = false,
@@ -18005,7 +18024,6 @@ function bee()
  my_child_bees = [],
  cosmos = null,
  matrix = null,
- nature = null,
  xenon = null,
  morpheus = null,
  owl = null,
@@ -18619,7 +18637,7 @@ function coyote()
  {
  if (is_init === false)
  return false;
- return coyote_bee.close(null);
+ return coyote_bee.quit();
  };
  this.error = function()
  {
@@ -19436,7 +19454,7 @@ function radio_dude()
  {
  if (is_init === false)
  return false;
- return radio_dude_bee.gui.actions.close(null);
+ return radio_dude_bee.quit();
  };
  this.error = function()
  {

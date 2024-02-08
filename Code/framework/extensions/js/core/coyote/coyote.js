@@ -591,7 +591,7 @@ function coyote()
         if (is_init === false)
             return false;
 
-        return coyote_bee.close(null);
+        return coyote_bee.quit();
     };
 
     this.error = function()

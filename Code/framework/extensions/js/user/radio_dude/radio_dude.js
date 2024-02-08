@@ -150,7 +150,7 @@ function radio_dude()
         if (is_init === false)
             return false;
 
-        return radio_dude_bee.gui.actions.close(null);
+        return radio_dude_bee.quit();
     };
 
     this.error = function()

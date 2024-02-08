@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 3.8)
+    GreyOS - Bootstrap facility (Version: 3.9)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -31,14 +31,14 @@ function boot_script()
     var os_settings = greyos.settings();
 
     // Set global settings
-    os_settings.set('boot_mode', 0);            // Boot modes: Normal (0) / Development (1)
-    os_settings.set('name', 'GreyOS');          // Meta-OS name
-    os_settings.set('version', '4.3 (alpha)');  // Meta-OS version
-    os_settings.set('theme', 'morph');          // Themes: 'bubble_gum', 'tomorrow', 'morph'
-    os_settings.set('max_apps', 50);            // Maximum number of allowed active apps per session
-    os_settings.set('max_services', 100)        // Maximum number of allowed active services per session
-    os_settings.set('apps_per_view', 18);       // Apps per stack bar view (This is buggy / Stackbar tries to resize automatically but usually fails)
-    os_settings.set('stack_bars', 4);           // Number of stack bars
+    os_settings.set('boot_mode', 0);                // Boot modes: Normal (0) / Development (1)
+    os_settings.set('name', 'GreyOS');              // Meta-OS name
+    os_settings.set('version', '4.4 (alpha)');      // Meta-OS version
+    os_settings.set('theme', 'morph');              // Themes: 'bubble_gum', 'tomorrow', 'morph'
+    os_settings.set('max_apps', 50);                // Maximum number of allowed active apps per session
+    os_settings.set('max_services', 100)            // Maximum number of allowed active services per session
+    os_settings.set('apps_per_view', 18);           // Apps per stack bar view (This is buggy / Stackbar tries to resize automatically but usually fails)
+    os_settings.set('stack_bars', 4);               // Number of stack bars
 
     // Initialization script
     var init_script = function()
@@ -218,11 +218,7 @@ function boot_script()
                 return false;
             }
 
-            var krator_bee = krator_app.base();
-
-            matrix_container.get('swarm').bees.insert(krator_bee);
-
-            krator_bee.run();
+            krator_app.run();
 
             return true;
         }

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.6)
+    GreyOS - Bee (Version: 5.7)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -3921,6 +3921,9 @@ function bee()
                 if (bee_statuses.running())
                     return false;
 
+                if (!swarm.bees.insert(self))
+                    return false;
+
                 if (utils_int.is_lonely_bee(my_bee_id))
                     return false;
 
@@ -4020,7 +4023,7 @@ function bee()
                         var __child_bee = null;
 
                         for (__child_bee in my_child_bees)
-                            __child_bee.close(null);
+                            __child_bee.quit(null);
 
                         try
                         {
@@ -4974,7 +4977,7 @@ function bee()
                 {
                     __currrent_running_instances_num++;
 
-                    if (__currrent_running_instances_num > __max_allowed_instances)
+                    if (__currrent_running_instances_num > __max_allowed_instances - 1)
                     {
                         error_code = self.error.codes.INSTANCE_NUM_LIMIT;
 
@@ -5000,6 +5003,14 @@ function bee()
         return true;
     };
 
+    this.quit = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return self.gui.actions.close(null);
+    };
+
     this.init = function(bee_id, icon = null)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
@@ -5020,9 +5031,6 @@ function bee()
 
         self.gui.size.max.width(swarm.settings.right());
         self.gui.size.max.height(swarm.settings.bottom());
-
-        nature.themes.store('bee');
-        nature.apply('new');
 
         bee_statuses.initialized(true);
 
@@ -5046,7 +5054,6 @@ function bee()
         owl = matrix.get('owl');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
-        nature = matrix.get('nature');
 
         return true;
     };
@@ -5057,7 +5064,6 @@ function bee()
         my_child_bees = [],
         cosmos = null,
         matrix = null,
-        nature = null,
         xenon = null,
         morpheus = null,
         owl = null,
