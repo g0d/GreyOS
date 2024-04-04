@@ -1,5 +1,5 @@
 /*
-    GreyOS - Coyote (Version: 3.5)
+    GreyOS - Coyote (Version: 3.6)
 
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
@@ -44,6 +44,9 @@ function coyote()
 
         function load_meta_info(results)
         {
+            if (results === 'null')
+                return;
+
             var __json_data = JSON.parse(results),
                 __meta_results = __json_data.webPages.value,
                 __meta_results_container_object = null,
@@ -160,30 +163,29 @@ function coyote()
 
         this.draw_normal = function()
         {
-            coyote_bee.settings.data.window.content('<div id="' + coyote_bee_id + '_tabs_bar" class="coyote_tabs_bar">' + 
-                                                    '  <div id="' + coyote_bee_id + '_tab_greyos" class="tab tab_selected">' + 
-                                                    '  <div id="' + coyote_bee_id + '_tab_x" class="tab_close"></div>' + 
-                                                    '  <div class="tab_text">GreyOS</div>' + 
-                                                    '  </div>' + 
-                                                    '  <div class="tab create_new_tab" title="Sorry, new tabs are not supported yet..."></div>' + 
+            coyote_bee.settings.data.window.content('<div class="coyote_browsing_controls">' + 
+                                                    '   <div id="' + coyote_bee_id + '_tabs_bar" class="coyote_tabs_bar">' + 
+                                                    '       <div id="' + coyote_bee_id + '_tab_greyos" class="tab tab_selected">' + 
+                                                    '           <div id="' + coyote_bee_id + '_tab_x" class="tab_close"></div>' + 
+                                                    '           <div class="tab_text">GreyOS</div>' + 
+                                                    '       </div>' + 
+                                                    '       <div class="tab create_new_tab" title="Sorry, new tabs are not supported yet..."></div>' + 
+                                                    '   </div>' + 
+                                                    '   <div class="coyote_control_bar">' + 
+                                                    '       <div id="' + coyote_bee_id + '_back" class="history_back browser_button"></div>' + 
+                                                    '       <div id="' + coyote_bee_id + '_forward" class="history_forward browser_button"></div>' + 
+                                                    '       <div id="' + coyote_bee_id + '_refresh" class="page_refresh browser_button"></div>' + 
+                                                    '       <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' + 
+                                                    '            title="Sorry, settings are not available yet..."></div>' + 
+                                                    '       <div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" ' + 
+                                                    '            title="Full screen mode is still buggy..."></div>' + 
+                                                    '       <div class="adress_bar">' + 
+                                                    '           <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' + 
+                                                    '                title="Sorry, page information is not available yet..."></div>' + 
+                                                    '           <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" ' + 
+                                                    '                  value="' + init_url + '" placeholder="Enter a web address..."></div>' + 
+                                                    '   </div>' + 
                                                     '</div>' + 
-                                                    '<div class="coyote_control_bar">' + 
-                                                    '  <div id="' + coyote_bee_id + '_back" class="history_back browser_button"></div>' + 
-                                                    '  <div id="' + coyote_bee_id + '_forward" class="history_forward browser_button"></div>' + 
-                                                    '  <div id="' + coyote_bee_id + '_refresh" class="page_refresh browser_button"></div>' + 
-                                                    '  <div id="' + coyote_bee_id + '_settings" class="browser_settings browser_button" ' + 
-                                                    '       title="Sorry, settings are not available yet...">' + 
-                                                    '</div>' + 
-                                                    '<div id="' + coyote_bee_id + '_full_screen" class="browser_full_screen browser_button" ' + 
-                                                    '     title="Full screen mode is still buggy..."></div>' + 
-                                                    '  <div class="adress_bar">' + 
-                                                    '      <div id="' + coyote_bee_id + '_page_info" class="page_info browser_button" ' + 
-                                                    '           title="Sorry, page information is not available yet...">' + 
-                                                    '      </div>' + 
-                                                    '      <input type="text" id="' + coyote_bee_id + '_address_box" class="address_box" ' + 
-                                                    '             value="' + init_url + '" placeholder="Enter a web address...">' + 
-                                                    '  </div>' + 
-                                                    '</div>' +  
                                                     '<div id="' + coyote_bee_id + '_frame" class="coyote_frame"></div>');
 
             coyote_bee.settings.data.casement.content('<div id="' + coyote_bee_id + '_meta_info_div" \
@@ -222,7 +224,11 @@ function coyote()
             __browser_frame_width = (coyote_bee.status.gui.size.width() - 18);
             browser_frame.style.width = __browser_frame_width + 'px';
 
-            __browser_frame_height = (coyote_bee.status.gui.size.height() - 155);
+            if (is_browsing_controls_hidden)
+                __browser_frame_height = (coyote_bee.status.gui.size.height() - 63);
+            else
+                __browser_frame_height = (coyote_bee.status.gui.size.height() - 155);
+
             browser_frame.style.height = __browser_frame_height + 'px';
         };
 
@@ -287,8 +293,13 @@ function coyote()
 
                     hb_manager = await hyperbeam(browser_frame, hb_url);
 
-                    if (utils_sys.validation.misc.is_nothing(url))
-                        url = init_url;
+                    if (delayed_browsing_url !== null)
+                        url = delayed_browsing_url;
+                    else
+                    {
+                        if (utils_sys.validation.misc.is_nothing(url))
+                            url = init_url;
+                    }
 
                     hb_manager.tabs.update({ url: url });
                     hb_manager.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { me.update_controls_delegate(tabId, changeInfo, tab); });
@@ -299,14 +310,14 @@ function coyote()
                     if (callback !== undefined)
                         callback.call(this);
 
-                    setTimeout(function()
-                            {
-                                is_browser_loading = false;
+                    setTimeout(() =>
+                    {
+                        is_browser_loading = false;
 
-                                ajax_factory('post', 'gate=meta_info&url=' + url, (results) => { load_meta_info(results); }, null, null);
+                        ajax_factory('post', 'gate=meta_info&url=' + url, (results) => { load_meta_info(results); }, null, null);
 
-                                infinity.end();
-                            }, 8000);
+                        infinity.end();
+                    }, 8000);
                 },
                 __on_fail = () =>
                 {
@@ -322,6 +333,17 @@ function coyote()
             ajax_factory('post', 'gate=hyperbeam&config=' + JSON.stringify(config.hb_options), __on_success, __on_fail, null);
 
             is_init_hyperbeam = true;
+        };
+
+        this.hide_browsing_controls = function()
+        {
+            var __browsing_controls = utils_sys.objects.by_class('coyote_browsing_controls');
+
+            __browsing_controls[0].style = 'display: none';
+
+            browser_frame.style.height = (coyote_bee.status.gui.size.height() - 63) + 'px';
+
+            is_browsing_controls_hidden = true;
         };
     }
 
@@ -515,7 +537,11 @@ function coyote()
                 browser_frame = utils_sys.objects.by_id(coyote_bee_id + '_frame');
                 browser_frame.style.margin = '';
                 browser_frame.style.width = (coyote_bee.status.gui.size.width() - 18) + 'px';
-                browser_frame.style.height = (coyote_bee.status.gui.size.height() - 155) + 'px';
+
+                if (is_browsing_controls_hidden)
+                    browser_frame.style.height = (coyote_bee.status.gui.size.height() - 63) + 'px';
+                else
+                    browser_frame.style.height = (coyote_bee.status.gui.size.height() - 155) + 'px';
 
                 config.is_full_screen = false;
             }
@@ -559,7 +585,26 @@ function coyote()
         if (is_init === false)
             return false;
 
+        if (is_browser_loading)
+        {
+            delayed_browsing_url = url;
+
+            return true;
+        }
+
+        delayed_browsing_url = null;
+
         return self.browser_controls.address(url, null);
+    };
+
+    this.hide_controls = function()
+    {
+        if (is_init === false)
+            return false;
+
+        utils_int.hide_browsing_controls();
+
+        return true;
     };
 
     this.base = function()
@@ -728,6 +773,7 @@ function coyote()
     var is_init = false,
         is_init_hyperbeam = false,
         is_browser_loading = true,
+        is_browsing_controls_hidden = false,
         cosmos = null,
         matrix = null,
         dev_box = null,
@@ -742,6 +788,7 @@ function coyote()
         browser_frame = null,
         meta_information_div = null,
         coyote_fs_layer = null,
+        delayed_browsing_url = null,
         hb_manager = null,
         init_url = 'https://probotek.eu/en/',
         utils_sys = new vulcan(),
