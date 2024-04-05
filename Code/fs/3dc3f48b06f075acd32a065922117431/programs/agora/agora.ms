@@ -12,13 +12,16 @@
 var ms = meta_script,
     ms_app = ms.app(),
     ms_utils = ms.os.utilities();
+
 console.log(ms);
 console.log(ms_app);
+  
 function gui()
 {
     var ms_app_sys_id = ms_app.get_system_id(),
         ms_app_id = ms_app.get_app_id(),
-        main_content = '';
+        main_content = '',
+        casement_content = '';
 
     /* ms_utils.graphics.apply_theme('graphics', 'agora'); - This will be applied by the Cloud Edit/Cloud IDE */
 
@@ -29,7 +32,7 @@ function gui()
     ms_app.main.set_status('Loading...');
 
     ms_app.casement.set_title('Search for programs');
-    ms_app.casement.set_content(main_content);
+    ms_app.casement.set_content(casement_content);
     ms_app.casement.set_status('Ready');
 
     var all_api = ms.program.list_api(),
@@ -60,6 +63,8 @@ ms_app.position.left(100);
 ms_app.position.top(100);
 ms_app.size.width(1200);
 ms_app.size.height(720);
+ms_app.size.min.width(1200);
+ms_app.size.min.height(720);
 ms_app.fx.fade.settings.into.set(0.07, 25, 100);
 ms_app.fx.fade.settings.out.set(0.07, 25, 100);
 ms_app.on('open', () => { ms_app.fx.fade.into(); });

@@ -1,1 +1,21 @@
-{"id":"agora","name":"AGORA","hint":"","icon":"app_default_icon","data":{"window":{"title":false,"content":true,"status":false},"casement":{"title":false,"content":true,"status":false}},"category":null,"misc":null,"extra":""}
+{
+    "id": "agora",
+    "name": "AGORA",
+    "hint": "",
+    "icon": "app_default_icon",
+    "data": {
+        "window": {
+            "title": false,
+            "content": true,
+            "status": false
+        },
+        "casement": {
+            "title": false,
+            "content": true,
+            "status": false
+        }
+    },
+    "category": null,
+    "misc": null,
+    "extra": ""
+}
