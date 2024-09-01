@@ -378,7 +378,7 @@ function cloud_edit()
             dynamic_elements.append(config.ce.exec_button);
             dynamic_elements.append(config.ce.extra_button);
 
-            // TODO: Create log & programs list in casement...
+            // TODO: Develop a log & programs list in casement...
 
             utils_sys.objects.by_id(cloud_edit_bee.settings.general.id() + '_status_bar_msg').append(dynamic_elements);
 

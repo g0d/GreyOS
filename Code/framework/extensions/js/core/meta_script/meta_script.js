@@ -1291,7 +1291,11 @@ function meta_script()
                     program_config.meta_caller.telemetry(__data);
 
                     me.on('register', function() { /* Ideas...??? */ });
-                    me.on('unregister', function() { svc_box.remove(program_config.model.name); });
+                    me.on('unregister', function()
+                    {
+                        uniplex.clear(program_config.model.name);
+                        svc_box.remove(program_config.model.name);
+                    });
 
                     return __result;
                 };

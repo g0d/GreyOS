@@ -43,7 +43,7 @@ function gui()
         console.log(all_api);
         //public_api_call = all_api[0].calls[0];
 
-        //public_api_call('Goodnight!');
+        //public_api_call('AGORA!');
     }
 
     function test_function(text)

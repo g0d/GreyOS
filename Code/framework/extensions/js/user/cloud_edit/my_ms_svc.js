@@ -15,15 +15,15 @@ if (all_api.length > 0)                                 // Check for available p
 /* -------------------------------------------------------------------------------------------------------- */
 
 /* OPTION 2 SVC :: Use the code below to build a service with a public API call for any service to interact */
-function alter_content(text)                            // Alter the content of the main window
+function console_out(text)                              // Write text in the console
 {
     console.log(text);
 }
 
-meta_script.program.expose_api([alter_content]);        // Expose the above function as a public API call
+meta_script.program.expose_api([console_out]);          // Expose the above function as a public API call
 /* -------------------------------------------------------------------------------------------------------- */
 
-ms_svc.init('my_ms_service', 'default');                // Initialize service name with default icon
+ms_svc.init('my_ms_service', 'svc_default');            // Initialize service name with default icon
 ms_svc.set('function_name',                             // Set function name and body
            (func_args) =>                               // Array of arguments
            {
