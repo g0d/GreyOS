@@ -57,7 +57,7 @@ function boot_screen()
 
             return false;
         }
-        else if (window.innerWidth < 1366 || window.innerHeight < 700)
+        else if (window.innerWidth < 1200 || window.innerHeight < 600)
         {
             utils_int.draw_boot_screen();
 
@@ -65,7 +65,7 @@ function boot_screen()
 
             __boot_message.innerHTML = 'Your screen is too small to run GreyOS!' + 
                                        '<br>' +
-                                       'Only screens from "1366 x 700" pixels and up are supported.';
+                                       'Only screens from "1200 x 600" pixels and up are supported.';
 
             return false;
         }

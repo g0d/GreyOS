@@ -351,10 +351,12 @@ function boot_script()
             var cc_reload = new f5();
             var new_msgbox = new msgbox();
 
+            // Initialize MsgBox
+            new_msgbox.init('desktop');
+
             os_utils.events.attach('greyos', window, 'resize', 
             function()
             {
-                new_msgbox.init('desktop');
                 /*
                 new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
                                 new_msgbox.types.OK, [() => { cc_reload.init(); }]);
@@ -388,7 +390,7 @@ function boot_script()
                                                                         if (event.buttons === 4)
                                                                             event.preventDefault();
                                                                     });
-            //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
+            document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
 
             var meta_description = os_utils.objects.selectors.first('meta[name="description"]').content;
 
@@ -444,7 +446,14 @@ function boot_script()
                                       console.log('Browser speed quality: ' + speed_index + '%');
                                   }, true);
 
-            auth_verification();
+            if (window.innerWidth !== screen.width || window.innerHeight !== screen.height)
+            {
+                new_msgbox.show(os_settings.get('name'), 'Your active screen is small.<br>For better results, ' + 
+                                os_settings.get('name') + ' will now go fullscreen!', 
+                new_msgbox.types.OK, [() => { document.documentElement.requestFullscreen(); auth_verification(); }]);
+            }
+            else
+                auth_verification();
 
             return true;
         }
