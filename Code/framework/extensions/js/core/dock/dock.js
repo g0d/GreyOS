@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 2.5)
+    GreyOS - Dock (Version: 2.7)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -87,7 +87,8 @@ function dock()
                 __title = __dock_app.getAttribute('title');
 
                 config.dock_array.push({ "id" : __app_id, "icon" : __app_icon, 
-                                         "position" : __position, "system" : __system, "title" : __title });
+                                         "position" : __position, "system" : __system, 
+                                         "title" : __title});
             }
 
             return true;
@@ -144,7 +145,8 @@ function dock()
                                 else
                                     __is_sys_level = false;
 
-                                x_runner.start('app', __app_id, __is_sys_level);
+                                if (x_runner.start('app', __app_id, __is_sys_level))
+                                    ;
                             };
             morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['id']));
         }
@@ -302,6 +304,59 @@ function dock()
         };
     }
 
+    function instances()
+    {
+        this.increase = function(dock_app_id)
+        {
+            if (is_init === false)
+                return false;
+
+            var __dock_app = null,
+                __app_instance_div = null;
+
+            for (__dock_app of config.dock_array)
+            {
+                if (__dock_app['id'] === dock_app_id)
+                {
+                    __app_instance_div = utils_sys.objects.by_id('app_' + dock_app_id + '_instances');
+
+                    __app_instance_div.innerHTML = parseInt(__app_instance_div.innerHTML) + 1;
+                    __app_instance_div.style.display = 'block';
+
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        this.decrease = function(dock_app_id)
+        {
+            if (is_init === false)
+                return false;
+
+            var __dock_app = null,
+                __app_instance_div = null;
+
+            for (__dock_app of config.dock_array)
+            {
+                if (__dock_app['id'] === dock_app_id)
+                {
+                    __app_instance_div = utils_sys.objects.by_id('app_' + dock_app_id + '_instances');
+
+                    __app_instance_div.innerHTML = parseInt(__app_instance_div.innerHTML) - 1;
+
+                    if (__app_instance_div.innerHTML === '0')
+                        __app_instance_div.style.display = 'none';
+
+                    return true;
+                }
+            }
+
+            return false;
+        };
+    }
+
     this.add = function()
     {
         if (is_init === false)
@@ -397,4 +452,5 @@ function dock()
         utils_int = new utilities();
 
     this.settings = new settings();
+    this.instances = new instances();
 }

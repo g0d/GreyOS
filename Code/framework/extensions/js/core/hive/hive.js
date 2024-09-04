@@ -557,7 +557,6 @@ function hive()
 
             __handler = function(event) { self.stack.bees.put(event); };
             morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(__honeycomb_id));
-            morpheus.run(hive_id, 'touch', 'touchend', __handler, utils_sys.objects.by_id(__honeycomb_id));
 
             honeycomb_views.dynamic_width(__dynamic_width);
 

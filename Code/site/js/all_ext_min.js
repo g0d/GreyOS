@@ -8065,14 +8065,13 @@ function hive()
  return true;
  };
  this.show_ghost_bee = function(event_object, mode)
- {console.log(1);
+ {
  if (utils_sys.validation.misc.is_undefined(event_object))
  return false;
  if ((navigator.maxTouchPoints === 0 && event_object.buttons !== 1) || mode < 0 || mode > 1)
  return false;
  if (honeycomb_views.swiping())
  return false;
-console.log('BEE');
  if (swarm.status.active_bee())
  {
  for (var i = 0; i < honeycomb_views.num(); i++)
@@ -8195,7 +8194,6 @@ console.log('BEE');
  utils_sys.objects.by_id(hive_id + '_sliding_box').appendChild(__new_honeycomb);
  __handler = function(event) { self.stack.bees.put(event); };
  morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(__honeycomb_id));
- morpheus.run(hive_id, 'touch', 'touchend', __handler, utils_sys.objects.by_id(__honeycomb_id));
  honeycomb_views.dynamic_width(__dynamic_width);
  return true;
  };
@@ -9606,7 +9604,8 @@ function dock()
  __system = __dock_app.getAttribute('data-system'),
  __title = __dock_app.getAttribute('title');
  config.dock_array.push({ "id" : __app_id, "icon" : __app_icon,
- "position" : __position, "system" : __system, "title" : __title });
+ "position" : __position, "system" : __system,
+ "title" : __title});
  }
  return true;
  }
@@ -9648,7 +9647,8 @@ function dock()
  __is_sys_level = true;
  else
  __is_sys_level = false;
- x_runner.start('app', __app_id, __is_sys_level);
+ if (x_runner.start('app', __app_id, __is_sys_level))
+ ;
  };
  morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['id']));
  }
@@ -9767,6 +9767,46 @@ function dock()
  return true;
  };
  }
+ function instances()
+ {
+ this.increase = function(dock_app_id)
+ {
+ if (is_init === false)
+ return false;
+ var __dock_app = null,
+ __app_instance_div = null;
+ for (__dock_app of config.dock_array)
+ {
+ if (__dock_app['id'] === dock_app_id)
+ {
+ __app_instance_div = utils_sys.objects.by_id('app_' + dock_app_id + '_instances');
+ __app_instance_div.innerHTML = parseInt(__app_instance_div.innerHTML) + 1;
+ __app_instance_div.style.display = 'block';
+ return true;
+ }
+ }
+ return false;
+ };
+ this.decrease = function(dock_app_id)
+ {
+ if (is_init === false)
+ return false;
+ var __dock_app = null,
+ __app_instance_div = null;
+ for (__dock_app of config.dock_array)
+ {
+ if (__dock_app['id'] === dock_app_id)
+ {
+ __app_instance_div = utils_sys.objects.by_id('app_' + dock_app_id + '_instances');
+ __app_instance_div.innerHTML = parseInt(__app_instance_div.innerHTML) - 1;
+ if (__app_instance_div.innerHTML === '0')
+ __app_instance_div.style.display = 'none';
+ return true;
+ }
+ }
+ return false;
+ };
+ }
  this.add = function()
  {
  if (is_init === false)
@@ -9836,6 +9876,7 @@ function dock()
  config = new config_model(),
  utils_int = new utilities();
  this.settings = new settings();
+ this.instances = new instances();
 }
 function user_profile()
 {
@@ -17363,6 +17404,7 @@ function bee()
  if (!hive.stack.bees.remove(this_object, __honeycomb_id))
  return false;
  }
+ dock.instances.decrease(__app_id);
  return true;
  }
  if ((event_object === null || event_object.buttons === 1) && bee_statuses.opened() && !bee_statuses.close())
@@ -18143,6 +18185,7 @@ function bee()
  }
  if (!self.gui.actions.show(child_bees, headless))
  return false;
+ dock.instances.increase(__app_id);
  my_child_bees = child_bees;
  utils_int.log('Run', 'OK');
  return true;
@@ -18181,6 +18224,7 @@ function bee()
  xenon = matrix.get('xenon');
  morpheus = matrix.get('morpheus');
  owl = matrix.get('owl');
+ dock = matrix.get('dock');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
  return true;
@@ -18194,6 +18238,7 @@ function bee()
  xenon = null,
  morpheus = null,
  owl = null,
+ dock = null,
  swarm = null,
  hive = null,
  colony = null,

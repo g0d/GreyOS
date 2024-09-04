@@ -4061,6 +4061,8 @@ function bee()
                             return false;
                     }
 
+                    dock.instances.decrease(__app_id);
+
                     return true;
                 }
 
@@ -5059,6 +5061,8 @@ function bee()
         if (!self.gui.actions.show(child_bees, headless))
             return false;
 
+        dock.instances.increase(__app_id);
+
         my_child_bees = child_bees;
 
         utils_int.log('Run', 'OK');
@@ -5115,6 +5119,7 @@ function bee()
         xenon = matrix.get('xenon');
         morpheus = matrix.get('morpheus');
         owl = matrix.get('owl');
+        dock = matrix.get('dock');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
 
@@ -5130,6 +5135,7 @@ function bee()
         xenon = null,
         morpheus = null,
         owl = null,
+        dock = null,
         swarm = null,
         hive = null,
         colony = null,

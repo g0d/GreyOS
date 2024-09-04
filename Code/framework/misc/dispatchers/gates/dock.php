@@ -44,7 +44,9 @@
                                        data-system="true" 
                                        data-icon="' . $app['icon'] . '" 
                                        class="favorites ' . $app['icon'] . '" 
-                                       title="' . $app['hint'] . '"></div>';
+                                       title="' . $app['hint'] . '">
+                                       <div id="app_' . $app['id'] . '_instances" class="instances">0</div>
+                                  </div>';
 
                         $index++;
                     }
@@ -59,7 +61,9 @@
                                data-system="false" 
                                data-icon="' . $app['icon'] . '" 
                                class="favorites ' . $app['icon'] . '" 
-                               title="' . $app['name'] . '"></div>';
+                               title="' . $app['name'] . '">
+                               <div id="app_' . $app['id'] . '_instances" class="instances">0</div>
+                          </div>';
 
                 $index++;
             }

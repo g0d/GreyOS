@@ -1,11 +1,11 @@
 /*
-    GreyOS - iSoundTrap (Version: 1.0)
+    GreyOS - iSoundTrap (Version: 1.1)
 
     File name: i_soundtrap.js
     Description: This file contains the iSoundTrap - Online audio creation application.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2022
+    Copyright © 2022 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -129,10 +129,10 @@ function i_soundtrap()
         i_soundtrap_bee.settings.actions.can_use_menu(false);
         i_soundtrap_bee.gui.position.left(120);
         i_soundtrap_bee.gui.position.top(20);
-        i_soundtrap_bee.gui.size.width(1600);
-        i_soundtrap_bee.gui.size.height(920);
-        i_soundtrap_bee.gui.size.min.width(1200);
-        i_soundtrap_bee.gui.size.min.height(800);
+        i_soundtrap_bee.gui.size.width(900);
+        i_soundtrap_bee.gui.size.height(600);
+        i_soundtrap_bee.gui.size.min.width(900);
+        i_soundtrap_bee.gui.size.min.height(600);
         i_soundtrap_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         i_soundtrap_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_soundtrap_bee.on('open', function() { i_soundtrap_bee.gui.fx.fade.into(); });

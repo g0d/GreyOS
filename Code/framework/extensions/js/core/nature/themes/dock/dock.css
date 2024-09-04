@@ -53,6 +53,20 @@
 	transition: background-image 0.1s ease-in;
 }
 
+.instances
+{
+    display: none;
+    color: white;
+    background-color: #4b2a44c2;
+    border-radius: 4px;
+    padding: 2px;
+    text-align: center;
+    width: 13px;
+    font-size: 8px;
+    margin-top: 17px;
+    margin-left: 15px;
+}
+
 .dock_replace
 {
 	border: 1px solid white;
