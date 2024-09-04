@@ -354,16 +354,6 @@ function boot_script()
             // Initialize MsgBox
             new_msgbox.init('desktop');
 
-            os_utils.events.attach('greyos', window, 'resize', 
-            function()
-            {
-                /*
-                new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
-                                new_msgbox.types.OK, [() => { cc_reload.init(); }]);
-                */
-                new_msgbox.show(os_settings.get('name'), 'Screen size changed. You may have to reload so that the interface adapts to the new dimensions!');
-            });
-
             os_utils.events.attach('greyos', document, 'keydown', 
             function(event) 
             {
@@ -450,7 +440,29 @@ function boot_script()
             {
                 new_msgbox.show(os_settings.get('name'), 'Your active screen is small.<br>For better results, ' + 
                                 os_settings.get('name') + ' will now go fullscreen!', 
-                new_msgbox.types.OK, [() => { document.documentElement.requestFullscreen(); auth_verification(); }]);
+                new_msgbox.types.OK, [() =>
+                {
+                    document.documentElement.requestFullscreen(); auth_verification();
+
+                    setTimeout(function()
+                    {
+                        os_utils.events.attach('greyos', window, 'resize', 
+                        function()
+                        {
+                            var new_msgbox = new msgbox();
+
+                            new_msgbox.init('desktop');
+                            /*
+                            new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + 
+                                            ' will now reload to the new dimensions!', 
+                                            new_msgbox.types.OK, [() => { cc_reload.init(); }]);
+                            */
+                            new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + 
+                                            os_settings.get('name') + ' will now reload!',
+                            new_msgbox.types.OK, [() => { cc_reload.init(); }]);
+                        });
+                    }, 1000);
+                }]);
             }
             else
                 auth_verification();
@@ -480,7 +492,7 @@ function boot_script()
                     i_ampedstudio, i_vectorink, i_ganttio, i_quakejs, i_mariojs, i_swooop, i_webgl_preview];
 
         // List of services
-        var svcs = []; // test_svc
+        var svcs = [];
 
         // Add a VM to the hypervisor
         //os_hypervisor.backtrace(true);
@@ -599,9 +611,9 @@ function boot_script()
             new_ui_controls.init('action_icons');
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
-            new_forest.init('desktop');
+            //new_forest.init('desktop');
             new_swarm.init('desktop', 44, 101, window.innerWidth - 60, window.innerHeight - 118);
-            new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
+            //new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
             new_octopus.init('device_manager');
@@ -616,17 +628,6 @@ function boot_script()
             // Load Banana (User suggestions widget)
             //Banana();
 
-            // Load test service
-            /*
-            var test_svc = svc_box_container.get('test_svc');
-
-            test_svc.init();
-            test_svc.setup('test_svc_1');
-            test_svc.set_func('test', (args) => { console.log(test_svc.config().sys_name + ': HELLO WORLD' + args); });
-            test_svc.exec_func('test', ['... my man!']);
-            test_svc.run();
-            console.log(test_svc);
-            */
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()
             {
@@ -644,12 +645,18 @@ function boot_script()
             var cc_reload = new f5();
             var new_msgbox = new msgbox();
 
+            // Initialize MsgBox
+            new_msgbox.init('desktop');
+
             os_utils.events.attach('greyos', window, 'resize', 
             function()
             {
-                new_msgbox.init('desktop');
-                new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
+                /*
+                new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + 
+                                ' will now reload to the new dimensions!', 
                                 new_msgbox.types.OK, [() => { cc_reload.init(); }]);
+                */
+                new_msgbox.show(os_settings.get('name'), 'Screen size changed. You may have to reload so that the interface adapts to the new dimensions!');
             });
 
             os_utils.events.attach('greyos', document, 'keydown', 
@@ -733,7 +740,35 @@ function boot_script()
                                       console.log('Browser speed quality: ' + speed_index + '%');
                                   }, true);
 
-            load_full_desktop_ui();
+            if (window.innerWidth !== screen.width || window.innerHeight !== screen.height)
+            {
+                new_msgbox.show(os_settings.get('name'), 'Your active screen is small.<br>For better results, ' + 
+                                os_settings.get('name') + ' will now go fullscreen!', 
+                new_msgbox.types.OK, [() =>
+                {
+                    document.documentElement.requestFullscreen(); load_full_desktop_ui();
+
+                    setTimeout(function()
+                    {
+                        os_utils.events.attach('greyos', window, 'resize', 
+                        function()
+                        {
+                            var new_msgbox = new msgbox();
+
+                            new_msgbox.init('desktop');
+                            /*
+                            new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + ' will now reload to the new dimensions!', 
+                                            new_msgbox.types.OK, [() => { cc_reload.init(); }]);
+                            */
+                            new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + 
+                                            os_settings.get('name') + ' will now reload!',
+                            new_msgbox.types.OK, [() => { cc_reload.init(); }]);
+                        });
+                    }, 1000);
+                }]);
+            }
+            else
+                load_full_desktop_ui();
 
             return true;
         }
