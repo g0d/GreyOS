@@ -127,11 +127,11 @@ function i_bassoon()
         i_bassoon_bee.settings.general.resizable(true);
         i_bassoon_bee.settings.actions.can_edit_title(false);
         i_bassoon_bee.settings.actions.can_use_menu(false);
-        i_bassoon_bee.gui.position.left(250);
-        i_bassoon_bee.gui.position.top(50);
-        i_bassoon_bee.gui.size.width(900);
+        i_bassoon_bee.gui.position.left(50);
+        i_bassoon_bee.gui.position.top(20);
+        i_bassoon_bee.gui.size.width(700);
         i_bassoon_bee.gui.size.height(600);
-        i_bassoon_bee.gui.size.min.width(900);
+        i_bassoon_bee.gui.size.min.width(700);
         i_bassoon_bee.gui.size.min.height(600);
         i_bassoon_bee.gui.size.max.width(1000);
         i_bassoon_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

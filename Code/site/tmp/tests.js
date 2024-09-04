@@ -70,7 +70,7 @@ console.log('SHARE SCREEN: ', navigator.mediaDevices.getDisplayMedia(
             {
                 video:
                 {
-                    width:          1366,
+                    width:          1200,
                     height:         700,
                     aspectRatio:    1.777777778,
                     frameRate:      30

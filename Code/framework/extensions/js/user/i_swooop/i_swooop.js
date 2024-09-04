@@ -136,7 +136,7 @@ function i_swooop()
         i_swooop_bee.settings.actions.can_edit_title(false);
         i_swooop_bee.settings.actions.can_use_menu(false);
         i_swooop_bee.gui.position.left((swarm.settings.right() / 2) - 600);
-        i_swooop_bee.gui.position.top(30);
+        i_swooop_bee.gui.position.top(0);
         i_swooop_bee.gui.size.width(1008);
         i_swooop_bee.gui.size.height(640);
         i_swooop_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 3.9)
+    GreyOS - Bootstrap facility (Version: 4.0)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -33,11 +33,11 @@ function boot_script()
     // Set global settings
     os_settings.set('boot_mode', 0);                // Boot modes: Normal (0) / Development (1)
     os_settings.set('name', 'GreyOS');              // Meta-OS name
-    os_settings.set('version', '4.4 (alpha)');      // Meta-OS version
+    os_settings.set('version', '4.5 (alpha)');      // Meta-OS version
     os_settings.set('theme', 'morph');              // Themes: 'bubble_gum', 'tomorrow', 'morph'
     os_settings.set('max_apps', 50);                // Maximum number of allowed active apps per session
     os_settings.set('max_services', 100)            // Maximum number of allowed active services per session
-    os_settings.set('apps_per_view', 18);           // Apps per stack bar view (This is buggy / Stackbar tries to resize automatically but usually fails)
+    os_settings.set('apps_per_view', 10);           // Apps per stack bar view (This is buggy / Stackbar tries to resize automatically but usually fails)
     os_settings.set('stack_bars', 4);               // Number of stack bars
 
     // Initialization script
@@ -390,7 +390,7 @@ function boot_script()
                                                                         if (event.buttons === 4)
                                                                             event.preventDefault();
                                                                     });
-            document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
+            //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
 
             var meta_description = os_utils.objects.selectors.first('meta[name="description"]').content;
 
@@ -746,7 +746,8 @@ function boot_script()
         if (!os_boot.init())
             return false;
 
-        os_environment.init();
+        if (os_environment)
+            os_environment.init();
 
         //os_loader.backtrace(true);
         os_loader.use([init_script, init_script_dev]);

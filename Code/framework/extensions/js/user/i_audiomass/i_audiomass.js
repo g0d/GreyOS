@@ -127,12 +127,12 @@ function i_audiomass()
         i_audiomass_bee.settings.general.resizable(true);
         i_audiomass_bee.settings.actions.can_edit_title(false);
         i_audiomass_bee.settings.actions.can_use_menu(false);
-        i_audiomass_bee.gui.position.left(250);
-        i_audiomass_bee.gui.position.top(50);
-        i_audiomass_bee.gui.size.width(1300);
-        i_audiomass_bee.gui.size.height(800);
-        i_audiomass_bee.gui.size.min.width(950);
-        i_audiomass_bee.gui.size.min.height(650);
+        i_audiomass_bee.gui.position.left(20);
+        i_audiomass_bee.gui.position.top(20);
+        i_audiomass_bee.gui.size.width(1100);
+        i_audiomass_bee.gui.size.height(600);
+        i_audiomass_bee.gui.size.min.width(900);
+        i_audiomass_bee.gui.size.min.height(600);
         i_audiomass_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         i_audiomass_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_audiomass_bee.on('open', function() { i_audiomass_bee.gui.fx.fade.into(); });

@@ -28,6 +28,7 @@
     "loading_screen"            :       "core",
     "f5"                        :       "core",
     "linux_mode"                :       "core",
+    "tablet_mode"               :       "core",
     "frog"                      :       "core",
     "teletraan"                 :       "core",
     "scenario"                  :       "core",

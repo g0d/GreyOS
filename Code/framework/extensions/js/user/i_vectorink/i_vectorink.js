@@ -127,10 +127,10 @@ function i_vectorink()
         i_vectorink_bee.settings.general.resizable(true);
         i_vectorink_bee.settings.actions.can_edit_title(false);
         i_vectorink_bee.settings.actions.can_use_menu(false);
-        i_vectorink_bee.gui.position.left(250);
-        i_vectorink_bee.gui.position.top(30);
-        i_vectorink_bee.gui.size.width(1300);
-        i_vectorink_bee.gui.size.height(900);
+        i_vectorink_bee.gui.position.left(50);
+        i_vectorink_bee.gui.position.top(0);
+        i_vectorink_bee.gui.size.width(1000);
+        i_vectorink_bee.gui.size.height(600);
         i_vectorink_bee.gui.size.min.width(900);
         i_vectorink_bee.gui.size.min.height(600);
         i_vectorink_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

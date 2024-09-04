@@ -1,11 +1,11 @@
 /*
-    GreyOS - Swarm (Version: 3.2)
+    GreyOS - Swarm (Version: 3.3)
 
     File name: swarm.js
     Description: This file contains the Swarm - Bees action area module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -43,10 +43,28 @@ function swarm()
             if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
-            coords.mouse_x = event_object.clientX + document.documentElement.scrollLeft + document.body.scrollLeft - 
-                             document.body.clientLeft - self.settings.left();
-            coords.mouse_y = event_object.clientY + document.documentElement.scrollTop + document.body.scrollTop - 
-                             document.body.clientTop - self.settings.top();
+            var __client_x = 0,
+                __client_y = 0;
+
+            if (navigator.maxTouchPoints > 0 && 
+                event_object.type.indexOf('touch') > -1 && 
+                event_object.touches.length > 0)
+            {
+                __client_x = event_object.touches[0].clientX;
+                __client_y = event_object.touches[0].clientY;
+            }
+            else
+            {
+                __client_x = event_object.clientX;
+                __client_y = event_object.clientY;
+            }
+
+            coords.mouse_x = __client_x + document.documentElement.scrollLeft + 
+                             document.body.scrollLeft - document.body.clientLeft -
+                             self.settings.left();
+            coords.mouse_y = __client_y + document.documentElement.scrollTop + 
+                             document.body.scrollTop - document.body.clientTop - 
+                             self.settings.top();
 
             return true;
         };
@@ -109,6 +127,7 @@ function swarm()
 
             __handler = function(event) { me.coords(event); me.toggle_hive(); };
             morpheus.run(swarm_id, 'mouse', 'mousemove', __handler, __swarm_object);
+            morpheus.run(swarm_id, 'touch', 'touchmove', __handler, __swarm_object);
 
             return true;
         };

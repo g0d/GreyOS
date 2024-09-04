@@ -1,16 +1,16 @@
 /*
-    GreyOS - Linux Mode (Version: 1.2)
+    GreyOS - Tablet Mode (Version: 1.0)
 
-    File name: linux_mode.js
-    Description: This file contains the Linux Mode utility.
+    File name: tablet_mode.js
+    Description: This file contains the Tablet Mode utility.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2024
+    Copyright © 2024
     Open Software License (OSL 3.0)
 */
 
-// Linux Mode
-function linux_mode()
+// Tablet Mode
+function tablet_mode()
 {
     var self = this;
 
@@ -18,7 +18,7 @@ function linux_mode()
     {
         this.apply_css_fix = function()
         {
-            utils_sys.graphics.apply_theme('/framework/extensions/js/core/linux_mode', 'linux');
+            utils_sys.graphics.apply_theme('/framework/extensions/js/core/tablet_mode', 'tablet');
 
             return true;
         };
@@ -26,7 +26,7 @@ function linux_mode()
 
     this.check = function()
     {
-        if (navigator.userAgent.indexOf('Linux') > -1)
+        if (navigator.userAgent.indexOf('android') > -1 || navigator.userAgent.indexOf('ios') > -1)
             return true;
 
         return false;

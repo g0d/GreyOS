@@ -188,10 +188,10 @@ function radio_dude()
         radio_dude_bee.settings.data.casement.labels.status('');
         radio_dude_bee.settings.general.single_instance(true);
         radio_dude_bee.gui.position.static(true);
-        radio_dude_bee.gui.position.left(930);
+        radio_dude_bee.gui.position.left(330);
         radio_dude_bee.gui.position.top(120);
         radio_dude_bee.gui.size.width(320);
-        radio_dude_bee.gui.size.height(270);
+        radio_dude_bee.gui.size.height(274);
         radio_dude_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         radio_dude_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         radio_dude_bee.on('open', function() { radio_dude_bee.gui.fx.fade.into(); });

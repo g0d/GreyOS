@@ -121,7 +121,7 @@ function meta_executor()
                 else
                 {
                     error_details.code = self.error.codes.RUN_FAIL;
-                    error_details.message = 'Program is incomplete!';
+                    error_details.message = 'Program is incomplete or misconfigured!';
                 }
 
                 return error_details.code;

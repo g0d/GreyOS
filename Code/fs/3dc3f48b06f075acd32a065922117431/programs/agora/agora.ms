@@ -23,7 +23,7 @@ function gui()
         main_content = '',
         casement_content = '';
 
-    /* ms_utils.graphics.apply_theme('graphics', 'agora'); - This will be applied by the Cloud Edit/Cloud IDE */
+    /* ms_utils.graphics.apply_theme('graphics', 'agora'); - This will be applied by the Cloud Edit / Cloud IDE */
 
     //ms_app.settings.icon('agora_icon');
     ms_app.settings.casement_width(40, 'fixed');
@@ -59,12 +59,12 @@ ms_app.main.set_title('AGORA :: Marketplace for Apps & Services');
 ms_app.settings.single_instance(true);
 ms_app.settings.resizable(true);
 ms_app.can.edit_title(false);
-ms_app.position.left(100);
-ms_app.position.top(100);
-ms_app.size.width(1200);
-ms_app.size.height(720);
-ms_app.size.min.width(1200);
-ms_app.size.min.height(720);
+ms_app.position.left(50);
+ms_app.position.top(30);
+ms_app.size.width(940);
+ms_app.size.height(600);
+ms_app.size.min.width(840);
+ms_app.size.min.height(600);
 ms_app.fx.fade.settings.into.set(0.07, 25, 100);
 ms_app.fx.fade.settings.out.set(0.07, 25, 100);
 ms_app.on('open', () => { ms_app.fx.fade.into(); });
@@ -75,5 +75,5 @@ ms_app.on('dragging', () =>
                           ms_app.fx.opacity.apply();
                       });
 ms_app.on('dragged', () => { ms_app.fx.opacity.reset(); });
-ms_app.on('close', () => { ms_app.fx.fade.out(); });    /* ms_utils.graphics.clear_theme('test'); -  This will be applied by the Cloud Edit/Cloud IDE */
+ms_app.on('close', () => { ms_app.fx.fade.out(); });    /* ms_utils.graphics.clear_theme('test'); -  This will be applied by the Cloud Edit / Cloud IDE */
 ms_app.run();

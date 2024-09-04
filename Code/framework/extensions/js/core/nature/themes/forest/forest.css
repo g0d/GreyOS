@@ -76,7 +76,7 @@
 .cat_list .cat
 {
 	text-align: left;
-    width: 84.3%;
+    width: 84%;
     min-height: 56px;
     margin-bottom: -4px;
 }
@@ -260,7 +260,7 @@
     clear: both;
     color: #5C5C5C;
     width: 280px;
-    height: 25px;
+    height: 26px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -274,7 +274,7 @@
 	color: #FFFFFF;
 	text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
 	width: 253px;
-    height: 24px;
+    height: 22px;
     background: #613F6C url('pix/storage.png') no-repeat 10px;
     overflow: hidden;
 	text-indent: 20px;

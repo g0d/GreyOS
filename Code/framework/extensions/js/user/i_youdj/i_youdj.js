@@ -127,10 +127,10 @@ function i_youdj()
         i_youdj_bee.settings.general.resizable(true);
         i_youdj_bee.settings.actions.can_edit_title(false);
         i_youdj_bee.settings.actions.can_use_menu(false);
-        i_youdj_bee.gui.position.left(250);
-        i_youdj_bee.gui.position.top(50);
-        i_youdj_bee.gui.size.width(1120);
-        i_youdj_bee.gui.size.height(840);
+        i_youdj_bee.gui.position.left(50);
+        i_youdj_bee.gui.position.top(20);
+        i_youdj_bee.gui.size.width(1024);
+        i_youdj_bee.gui.size.height(600);
         i_youdj_bee.gui.size.min.width(900);
         i_youdj_bee.gui.size.min.height(600);
         i_youdj_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

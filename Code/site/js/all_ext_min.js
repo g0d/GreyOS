@@ -1795,7 +1795,13 @@ function meta_os()
  };
  this.environment = function()
  {
- return new linux_mode();
+ var __linux_mode = new linux_mode(),
+ __tablet_mode = new tablet_mode();
+ if (__tablet_mode.check())
+ return __tablet_mode;
+ if (__linux_mode.check())
+ return __linux_mode;
+ return false;
  };
  }
  function system()
@@ -4744,13 +4750,13 @@ function boot_screen()
  'Check your Internet connection and reload.';
  return false;
  }
- else if (window.innerWidth < 1200 || window.innerHeight < 600)
+ else if (window.innerWidth < 1280 || window.innerHeight < 600)
  {
  utils_int.draw_boot_screen();
  var __boot_message = utils_sys.objects.by_id('boot_screen_message');
  __boot_message.innerHTML = 'Your screen is too small to run GreyOS!' +
  '<br>' +
- 'Only screens from "1200 x 600" pixels and up are supported.';
+ 'Only screens from "1280 x 600" pixels and up are supported.';
  return false;
  }
  return true;
@@ -4848,6 +4854,7 @@ function f5()
 }
 function linux_mode()
 {
+ var self = this;
  function utilities()
  {
  this.apply_css_fix = function()
@@ -4856,14 +4863,41 @@ function linux_mode()
  return true;
  };
  }
- this.init = function()
+ this.check = function()
  {
  if (navigator.userAgent.indexOf('Linux') > -1)
+ return true;
+ return false;
+ };
+ this.init = function()
  {
  utils_int.apply_css_fix();
  return true;
+ };
+ var utils_sys = new vulcan(),
+ utils_int = new utilities();
+}
+function tablet_mode()
+{
+ var self = this;
+ function utilities()
+ {
+ this.apply_css_fix = function()
+ {
+ utils_sys.graphics.apply_theme('/framework/extensions/js/core/tablet_mode', 'tablet');
+ return true;
+ };
  }
+ this.check = function()
+ {
+ if (navigator.userAgent.indexOf('android') > -1 || navigator.userAgent.indexOf('ios') > -1)
+ return true;
  return false;
+ };
+ this.init = function()
+ {
+ utils_int.apply_css_fix();
+ return true;
  };
  var utils_sys = new vulcan(),
  utils_int = new utilities();
@@ -6938,10 +6972,25 @@ function forest()
  {
  if (utils_sys.validation.misc.is_undefined(event_object))
  return false;
- coords.mouse_x = event_object.clientX + document.documentElement.scrollLeft +
+ var __client_x = 0,
+ __client_y = 0;
+ if (navigator.maxTouchPoints > 0 &&
+ event_object.type.indexOf('touch') > -1 &&
+ event_object.touches.length > 0)
+ {
+ __client_x = event_object.touches[0].clientX;
+ __client_y = event_object.touches[0].clientY;
+ }
+ else
+ {
+ __client_x = event_object.clientX;
+ __client_y = event_object.clientY;
+ }
+ coords.mouse_x = __client_x + document.documentElement.scrollLeft +
  document.body.scrollLeft - document.body.clientLeft;
- coords.mouse_y = event_object.clientY + document.documentElement.scrollTop +
+ coords.mouse_y = __client_y + document.documentElement.scrollTop +
  document.body.scrollTop - document.body.clientTop;
+console.log(coords.mouse_x, coords.mouse_y);
  return true;
  };
  this.reset_desktops_trace = function()
@@ -6990,7 +7039,7 @@ function forest()
  __dynamic_object = document.createElement('div');
  __dynamic_object.setAttribute('id', forest_id);
  __dynamic_object.setAttribute('class', 'forest');
- __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 87) + 'px;');
+ __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 86) + 'px;');
  __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' +
  '<div id="' + forest_id + '_forest_top_list" class="top_list">' +
  ' <a href="#" class="create_cat">' +
@@ -7051,6 +7100,7 @@ function forest()
  utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
  __handler = function(event) { me.coords(event); me.toggle_hive(); };
  morpheus.run(forest_id, 'mouse', 'mousemove', __handler, __forest_object);
+ morpheus.run(forest_id, 'touch', 'touchmove', __handler, __forest_object);
  me.events.attach('swipe');
  return true;
  };
@@ -7316,10 +7366,26 @@ function swarm()
  {
  if (utils_sys.validation.misc.is_undefined(event_object))
  return false;
- coords.mouse_x = event_object.clientX + document.documentElement.scrollLeft + document.body.scrollLeft -
- document.body.clientLeft - self.settings.left();
- coords.mouse_y = event_object.clientY + document.documentElement.scrollTop + document.body.scrollTop -
- document.body.clientTop - self.settings.top();
+ var __client_x = 0,
+ __client_y = 0;
+ if (navigator.maxTouchPoints > 0 &&
+ event_object.type.indexOf('touch') > -1 &&
+ event_object.touches.length > 0)
+ {
+ __client_x = event_object.touches[0].clientX;
+ __client_y = event_object.touches[0].clientY;
+ }
+ else
+ {
+ __client_x = event_object.clientX;
+ __client_y = event_object.clientY;
+ }
+ coords.mouse_x = __client_x + document.documentElement.scrollLeft +
+ document.body.scrollLeft - document.body.clientLeft -
+ self.settings.left();
+ coords.mouse_y = __client_y + document.documentElement.scrollTop +
+ document.body.scrollTop - document.body.clientTop -
+ self.settings.top();
  return true;
  };
  this.show_bee = function(bees_colony, index)
@@ -7367,6 +7433,7 @@ function swarm()
  __swarm_object = utils_sys.objects.by_id(swarm_id);
  __handler = function(event) { me.coords(event); me.toggle_hive(); };
  morpheus.run(swarm_id, 'mouse', 'mousemove', __handler, __swarm_object);
+ morpheus.run(swarm_id, 'touch', 'touchmove', __handler, __swarm_object);
  return true;
  };
  }
@@ -7896,17 +7963,31 @@ function hive()
  {
  if (utils_sys.validation.misc.is_undefined(event_object))
  return false;
- coords.mouse_x = event_object.clientX +
- document.documentElement.scrollLeft + document.body.scrollLeft -
- document.body.clientLeft;
- coords.mouse_y = event_object.clientY +
- document.documentElement.scrollTop + document.body.scrollTop -
- document.body.clientTop;
+ var __client_x = 0,
+ __client_y = 0;
+ if (navigator.maxTouchPoints > 0 &&
+ event_object.type.indexOf('touch') > -1 &&
+ event_object.touches.length > 0)
+ {
+ __client_x = event_object.touches[0].clientX;
+ __client_y = event_object.touches[0].clientY;
+ }
+ else
+ {
+ __client_x = event_object.clientX;
+ __client_y = event_object.clientY;
+ }
+ coords.mouse_x = __client_x +
+ document.documentElement.scrollLeft +
+ document.body.scrollLeft - document.body.clientLeft;
+ coords.mouse_y = __client_y +
+ document.documentElement.scrollTop +
+ document.body.scrollTop - document.body.clientTop;
  return true;
  };
  this.reset_stack_trace = function(event_object)
  {
- if (event_object.buttons === 0 && last_mouse_button_clicked === 1)
+ if (navigator.maxTouchPoints === 0 && event_object.buttons === 0 && last_mouse_button_clicked === 1)
  {
  stack_trace.bee_drag = false;
  stack_trace.internal_bee_drag = false;
@@ -7917,7 +7998,7 @@ function hive()
  };
  this.release_bee = function(event_object)
  {
- if (event_object.buttons === 0 && last_mouse_button_clicked === 1)
+ if (navigator.maxTouchPoints === 0 && event_object.buttons === 0 && last_mouse_button_clicked === 1)
  {
  if (stack_trace.bee_drag)
  {
@@ -7931,7 +8012,7 @@ function hive()
  this.setup_honeycomb_size = function(bees_per_honeycomb)
  {
  var __proposed_stack_width = Math.floor((bees_per_honeycomb / 2) * 230),
- __min_screen_width = 1296,
+ __min_screen_width = 1200,
  __proportion = __proposed_stack_width / __min_screen_width,
  __fixed_bees_per_honeycomb = bees_per_honeycomb;
  if (__proportion > 1 & __proposed_stack_width >= __min_screen_width)
@@ -7945,6 +8026,8 @@ function hive()
  __proposed_stack_width -= (__width_diff - __margin_fix);
  }
  max_stack_width = __proposed_stack_width;
+ if (bees_per_honeycomb === 10)
+ __fixed_bees_per_honeycomb = 8;
  return __fixed_bees_per_honeycomb;
  };
  this.validate_honeycomb_range = function(val)
@@ -7982,11 +8065,14 @@ function hive()
  return true;
  };
  this.show_ghost_bee = function(event_object, mode)
- {
- if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1 || mode < 0 || mode > 1)
+ {console.log(1);
+ if (utils_sys.validation.misc.is_undefined(event_object))
+ return false;
+ if ((navigator.maxTouchPoints === 0 && event_object.buttons !== 1) || mode < 0 || mode > 1)
  return false;
  if (honeycomb_views.swiping())
  return false;
+console.log('BEE');
  if (swarm.status.active_bee())
  {
  for (var i = 0; i < honeycomb_views.num(); i++)
@@ -8037,7 +8123,7 @@ function hive()
  };
  this.hide_ghost_bee = function(event_object)
  {
- if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+ if (utils_sys.validation.misc.is_undefined(event_object) || (navigator.maxTouchPoints === 0 && event_object.buttons !== 1))
  return false;
  var __active_bee_id = swarm.status.active_bee();
  if (__active_bee_id)
@@ -8109,6 +8195,7 @@ function hive()
  utils_sys.objects.by_id(hive_id + '_sliding_box').appendChild(__new_honeycomb);
  __handler = function(event) { self.stack.bees.put(event); };
  morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(__honeycomb_id));
+ morpheus.run(hive_id, 'touch', 'touchend', __handler, utils_sys.objects.by_id(__honeycomb_id));
  honeycomb_views.dynamic_width(__dynamic_width);
  return true;
  };
@@ -8163,14 +8250,19 @@ function hive()
  last_mouse_button_clicked = event.buttons;
  };
  morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
+ morpheus.run(hive_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
  __handler = function(event) { me.reset_stack_trace(event); };
  morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
+ morpheus.run(hive_id, 'touch', 'touchend', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
  __handler = function(event) { me.hide_ghost_bee(event); };
  morpheus.run(hive_id, 'mouse', 'mousemove', __handler, __swarm_object);
+ morpheus.run(hive_id, 'touch', 'touchmove', __handler, __swarm_object);
  __handler = function(event) { me.reset_stack_trace(event); };
  morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __swarm_object);
+ morpheus.run(hive_id, 'touch', 'touchend', __handler, __swarm_object);
  __handler = function(event) { me.release_bee(event); };
  morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __forest_object);
+ morpheus.run(hive_id, 'touch', 'touchend', __handler, __forest_object);
  __handler = function(event) { me.manage_stack_view(event, '-'); };
  morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_previous_arrow'));
  __handler = function(event) { me.manage_stack_view(event, '+'); };
@@ -8266,6 +8358,7 @@ function hive()
  }
  __handler = function(event) { me.release_bee(event); };
  morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __ghost_object);
+ morpheus.run(hive_id, 'touch', 'touchend', __handler, __ghost_object);
  }
  return true;
  };
@@ -8331,7 +8424,7 @@ function hive()
  {
  var __id = null,
  __container = null,
- __bees_per_honeycomb = 10,
+ __bees_per_honeycomb = 8,
  __left = 0,
  __top = 0;
  this.id = function(val)
@@ -8450,7 +8543,7 @@ function hive()
  if (is_init === false)
  return false;
  if (utils_sys.validation.misc.is_undefined(event_object) ||
- (event_object.buttons !== 0 && last_mouse_button_clicked !== 1))
+ (navigator.maxTouchPoints === 0 && event_object.buttons !== 0 && last_mouse_button_clicked !== 1))
  return false;
  if (honeycomb_views.swiping())
  return false;
@@ -8494,7 +8587,7 @@ function hive()
  }
  else
  {
- if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+ if (utils_sys.validation.misc.is_undefined(event_object) || (navigator.maxTouchPoints === 0 && event_object.buttons !== 1))
  return false;
  if (swarm.status.active_bee())
  {
@@ -8704,7 +8797,7 @@ function hive()
  !utils_sys.validation.numerics.is_integer(left) || left < 0 ||
  !utils_sys.validation.numerics.is_integer(top) || top < 0 ||
  !utils_sys.validation.numerics.is_integer(bees_per_honeycomb) ||
- bees_per_honeycomb < 10 || bees_per_honeycomb % 2 !== 0 ||
+ bees_per_honeycomb < 8 || bees_per_honeycomb % 2 !== 0 ||
  !utils_sys.validation.numerics.is_integer(honeycombs_num) || honeycombs_num < 1)
  return false;
  var dynamic_bees_per_honeycomb = utils_int.setup_honeycomb_size(bees_per_honeycomb);
@@ -11959,7 +12052,7 @@ function meta_executor()
  else
  {
  error_details.code = self.error.codes.RUN_FAIL;
- error_details.message = 'Program is incomplete!';
+ error_details.message = 'Program is incomplete or misconfigured!';
  }
  return error_details.code;
  }
@@ -12176,7 +12269,7 @@ function morpheus()
  {
  if (__scheduled_events_list[i].context_list[j].events[k].id === event_id)
  {
- if (context_id === 'key' || context_id === 'mouse')
+ if (context_id === 'key' || context_id === 'mouse' || context_id === 'touch')
  {
  var __receiver_object = __scheduled_events_list[i].context_list[j].events[k].dom_object;
  utils_sys.events.attach(uid, __receiver_object, event_id,
@@ -12398,12 +12491,23 @@ function x_runner()
  {
  if (!check_single_instance_app(x_mc.program_id()))
  {
+ var __msg_win = new msgbox();
+ __msg_win.init('desktop');
  if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+ {
+ __msg_win.show(xenon.load('os_name'), 'The is not a valid application!');
  frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
+ }
  else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
+ {
+ __msg_win.show(xenon.load('os_name'), 'The application is misconfigured!');
  frog('X-RUNNER', '[*] Run Fail [*]', meta_executor.error.last.message());
+ }
  else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
+ {
+ __msg_win.show(xenon.load('os_name'), 'The application has errors!');
  frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+ }
  }
  else
  nature.themes.clear(x_mc.program_id());
@@ -12737,8 +12841,10 @@ function octopus()
  {
  nature.themes.store('octopus');
  nature.apply('new');
- me.start_component();
- me.draw();
+ if (me.start_component())
+ return me.draw();
+ else
+ return false;
  };
  this.start_component = function()
  {
@@ -12759,6 +12865,8 @@ function octopus()
  volume: 0.30,
  }
  };
+ if (!navigator.mediaDevices)
+ return false;
  navigator.mediaDevices.ondevicechange = function() { device_manager(); };
  is_component_active = true;
  return true;
@@ -12856,7 +12964,7 @@ function octopus()
  if (utils_sys.validation.alpha.is_symbol(container_id))
  return false;
  self.settings.container(container_id);
- utils_int.load_ui();
+ return utils_int.load_ui();
  }
  };
  this.cosmos = function(cosmos_object)
@@ -14361,11 +14469,19 @@ function bee()
  this.mouseout = false;
  this.mousemove = false;
  }
+ function touch()
+ {
+ this.touchstart = false;
+ this.touchend = false;
+ this.touchcancel = false;
+ this.touchmove = false;
+ }
  this.on_event = false;
  this.system = new system();
  this.gui = new gui();
  this.key = new key();
  this.mouse = new mouse();
+ this.touch = new touch();
  }
  function error()
  {
@@ -14608,6 +14724,10 @@ function bee()
  morpheus.execute(my_bee_id, 'mouse', 'mouseover');
  morpheus.execute(my_bee_id, 'mouse', 'mouseout');
  morpheus.execute(my_bee_id, 'mouse', 'mousemove');
+ morpheus.execute(my_bee_id, 'touch', 'touchstart');
+ morpheus.execute(my_bee_id, 'touch', 'touchend');
+ morpheus.execute(my_bee_id, 'touch', 'touchcancel');
+ morpheus.execute(my_bee_id, 'touch', 'touchmove');
  return true;
  }
  function attach_events()
@@ -14617,20 +14737,26 @@ function bee()
  __handler = null;
  __handler = function(event) { __bee_gui.actions.menu.close(event); };
  morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, document);
+ morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, document);
  __handler = function(event) { __bee_gui.actions.release(event); };
  morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
+ morpheus.store(my_bee_id, 'touch', 'touchend', __handler, document);
  __handler = function(event) { __bee_gui.actions.dresize(event); };
  morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.swarm);
+ morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.swarm);
  __handler = function(event) { __bee_gui.actions.hover.into(event); };
  morpheus.store(my_bee_id, 'mouse', 'mouseover', __handler, ui_objects.window.ui);
  __handler = function(event) { __bee_gui.actions.hover.out(event); };
  morpheus.store(my_bee_id, 'mouse', 'mouseout', __handler, ui_objects.window.ui);
  __handler = function(event) { coords(event, 1); };
  morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.window.ui);
+ morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.window.ui);
  __handler = function() { __bee_gui.actions.touch(); };
  morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.ui);
+ morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.ui);
  __handler = function(event) { coords(event, 2); manage_drag_status(event); };
  morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.ui);
+ morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.control_bar.ui);
  __handler = function(event)
  {
  __bee_settings.actions.can_drag.enabled(false);
@@ -14650,6 +14776,9 @@ function bee()
  {
  __handler = function(event) { __bee_gui.actions.close(event); };
  morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.close);
+ morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.control_bar.close);
+ __handler = function(event) { event.preventDefault(); };
+ morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.window.control_bar.close);
  }
  if (__bee_settings.actions.can_use_menu())
  {
@@ -14683,6 +14812,7 @@ function bee()
  morpheus.execute(my_bee_id, 'system', 'active');
  };
  morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.status_bar.resize);
+ morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.status_bar.resize);
  __handler = function()
  {
  bee_statuses.mouse_clicked(false);
@@ -14691,6 +14821,7 @@ function bee()
  morpheus.execute(my_bee_id, 'gui', 'resized');
  };
  morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
+ morpheus.store(my_bee_id, 'touch', 'touchend', __handler, document);
  }
  __handler = function() { return false; };
  morpheus.run(my_bee_id, 'mouse', 'selectstart', __handler, ui_objects.window.control_bar.ui);
@@ -14703,8 +14834,10 @@ function bee()
  morpheus.store(my_bee_id, 'mouse', 'mouseout', __handler, ui_objects.casement.ui);
  __handler = function(event) { coords(event, 1); };
  morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.casement.ui);
+ morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.casement.ui);
  __handler = function() { __bee_gui.actions.touch(); };
  morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.casement.ui);
+ morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.casement.ui);
  return true;
  }
  function coords(event_object, type)
@@ -14713,12 +14846,26 @@ function bee()
  !utils_sys.validation.numerics.is_integer(type) ||
  type < 1 || type > 2)
  return false;
- var __pos_x = 0,
+ var __client_x = 0,
+ __client_y = 0,
+ __pos_x = 0,
  __pos_y = 0;
- __pos_x = event_object.clientX + document.documentElement.scrollLeft +
+ if (navigator.maxTouchPoints > 0 &&
+ event_object.type.indexOf('touch') > -1 &&
+ event_object.touches.length > 0)
+ {
+ __client_x = event_object.touches[0].clientX;
+ __client_y = event_object.touches[0].clientY;
+ }
+ else
+ {
+ __client_x = event_object.clientX;
+ __client_y = event_object.clientY;
+ }
+ __pos_x = __client_x + document.documentElement.scrollLeft +
  document.body.scrollLeft - document.body.clientLeft -
  swarm.settings.left() - self.gui.position.left();
- __pos_y = event_object.clientY + document.documentElement.scrollTop +
+ __pos_y = __client_y + document.documentElement.scrollTop +
  document.body.scrollTop - document.body.clientTop -
  swarm.settings.top() - self.gui.position.top();
  if (type === 1)
@@ -14778,7 +14925,7 @@ function bee()
  }
  function manage_drag_status(event_object)
  {
- if (event_object.buttons !== 1)
+ if (navigator.maxTouchPoints === 0 && event_object.buttons !== 1)
  return false;
  if (!self.settings.actions.can_drag.enabled() || bee_statuses.title_on_edit() || bee_statuses.close())
  return false;
@@ -15203,6 +15350,22 @@ function bee()
  this.mousemove = function(val)
  {
  return validate('mousemove', 'mouse', val);
+ };
+ this.touchstart = function(val)
+ {
+ return validate('touchstart', 'touch', val);
+ };
+ this.touchend = function(val)
+ {
+ return validate('touchend', 'touch', val);
+ };
+ this.touchcancel = function(val)
+ {
+ return validate('touchcancel', 'touch', val);
+ };
+ this.touchmove = function(val)
+ {
+ return validate('touchmove', 'touch', val);
  };
  var __status_settings = new events_status_settings_model();
  }
@@ -16354,7 +16517,7 @@ function bee()
  }
  function max()
  {
- this.width = 1366;
+ this.width = 1200;
  this.height = 700;
  }
  this.width = 300;
@@ -16977,7 +17140,7 @@ function bee()
  return false;
  if (!bee_statuses.menu_activated())
  return false;
- if (event_object === null || event_object.buttons === 1)
+ if (event_object === null || navigator.maxTouchPoints > 0 || event_object.buttons === 1)
  {
  gfx.visibility.toggle(ui_config.window.menu.id, 1);
  bee_statuses.menu_activated(false);
@@ -17343,7 +17506,7 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(event_object) || bee_statuses.title_on_edit() || bee_statuses.close())
  return false;
- if (event_object.buttons !== 1)
+ if (navigator.maxTouchPoints === 0 && event_object.buttons !== 1)
  return false;
  if (bee_statuses.drag() && self.settings.actions.can_drag.enabled())
  {
@@ -17635,7 +17798,7 @@ function bee()
  return false;
  if (utils_sys.validation.misc.is_undefined(event_object))
  return false;
- if (event_object.buttons !== 0)
+ if (navigator.maxTouchPoints === 0 && event_object.buttons !== 0)
  return false;
  self.settings.actions.can_drag.enabled(true);
  if (!bee_statuses.close() && swarm.status.active_bee() === my_bee_id)
@@ -19307,8 +19470,8 @@ function cloud_edit()
  cloud_edit_bee.settings.actions.can_edit_title(false);
  cloud_edit_bee.settings.general.allowed_instances(4);
  cloud_edit_bee.settings.general.casement_width(60, 'fixed');
- cloud_edit_bee.gui.position.left(330);
- cloud_edit_bee.gui.position.top(80);
+ cloud_edit_bee.gui.position.left(100);
+ cloud_edit_bee.gui.position.top(40);
  cloud_edit_bee.gui.size.width(800);
  cloud_edit_bee.gui.size.height(530);
  cloud_edit_bee.gui.size.min.width(800);
@@ -19519,10 +19682,10 @@ function radio_dude()
  radio_dude_bee.settings.data.casement.labels.status('');
  radio_dude_bee.settings.general.single_instance(true);
  radio_dude_bee.gui.position.static(true);
- radio_dude_bee.gui.position.left(930);
+ radio_dude_bee.gui.position.left(330);
  radio_dude_bee.gui.position.top(120);
  radio_dude_bee.gui.size.width(320);
- radio_dude_bee.gui.size.height(270);
+ radio_dude_bee.gui.size.height(274);
  radio_dude_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
  radio_dude_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
  radio_dude_bee.on('open', function() { radio_dude_bee.gui.fx.fade.into(); });

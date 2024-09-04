@@ -522,8 +522,8 @@ function cloud_edit()
         cloud_edit_bee.settings.actions.can_edit_title(false);
         cloud_edit_bee.settings.general.allowed_instances(4);
         cloud_edit_bee.settings.general.casement_width(60, 'fixed');
-        cloud_edit_bee.gui.position.left(330);
-        cloud_edit_bee.gui.position.top(80);
+        cloud_edit_bee.gui.position.left(100);
+        cloud_edit_bee.gui.position.top(40);
         cloud_edit_bee.gui.size.width(800);
         cloud_edit_bee.gui.size.height(530);
         cloud_edit_bee.gui.size.min.width(800);

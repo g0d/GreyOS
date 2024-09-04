@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.7)
+    GreyOS - Bee (Version: 5.8)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -261,11 +261,20 @@ function bee()
             this.mousemove = false;
         }
 
+        function touch()
+        {
+            this.touchstart = false;
+            this.touchend = false;
+            this.touchcancel = false;
+            this.touchmove = false;
+        }
+
         this.on_event = false;
         this.system = new system();
         this.gui = new gui();
         this.key = new key();
         this.mouse = new mouse();
+        this.touch = new touch();
     }
 
     function error()
@@ -568,6 +577,11 @@ function bee()
             morpheus.execute(my_bee_id, 'mouse', 'mouseout');
             morpheus.execute(my_bee_id, 'mouse', 'mousemove');
 
+            morpheus.execute(my_bee_id, 'touch', 'touchstart');
+            morpheus.execute(my_bee_id, 'touch', 'touchend');
+            morpheus.execute(my_bee_id, 'touch', 'touchcancel');
+            morpheus.execute(my_bee_id, 'touch', 'touchmove');
+
             return true;
         }
 
@@ -579,12 +593,15 @@ function bee()
 
             __handler = function(event) { __bee_gui.actions.menu.close(event); };
             morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, document);
+            morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, document);
 
             __handler = function(event) { __bee_gui.actions.release(event); };
             morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
+            morpheus.store(my_bee_id, 'touch', 'touchend', __handler, document);
 
             __handler = function(event) { __bee_gui.actions.dresize(event); };
             morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.swarm);
+            morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.swarm);
 
             __handler = function(event) { __bee_gui.actions.hover.into(event); };
             morpheus.store(my_bee_id, 'mouse', 'mouseover', __handler, ui_objects.window.ui);
@@ -594,12 +611,15 @@ function bee()
 
             __handler = function(event) { coords(event, 1); };
             morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.window.ui);
+            morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.window.ui);
 
             __handler = function() { __bee_gui.actions.touch(); };
             morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.ui);
+            morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.ui);
 
             __handler = function(event) { coords(event, 2); manage_drag_status(event); };
             morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.ui);
+            morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.control_bar.ui);
 
             __handler = function(event)
                         {
@@ -626,6 +646,10 @@ function bee()
             {
                 __handler = function(event) { __bee_gui.actions.close(event); };
                 morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.control_bar.close);
+                morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.control_bar.close);
+
+                __handler = function(event) { event.preventDefault(); };
+                morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.window.control_bar.close);
             }
 
             if (__bee_settings.actions.can_use_menu())
@@ -667,6 +691,7 @@ function bee()
                                 morpheus.execute(my_bee_id, 'system', 'active');
                             };
                 morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.status_bar.resize);
+                morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.window.status_bar.resize);
 
                 __handler = function()
                 {
@@ -678,6 +703,7 @@ function bee()
                     morpheus.execute(my_bee_id, 'gui', 'resized');
                 };
                 morpheus.store(my_bee_id, 'mouse', 'mouseup', __handler, document);
+                morpheus.store(my_bee_id, 'touch', 'touchend', __handler, document);
             }
 
             __handler = function() { return false; };
@@ -695,9 +721,11 @@ function bee()
 
             __handler = function(event) { coords(event, 1); };
             morpheus.store(my_bee_id, 'mouse', 'mousemove', __handler, ui_objects.casement.ui);
+            morpheus.store(my_bee_id, 'touch', 'touchmove', __handler, ui_objects.casement.ui);
 
             __handler = function() { __bee_gui.actions.touch(); };
             morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.casement.ui);
+            morpheus.store(my_bee_id, 'touch', 'touchstart', __handler, ui_objects.casement.ui);
 
             return true;
         }
@@ -709,14 +737,29 @@ function bee()
                 type < 1 || type > 2)
                 return false;
 
-            var __pos_x = 0,
+            var __client_x = 0,
+                __client_y = 0,
+                __pos_x = 0,
                 __pos_y = 0;
 
-            __pos_x = event_object.clientX + document.documentElement.scrollLeft + 
+            if (navigator.maxTouchPoints > 0 && 
+                event_object.type.indexOf('touch') > -1 && 
+                event_object.touches.length > 0)
+            {
+                __client_x = event_object.touches[0].clientX;
+                __client_y = event_object.touches[0].clientY;
+            }
+            else
+            {
+                __client_x = event_object.clientX;
+                __client_y = event_object.clientY;
+            }
+
+            __pos_x = __client_x + document.documentElement.scrollLeft + 
                       document.body.scrollLeft - document.body.clientLeft - 
                       swarm.settings.left() - self.gui.position.left();
 
-            __pos_y = event_object.clientY + document.documentElement.scrollTop + 
+            __pos_y = __client_y + document.documentElement.scrollTop + 
                       document.body.scrollTop - document.body.clientTop - 
                       swarm.settings.top() - self.gui.position.top();
 
@@ -794,7 +837,7 @@ function bee()
 
         function manage_drag_status(event_object)
         {
-            if (event_object.buttons !== 1)
+            if (navigator.maxTouchPoints === 0 && event_object.buttons !== 1)
                 return false;
 
             if (!self.settings.actions.can_drag.enabled() || bee_statuses.title_on_edit() || bee_statuses.close())
@@ -1337,6 +1380,26 @@ function bee()
         this.mousemove = function(val)
         {
             return validate('mousemove', 'mouse', val);
+        };
+
+        this.touchstart = function(val)
+        {
+            return validate('touchstart', 'touch', val);
+        };
+
+        this.touchend = function(val)
+        {
+            return validate('touchend', 'touch', val);
+        };
+
+        this.touchcancel = function(val)
+        {
+            return validate('touchcancel', 'touch', val);
+        };
+
+        this.touchmove = function(val)
+        {
+            return validate('touchmove', 'touch', val);
         };
 
         var __status_settings = new events_status_settings_model();
@@ -2876,7 +2939,7 @@ function bee()
 
                 function max()
                 {
-                    this.width = 1366;
+                    this.width = 1200;
                     this.height = 700;
                 }
 
@@ -3685,7 +3748,7 @@ function bee()
                     if (!bee_statuses.menu_activated())
                         return false;
 
-                    if (event_object === null || event_object.buttons === 1)
+                    if (event_object === null || navigator.maxTouchPoints > 0 || event_object.buttons === 1)
                     {
                         gfx.visibility.toggle(ui_config.window.menu.id, 1);
 
@@ -4200,7 +4263,7 @@ function bee()
                 if (utils_sys.validation.misc.is_undefined(event_object) || bee_statuses.title_on_edit() || bee_statuses.close())
                     return false;
 
-                if (event_object.buttons !== 1)
+                if (navigator.maxTouchPoints === 0 && event_object.buttons !== 1)
                     return false;
 
                 if (bee_statuses.drag() && self.settings.actions.can_drag.enabled())
@@ -4560,7 +4623,7 @@ function bee()
                 if (utils_sys.validation.misc.is_undefined(event_object))
                     return false;
 
-                if (event_object.buttons !== 0)
+                if (navigator.maxTouchPoints === 0 && event_object.buttons !== 0)
                     return false;
 
                 self.settings.actions.can_drag.enabled(true);

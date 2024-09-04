@@ -136,9 +136,9 @@ function i_webgl_preview()
         i_webgl_preview_bee.settings.actions.can_edit_title(false);
         i_webgl_preview_bee.settings.actions.can_use_menu(false);
         i_webgl_preview_bee.gui.position.left((swarm.settings.right() / 2) - 600);
-        i_webgl_preview_bee.gui.position.top(30);
-        i_webgl_preview_bee.gui.size.width(1057);
-        i_webgl_preview_bee.gui.size.height(810);
+        i_webgl_preview_bee.gui.position.top(20);
+        i_webgl_preview_bee.gui.size.width(900);
+        i_webgl_preview_bee.gui.size.height(600);
         i_webgl_preview_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         i_webgl_preview_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         i_webgl_preview_bee.on('open', function() { i_webgl_preview_bee.gui.fx.fade.into(); });

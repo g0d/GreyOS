@@ -1,11 +1,11 @@
 /*
-    GreyOS - Boot Screen (Version: 1.3)
+    GreyOS - Boot Screen (Version: 1.4)
 
     File name: boot_screen.js
     Description: This file contains the Boot Screen utility.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -57,7 +57,7 @@ function boot_screen()
 
             return false;
         }
-        else if (window.innerWidth < 1200 || window.innerHeight < 600)
+        else if (window.innerWidth < 1280 || window.innerHeight < 600)
         {
             utils_int.draw_boot_screen();
 
@@ -65,7 +65,7 @@ function boot_screen()
 
             __boot_message.innerHTML = 'Your screen is too small to run GreyOS!' + 
                                        '<br>' +
-                                       'Only screens from "1200 x 600" pixels and up are supported.';
+                                       'Only screens from "1280 x 600" pixels and up are supported.';
 
             return false;
         }

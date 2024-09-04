@@ -1,5 +1,5 @@
 /*
-    GreyOS - Octopus (Version: 1.3)
+    GreyOS - Octopus (Version: 1.4)
 
     File name: octopus.js
     Description: This file contains the Octopus - Devices management module.
@@ -117,8 +117,10 @@ function octopus()
             nature.themes.store('octopus');
             nature.apply('new');
 
-            me.start_component();
-            me.draw();
+            if (me.start_component())
+                return me.draw();
+            else
+                return false;
         };
 
         this.start_component = function()
@@ -141,6 +143,9 @@ function octopus()
                     volume: 0.30,
                 }
             };
+
+            if (!navigator.mediaDevices)
+                return false;
 
             //navigator.mediaDevices.getUserMedia(__constraints).then(() => { device_manager(); });
             navigator.mediaDevices.ondevicechange = function() { device_manager(); };
@@ -278,7 +283,7 @@ function octopus()
 
             self.settings.container(container_id);
 
-            utils_int.load_ui();
+            return utils_int.load_ui();
         }
     };
 

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 3.9)
+    GreyOS - Hive (Version: 4.0)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -227,19 +227,35 @@ function hive()
             if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
-            coords.mouse_x = event_object.clientX + 
-                             document.documentElement.scrollLeft + document.body.scrollLeft - 
-                             document.body.clientLeft;
-            coords.mouse_y = event_object.clientY + 
-                             document.documentElement.scrollTop + document.body.scrollTop - 
-                             document.body.clientTop;
+            var __client_x = 0,
+                __client_y = 0;
+
+            if (navigator.maxTouchPoints > 0 && 
+                event_object.type.indexOf('touch') > -1 && 
+                event_object.touches.length > 0)
+            {
+                __client_x = event_object.touches[0].clientX;
+                __client_y = event_object.touches[0].clientY;
+            }
+            else
+            {
+                __client_x = event_object.clientX;
+                __client_y = event_object.clientY;
+            }
+
+            coords.mouse_x = __client_x + 
+                             document.documentElement.scrollLeft + 
+                             document.body.scrollLeft - document.body.clientLeft;
+            coords.mouse_y = __client_y + 
+                             document.documentElement.scrollTop + 
+                             document.body.scrollTop - document.body.clientTop;
 
             return true;
         };
 
         this.reset_stack_trace = function(event_object)
         {
-            if (event_object.buttons === 0 && last_mouse_button_clicked === 1)
+            if (navigator.maxTouchPoints === 0 && event_object.buttons === 0 && last_mouse_button_clicked === 1)
             {
                 stack_trace.bee_drag = false;
                 stack_trace.internal_bee_drag = false;
@@ -253,7 +269,7 @@ function hive()
 
         this.release_bee = function(event_object)
         {
-            if (event_object.buttons === 0 && last_mouse_button_clicked === 1)
+            if (navigator.maxTouchPoints === 0 && event_object.buttons === 0 && last_mouse_button_clicked === 1)
             {
                 if (stack_trace.bee_drag)
                 {
@@ -271,7 +287,7 @@ function hive()
         this.setup_honeycomb_size = function(bees_per_honeycomb)
         {
             var __proposed_stack_width = Math.floor((bees_per_honeycomb / 2) * 230),
-                __min_screen_width = 1296,
+                __min_screen_width = 1200,
                 __proportion = __proposed_stack_width / __min_screen_width,
                 __fixed_bees_per_honeycomb = bees_per_honeycomb;
 
@@ -291,6 +307,10 @@ function hive()
             }
 
             max_stack_width = __proposed_stack_width;
+
+            /* Temporary hack - TODO: Fix with internal operations & CSS */
+            if (bees_per_honeycomb === 10)
+                __fixed_bees_per_honeycomb = 8;
 
             return __fixed_bees_per_honeycomb;
         };
@@ -341,7 +361,10 @@ function hive()
 
         this.show_ghost_bee = function(event_object, mode)
         {
-            if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1 || mode < 0 || mode > 1)
+            if (utils_sys.validation.misc.is_undefined(event_object))
+                return false;
+
+            if ((navigator.maxTouchPoints === 0 && event_object.buttons !== 1) || mode < 0 || mode > 1)
                 return false;
 
             if (honeycomb_views.swiping())
@@ -412,7 +435,7 @@ function hive()
 
         this.hide_ghost_bee = function(event_object)
         {
-            if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+            if (utils_sys.validation.misc.is_undefined(event_object) || (navigator.maxTouchPoints === 0 && event_object.buttons !== 1))
                 return false;
 
             var __active_bee_id = swarm.status.active_bee();
@@ -534,6 +557,7 @@ function hive()
 
             __handler = function(event) { self.stack.bees.put(event); };
             morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(__honeycomb_id));
+            morpheus.run(hive_id, 'touch', 'touchend', __handler, utils_sys.objects.by_id(__honeycomb_id));
 
             honeycomb_views.dynamic_width(__dynamic_width);
 
@@ -608,18 +632,23 @@ function hive()
                             last_mouse_button_clicked = event.buttons;
                         };
             morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
+            morpheus.run(hive_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
 
             __handler = function(event) { me.reset_stack_trace(event); };
             morpheus.run(hive_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
+            morpheus.run(hive_id, 'touch', 'touchend', __handler, utils_sys.objects.by_id(hive_id + '_stack'));
 
             __handler = function(event) { me.hide_ghost_bee(event); };
             morpheus.run(hive_id, 'mouse', 'mousemove', __handler, __swarm_object);
+            morpheus.run(hive_id, 'touch', 'touchmove', __handler, __swarm_object);
 
             __handler = function(event) { me.reset_stack_trace(event); };
             morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __swarm_object);
+            morpheus.run(hive_id, 'touch', 'touchend', __handler, __swarm_object);
 
             __handler = function(event) { me.release_bee(event); };
             morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __forest_object);
+            morpheus.run(hive_id, 'touch', 'touchend', __handler, __forest_object);
 
             __handler = function(event) { me.manage_stack_view(event, '-'); };
             morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_previous_arrow'));
@@ -780,6 +809,7 @@ function hive()
 
                 __handler = function(event) { me.release_bee(event); };
                 morpheus.run(hive_id, 'mouse', 'mouseup', __handler, __ghost_object);
+                morpheus.run(hive_id, 'touch', 'touchend', __handler, __ghost_object);
             }
 
             return true;
@@ -868,7 +898,7 @@ function hive()
     {
         var __id = null,
             __container = null,
-            __bees_per_honeycomb = 10,
+            __bees_per_honeycomb = 8,
             __left = 0,
             __top = 0;
 
@@ -1040,7 +1070,7 @@ function hive()
                     return false;
 
                 if (utils_sys.validation.misc.is_undefined(event_object) || 
-                    (event_object.buttons !== 0 && last_mouse_button_clicked !== 1))
+                    (navigator.maxTouchPoints === 0 && event_object.buttons !== 0 && last_mouse_button_clicked !== 1))
                     return false;
 
                 if (honeycomb_views.swiping())
@@ -1103,7 +1133,7 @@ function hive()
                 }
                 else
                 {
-                    if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+                    if (utils_sys.validation.misc.is_undefined(event_object) || (navigator.maxTouchPoints === 0 && event_object.buttons !== 1))
                         return false;
 
                     if (swarm.status.active_bee())
@@ -1378,7 +1408,7 @@ function hive()
                 !utils_sys.validation.numerics.is_integer(left) || left < 0 || 
                 !utils_sys.validation.numerics.is_integer(top) || top < 0 || 
                 !utils_sys.validation.numerics.is_integer(bees_per_honeycomb) || 
-                bees_per_honeycomb < 10 || bees_per_honeycomb % 2 !== 0 || 
+                bees_per_honeycomb < 8 || bees_per_honeycomb % 2 !== 0 || 
                 !utils_sys.validation.numerics.is_integer(honeycombs_num) || honeycombs_num < 1)
                 return false;
 

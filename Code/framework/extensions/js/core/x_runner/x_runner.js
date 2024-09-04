@@ -169,12 +169,28 @@ function x_runner()
                     {
                         if (!check_single_instance_app(x_mc.program_id()))
                         {
+                            var __msg_win = new msgbox();
+
+                            __msg_win.init('desktop');
+
                             if (meta_executor.error.last.code() === meta_executor.error.codes.INVALID_CODE)
+                            {
+                                __msg_win.show(xenon.load('os_name'), 'The is not a valid application!');
+
                                 frog('X-RUNNER', '# Invalid Code #', meta_executor.error.last.message());
+                            }
                             else if (meta_executor.error.last.code() === meta_executor.error.codes.RUN_FAIL)
+                            {
+                                __msg_win.show(xenon.load('os_name'), 'The application is misconfigured!');
+
                                 frog('X-RUNNER', '[*] Run Fail [*]', meta_executor.error.last.message());
+                            }
                             else if (meta_executor.error.last.code() === meta_executor.error.codes.ERROR)
+                            {
+                                __msg_win.show(xenon.load('os_name'), 'The application has errors!');
+
                                 frog('X-RUNNER', '[!] Error [!]', meta_executor.error.last.message());
+                            }
                         }
                         else
                             nature.themes.clear(x_mc.program_id());

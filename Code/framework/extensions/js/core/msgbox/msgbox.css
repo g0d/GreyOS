@@ -5,7 +5,7 @@
     Description: This file contains the MsgBox - CSS.
 
     Coded by George Delaportas (G0D) 
-    Copyright (C) 2017 - 2023
+    Copyright (C) 2017 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -46,7 +46,7 @@
 #msgbox_title
 {
     text-align: center;
-    background-color: #4d94b3;
+    background-color: #b55273;
     border-radius: 6px;
     width: 100%;
     margin-left: auto;
@@ -73,7 +73,7 @@
     color: #d8d8d8;
     background-color: #45454a;
     text-align: center;
-    border: solid 1px #479e44;
+    border: solid 1px #778b8b73;
     border-radius: 6px;
     cursor: pointer;
     width: 34%;

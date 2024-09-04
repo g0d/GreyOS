@@ -1,11 +1,11 @@
 /*
-    GreyOS - Forest (Version: 2.3)
+    GreyOS - Forest (Version: 2.5)
 
     File name: forest.js
     Description: This file contains the Forest - Desktops manager module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -244,11 +244,27 @@ function forest()
             if (utils_sys.validation.misc.is_undefined(event_object))
                 return false;
 
-            coords.mouse_x = event_object.clientX + document.documentElement.scrollLeft + 
-                             document.body.scrollLeft - document.body.clientLeft;
-            coords.mouse_y = event_object.clientY + document.documentElement.scrollTop + 
-                             document.body.scrollTop - document.body.clientTop;
+            var __client_x = 0,
+                __client_y = 0;
 
+            if (navigator.maxTouchPoints > 0 && 
+                event_object.type.indexOf('touch') > -1 && 
+                event_object.touches.length > 0)
+            {
+                __client_x = event_object.touches[0].clientX;
+                __client_y = event_object.touches[0].clientY;
+            }
+            else
+            {
+                __client_x = event_object.clientX;
+                __client_y = event_object.clientY;
+            }
+
+            coords.mouse_x = __client_x + document.documentElement.scrollLeft + 
+                             document.body.scrollLeft - document.body.clientLeft;
+            coords.mouse_y = __client_y + document.documentElement.scrollTop + 
+                             document.body.scrollTop - document.body.clientTop;
+console.log(coords.mouse_x, coords.mouse_y);
             return true;
         };
 
@@ -313,7 +329,7 @@ function forest()
 
             __dynamic_object.setAttribute('id', forest_id);
             __dynamic_object.setAttribute('class', 'forest');
-            __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 87) + 'px;');
+            __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 86) + 'px;');
 
             __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' + 
                                          '<div id="' + forest_id + '_forest_top_list" class="top_list">' + 
@@ -377,6 +393,7 @@ function forest()
 
             __handler = function(event) { me.coords(event); me.toggle_hive(); };
             morpheus.run(forest_id, 'mouse', 'mousemove', __handler, __forest_object);
+            morpheus.run(forest_id, 'touch', 'touchmove', __handler, __forest_object);
 
             //utils_sys.objects.by_id(forest_id + '_stack').style.width = 
             //(utils_sys.graphics.pixels_value(__dynamic_object.style.width) - 84) + 'px';
