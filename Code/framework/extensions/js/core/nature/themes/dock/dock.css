@@ -69,29 +69,17 @@
 
 .dock_replace
 {
-	border: 1px solid white;
-	border-radius: 5px;
-	-moz-box-shadow: inset 2px 2px 3px #c9c9c9;
-	-webkit-box-shadow: inset 2px 2px 3px #c9c9c9;
-	box-shadow: inset 2px 2px 3px #c9c9c9;
+    
 }
 
 .dock_replace_outer
 {
-	border: 1px solid #9C95A1;
-	border-radius: 5px;
-	-moz-box-shadow: 2px 2px 2px 1px #bababa;
-	-webkit-box-shadow: 2px 2px 2px 1px #bababa;
-	box-shadow: 2px 2px 2px 1px #bababa;
+    
 }
 
 .dock_replace_outer_move
 {
-	border: 2px solid white;
-	border-radius: 5px;
-	-moz-box-shadow: 2px 2px 2px 1px #bababa;
-	-webkit-box-shadow: 2px 2px 2px 1px #bababa;
-	box-shadow: 2px 2px 2px 1px #bababa;
+
 }
 
 .app_default

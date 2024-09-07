@@ -208,7 +208,7 @@ option
     float: none;
     clear: both;
     color: #000000;
-    min-height: 550px;
+    height: 100vh;
     overflow: auto;
     margin-left: auto;
     margin-right: auto;

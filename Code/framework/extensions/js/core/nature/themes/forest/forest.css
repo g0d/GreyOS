@@ -36,6 +36,11 @@
     background-color: #C5437A;
 }
 
+.top_list
+{
+	height: 36px;
+}
+
 .cat_list
 {
     overflow-y: auto;
@@ -50,27 +55,26 @@
 	background: #504D52;
 }
 
-.top_list
-{
-	height: 90px;
-}
-
 .top_list a.create_cat
 {
     display: inline-block;
     font-size: 14px;
-	color: #FFFFFF;
-	text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
-    background: url('pix/new_cat.png') no-repeat 15px 10px;
-	border: 5px dashed #D967A8;
-	border-radius: 5px;
-	margin: 20px 0 0 -20px;
-    padding: 11px 83px 13px 50px;
+    color: #FFFFFF;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+    background: url(pix/new_cat.png) no-repeat 5px 8px;
+    border-radius: 5px;
+    margin: 0px 0 0 -25px;
+    padding: 9px 82px 10px 42px;
 }
 
 .cat
 {
     width: 230px;
+}
+
+.cat_text a:hover
+{
+
 }
 
 .cat_list .cat
@@ -135,19 +139,19 @@
     background: #A296AB url('pix/games.png') no-repeat 10px;
 }
 
-.cat_list .cat a span
+.cat_list .cat .desktop_num
 {
     float: right;
 	background: #5C5C5C;
+    min-width: 15px;
 	border-radius: 25px;
+    text-align: center;
 	text-indent: 0;
-    margin-top: -3px;
-    padding: 4px 8px;
+    padding: 0px 8px;
 }
 
 .cat_list .cat a:hover span
 {
-    background: #FFFFFF;
 	color: #5C5C5C;
 }
 
@@ -184,7 +188,7 @@
 	position: absolute;
     content: "";
 	left: 16px;
-	top: 20px;
+	top: 21px;
     width: 0; 
 	height: 0; 
 	border-top: 5px solid transparent;
@@ -205,7 +209,7 @@
 	border-top: 5px solid #BCBCBF;
 }
 
-.cat_list .cat li a span
+.cat_list .cat .desktop_num
 {
     background: #FFFFFF;
 	color: #5C5C5C;
@@ -218,12 +222,17 @@
     margin-bottom: 1px;
 }
 
+.cat_list .cat li.create_new a:hover
+{
+    color: #13d9ce;
+}
+
 .cat_list .cat li.create_new a:before
 {
     content: "";
 	border: none;
 	background: url('pix/new_cat_hover.png') no-repeat left;
-	top: 16px;
+	top: 15px;
 	left: 12px;
     width: 20px;
 	height: 20px;
@@ -268,8 +277,8 @@
 .drawer a
 {
 	display: inline-block;
-    float: left;
     clear: both;
+    float: left;
     font-size: 14px;
 	color: #FFFFFF;
 	text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
@@ -286,7 +295,7 @@
     padding-left: 35px;
 }
 
-.drawer a span
+.drawer_apps_num
 {
 	float: right;
 	background: #5C5C5C;

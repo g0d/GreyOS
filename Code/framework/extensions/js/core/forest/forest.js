@@ -1,5 +1,5 @@
 /*
-    GreyOS - Forest (Version: 2.5)
+    GreyOS - Forest (Version: 2.6)
 
     File name: forest.js
     Description: This file contains the Forest - Desktops manager module.
@@ -334,26 +334,30 @@ console.log(coords.mouse_x, coords.mouse_y);
             __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' + 
                                          '<div id="' + forest_id + '_forest_top_list" class="top_list">' + 
                                          '  <a href="#" class="create_cat">' + 
-                                                      'Create new desktop</a>' + 
+                                                      'Create new category</a>' + 
                                          '</div>' + 
                                          '<div id="' + forest_id + '_forest_cat_list" class="cat_list" style="height: ' + 
-                                         (window.innerHeight - 260) + 'px;">' + 
+                                         (window.innerHeight - 200) + 'px;">' + 
                                          '  <div class="cat social">' + 
-                                         '      <a href="#" style="background-color: #5C5C5C;" title="Sample desktop!">' + 
-                                                                                                     'My desktop' + 
-                                         '          <span style="background: #FFF; color: #5C5C5C;">7</span>' + 
+                                         '      <a href="#" style="background-color: #5C5C5C;" title="Sample category!">' + 
+                                                                                                     'My main category' + 
+                                         '          <span style="background: #FFF; color: #5C5C5C;" class="desktop_num">4</span>' + 
                                          '      </a>' + 
                                          '      <ul class="expanded">' + 
                                          '          <li>' + 
-                                         '              <a href="#">Social media<span>2</span></a>' + 
+                                         '              <a href="#">' + 
+                                         '                  <span class="cat_text">Social media desktop</span>' + 
+                                         '                  <span class="desktop_num">3</span></a>' + 
                                          '              <ul>' + 
-                                         '                  <li><a href="#">Digg</a></li>' + 
-                                         '                  <li><a href="#">Foursquare</a></li>' + 
+                                         '                  <li><a href="#">App 1</a></li>' + 
+                                         '                  <li><a href="#">App 2</a></li>' + 
+                                         '                  <li><a href="#">App X</a></li>' + 
                                          '              </ul>' + 
                                          '          </li>' + 
                                          '          <li>' + 
-                                         '              <a href="#">Youtube' + 
-                                         '                  <span>1</span>' + 
+                                         '              <a href="#">' + 
+                                         '                  <span class="cat_text">Other desktop</span>' + 
+                                         '                  <span class="desktop_num">1</span>' + 
                                          '              </a>' + 
                                          '          </li>' + 
                                          '          <li class="create_new">' + 
@@ -362,30 +366,16 @@ console.log(coords.mouse_x, coords.mouse_y);
                                          '      </ul>' + 
                                          '  </div>' + 
                                          '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample desktop!">Misc Apps' + 
-                                         '          <span>16</span>' + 
+                                         '      <a href="#" title="Sample category!">Another category' + 
+                                         '          <span class="desktop_num">11</span>' + 
                                          '      </a>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample desktop!">Educational Apps' + 
-                                         '          <span>4</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample desktop!">e-Banking' + 
-                                         '          <span>3</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample desktop!">Healthcare' + 
-                                         '          <span>1</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' + 
+                                         '  </div>' +   
                                          '</div>' + 
                                          '<div class="drawer" title="Sorry, drawer is not available yet...">' + 
                                          '  <input class="search_box" value="" placeholder="Search your drawer for apps...">' + 
-                                         '  <a href="#">Drawer' + 
-                                         '      <span>0</span>' + 
+                                         '  <a href="#">' + 
+                                         '      <span class="cat_text">Drawer</span>' + 
+                                         '      <span class="drawer_apps_num">0</span>' + 
                                          '  </a>' + 
                                          '</div>';
 

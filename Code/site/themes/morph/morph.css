@@ -267,7 +267,7 @@ option
     float: none;
     clear: both;
     color: #000000;
-    min-height: 550px;
+    height: 100vh;
     overflow: auto;
     margin-left: auto;
     margin-right: auto;
@@ -357,13 +357,6 @@ option
 .forest .trigger_bar:hover
 {
     background-color: #ff97c35c !important;
-}
-
-.top_list a.create_cat
-{
-    border-radius: 6px !important;
-    margin: 20px 0 0 -12px !important;
-    padding: 16px 88px 16px 50px !important;
 }
 
 .top_list, .cat_list
