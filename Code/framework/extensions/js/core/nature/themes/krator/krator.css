@@ -57,6 +57,11 @@
     background-color: #fff48d;
 }
 
+.control_item .text::placeholder
+{
+    color: #6e6e6e !important;
+}
+
 .registration_control
 {
     margin-top: 5px;
