@@ -13,7 +13,7 @@
 {
     position: absolute;
 	left: 0px;
-	top: 87px;
+	top: 45px;
 	margin-left: -298px;
     z-index: 2147483646;
 }
@@ -38,7 +38,9 @@
 
 .top_list
 {
+    width: 295px !important;
 	height: 36px;
+    margin-bottom: 2px;
 }
 
 .cat_list
@@ -218,13 +220,13 @@
 
 .cat_list .cat li.create_new a
 {
-    color: #35BAB2;
+    color: #a57fff;
     margin-bottom: 1px;
 }
 
 .cat_list .cat li.create_new a:hover
 {
-    color: #13d9ce;
+    color: #cd7aff;
 }
 
 .cat_list .cat li.create_new a:before
@@ -295,12 +297,17 @@
     padding-left: 35px;
 }
 
+.drawer .cat_text
+{
+    float: left;
+    margin-top: 3px;
+}
+
 .drawer_apps_num
 {
 	float: right;
 	background: #5C5C5C;
 	border-radius: 25px;
 	text-indent: 0;
-    margin-top: -3px;
     padding: 4px 8px;
 }

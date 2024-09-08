@@ -147,7 +147,7 @@ body
 {
     float: right;
     font-size: 10px;
-    color: #aaaaaac9;
+    color: white;
     margin-top: 14px;
 }
 
@@ -156,11 +156,6 @@ body
     float: right;
     clear: right;
     margin-top: 7px;
-}
-
-#eureka
-{
-    display: none;
 }
 
 .error

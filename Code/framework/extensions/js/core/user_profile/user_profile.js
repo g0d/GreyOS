@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 2.5)
+    GreyOS - User Profile (Version: 2.6)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -248,7 +248,8 @@ function user_profile()
                 __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
 
             __user_profile_area.style.display = 'block';
-            __my_profile_label.style.color = '#55ffe7';
+            __my_profile_label.classList.remove('user_profile_hidden');
+            __my_profile_label.classList.add('user_profile_active');
 
             is_profile_area_visible = true;
 
@@ -263,7 +264,8 @@ function user_profile()
                 __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
 
             __user_profile_area.style.display = 'none';
-            __my_profile_label.style.color = '#55b8ff';
+            __my_profile_label.classList.remove('user_profile_active');
+            __my_profile_label.classList.add('user_profile_hidden');
 
             is_profile_area_visible = false;
 

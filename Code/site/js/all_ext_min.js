@@ -6990,7 +6990,6 @@ function forest()
  document.body.scrollLeft - document.body.clientLeft;
  coords.mouse_y = __client_y + document.documentElement.scrollTop +
  document.body.scrollTop - document.body.clientTop;
-console.log(coords.mouse_x, coords.mouse_y);
  return true;
  };
  this.reset_desktops_trace = function()
@@ -7039,14 +7038,14 @@ console.log(coords.mouse_x, coords.mouse_y);
  __dynamic_object = document.createElement('div');
  __dynamic_object.setAttribute('id', forest_id);
  __dynamic_object.setAttribute('class', 'forest');
- __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 86) + 'px;');
+ __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 45) + 'px;');
  __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' +
  '<div id="' + forest_id + '_forest_top_list" class="top_list">' +
  ' <a href="#" class="create_cat">' +
  'Create new category</a>' +
  '</div>' +
  '<div id="' + forest_id + '_forest_cat_list" class="cat_list" style="height: ' +
- (window.innerHeight - 200) + 'px;">' +
+ (window.innerHeight - 167) + 'px;">' +
  ' <div class="cat social">' +
  ' <a href="#" style="background-color: #5C5C5C;" title="Sample category!">' +
  'My main category' +
@@ -7081,7 +7080,7 @@ console.log(coords.mouse_x, coords.mouse_y);
  ' </div>' +
  '</div>' +
  '<div class="drawer" title="Sorry, drawer is not available yet...">' +
- ' <input class="search_box" value="" placeholder="Search your drawer for apps...">' +
+ ' <input class="search_box" value="" placeholder="Search my drawer for apps...">' +
  ' <a href="#">' +
  ' <span class="cat_text">Drawer</span>' +
  ' <span class="drawer_apps_num">0</span>' +
@@ -8086,7 +8085,7 @@ function hive()
  __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
  __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
  __stack_offset_x_space = self.settings.left() +
- utils_sys.graphics.pixels_value(__hive_object.style.width) + 190;
+ utils_sys.graphics.pixels_value(__hive_object.style.width) + 250;
  if (mode === 1)
  {
  self.stack.bees.expel(event_object);
@@ -9354,7 +9353,7 @@ function ui_controls()
  };
  this.draw_controls = function()
  {
- var __controls_div = utils_sys.objects.selectors.first('#top_panel #bottom_area #action_icons');
+ var __controls_div = utils_sys.objects.selectors.first('#top_panel #action_icons');
  if (__controls_div === null)
  return false;
  __controls_div.innerHTML = '<div id="placement" class="actions">' +
@@ -9367,7 +9366,7 @@ function ui_controls()
  {
  if (utils_sys.validation.alpha.is_symbol(id))
  return false;
- var __selector = '#top_panel #bottom_area #action_icons #placement ' + '#' + id,
+ var __selector = '#top_panel #action_icons #placement ' + '#' + id,
  __control = utils_sys.objects.selectors.first(__selector);
  if (id === 'boxify_all')
  __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify_hover.png')";
@@ -9381,7 +9380,7 @@ function ui_controls()
  {
  if (utils_sys.validation.alpha.is_symbol(id))
  return false;
- var __selector = '#top_panel #bottom_area #action_icons #placement' + ' #' + id,
+ var __selector = '#top_panel #action_icons #placement' + ' #' + id,
  __control = utils_sys.objects.selectors.first(__selector);
  if (id === 'boxify_all')
  __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify.png')";
@@ -9645,7 +9644,7 @@ function dock()
  function enable_drag()
  {
  var __dock_div = utils_sys.objects.by_id(self.settings.container()),
- __dock_apps = utils_sys.objects.selectors.all('#top_panel #bottom_area #dynamic_container #favorite_apps .favorites'),
+ __dock_apps = utils_sys.objects.selectors.all('#top_panel #favorite_apps .favorites'),
  __dock_apps_length = __dock_apps.length,
  __handler = null;
  for (var i = 0; i < __dock_apps_length; i++)
@@ -10062,7 +10061,8 @@ function user_profile()
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
  __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
  __user_profile_area.style.display = 'block';
- __my_profile_label.style.color = '#55ffe7';
+ __my_profile_label.classList.remove('user_profile_hidden');
+ __my_profile_label.classList.add('user_profile_active');
  is_profile_area_visible = true;
  super_tray.hide();
  return true;
@@ -10072,7 +10072,8 @@ function user_profile()
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
  __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
  __user_profile_area.style.display = 'none';
- __my_profile_label.style.color = '#55b8ff';
+ __my_profile_label.classList.remove('user_profile_active');
+ __my_profile_label.classList.add('user_profile_hidden');
  is_profile_area_visible = false;
  super_tray.hide();
  return true;

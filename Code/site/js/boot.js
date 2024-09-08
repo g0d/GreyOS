@@ -186,7 +186,7 @@ function boot_script()
             new_tik_tok.init('clock');
 
             // Initialize desktop module
-            new_swarm.init('desktop', 11, 101, window.innerWidth - 26, window.innerHeight - 120);
+            new_swarm.init('desktop', 11, 60, window.innerWidth - 26, window.innerHeight - 76);
 
             // Show login/register windows
             run_krator_app();
@@ -239,7 +239,7 @@ function boot_script()
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
             matrix_container.get('forest').init('desktop');
-            matrix_container.get('swarm').reset('desktop', 44, 101, window.innerWidth - 60, window.innerHeight - 118);
+            matrix_container.get('swarm').reset('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
             matrix_container.get('hive').init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             matrix_container.get('eagle').init('desktop');
             matrix_container.get('octopus').init('device_manager');
@@ -318,7 +318,7 @@ function boot_script()
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
             new_forest.init('desktop');
-            new_swarm.init('desktop', 44, 101, window.innerWidth - 60, window.innerHeight - 118);
+            new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
             new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
@@ -387,7 +387,6 @@ function boot_script()
             meta_description = meta_description.replace('{os_name}', os_settings.get('name'));
 
             os_utils.objects.selectors.first('meta[name="description"]').content = meta_description;
-            os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
 
             //navigator.geolocation.getCurrentPosition(function(pos) { console.log(pos); }, 
             //                                         function(error) { console.log(error); }, 
@@ -442,10 +441,14 @@ function boot_script()
                                 os_settings.get('name') + ' will now go fullscreen!', 
                 new_msgbox.types.OK, [() =>
                 {
-                    document.documentElement.requestFullscreen(); auth_verification();
+                    document.documentElement.requestFullscreen();
+
+                    auth_verification();
 
                     setTimeout(function()
                     {
+                        os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
+
                         os_utils.events.attach('greyos', window, 'resize', 
                         function()
                         {
@@ -465,7 +468,11 @@ function boot_script()
                 }]);
             }
             else
+            {
+                os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
+
                 auth_verification();
+            }
 
             return true;
         }
@@ -612,7 +619,7 @@ function boot_script()
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
             //new_forest.init('desktop');
-            new_swarm.init('desktop', 44, 101, window.innerWidth - 60, window.innerHeight - 118);
+            new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
             //new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
             new_tik_tok.init('clock');
@@ -695,7 +702,6 @@ function boot_script()
             meta_description = meta_description.replace('{os_name}', os_settings.get('name'));
 
             os_utils.objects.selectors.first('meta[name="description"]').content = meta_description;
-            os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
 
             var greyos_logo_art = `
 
@@ -746,10 +752,14 @@ function boot_script()
                                 os_settings.get('name') + ' will now go fullscreen!', 
                 new_msgbox.types.OK, [() =>
                 {
-                    document.documentElement.requestFullscreen(); load_full_desktop_ui();
+                    document.documentElement.requestFullscreen();
+
+                    load_full_desktop_ui();
 
                     setTimeout(function()
                     {
+                        os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
+
                         os_utils.events.attach('greyos', window, 'resize', 
                         function()
                         {
@@ -768,7 +778,11 @@ function boot_script()
                 }]);
             }
             else
+            {
+                os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
+
                 load_full_desktop_ui();
+            }   
 
             return true;
         }

@@ -102,6 +102,7 @@ option
 {
     background-color: #ffffff;
     padding-top: 2px;
+    box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
 
 #logo
@@ -128,6 +129,11 @@ option
 .profile_info
 {
     margin-top: 15px !important;
+}
+
+.user_profile_area
+{
+    border-color: #f9f9f9 transparent;
 }
 
 .user_reboot
@@ -160,16 +166,6 @@ option
     color: #ffbc00;
 }
 
-#dynamic_container
-{
-    background-color: #F4F4F4;
-    background-image: url('pix/top_panel/diagonal.jpg');
-    background-position: left center;
-    background-repeat: no-repeat;
-    height: 40px;
-    margin-top: 45px;
-}
-
 #search
 {
     display: none;
@@ -183,7 +179,7 @@ option
     clear: right;
 }
 
-#eye
+#philos
 {
     float: left;
     clear: left;
@@ -240,7 +236,7 @@ option
     cursor: pointer;
     background-repeat: no-repeat;
     height: 20px;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .tik_tok .clock_date

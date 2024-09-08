@@ -264,7 +264,7 @@ function forest()
                              document.body.scrollLeft - document.body.clientLeft;
             coords.mouse_y = __client_y + document.documentElement.scrollTop + 
                              document.body.scrollTop - document.body.clientTop;
-console.log(coords.mouse_x, coords.mouse_y);
+
             return true;
         };
 
@@ -329,7 +329,7 @@ console.log(coords.mouse_x, coords.mouse_y);
 
             __dynamic_object.setAttribute('id', forest_id);
             __dynamic_object.setAttribute('class', 'forest');
-            __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 86) + 'px;');
+            __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 45) + 'px;');
 
             __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' + 
                                          '<div id="' + forest_id + '_forest_top_list" class="top_list">' + 
@@ -337,7 +337,7 @@ console.log(coords.mouse_x, coords.mouse_y);
                                                       'Create new category</a>' + 
                                          '</div>' + 
                                          '<div id="' + forest_id + '_forest_cat_list" class="cat_list" style="height: ' + 
-                                         (window.innerHeight - 200) + 'px;">' + 
+                                         (window.innerHeight - 167) + 'px;">' + 
                                          '  <div class="cat social">' + 
                                          '      <a href="#" style="background-color: #5C5C5C;" title="Sample category!">' + 
                                                                                                      'My main category' + 
@@ -372,7 +372,7 @@ console.log(coords.mouse_x, coords.mouse_y);
                                          '  </div>' +   
                                          '</div>' + 
                                          '<div class="drawer" title="Sorry, drawer is not available yet...">' + 
-                                         '  <input class="search_box" value="" placeholder="Search your drawer for apps...">' + 
+                                         '  <input class="search_box" value="" placeholder="Search my drawer for apps...">' + 
                                          '  <a href="#">' + 
                                          '      <span class="cat_text">Drawer</span>' + 
                                          '      <span class="drawer_apps_num">0</span>' + 

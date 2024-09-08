@@ -35,7 +35,7 @@ function ui_controls()
 
         this.draw_controls = function()
         {
-            var __controls_div = utils_sys.objects.selectors.first('#top_panel #bottom_area #action_icons');
+            var __controls_div = utils_sys.objects.selectors.first('#top_panel #action_icons');
 
             if (__controls_div === null)
                 return false;
@@ -53,7 +53,7 @@ function ui_controls()
             if (utils_sys.validation.alpha.is_symbol(id))
                 return false;
 
-            var __selector = '#top_panel #bottom_area #action_icons #placement ' + '#' + id,
+            var __selector = '#top_panel #action_icons #placement ' + '#' + id,
                 __control = utils_sys.objects.selectors.first(__selector);
 
             if (id === 'boxify_all')
@@ -71,7 +71,7 @@ function ui_controls()
             if (utils_sys.validation.alpha.is_symbol(id))
                 return false;
 
-            var __selector = '#top_panel #bottom_area #action_icons #placement' + ' #' + id,
+            var __selector = '#top_panel #action_icons #placement' + ' #' + id,
                 __control = utils_sys.objects.selectors.first(__selector);
 
             if (id === 'boxify_all')

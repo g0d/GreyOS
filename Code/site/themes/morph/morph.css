@@ -100,14 +100,9 @@ option
 
 #top_panel
 {
-    background-color: #00000094;
-}
-
-#top_area
-{
-    background-color: #00000094;
-    width: 100%;
+    background-color: #b3edef2b;
     height: 45px;
+    box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
 
 #logo
@@ -123,24 +118,30 @@ option
 
 .notifications_num
 {
-    background-color: #00c7ffa8 !important;
+    background-color: #2beeffa8 !important;
 }
 
 .my:hover
 {
-    color: #80caff !important;
+    color: white !important;
 }
 
 .user_profile_area
 {
-    background-color: #181c2bc4 !important;
-    border: 2px solid #577b844a !important;
+    right: 32px !important;
+    background-color: #2727271f !important;
+    border: 2px solid #ffffff4a !important;
     border-radius: 12px
 }
 
-.user_profile_area:before
+.user_profile_active
 {
-    border-color: #577b844a transparent !important;
+    color: white;
+}
+
+.user_profile_hidden
+{
+    color: white;
 }
 
 .user_profile_name
@@ -150,17 +151,22 @@ option
 
 .user_email
 {
-    color: #fffb45d4 !important;
+    color: #FFEB3B !important;
+}
+
+.profile_separator
+{
+    color: #ffffff5c !important;
 }
 
 .user_account, .user_settings
 {
-    color: #86bbc4 !important;
+    color: #ffd5ff !important;
 }
 
 .user_account:hover, .user_settings:hover
 {
-    color: #a2dfe9 !important;
+    color: white !important;
 }
 
 .separator
@@ -170,13 +176,8 @@ option
 
 .user_reboot
 {
-    background-color: #452161d4 !important;
+    background-color: #2beeffa8 !important;
     margin-top: 5px !important;
-}
-
-.user_reboot:hover
-{
-    background-color: #6a3891d4 !important;
 }
 
 .total_notifications
@@ -187,25 +188,26 @@ option
 .notifications_list
 {
     height: 102px !important;
+    overflow: hidden !important;
 }
 
 .notification_list_item
 {
-    color: #b3b3b3 !important;
-    border-left: #83838380 solid 1px !important;
+    color: white !important;
+    border-left: #ffffff5c solid 1px !important;
     border-right: none !important;
     border-bottom: none !important;
 }
 
 .notification_list_item:hover
 {
-    color: #55ffe7 !important;
-    background-color: #00000059 !important;
+    color: #2dffe4 !important;
+    background-color: #ebebeb59 !important;
 }
 
 .list_item_notifications
 {
-    background: none repeat scroll 0 0 #0c2d31 !important;
+    background: none repeat scroll 0 0 #ffffff !important;
 }
 
 .logout_button
@@ -220,22 +222,14 @@ option
 
 .logout_button:hover
 {
-    color: #ff8bcfc7 !important;
-}
-
-#dynamic_container
-{
-    background-color: #06283775;
-    height: 40px;
-    border-bottom: 1px solid #38697266;
-    box-shadow: 0px 2px 8px rgb(0 0 0 / 40%);
+    color: white !important;
 }
 
 #search
 {
     display: none;
     float: right;
-    margin-right: 33px;
+    margin-right: 31px;
 }
 
 #eureka
@@ -244,22 +238,28 @@ option
     clear: right;
 }
 
-#eye
+#philos
 {
     background-image: url('pix/icons/philos/eye.png');
+    float: left;
+    clear: none;
+    width: 30px;
+    height: 15px;
+    margin-top: 15px;
+    margin-right: 5px;
 }
 
 #eureka_search_box
 {
     font-size: 12px;
-    height: 25px;
-    padding: 0 5px;
     width: 238px;
+    height: 27px;
     margin-top: 6px;
-    border-radius: 2px;
+    padding: 0 5px;
     color: white;
-    background-color: #0000005e;
-    border-color: #2f2f2f;
+    background-color: #2727271f !important;
+    border: 2px solid #ffffff4a !important;
+    border-radius: 12px;
 }
 
 #desktop
@@ -294,7 +294,7 @@ option
     cursor: pointer;
     background-repeat: no-repeat;
     height: 20px;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .error
@@ -317,14 +317,13 @@ option
 
 .dock_replace
 {
-    border: 1px solid #0c4443 !important;
     border-radius: 6px !important;
-    box-shadow: inset 2px 2px 4px 0px #000000ba !important;
+    box-shadow: inset 1px 1px 4px 0px #000000ba !important;
 }
 
 .tik_tok
 {
-    background-color: #39393942 !important;
+    background-color: transparent !important;
     height: 37px !important;
     border: none !important;
     margin-top: 0px !important;
@@ -332,17 +331,12 @@ option
 
 .tik_tok .clock_time
 {
-    color: #7cd8dc !important;
+    color: #FFEB3B !important;
 }
 
 .tik_tok .clock_date
 {
     color: #ffffff !important;
-}
-
-.forest
-{
-    top: 86px !important;
 }
 
 .forest .trigger_bar
@@ -361,7 +355,7 @@ option
 
 .top_list, .cat_list
 {
-    background: #504d529c !important;
+    background: #cc7fff2b !important;
 }
 
 .cat .apps a
@@ -655,6 +649,8 @@ option
 
 .service_icons_area
 {
+    background-color: #2727271f !important;
+    border: 2px solid #ffffff4a !important;
     border-radius: 12px;
 }
 

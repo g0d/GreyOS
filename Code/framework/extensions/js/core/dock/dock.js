@@ -154,7 +154,7 @@ function dock()
         function enable_drag()
         {
             var __dock_div = utils_sys.objects.by_id(self.settings.container()),
-                __dock_apps = utils_sys.objects.selectors.all('#top_panel #bottom_area #dynamic_container #favorite_apps .favorites'),
+                __dock_apps = utils_sys.objects.selectors.all('#top_panel #favorite_apps .favorites'),
                 __dock_apps_length = __dock_apps.length,
                 __handler = null;
 

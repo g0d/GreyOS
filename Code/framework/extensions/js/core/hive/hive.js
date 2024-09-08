@@ -396,7 +396,7 @@ function hive()
                                 __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
                                 __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
                                 __stack_offset_x_space = self.settings.left() + 
-                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 190;
+                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 250;
                                 //__stack_offset_y_space = self.settings.top() + 
                                 //                         utils_sys.graphics.pixels_value(__hive_object.style.height);
 

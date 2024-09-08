@@ -20,18 +20,17 @@
 #favorite_apps
 {
     float: left;
-    clear: right;
-    margin-left: 16px;
-    margin-top: 2px;
-    height: 38px;
-    min-width: 1104x;
-    max-width: 1104px;
+    clear: none;
+    mix-blend-mode: hard-light;
+    height: 100%;
+    width: 1004px;
 }
 
 .favorites
 {
     width: 30px;
     height: 30px;
+    margin-top: 6px;
     padding: 0px;
     border: 1px solid transparent;
     float: left;
