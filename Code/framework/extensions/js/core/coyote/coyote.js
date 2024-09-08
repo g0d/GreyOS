@@ -676,8 +676,8 @@ function coyote()
         coyote_bee.settings.general.resizable(true);
         coyote_bee.settings.general.casement_width(50, 'fixed');
         coyote_bee.settings.general.allowed_instances(5);
-        coyote_bee.gui.position.left(70);
-        coyote_bee.gui.position.top(10);
+        coyote_bee.gui.position.left(30);
+        coyote_bee.gui.position.top(0);
         coyote_bee.gui.size.width(1024);
         coyote_bee.gui.size.height(720);
         coyote_bee.gui.size.min.width(960);

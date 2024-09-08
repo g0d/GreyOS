@@ -26,7 +26,7 @@ function tablet_mode()
 
     this.check = function()
     {
-        if (navigator.userAgent.indexOf('android') > -1 || navigator.userAgent.indexOf('ios') > -1)
+        if (navigator.maxTouchPoints > 0 || navigator.userAgent.indexOf('android') > -1 || navigator.userAgent.indexOf('ios') > -1)
             return true;
 
         return false;

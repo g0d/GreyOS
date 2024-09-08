@@ -449,6 +449,9 @@ function boot_script()
                     {
                         os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
 
+                        if (navigator.maxTouchPoints > 0)
+                            return;
+
                         os_utils.events.attach('greyos', window, 'resize', 
                         function()
                         {

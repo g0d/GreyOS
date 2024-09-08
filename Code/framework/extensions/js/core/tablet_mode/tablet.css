@@ -9,3 +9,12 @@
     Open Software License (OSL 3.0)
 */
 
+.favorites
+{
+    margin-right: 5px !important;
+}
+
+#favorite_apps
+{
+    width: 400px !important;
+}
