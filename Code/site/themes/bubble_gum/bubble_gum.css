@@ -1,7 +1,7 @@
 /*
     GreyOS theme (Bubble Gum) [Default]
 
-    File name: default.css
+    File name: bubble_gum.css
     Description: This file contains the GreyOS - Bubble Gum (default) CSS theme.
 
     Coded by George Delaportas (G0D)
@@ -98,10 +98,14 @@ option
     height: 100%;
 }
 
+#version
+{
+    color: #797979;
+}
+
 #top_panel
 {
     background-color: #ffffff;
-    padding-top: 2px;
     box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
 
@@ -136,6 +140,11 @@ option
     border-color: #f9f9f9 transparent;
 }
 
+.user_profile_name
+{
+    color: #e32550 !important;
+}
+
 .user_reboot
 {
     background-color: #279e70 !important;
@@ -166,11 +175,32 @@ option
     color: #ffbc00;
 }
 
+.service_icons_area
+{
+    background-color: white !important;
+    border: 2px solid #dcdcdc !important;
+}
+
+.super_tray .access_icon
+{
+    filter: invert(0.5);
+}
+
 #search
 {
-    display: none;
-    float: right;
-    margin-right: 35px;
+    
+}
+
+#philos
+{
+    cursor: pointer;
+    float: left;
+    clear: none;
+    background-image: url('pix/icons/philos/eye.png');
+    width: 36px;
+    height: 20px;
+    margin-top: 13px;
+    margin-right: 10px;
 }
 
 #eureka
@@ -179,24 +209,22 @@ option
     clear: right;
 }
 
-#philos
-{
-    float: left;
-    clear: left;
-    background-image: url('pix/icons/philos/eye.png');
-    width: 30px;
-    height: 15px;
-    margin-top: 12px;
-    margin-right: 10px;
-}
-
 #eureka_search_box
 {
     font-size: 12px;
     height: 25px;
-    padding: 0 7px;
-    width: 235px;
-    margin-top: 5px;
+    padding: 0 5px;
+    width: 238px;
+    height: 27px;
+    margin-top: 6px;
+    border-radius: 2px;
+    color: #505050;
+    background-color: white;
+}
+
+#eureka_search_box:focus
+{
+    outline: white;
 }
 
 #desktop
@@ -230,6 +258,11 @@ option
     margin-right: 5px;
 }
 
+#action_icons
+{
+    mix-blend-mode: difference !important;
+}
+
 .placement_icons
 {
     float: left;
@@ -237,6 +270,22 @@ option
     background-repeat: no-repeat;
     height: 20px;
     margin-right: 10px;
+}
+
+#favorite_apps
+{
+    mix-blend-mode: darken !important;
+}
+
+.cat_list .cat a:hover .cat_text
+{
+    color: white !important;
+}
+
+.tik_tok
+{
+    height: 37px !important;
+    margin-top: 0px !important;
 }
 
 .tik_tok .clock_date
@@ -252,16 +301,13 @@ option
 .parrot .speaker
 {
     filter: invert(0.5);
+    margin-top: 3px;
 }
 
 .parrot .volume
 {
     color: #919191 !important;
-}
-
-.octopus
-{
-    margin-top: 6px !important;
+    margin-top: -2px;
 }
 
 .octopus .device
@@ -337,4 +383,25 @@ option
     margin-left: auto;
     margin-right: auto;
     padding-bottom: 10px;
+}
+
+.register_new_account
+{
+    color: #84cc30 !important;
+}
+
+.control_item .button
+{
+    background-color: #ffc561 !important;
+}
+
+.control_item .button:hover
+{
+    background-color: #ffd58d !important;
+}
+
+.drawer .search_box
+{
+    color: #505050 !important;
+    border: none !important;
 }

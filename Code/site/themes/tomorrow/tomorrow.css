@@ -101,7 +101,6 @@ option
 #top_panel
 {
     background-color: #00000094;
-    height: 45px;
     box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
 
@@ -131,6 +130,7 @@ option
     background-color: #181c2bc4 !important;
     border: 2px solid #577b844a !important;
     border-radius: 6px;
+    right: 90px !important;
 }
 
 .user_profile_area:before
@@ -176,7 +176,6 @@ option
 .user_reboot
 {
     background-color: #ae373780 !important;
-    margin-top: 5px !important;
 }
 
 .user_reboot:hover
@@ -229,9 +228,7 @@ option
 
 #search
 {
-    display: none;
-    float: right;
-    margin-right: 33px;
+    
 }
 
 #eureka
@@ -242,13 +239,14 @@ option
 
 #philos
 {
-    background-image: url('pix/icons/philos/eye.png');
+    cursor: pointer;
     float: left;
     clear: none;
-    width: 30px;
-    height: 15px;
-    margin-top: 15px;
-    margin-right: 5px;
+    background-image: url('pix/icons/philos/eye.png');
+    width: 36px;
+    height: 20px;
+    margin-top: 13px;
+    margin-right: 10px;
 }
 
 #eureka_search_box
@@ -257,11 +255,17 @@ option
     height: 25px;
     padding: 0 5px;
     width: 238px;
+    height: 27px;
     margin-top: 6px;
     border-radius: 2px;
     color: white;
     background-color: #0000005e;
     border-color: #2f2f2f;
+}
+
+#eureka_search_box:focus
+{
+    outline: white;
 }
 
 #desktop
@@ -326,7 +330,7 @@ option
 
 .tik_tok
 {
-    background-color: #0b3d3c8f !important;
+    background-color: transparent !important;
     height: 37px !important;
     border: none !important;
     margin-top: 0px !important;

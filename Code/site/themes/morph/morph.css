@@ -101,7 +101,6 @@ option
 #top_panel
 {
     background-color: #b3edef2b;
-    height: 45px;
     box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
 
@@ -128,7 +127,6 @@ option
 
 .user_profile_area
 {
-    right: 32px !important;
     background-color: #2727271f !important;
     border: 2px solid #ffffff4a !important;
     border-radius: 12px
@@ -177,7 +175,11 @@ option
 .user_reboot
 {
     background-color: #2beeffa8 !important;
-    margin-top: 5px !important;
+}
+
+.user_reboot:hover
+{
+    background-color: #0fe7f9a8 !important;
 }
 
 .total_notifications
@@ -227,9 +229,7 @@ option
 
 #search
 {
-    display: none;
-    float: right;
-    margin-right: 31px;
+    
 }
 
 #eureka
@@ -240,13 +240,14 @@ option
 
 #philos
 {
-    background-image: url('pix/icons/philos/eye.png');
+    cursor: pointer;
     float: left;
     clear: none;
-    width: 30px;
-    height: 15px;
-    margin-top: 15px;
-    margin-right: 5px;
+    background-image: url('pix/icons/philos/eye.png');
+    width: 36px;
+    height: 20px;
+    margin-top: 13px;
+    margin-right: 10px;
 }
 
 #eureka_search_box
@@ -260,6 +261,11 @@ option
     background-color: #2727271f !important;
     border: 2px solid #ffffff4a !important;
     border-radius: 12px;
+}
+
+#eureka_search_box:focus
+{
+    outline: white;
 }
 
 #desktop
@@ -394,7 +400,6 @@ option
 .drawer .search_box
 {
     width: 278px !important;
-    color: white;
     background-color: #0000005e !important;
     border: none !important;
 }

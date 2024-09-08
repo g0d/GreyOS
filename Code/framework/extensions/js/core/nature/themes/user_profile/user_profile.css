@@ -18,8 +18,8 @@
     box-shadow: 0 0 12px #282c2c5e !important;
     width: 530px;
     height: 178px;
-    right: 92px;
-    margin-top: 42px;
+    right: 31px;
+    margin-top: 54px;
     z-index: 2147483645;
 }
 
@@ -61,6 +61,7 @@
     clear: left;
     cursor: pointer;
     background-image: url('pix/profile/avatar_small.jpg');
+    border-radius: 6px;
     width: 27px;
     height: 27px;
     margin-top: 2px;
@@ -110,6 +111,7 @@
     clear: left;
     cursor: pointer;
     background-image: url('pix/profile/avatar_big.jpg');
+    border-radius: 6px;
     width: 96px;
     height: 96px;
     border: 1px solid #C5C5C5;
@@ -127,12 +129,12 @@
 .user_profile_name
 {
     font-size: 14px;
-    font-weight: bold;
-    color: #3b77a2;
+    color: #18abe6;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     width: 160px;
+    margin-top: -4px;
     margin-bottom: 4px;
 }
 
@@ -196,9 +198,9 @@
     color: #FFFFFF;
     font-size: 14px;
     height: 18px;
-    line-height: 16px;
-    margin-top: 4px;
-    padding: 6px 12px;
+    line-height: 19px;
+    margin-top: 8px;
+    padding: 6px 8px;
 }
 
 .user_reboot:hover

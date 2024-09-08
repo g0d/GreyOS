@@ -38,9 +38,8 @@
 
 .top_list
 {
-    width: 295px !important;
+    width: 298px !important;
 	height: 36px;
-    margin-bottom: 2px;
 }
 
 .cat_list
@@ -269,11 +268,16 @@
 {
     float: left;
     clear: both;
-    color: #5C5C5C;
+    color: white;
     width: 280px;
-    height: 26px;
+    height: 28px;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.drawer .search_box:focus
+{
+    outline: white;
 }
 
 .drawer a

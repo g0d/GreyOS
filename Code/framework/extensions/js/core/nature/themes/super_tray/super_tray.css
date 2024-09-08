@@ -26,7 +26,7 @@
     margin-right: auto;
 }
 
-.super_tray .access
+.super_tray .access_icon
 {
     cursor: pointer;
     background: url('pix/down_arrow.png') no-repeat;
@@ -45,7 +45,7 @@
     width: 180px;
     height: 120px;
     right: 280px;
-    margin-top: 9px;
+    margin-top: 21px;
     z-index: 2147483644;
 }
 

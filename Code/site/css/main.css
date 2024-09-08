@@ -151,11 +151,26 @@ body
     margin-top: 14px;
 }
 
+#top_panel
+{
+    height: 45px;
+}
+
 #user_profile
 {
     float: right;
     clear: right;
     margin-top: 7px;
+}
+
+#search
+{
+    display: none;
+    position: relative;
+    float: right;
+    margin-right: 31px;
+    margin-top: 10px;
+    z-index: 2147483646;
 }
 
 .error
@@ -178,4 +193,9 @@ body
 {
     color: #FFFFFF;
     background: #D5D5D5;
+}
+
+::placeholder
+{
+    color: #dbdbdb;
 }
