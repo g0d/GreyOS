@@ -56,7 +56,7 @@ function boot_script()
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
-                    i_ampedstudio, i_vectorink, i_ganttio, i_quakejs, i_mariojs, i_swooop, i_webgl_preview];
+                    i_ampedstudio, i_vectorink, i_ganttio, i_warbands, i_quakejs, i_mariojs, i_swooop, i_webgl_preview];
 
         // List of services
         var svcs = [];

@@ -50,6 +50,11 @@
         "hint"      :   "iGanttIO :: 3rd-party integrated Gantt charts creator. Click me!"
     },
     {
+        "id"        :   "i_warbands",
+        "icon"      :   "app_i_warbands",
+        "hint"      :   "iWarbands :: 3rd-party integrated capture-the-flag game. Click me!"
+    },
+    {
         "id"        :   "i_quakejs",
         "icon"      :   "app_i_quakejs",
         "hint"      :   "iQuakeJS :: 3rd-party integrated shoot-em up game. Click me!"

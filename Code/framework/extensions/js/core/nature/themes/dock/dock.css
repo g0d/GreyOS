@@ -317,6 +317,21 @@
     background-image: url('pix/favorites/active/icon_games.png') !important;
 }
 
+#app_i_warbands
+{
+    background-image: url('pix/favorites/inactive/icon_games.png');
+}
+
+#app_i_warbands:hover
+{
+    background-image: url('pix/favorites/hover/icon_games.png') !important;
+}
+
+.app_i_warbands_on
+{
+    background-image: url('pix/favorites/active/icon_games.png') !important;
+}
+
 #app_i_youdj
 {
     background-image: url('pix/favorites/inactive/icon_box.png');
