@@ -144,6 +144,26 @@ function boot_script()
             // Iniatilaze loading screen
             var load_screen = new loading_screen();
 
+            // Initialize Firefox mode module
+            var firefox_browser = new firefox_mode();
+
+            function init_ui()
+            {
+                new_swarm.init('desktop', 11, 60, window.innerWidth - 26, window.innerHeight - 76);
+
+                // Show login/register windows
+                run_krator_app();
+
+                // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
+                setTimeout(function()
+                {
+                    // Play the splash screen sound
+                    new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/splash_fresh.mp3');
+
+                    load_screen.hide();
+                }, 3000);
+            }
+
             // Show the loading screen while everything is loading
             load_screen.show();
 
@@ -185,20 +205,11 @@ function boot_script()
             // Initialize the system clock
             new_tik_tok.init('clock');
 
-            // Initialize desktop module
-            new_swarm.init('desktop', 11, 60, window.innerWidth - 26, window.innerHeight - 76);
-
-            // Show login/register windows
-            run_krator_app();
-
-            // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
-            setTimeout(function()
-            {
-                // Play the splash screen sound
-                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/splash_fresh.mp3');
-
-                load_screen.hide();
-            }, 3000);
+            // Initialize login UI
+            if (firefox_browser.check())
+                setTimeout(function() { init_ui(); }, 1000);
+            else
+                init_ui();
 
             return true;
         }
@@ -269,6 +280,9 @@ function boot_script()
             // Iniatilaze loading screen
             var load_screen = new loading_screen();
 
+            // Initialize Firefox mode module
+            var firefox_browser = new firefox_mode();
+
             // Show the loading screen while everything is loading
             load_screen.show();
 
@@ -292,6 +306,38 @@ function boot_script()
             // Preload MsgBox
             var new_msgbox = new msgbox();
 
+            function init_ui()
+            {
+                new_ui_controls.init('action_icons');
+                new_dock.init('favorite_apps');
+                new_user_profile.init('user_profile');
+                new_forest.init('desktop');
+                new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
+                new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
+                new_eagle.init('desktop');
+                new_tik_tok.init('clock');
+                new_octopus.init('device_manager');
+                new_super_tray.init('services_tray');
+                new_parrot.init('audio');
+                new_xgc.init();
+
+                // Show preloaded or saved bees (apps)
+                new_swarm.bees.show();
+                new_hive.stack.bees.show();
+
+                // Load Banana (User suggestions widget)
+                //Banana();
+
+                // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
+                setTimeout(function()
+                {
+                    // Play the login sound
+                    new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login_fresh.mp3');
+
+                    load_screen.hide();
+                }, 3000);
+            }
+
             // Initialize MsgBox
             new_msgbox.init('desktop');
 
@@ -313,35 +359,11 @@ function boot_script()
                                 "max_services"  :   os_settings.get('max_services')
                             });
 
-            // Initialize the desktop UI
-            new_ui_controls.init('action_icons');
-            new_dock.init('favorite_apps');
-            new_user_profile.init('user_profile');
-            new_forest.init('desktop');
-            new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
-            new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
-            new_eagle.init('desktop');
-            new_tik_tok.init('clock');
-            new_octopus.init('device_manager');
-            new_super_tray.init('services_tray');
-            new_parrot.init('audio');
-            new_xgc.init();
-
-            // Show preloaded or saved bees (apps)
-            new_swarm.bees.show();
-            new_hive.stack.bees.show();
-
-            // Load Banana (User suggestions widget)
-            //Banana();
-
-            // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
-            setTimeout(function()
-            {
-                // Play the login sound
-                new_parrot.play('sys', '/site/themes/' + new_chameleon.get() + '/sounds/login_fresh.mp3');
-
-                load_screen.hide();
-            }, 3000);
+            // Initialize desktop UI
+            if (firefox_browser.check())
+                setTimeout(function() { init_ui(); }, 1000);
+            else
+                init_ui();
 
             return true;
         }
@@ -762,6 +784,9 @@ function boot_script()
                     setTimeout(function()
                     {
                         os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
+
+                        if (navigator.maxTouchPoints > 0)
+                            return;
 
                         os_utils.events.attach('greyos', window, 'resize', 
                         function()

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Boot Screen (Version: 1.4)
+    GreyOS - Boot Screen (Version: 1.5)
 
     File name: boot_screen.js
     Description: This file contains the Boot Screen utility.
@@ -33,6 +33,8 @@ function boot_screen()
 
     this.init = function()
     {
+        var firefox_browser = new firefox_mode();
+        /*
         if (navigator.userAgent.indexOf('Chrome') === -1)
         {
             utils_int.draw_boot_screen();
@@ -45,6 +47,9 @@ function boot_screen()
 
             return false;
         }
+        */
+        if (firefox_browser.check())
+            firefox_browser.init();
         else if (navigator.onLine === false)
         {
             utils_int.draw_boot_screen();

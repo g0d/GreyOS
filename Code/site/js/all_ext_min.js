@@ -4732,15 +4732,9 @@ function boot_screen()
  }
  this.init = function()
  {
- if (navigator.userAgent.indexOf('Chrome') === -1)
- {
- utils_int.draw_boot_screen();
- var __boot_message = utils_sys.objects.by_id('boot_screen_message');
- __boot_message.innerHTML = 'Your browser is incompatible!' +
- '<br>' +
- 'Use a Chrome-based browser to access the Meta-OS.';
- return false;
- }
+ var firefox_browser = new firefox_mode();
+ if (firefox_browser.check())
+ firefox_browser.init();
  else if (navigator.onLine === false)
  {
  utils_int.draw_boot_screen();
@@ -4866,6 +4860,31 @@ function linux_mode()
  this.check = function()
  {
  if (navigator.userAgent.indexOf('Linux') > -1)
+ return true;
+ return false;
+ };
+ this.init = function()
+ {
+ utils_int.apply_css_fix();
+ return true;
+ };
+ var utils_sys = new vulcan(),
+ utils_int = new utilities();
+}
+function firefox_mode()
+{
+ var self = this;
+ function utilities()
+ {
+ this.apply_css_fix = function()
+ {
+ utils_sys.graphics.apply_theme('/framework/extensions/js/core/firefox_mode', 'firefox');
+ return true;
+ };
+ }
+ this.check = function()
+ {
+ if (navigator.userAgent.indexOf('Chrome') === -1)
  return true;
  return false;
  };

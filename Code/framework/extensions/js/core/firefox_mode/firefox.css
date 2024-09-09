@@ -1,0 +1,16 @@
+/*
+    GreyOS - Firefox CSS
+
+    File name: firefox.css
+    Description: This file contains the GreyOS - Firefox CSS.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2024
+    Open Software License (OSL 3.0)
+*/
+
+.user_reboot
+{
+    height: 16px !important;
+    line-height: 15px !important;
+}
