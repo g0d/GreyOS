@@ -1116,15 +1116,15 @@ function hive()
                             var __this_bee_id = __tmp_bees_list[j],
                                 __this_bee = colony.get(__this_bee_id);
 
-                            self.stack.bees.remove(__this_bee, i + 1);
-
                             //honeycomb_views.list(i).bees.remove(__this_bee_id);
 
                             //__this_bee.settings.general.in_hive(false);
 
-                            swarm.settings.active_bee(__this_bee_id);
-    
                             utils_int.set_z_index(__this_bee_id);
+
+                            swarm.settings.active_bee(__this_bee_id);
+
+                            self.stack.bees.remove(__this_bee, i + 1);
                         }
                     }
 

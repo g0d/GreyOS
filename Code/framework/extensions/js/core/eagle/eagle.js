@@ -107,6 +107,8 @@ function eagle()
 
             __eagle.style.display = 'none';
 
+            picked_window = 0;
+            scroll_multiplier = 1;
             is_visible = false;
 
             return true;
@@ -226,13 +228,34 @@ function eagle()
 
         this.init_trace_keys = function()
         {
-            var __handler = null;
+            var __handler = null,
+                __boxify = utils_sys.objects.by_id('boxify_all');
 
             __handler = function(event) { me.key_down_tracer(event); };
             morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
 
             __handler = function(event) { me.key_up_tracer(event); };
             morpheus.run(eagle_id, 'key', 'keyup', __handler, document);
+
+            __handler = function(event_object)
+            {
+                trace_keys.trigger_set = true;
+
+                if (is_visible === false)
+                {
+                    me.show_eagle();
+                    me.draw_windows();
+                }
+
+                me.switch_windows();
+
+                event_object.preventDefault();
+            };
+            morpheus.run(eagle_id, 'mouse', 'click', __handler, __boxify);
+
+            __handler = function() { me.hide_eagle(); };
+            morpheus.run(eagle_id, 'mouse', 'mouseout', __handler, __boxify);
+            morpheus.run(eagle_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
 
             return true;
         };

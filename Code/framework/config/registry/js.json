@@ -40,6 +40,7 @@
     "dev_box"                   :       "core",
     "app_box"                   :       "core",
     "svc_box"                   :       "core",
+    "event_proxy"               :       "core",
     "colony"                    :       "core",
     "roost"                     :       "core",
     "xenon"                     :       "core",

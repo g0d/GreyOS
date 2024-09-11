@@ -237,6 +237,9 @@ function user_profile()
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
             morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
 
+            //morpheus.store(super_tray_id + '_user_profile_call', 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
+            //morpheus.store(super_tray_id + '_user_profile_call', 'touch', 'touchmove', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
+
             __handler = function(event) {  hide_profile_area_on_key(event); };
             morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
 
@@ -391,6 +394,7 @@ function user_profile()
         self.settings.container(container_id);
 
         user_profile_id = self.settings.id();
+        super_tray_id = super_tray.id();
 
         nature.themes.store('user_profile');
         nature.apply('new');
@@ -436,6 +440,7 @@ function user_profile()
         super_tray = null,
         chameleon = null,
         nature = null,
+        super_tray_id = null,
         utils_sys = new vulcan(),
         random = new pythia(),
         key_control = new key_manager(),

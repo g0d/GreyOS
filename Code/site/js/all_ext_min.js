@@ -6000,6 +6000,59 @@ function svc_box()
  svcs = new svc_box_model(),
  utils_int = new utilities();
 }
+function event_proxy()
+{
+ var self = this;
+ this.execute = function(event_id, context, event)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(event_id) ||
+ utils_sys.validation.alpha.is_symbol(context) ||
+ utils_sys.validation.alpha.is_symbol(event))
+ return false;
+ if (any_model)
+ {
+ var __result = null;
+ __result = morpheus.execute(event_id, context, event);
+ if (!__result)
+ {
+ if (backtrace === true)
+ frog('MODEL PROXY', 'Model :: Failed execution', model_id);
+ return false;
+ }
+ if (backtrace === true)
+ frog('MODEL PROXY', 'Model :: Successful execution', model_id);
+ return __result;
+ }
+ if (backtrace === true)
+ frog('MODEL PROXY', 'Model :: Failed initialization', model_id);
+ return false;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ morpheus = matrix.get('morpheus');
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ matrix = null,
+ morpheus = null,
+ utils_sys = new vulcan();
+}
 function colony()
 {
  var self = this;
@@ -8584,9 +8637,9 @@ function hive()
  {
  var __this_bee_id = __tmp_bees_list[j],
  __this_bee = colony.get(__this_bee_id);
- self.stack.bees.remove(__this_bee, i + 1);
- swarm.settings.active_bee(__this_bee_id);
  utils_int.set_z_index(__this_bee_id);
+ swarm.settings.active_bee(__this_bee_id);
+ self.stack.bees.remove(__this_bee, i + 1);
  }
  }
  return true;
@@ -9376,8 +9429,8 @@ function ui_controls()
  if (__controls_div === null)
  return false;
  __controls_div.innerHTML = '<div id="placement" class="actions">' +
- ' <div id="boxify_all" class="placement_icons" title="Boxify/unboxify all windows"></div>' +
- ' <div id="stack_all" class="placement_icons" title="Stack/unstack all windows"></div>' +
+ ' <div id="boxify_all" class="placement_icons" title="Switch among open apps"></div>' +
+ ' <div id="stack_all" class="placement_icons" title="Stack/unstack all apps"></div>' +
  '</div>';
  return true;
  };
@@ -9414,6 +9467,13 @@ function ui_controls()
  var __handler = null;
  __handler = function() { self.placement.boxify(); };
  morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('boxify_all'));
+ morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id('boxify_all'));
+ __handler = function()
+ {
+ me.make_inactive('boxify_all');
+ config.is_boxified = false;
+ };
+ morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id('boxify_all'));
  __handler = function() { self.placement.stack(); };
  morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('stack_all'));
  return true;
@@ -9452,17 +9512,10 @@ function ui_controls()
  {
  if (is_init === false)
  return false;
- if (colony.list().length === 0)
- return false;
  if (config.is_boxified === false)
  {
- utils_int.make_active('boxify_all', 'placement');
+ utils_int.make_active('boxify_all');
  config.is_boxified = true;
- }
- else
- {
- utils_int.make_inactive('boxify_all', 'placement');
- config.is_boxified = false;
  }
  return true;
  };
@@ -9478,7 +9531,7 @@ function ui_controls()
  return false;
  for (var i = 0; i < __bees_length; i++)
  hive.stack.bees.insert(__bees[i], null);
- utils_int.make_active('stack_all', 'placement');
+ utils_int.make_active('stack_all');
  config.is_stack = true;
  }
  else
@@ -9486,7 +9539,7 @@ function ui_controls()
  if (colony.list().length === 0)
  return false;
  hive.stack.bees.expel(null);
- utils_int.make_inactive('stack_all', 'placement');
+ utils_int.make_inactive('stack_all');
  config.is_stack = false;
  }
  return true;
@@ -9526,6 +9579,7 @@ function ui_controls()
  colony = cosmos.hub.access('colony');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
+ eagle = matrix.get('eagle');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
  return true;
@@ -9537,6 +9591,7 @@ function ui_controls()
  colony = null,
  swarm = null,
  hive = null,
+ eagle = null,
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),
@@ -10071,6 +10126,7 @@ function user_profile()
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_logout'));
  __handler = function() { me.hide_profile_area(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+ morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
  __handler = function(event) { hide_profile_area_on_key(event); };
  morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
  return true;
@@ -10182,6 +10238,7 @@ function user_profile()
  self.settings.id('user_profile_' + random.generate());
  self.settings.container(container_id);
  user_profile_id = self.settings.id();
+ super_tray_id = super_tray.id();
  nature.themes.store('user_profile');
  nature.apply('new');
  utils_int.draw_user_profile();
@@ -10218,6 +10275,7 @@ function user_profile()
  super_tray = null,
  chameleon = null,
  nature = null,
+ super_tray_id = null,
  utils_sys = new vulcan(),
  random = new pythia(),
  key_control = new key_manager(),
@@ -10424,6 +10482,8 @@ function eagle()
  {
  var __eagle = utils_sys.objects.by_id(eagle_id);
  __eagle.style.display = 'none';
+ picked_window = 0;
+ scroll_multiplier = 1;
  is_visible = false;
  return true;
  };
@@ -10506,11 +10566,27 @@ function eagle()
  };
  this.init_trace_keys = function()
  {
- var __handler = null;
+ var __handler = null,
+ __boxify = utils_sys.objects.by_id('boxify_all');
  __handler = function(event) { me.key_down_tracer(event); };
  morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
  __handler = function(event) { me.key_up_tracer(event); };
  morpheus.run(eagle_id, 'key', 'keyup', __handler, document);
+ __handler = function(event_object)
+ {
+ trace_keys.trigger_set = true;
+ if (is_visible === false)
+ {
+ me.show_eagle();
+ me.draw_windows();
+ }
+ me.switch_windows();
+ event_object.preventDefault();
+ };
+ morpheus.run(eagle_id, 'mouse', 'click', __handler, __boxify);
+ __handler = function() { me.hide_eagle(); };
+ morpheus.run(eagle_id, 'mouse', 'mouseout', __handler, __boxify);
+ morpheus.run(eagle_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
  return true;
  };
  }
@@ -13135,6 +13211,7 @@ function super_tray()
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
  __handler = function() { me.hide_tray_area(); };
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+ morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
  __handler = function(event) { hide_tray_area_on_key(event); };
  morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
  return true;
@@ -13338,6 +13415,12 @@ function super_tray()
  return false;
  return utils_int.toggle_tray_area();
  };
+ this.id = function()
+ {
+ if (is_init === false)
+ return false;
+ return super_tray_id;
+ };
  this.init = function(container_id)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
@@ -13372,7 +13455,6 @@ function super_tray()
  svc_box = null,
  roost = null,
  morpheus = null,
- user_profile = null,
  nature = null,
  utils_sys = new vulcan(),
  random = new pythia(),
@@ -18597,12 +18679,18 @@ function coyote()
  __browser_frame_height = (coyote_bee.status.gui.size.height() - 155);
  browser_frame.style.height = __browser_frame_height + 'px';
  };
+ this.mnanage_fullscreen_events = function(choice)
+ {
+ var __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen');
+ morpheus.delete(config.id, 'click', __full_screen);
+ __handler = function(event) { self.browser_controls.full_screen(event, choice); };
+ morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
+ };
  this.attach_events = function(mode)
  {
  var __refresh = utils_sys.objects.by_id(coyote_bee_id + '_refresh'),
  __back = utils_sys.objects.by_id(coyote_bee_id + '_back'),
  __forward = utils_sys.objects.by_id(coyote_bee_id + '_forward'),
- __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen'),
  __tab_close = utils_sys.objects.by_id(coyote_bee_id + '_tab_x'),
  __handler = null;
  browser_address_box = utils_sys.objects.by_id(coyote_bee_id + '_address_box');
@@ -18621,17 +18709,9 @@ function coyote()
  __handler = function(event) { self.browser_controls.tabs.destroy(event); };
  morpheus.run(config.id, 'mouse', 'click', __handler, __tab_close);
  if (mode === 'normal_to_fullscreen')
- {
- morpheus.delete('click', config.id, __full_screen);
- __handler = function(event) { self.browser_controls.full_screen(event, 1); };
- morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
- }
+ me.mnanage_fullscreen_events(1);
  else
- {
- morpheus.delete('click', config.id, __full_screen);
- __handler = function(event) { self.browser_controls.full_screen(event, 2); };
- morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
- }
+ me.mnanage_fullscreen_events(2);
  return true;
  };
  this.init_hyperbeam = function(url, callback)
@@ -18790,7 +18870,9 @@ function coyote()
  return false;
  var __coyote_content = utils_sys.objects.by_id(coyote_bee_id + '_data'),
  __page_info = utils_sys.objects.by_id(coyote_bee_id + '_page_info'),
- __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen');
+ __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen'),
+ __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
+ __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
  if (mode === 1)
  {
  __page_info.style.left = '87px';
@@ -18805,6 +18887,8 @@ function coyote()
  browser_frame.style.margin = 'auto';
  browser_frame.style.width = '100%';
  browser_frame.style.height = (window.innerHeight - 63) + 'px';
+ utils_int.mnanage_fullscreen_events(2);
+ hb_manager.resize(1920, 1080);
  config.is_full_screen = true;
  }
  else
@@ -18824,24 +18908,10 @@ function coyote()
  browser_frame.style.height = (coyote_bee.status.gui.size.height() - 63) + 'px';
  else
  browser_frame.style.height = (coyote_bee.status.gui.size.height() - 155) + 'px';
+ utils_int.mnanage_fullscreen_events(1);
+ hb_manager.resize(__browser_frame_width, __browser_frame_height);
  config.is_full_screen = false;
  }
- hb_manager.destroy();
- utils_int.init_hyperbeam(config.pages[config.index - 1], () =>
- {
- if (mode === 1)
- {
- utils_int.attach_events('fullscreen_to_normal');
- hb_manager.resize(1920, 1080);
- }
- else
- {
- utils_int.attach_events('normal_to_fullscreen');
- var __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
- __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
- hb_manager.resize(1920, 1080);
- }
- });
  return true;
  };
  this.settings = function()

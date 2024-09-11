@@ -1,11 +1,11 @@
 /*
-    GreyOS - UI Controls (Version: 1.8)
+    GreyOS - UI Controls (Version: 2.0)
 
     File name: ui_controls.js
     Description: This file contains the UI Controls module.
 
     Coded by John Inglessis (negle) and George Delaportas (G0D)
-    Copyright © 2013 - 2023
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -41,8 +41,8 @@ function ui_controls()
                 return false;
 
             __controls_div.innerHTML = '<div id="placement" class="actions">' + 
-                                       '    <div id="boxify_all" class="placement_icons" title="Boxify/unboxify all windows"></div>' + 
-                                       '    <div id="stack_all" class="placement_icons" title="Stack/unstack all windows"></div>' + 
+                                       '    <div id="boxify_all" class="placement_icons" title="Switch among open apps"></div>' + 
+                                       '    <div id="stack_all" class="placement_icons" title="Stack/unstack all apps"></div>' + 
                                        '</div>';
 
             return true;
@@ -90,6 +90,15 @@ function ui_controls()
 
             __handler = function() { self.placement.boxify(); };
             morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('boxify_all'));
+            morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id('boxify_all'));
+
+            __handler = function()
+            {
+                me.make_inactive('boxify_all');
+
+                config.is_boxified = false;
+            };
+            morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id('boxify_all'));
 
             __handler = function() { self.placement.stack(); };
             morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('stack_all'));
@@ -143,20 +152,11 @@ function ui_controls()
             if (is_init === false)
                 return false;
 
-            if (colony.list().length === 0)
-                return false;
-
             if (config.is_boxified === false)
             {
-                utils_int.make_active('boxify_all', 'placement');
+                utils_int.make_active('boxify_all');
 
                 config.is_boxified = true;
-            }
-            else
-            {
-                utils_int.make_inactive('boxify_all', 'placement');
-
-                config.is_boxified = false;
             }
 
             return true;
@@ -178,7 +178,7 @@ function ui_controls()
                 for (var i = 0; i < __bees_length; i++)
                     hive.stack.bees.insert(__bees[i], null);
 
-                utils_int.make_active('stack_all', 'placement');
+                utils_int.make_active('stack_all');
 
                 config.is_stack = true;
             }
@@ -189,7 +189,7 @@ function ui_controls()
 
                 hive.stack.bees.expel(null);
 
-                utils_int.make_inactive('stack_all', 'placement');
+                utils_int.make_inactive('stack_all');
 
                 config.is_stack = false;
             }
@@ -246,6 +246,7 @@ function ui_controls()
 
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
+        eagle = matrix.get('eagle');
         morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
@@ -259,6 +260,7 @@ function ui_controls()
         colony = null,
         swarm = null,
         hive = null,
+        eagle = null,
         morpheus = null,
         nature = null,
         utils_sys = new vulcan(),

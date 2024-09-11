@@ -147,6 +147,12 @@ function super_tray()
 
             is_super_tray_visible = true;
 
+            //morpheus.execute(super_tray_id + '_user_profile_call', 'mouse', 'click');
+            //morpheus.execute(super_tray_id + '_user_profile_call', 'touch', 'touchstart');
+
+            //morpheus.delete(super_tray_id + '_user_profile_call', 'click', utils_sys.objects.by_id(super_tray_id + '_arrow'));
+            //morpheus.delete(super_tray_id + '_user_profile_call', 'touchmove', utils_sys.objects.by_id(super_tray_id + '_arrow'));
+
             return true;
         };
 
@@ -414,6 +420,14 @@ function super_tray()
             return false;
 
         return utils_int.toggle_tray_area();
+    };
+
+    this.id = function()
+    {
+        if (is_init === false)
+            return false;
+
+        return super_tray_id;
     };
 
     this.init = function(container_id)

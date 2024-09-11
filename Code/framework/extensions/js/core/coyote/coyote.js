@@ -1,5 +1,5 @@
 /*
-    GreyOS - Coyote (Version: 3.6)
+    GreyOS - Coyote (Version: 3.7)
 
     File name: coyote.js
     Description: This file contains the Coyote - Browser application.
@@ -232,12 +232,21 @@ function coyote()
             browser_frame.style.height = __browser_frame_height + 'px';
         };
 
+        this.mnanage_fullscreen_events = function(choice)
+        {
+            var __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen');
+
+            morpheus.delete(config.id, 'click', __full_screen);
+
+            __handler = function(event) { self.browser_controls.full_screen(event, choice); };
+            morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
+        };
+
         this.attach_events = function(mode)
         {
             var __refresh = utils_sys.objects.by_id(coyote_bee_id + '_refresh'),
                 __back = utils_sys.objects.by_id(coyote_bee_id + '_back'),
                 __forward = utils_sys.objects.by_id(coyote_bee_id + '_forward'),
-                __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen'),
                 __tab_close = utils_sys.objects.by_id(coyote_bee_id + '_tab_x'),
                 __handler = null;
 
@@ -264,19 +273,9 @@ function coyote()
             morpheus.run(config.id, 'mouse', 'click', __handler, __tab_close);
 
             if (mode === 'normal_to_fullscreen')
-            {
-                morpheus.delete('click', config.id, __full_screen);
-
-                __handler = function(event) { self.browser_controls.full_screen(event, 1); };
-                morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
-            }
+                me.mnanage_fullscreen_events(1);
             else
-            {
-                morpheus.delete('click', config.id, __full_screen);
-
-                __handler = function(event) { self.browser_controls.full_screen(event, 2); };
-                morpheus.run(config.id, 'mouse', 'click', __handler, __full_screen);
-            }
+                me.mnanage_fullscreen_events(2);
 
             return true;
         };
@@ -499,7 +498,9 @@ function coyote()
 
             var __coyote_content = utils_sys.objects.by_id(coyote_bee_id + '_data'),
                 __page_info = utils_sys.objects.by_id(coyote_bee_id + '_page_info'),
-                __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen');
+                __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen'),
+                __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
+                __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
 
             if (mode === 1)
             {
@@ -518,6 +519,10 @@ function coyote()
                 browser_frame.style.margin = 'auto';
                 browser_frame.style.width = '100%';
                 browser_frame.style.height = (window.innerHeight - 63) + 'px';
+
+                utils_int.mnanage_fullscreen_events(2);
+
+                hb_manager.resize(1920, 1080);
 
                 config.is_full_screen = true;
             }
@@ -543,30 +548,12 @@ function coyote()
                 else
                     browser_frame.style.height = (coyote_bee.status.gui.size.height() - 155) + 'px';
 
+                utils_int.mnanage_fullscreen_events(1);
+
+                hb_manager.resize(__browser_frame_width, __browser_frame_height);
+
                 config.is_full_screen = false;
             }
-
-            hb_manager.destroy();
-
-            utils_int.init_hyperbeam(config.pages[config.index - 1], () => 
-            {
-                if (mode === 1)
-                {
-                    utils_int.attach_events('fullscreen_to_normal');
-
-                    hb_manager.resize(1920, 1080);
-                }
-                else
-                {
-                    utils_int.attach_events('normal_to_fullscreen');
-
-                    var __browser_frame_width = utils_sys.graphics.pixels_value(browser_frame.style.width),
-                        __browser_frame_height = utils_sys.graphics.pixels_value(browser_frame.style.height);
-
-                    //hb_manager.resize(__browser_frame_width, __browser_frame_height);
-                    hb_manager.resize(1920, 1080);
-                }
-            });
 
             return true;
         };    
