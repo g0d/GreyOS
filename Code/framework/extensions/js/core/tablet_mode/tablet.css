@@ -16,7 +16,17 @@
 
 #favorite_apps
 {
-    width: 400px !important;
+    width: 445px !important;
+}
+
+.super_tray, .octopus, .parrot
+{
+    margin-right: 15px !important;
+}
+
+#user_profile
+{
+    margin-left: 15px !important;
 }
 
 .user_reboot

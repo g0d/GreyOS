@@ -235,6 +235,7 @@ function user_profile()
 
             __handler = function() {  me.hide_profile_area(); };
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+            morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
 
             __handler = function(event) {  hide_profile_area_on_key(event); };
             morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);

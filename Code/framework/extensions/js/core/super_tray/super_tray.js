@@ -1,5 +1,5 @@
 /*
-    GreyOS - Super Tray (Version: 1.8)
+    GreyOS - Super Tray (Version: 1.9)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area module.
@@ -131,6 +131,7 @@ function super_tray()
 
             __handler = function() {  me.hide_tray_area(); };
             morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
+            morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
 
             __handler = function(event) {  hide_tray_area_on_key(event); };
             morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
@@ -146,8 +147,6 @@ function super_tray()
 
             is_super_tray_visible = true;
 
-            //user_profile.hide();
-
             return true;
         };
 
@@ -158,8 +157,6 @@ function super_tray()
             __service_icons_tray.style.display = 'none';
 
             is_super_tray_visible = false;
-
-            //user_profile.hide();
 
             return true;
         };
@@ -452,7 +449,6 @@ function super_tray()
         roost = cosmos.hub.access('roost');
 
         morpheus = matrix.get('morpheus');
-        //user_profile = matrix.get('user_profile');
         nature = matrix.get('nature');
 
         return true;
@@ -466,7 +462,6 @@ function super_tray()
         svc_box = null,
         roost = null,
         morpheus = null,
-        user_profile = null,
         nature = null,
         utils_sys = new vulcan(),
         random = new pythia(),
