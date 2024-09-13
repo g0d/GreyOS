@@ -5,7 +5,7 @@
     Description: This file contains the Banana - Suggestions manager widget.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -26,24 +26,24 @@ function Banana()
                 data = 'gate=banana&suggestion=' + utils.objects.by_id('banana_suggestion').value;
 
             ajax_factory('post', data, function(result)
-                                    {
-                                            utils.objects.by_id('banana_suggestion').value = '';
+            {
+                    utils.objects.by_id('banana_suggestion').value = '';
 
-                                            if (result === '1')
-                                                utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
-                                            else
-                                                utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
+                    if (result === '1')
+                        utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
+                    else
+                        utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
 
-                                            setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
-                                    },
-                                    function()
-                                    {
-                                            // Nothing...
-                                    },
-                                    function()
-                                    {
-                                            // Nothing...
-                                    });
+                    setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
+            },
+            function()
+            {
+                    // Nothing...
+            },
+            function()
+            {
+                    // Nothing...
+            });
 
             return true;
         }
@@ -108,7 +108,6 @@ function Banana()
                         }
                     }
                     utils.objects.by_id('toggle').addEventListener('click', function() { toggle(); }, false);
-
                     utils.objects.by_id('banana_send').addEventListener('click', function() { banana_post(); }, false);
                }, 1500);
 

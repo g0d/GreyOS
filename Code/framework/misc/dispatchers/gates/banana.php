@@ -14,6 +14,10 @@
     if (!defined('micro_mvc'))
         exit();
 
+    // Load extensions
+	UTIL::Load_Extension('arkangel', 'php');
+	UTIL::Load_Extension('woody', 'php');
+
     if (!empty($_POST['suggestion']))
     {
         $user_profile = ARKANGEL::Fetch_My_Profile();
