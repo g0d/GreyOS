@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 4.0)
+    GreyOS - Bootstrap facility (Version: 4.1)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -52,7 +52,7 @@ function boot_script()
         // List of system components
         var sys_components = [xenon, morpheus, event_proxy, x_runner, panda, xgc, owl, uniplex, teal_fs, 
                               octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
-                              user_profile, tik_tok, eagle, nature, chameleon];
+                              user_profile, tik_tok, eagle, search, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
@@ -169,10 +169,10 @@ function boot_script()
 
             // Load basic components and UI infrastructure
             var new_xenon = matrix_container.get('xenon');
-            var new_parrot = matrix_container.get('parrot');
-            var new_tik_tok = matrix_container.get('tik_tok');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
+            var new_parrot = matrix_container.get('parrot');
+            var new_tik_tok = matrix_container.get('tik_tok');
             var new_swarm = matrix_container.get('swarm');
 
             // Preload MsgBox
@@ -249,20 +249,21 @@ function boot_script()
             matrix_container.get('ui_controls').init('action_icons');
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
+            matrix_container.get('search').init();
             matrix_container.get('forest').init('desktop');
             matrix_container.get('swarm').reset('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
             matrix_container.get('hive').init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             matrix_container.get('eagle').init('desktop');
-            matrix_container.get('octopus').init('device_manager');
             matrix_container.get('super_tray').init('services_tray');
+            matrix_container.get('octopus').init('device_manager');
             matrix_container.get('parrot').load('audio');
-            matrix_container.get('xgc').init();
+            matrix_container.get('xgc').init(true);
 
             // Show preloaded or saved bees (apps)
             matrix_container.get('swarm').bees.show();
             matrix_container.get('hive').stack.bees.show();
 
-            // Load Banana (User suggestions widget)
+            // Banana (User suggestions widget)
             //Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
@@ -288,20 +289,21 @@ function boot_script()
 
             // Load all components and full UI infrastructure
             var new_xenon = matrix_container.get('xenon');
-            var new_octopus = matrix_container.get('octopus');
-            var new_super_tray = matrix_container.get('super_tray');
-            var new_parrot = matrix_container.get('parrot');
-            var new_xgc = matrix_container.get('xgc');
             var new_chameleon = matrix_container.get('chameleon');
             var new_nature = matrix_container.get('nature');
             var new_ui_controls = matrix_container.get('ui_controls');
+            var new_search = matrix_container.get('search');
             var new_dock = matrix_container.get('dock');
             var new_user_profile = matrix_container.get('user_profile');
             var new_forest = matrix_container.get('forest');
             var new_swarm = matrix_container.get('swarm');
             var new_hive = matrix_container.get('hive');
             var new_eagle = matrix_container.get('eagle');
+            var new_super_tray = matrix_container.get('super_tray');
+            var new_octopus = matrix_container.get('octopus');
+            var new_parrot = matrix_container.get('parrot');
             var new_tik_tok = matrix_container.get('tik_tok');
+            var new_xgc = matrix_container.get('xgc');
 
             // Preload MsgBox
             var new_msgbox = new msgbox();
@@ -311,21 +313,22 @@ function boot_script()
                 new_ui_controls.init('action_icons');
                 new_dock.init('favorite_apps');
                 new_user_profile.init('user_profile');
+                new_search.init();
                 new_forest.init('desktop');
                 new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
                 new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
                 new_eagle.init('desktop');
-                new_tik_tok.init('clock');
-                new_octopus.init('device_manager');
                 new_super_tray.init('services_tray');
+                new_octopus.init('device_manager');
                 new_parrot.init('audio');
-                new_xgc.init();
+                new_tik_tok.init('clock');
+                new_xgc.init(true);
 
                 // Show preloaded or saved bees (apps)
                 new_swarm.bees.show();
                 new_hive.stack.bees.show();
 
-                // Load Banana (User suggestions widget)
+                // Banana (User suggestions widget)
                 //Banana();
 
                 // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
@@ -517,7 +520,7 @@ function boot_script()
         // List of system components
         var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, teal_fs, 
                               octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
-                              user_profile, tik_tok, eagle, nature, chameleon];
+                              user_profile, tik_tok, eagle, search, nature, chameleon];
 
         // List of applications
         var apps = [trinity, krator, coyote, radio_dude, cloud_edit, i_bassoon, i_youdj, i_audiomass, i_soundtrap, 
@@ -600,20 +603,21 @@ function boot_script()
 
             // Load all components and full UI infrastructure
             var new_xenon = matrix_container.get('xenon');
+            var new_chameleon = matrix_container.get('chameleon');
+            var new_nature = matrix_container.get('nature');
             var new_ui_controls = matrix_container.get('ui_controls');
             var new_dock = matrix_container.get('dock');
             var new_user_profile = matrix_container.get('user_profile');
+            var new_search = matrix_container.get('search');
             var new_forest = matrix_container.get('forest');
             var new_swarm = matrix_container.get('swarm');
             var new_hive = matrix_container.get('hive');
             var new_eagle = matrix_container.get('eagle');
-            var new_tik_tok = matrix_container.get('tik_tok');
-            var new_octopus = matrix_container.get('octopus');
             var new_super_tray = matrix_container.get('super_tray');
+            var new_octopus = matrix_container.get('octopus');
             var new_parrot = matrix_container.get('parrot');
+            var new_tik_tok = matrix_container.get('tik_tok');
             var new_xgc = matrix_container.get('xgc');
-            var new_chameleon = matrix_container.get('chameleon');
-            var new_nature = matrix_container.get('nature');
 
             // Preload MsgBox
             var new_msgbox = new msgbox();
@@ -643,21 +647,22 @@ function boot_script()
             new_ui_controls.init('action_icons');
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
+            new_search.init();
             //new_forest.init('desktop');
             new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
             //new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
             new_eagle.init('desktop');
-            new_tik_tok.init('clock');
-            new_octopus.init('device_manager');
             new_super_tray.init('services_tray');
+            new_octopus.init('device_manager');
             new_parrot.init('audio');
+            new_tik_tok.init('clock');
             new_xgc.init(true);
 
             // Show preloaded or saved bees (apps)
             new_swarm.bees.show();
             new_hive.stack.bees.show();
 
-            // Load Banana (User suggestions widget)
+            // Banana (User suggestions widget)
             //Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)

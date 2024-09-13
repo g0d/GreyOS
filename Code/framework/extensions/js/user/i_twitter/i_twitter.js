@@ -45,7 +45,7 @@ function i_twitter()
                     '       <li><a id="favorites" title="Favorites" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/favorites.png"></a></li>' +
                     '       <li><a id="account_settings" title="Settings" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/settings.png"></a></li>' +
                     '       <li><a id="direct_messages" title="Messages" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/messages.png"></a></li>' +
-                    '       <li><a id="search" title="Search" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/search.png"></a></li>' +
+                    '       <li><a id="user_search" title="Search" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/search.png"></a></li>' +
                     '       <li class="logout"><a id="logout" title="Logout" href="#"><img src="framework/extensions/js/i_twitter/themes/pix/logout.png"></a></li>' +
                     '       <li id="twitter_menu_separator_li"><div id="twitter_menu_separator_div"></div></li>' + 
                     '   </ul>' +

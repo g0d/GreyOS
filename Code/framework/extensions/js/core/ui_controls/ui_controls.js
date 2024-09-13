@@ -42,7 +42,7 @@ function ui_controls()
 
             __controls_div.innerHTML = '<div id="placement" class="actions">' + 
                                        '    <div id="boxify_all" class="placement_icons" title="Switch among open apps"></div>' + 
-                                       '    <div id="stack_all" class="placement_icons" title="Stack/unstack all apps"></div>' + 
+                                       '    <div id="stack_all" class="placement_icons" title="Stack / unstack all apps"></div>' + 
                                        '</div>';
 
             return true;

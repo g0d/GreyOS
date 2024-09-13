@@ -54,6 +54,7 @@
     "ui_controls"               :       "core",
     "dock"                      :       "core",
     "user_profile"              :       "core",
+    "search"                    :       "core",
     "chameleon"                 :       "core",
     "nature"                    :       "core",
     "eagle"                     :       "core",

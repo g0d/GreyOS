@@ -9430,7 +9430,7 @@ function ui_controls()
  return false;
  __controls_div.innerHTML = '<div id="placement" class="actions">' +
  ' <div id="boxify_all" class="placement_icons" title="Switch among open apps"></div>' +
- ' <div id="stack_all" class="placement_icons" title="Stack/unstack all apps"></div>' +
+ ' <div id="stack_all" class="placement_icons" title="Stack / unstack all apps"></div>' +
  '</div>';
  return true;
  };
@@ -10140,6 +10140,7 @@ function user_profile()
  __my_profile_label.classList.add('user_profile_active');
  is_profile_area_visible = true;
  super_tray.hide();
+ search.hide();
  return true;
  };
  this.hide_profile_area = function()
@@ -10256,6 +10257,7 @@ function user_profile()
  hive = matrix.get('hive');
  morpheus = matrix.get('morpheus');
  super_tray = matrix.get('super_tray');
+ search = matrix.get('search');
  parrot = matrix.get('parrot');
  chameleon = matrix.get('chameleon');
  nature = matrix.get('nature');
@@ -10271,6 +10273,7 @@ function user_profile()
  xenon = null,
  swarm = null,
  hive = null,
+ search = null,
  morpheus = null,
  super_tray = null,
  chameleon = null,
@@ -10283,6 +10286,112 @@ function user_profile()
  user_profile_data = new user_profile_model(),
  utils_int = new utilities();
  this.settings = new settings();
+}
+function search()
+{
+ var self = this;
+ function utilities()
+ {
+ var me = this;
+ function key_down_tracer(event_object)
+ {
+ key_control.scan(event_object);
+ var __key_code = key_control.get();
+ if (__key_code === 114)
+ {
+ if (search_on === true)
+ return false;
+ self.toggle();
+ search_on = true;
+ }
+ return true;
+ }
+ function key_up_tracer(event_object)
+ {
+ key_control.scan(event_object);
+ var __key_code = key_control.get();
+ if (__key_code !== 114)
+ return false;
+ search_on = false;
+ return true;
+ }
+ this.attach_events = function()
+ {
+ var __handler = null;
+ __handler = function(event) { key_down_tracer(event); };
+ morpheus.run('search', 'key', 'keydown', __handler, document);
+ __handler = function(event) { key_up_tracer(event); };
+ morpheus.run('search', 'key', 'keyup', __handler, document);
+ return true;
+ };
+ this.draw = function()
+ {
+ return true;
+ };
+ this.load_ui = function()
+ {
+ nature.themes.store('search');
+ nature.apply('new');
+ me.draw();
+ me.attach_events();
+ };
+ }
+ this.show = function()
+ {
+ if (is_init === false)
+ return false;
+ utils_sys.objects.by_id('search').style.display = 'block';
+ utils_sys.objects.by_id('eureka_search_box').focus();
+ is_search_visible = true;
+ return true;
+ };
+ this.hide = function()
+ {
+ if (is_init === false)
+ return false;
+ utils_sys.objects.by_id('search').style.display = 'none';
+ is_search_visible = false;
+ return true;
+ };
+ this.toggle = function()
+ {
+ if (is_init === false)
+ return false;
+ if (is_search_visible)
+ self.hide();
+ else
+ self.show();
+ return true;
+ };
+ this.init = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (is_init === true)
+ return false;
+ is_init = true;
+ return utils_int.load_ui();
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ morpheus = matrix.get('morpheus');
+ nature = matrix.get('nature');
+ return true;
+ };
+ var is_init = false,
+ search_on = false,
+ is_search_visible = false,
+ cosmos = null,
+ matrix = null,
+ morpheus = null,
+ nature = null,
+ utils_sys = new vulcan(),
+ key_control = new key_manager(),
+ utils_int = new utilities();
 }
 function chameleon()
 {
@@ -13221,6 +13330,7 @@ function super_tray()
  var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
  __service_icons_tray.style.display = 'block';
  is_super_tray_visible = true;
+ search.hide();
  return true;
  };
  this.hide_tray_area = function()
@@ -13444,6 +13554,7 @@ function super_tray()
  svc_box = cosmos.hub.access('svc_box');
  roost = cosmos.hub.access('roost');
  morpheus = matrix.get('morpheus');
+ search = matrix.get('search');
  nature = matrix.get('nature');
  return true;
  };
@@ -13454,6 +13565,7 @@ function super_tray()
  matrix = null,
  svc_box = null,
  roost = null,
+ search = null,
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),

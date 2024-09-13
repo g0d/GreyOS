@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 2.6)
+    GreyOS - User Profile (Version: 2.7)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -258,6 +258,7 @@ function user_profile()
             is_profile_area_visible = true;
 
             super_tray.hide();
+            search.hide();
 
             return true;
         };
@@ -419,6 +420,7 @@ function user_profile()
         hive = matrix.get('hive');
         morpheus = matrix.get('morpheus');
         super_tray = matrix.get('super_tray');
+        search = matrix.get('search');
         parrot = matrix.get('parrot');
         chameleon = matrix.get('chameleon');
         nature = matrix.get('nature');
@@ -436,6 +438,7 @@ function user_profile()
         xenon = null,
         swarm = null,
         hive = null,
+        search = null,
         morpheus = null,
         super_tray = null,
         chameleon = null,
