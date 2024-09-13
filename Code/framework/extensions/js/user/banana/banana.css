@@ -5,17 +5,17 @@
     Description: This file contains the Banana theme CSS.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */
 
 #banana
 {
     position: absolute;
-    right: -205px;
+    left: calc(100vw - 15px);
     top: 40%;
     color: #FFF;
-    background: #41314D;
+    background: #ffffff30;
     text-align: center;
     width: 220px;
     height: 200px;
@@ -32,13 +32,13 @@
     height: 100%;
     cursor: pointer;
     color: #000000;
-    background-color: #3cff59;
+    background-color: #3cff59cc;
     border-radius: 12px 0px 0px 12px;
 }
 
 .banana_trigger:hover
 {
-    background-color: #4fffdb;
+    background-color: #4fffdbcc;
 }
 
 .banana_body
@@ -63,8 +63,14 @@
     width: 180px;
     height: 100px;
     resize: none;
+    background-color: #ffffffcc;
     margin-bottom: 5px;
     border-radius: 6px;
+}
+
+#banana_suggestion::placeholder
+{
+    color: rgb(116, 116, 116);
 }
 
 #banana_send
@@ -72,7 +78,13 @@
     width: 100px;
     height: 24px;
     cursor: pointer;
+    background-color: #cfcfcfcc;
     border-radius: 6px;
+}
+
+#banana_send:hover
+{
+    background-color: #dfdfdfcc;
 }
 
 #banana_info

@@ -264,7 +264,7 @@ function boot_script()
             matrix_container.get('hive').stack.bees.show();
 
             // Banana (User suggestions widget)
-            //Banana();
+            Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()
@@ -329,7 +329,7 @@ function boot_script()
                 new_hive.stack.bees.show();
 
                 // Banana (User suggestions widget)
-                //Banana();
+                Banana();
 
                 // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
                 setTimeout(function()
@@ -663,7 +663,7 @@ function boot_script()
             new_hive.stack.bees.show();
 
             // Banana (User suggestions widget)
-            //Banana();
+            Banana();
 
             // Hide the loading screen when all has been loaded (Give also a buffer time for delayed rendering)
             setTimeout(function()

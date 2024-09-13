@@ -242,6 +242,8 @@ function template_app()
         dev_box = cosmos.hub.access('dev_box'); // Always have a "dev_box" to reference the development toolbox
 
         morpheus = matrix.get('morpheus'); // Good to have to manage OS level events
+        nature = matrix.get('nature'); // Always have a reference to "nature" module
+        infinity = dev_box.get('infinity'); // Always have a reference to "infinity" module
 
         // Your code...
 

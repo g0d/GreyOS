@@ -1,6 +1,6 @@
 <?php
     /*
-        GreyOS - Extensions Loader (Version: 1.3)
+        GreyOS - Extensions Loader (Version: 1.4)
         
         File name: ext_loader.php
         Description: This file contains the Extensions Loader facility that manually loads non-essential or non-standard extensions for testing.
@@ -12,7 +12,6 @@
 
     //UTIL::Load_Extension('sand_box', 'js');
     //UTIL::Load_Extension('sketch_pad', 'js');
-    //UTIL::Load_Extension('banana', 'js');
     //UTIL::Load_Extension('teal_mail', 'js');
     UTIL::Load_Extension('i_bassoon', 'js');
     UTIL::Load_Extension('i_youdj', 'js');
@@ -30,4 +29,5 @@
     //UTIL::Load_Extension('i_twitter', 'js');
     //UTIL::Load_Extension('i_linkedin', 'js');
     //UTIL::Load_Extension('i_youtube', 'js');
+    UTIL::Load_Extension('banana', 'js');
 ?>
