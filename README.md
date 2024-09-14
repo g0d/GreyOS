@@ -14,9 +14,9 @@ Also, you may give it a try at https://greyos.gr/ (Credentials: demo@greyos.gr /
 
 Finally, you can try booting GreyOS directly from a device with the [Meta-USB ISO](https://mega.nz/file/8iIBXJTb#tnYs7NzaPT8vDcP9KN5lPgEiMyi0BHhROXiZT3fDgL8). In order to do so, you have to burn the ISO image in a USB that is at least 32GiB or more, using Rufus.
 
-![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-%20New%20Login.png)
+![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/Pictures/GreyOS%20-%20Morph%20Splash%20V2.PNG)
 
-![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-%20Showcase.png)  
+![alt tag](https://github.com/g0d/GreyOS/blob/master/Misc/Pictures/GreyOS%20-%20Desktop%20Showcase%20(Morph%20v2).PNG)  
 
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/Pictures/GreyOS%20-%20DAW%20Apps.png)
 
