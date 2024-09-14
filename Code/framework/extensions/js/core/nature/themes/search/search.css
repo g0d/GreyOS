@@ -9,7 +9,12 @@
     Open Software License (OSL 3.0)
 */
 
-#search
+.search
 {
-    
+    display: none;
+    position: relative;
+    float: right;
+    margin-right: 31px;
+    margin-top: 10px;
+    z-index: 2147483643;
 }

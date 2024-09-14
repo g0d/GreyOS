@@ -163,16 +163,6 @@ body
     margin-top: 7px;
 }
 
-#search
-{
-    display: none;
-    position: relative;
-    float: right;
-    margin-right: 31px;
-    margin-top: 10px;
-    z-index: 2147483643;
-}
-
 .error
 {
     color: #65c9c9;

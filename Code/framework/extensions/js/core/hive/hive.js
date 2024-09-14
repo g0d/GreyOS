@@ -609,11 +609,11 @@ function hive()
                                                    'width: ' + max_stack_width + 'px; ' + 
                                                    'height: 85px;');
 
-            __dynamic_object.innerHTML = '<div id="' + hive_id + '_previous_arrow" class="stack_arrow left_arrow"></div>' + 
-                                         '<div id="' + hive_id + '_stack" class="stack_bar">' + 
-                                         '  <div id="' + hive_id + '_sliding_box" class="sliding_box"></div>' + 
-                                         '</div>' + 
-                                         '<div id="' + hive_id + '_next_arrow" class="stack_arrow right_arrow"></div>';
+            __dynamic_object.innerHTML = `<div id="` + hive_id + `_previous_arrow" class="stack_arrow left_arrow"></div>
+                                            <div id="` + hive_id + `_stack" class="stack_bar">
+                                            <div id="` + hive_id + `_sliding_box" class="sliding_box"></div>
+                                          </div>
+                                          <div id="` + hive_id + `_next_arrow" class="stack_arrow right_arrow"></div>`;
 
             utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
 
@@ -726,10 +726,10 @@ function hive()
             __dynamic_object.setAttribute('id', 'hive_bee_' + bee_id);
             __dynamic_object.setAttribute('class', __ctrl_bar_class + ' hive_bee');
 
-            __dynamic_object.innerHTML = '<div id="hive_bee_' + bee_id + '_icon" class="' + __ctrl_bar_icon_class + '"></div>' + 
-                                         '<div id="hive_bee_' + bee_id + '_title" class="' + __ctrl_bar_title_class + '">' + 
-                                         __bee_object.settings.data.window.labels.title() + 
-                                         '</div>';
+            __dynamic_object.innerHTML = `<div id="hive_bee_` + bee_id + `_icon" class="` + __ctrl_bar_icon_class + `"></div> 
+                                          <div id="hive_bee_` + bee_id + `_title" class="` + __ctrl_bar_title_class + `">` +
+                                            __bee_object.settings.data.window.labels.title() + 
+                                          `</div>`;
 
             if (__bee_object.settings.actions.can_close())
                 __dynamic_object.innerHTML += '<div id="hive_bee_' + bee_id + '_close" class="' + __ctrl_bar_close_class + '"></div>';

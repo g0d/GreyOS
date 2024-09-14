@@ -227,7 +227,7 @@ option
     color: white !important;
 }
 
-#search
+.search
 {
     
 }
@@ -394,7 +394,7 @@ option
 
 .drawer a
 {
-    background: #613f6cbd url(pix/storage.png) no-repeat 10px !important;
+    background: #613f6cbd url(/framework/extensions/js/core/nature/themes/forest/pix/storage.png) no-repeat 10px !important;
 }
 
 .drawer .search_box

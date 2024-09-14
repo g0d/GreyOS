@@ -162,60 +162,60 @@ function user_profile()
                 return false;
 
             __user_profile_div.style = 'width: 182px; margin-left: 25px;';
-            __user_profile_div.innerHTML = '<div id="' + user_profile_id + '" title="Manage profile">\
-                                                <div id="' + user_profile_id + '_notifications_num" class="notifications_num">00</div>\
-                                                <div id="' + user_profile_id + '_profile_access" class="profile_access">\
-                                                    <div id="' + user_profile_id + '_small_avatar" class="small_avatar"></div>\
-                                                    <div id="' + user_profile_id + '_my" class="my">My profile</div>\
-                                                </div>\
-                                            </div>\
-                                            <div id="' + user_profile_id + '_area" class="user_profile_area">\
-                                                <div id="' + user_profile_id + '_profile_left_side" class="profile_left_side">\
-                                                    <div id="' + user_profile_id + '_profile_info" class="profile_info">\
-                                                        <div id="' + user_profile_id + '_big_avatar" class="big_avatar"></div>\
-                                                        <div id="' + user_profile_id + '_user_data" class="user_data">\
-                                                            <div id="' + user_profile_id + '_user_profile_name" class="user_profile_name"></div>\
-                                                            <div id="' + user_profile_id + '_user_email" class="user_email"></div>\
-                                                            <div id="' + user_profile_id + '_user_account" class="user_account">Account</div>\
-                                                            <div id="' + user_profile_id + '_separator" class="profile_separator">|</div>\
-                                                            <div id="' + user_profile_id + '_user_settings" class="user_settings">Settings</div>\
-                                                            <div id="' + user_profile_id + '_user_reboot" class="user_reboot">Reload Interface</div>\
-                                                        </div>\
-                                                    </div>\
-                                                </div>\
-                                                <div id="' + user_profile_id + '_profile_right_side" class="profile_right_side">\
-                                                    <div id="' + user_profile_id + '_notifications" class="notifications">\
-                                                        <div id="' + user_profile_id + '_total_notifications" class="total_notifications"></div>\
-                                                        <div id="' + user_profile_id + '_notifications_list" class="notifications_list">\
-                                                            <div id="' + user_profile_id + '_messages" class="notification_list_item">\
-                                                                <div class="' + user_profile_id + '_item_details" class="items_details">\
-                                                                    <div id="' + user_profile_id + '_messages_icon" class="messages_icon list_item_icon"></div>\
-                                                                    <div id="' + user_profile_id + '_messages_text" class="list_item_text">Messages</div>\
-                                                                </div>\
-                                                                <div id="' + user_profile_id + '_messages_notifications" class="list_item_notifications">00</div>\
-                                                            </div>\
-                                                            <div id="' + user_profile_id + '_alerts" class="notification_list_item">\
-                                                                <div class="' + user_profile_id + '_item_details" class="item_details">\
-                                                                    <div id="' + user_profile_id + '_alerts_icon" class="alerts_icon list_item_icon"></div>\
-                                                                    <div id="' + user_profile_id + '_alerts_text" class="list_item_text">Alerts</div>\
-                                                                </div>\
-                                                                <div id="' + user_profile_id + '_alerts_notifications" class="list_item_notifications">00</div>\
-                                                            </div>\
-                                                            <div id="' + user_profile_id + '_calendar" class="notification_list_item">\
-                                                                <div class="' + user_profile_id + '_item_details" class="item_details">\
-                                                                    <div id="' + user_profile_id + '_calendar_icon" class="calendar_icon list_item_icon"></div>\
-                                                                    <div id="' + user_profile_id + '_calendar_text" class="list_item_text">Calendar</div>\
-                                                                </div>\
-                                                                <div id="' + user_profile_id + '_calendar_notifications" class="list_item_notifications">00</div>\
-                                                            </div>\
-                                                        </div>\
-                                                    </div>\
-                                                    <div id="' + user_profile_id + '_logout" class="logout">\
-                                                        <div id="' + user_profile_id + '_logout_icon" class="logout_icon"></div>\
-                                                        <button id="' + user_profile_id + '_logout_button" class="button logout_button" type="button">Logout</button>\
-                                                    </div>\
-                                                </div>\
-                                            </div>';
+            __user_profile_div.innerHTML = `<div id="` + user_profile_id + `" title="Manage profile">
+                                                <div id="` + user_profile_id + `_notifications_num" class="notifications_num">00</div>
+                                                <div id="` + user_profile_id + `_profile_access" class="profile_access">
+                                                    <div id="` + user_profile_id + `_small_avatar" class="small_avatar"></div>
+                                                    <div id="` + user_profile_id + `_my" class="my">My profile</div>
+                                                </div>
+                                            </div>
+                                            <div id="` + user_profile_id + `_area" class="user_profile_area">
+                                                <div id="` + user_profile_id + `_profile_left_side" class="profile_left_side">
+                                                    <div id="` + user_profile_id + `_profile_info" class="profile_info">
+                                                        <div id="` + user_profile_id + `_big_avatar" class="big_avatar"></div>
+                                                        <div id="` + user_profile_id + `_user_data" class="user_data">
+                                                            <div id="` + user_profile_id + `_user_profile_name" class="user_profile_name"></div>
+                                                            <div id="` + user_profile_id + `_user_email" class="user_email"></div>
+                                                            <div id="` + user_profile_id + `_user_account" class="user_account">Account</div>
+                                                            <div id="` + user_profile_id + `_separator" class="profile_separator">|</div>
+                                                            <div id="` + user_profile_id + `_user_settings" class="user_settings">Settings</div>
+                                                            <div id="` + user_profile_id + `_user_reboot" class="user_reboot">Reload Interface</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="` + user_profile_id + `_profile_right_side" class="profile_right_side">
+                                                    <div id="` + user_profile_id + `_notifications" class="notifications">
+                                                        <div id="` + user_profile_id + `_total_notifications" class="total_notifications"></div>
+                                                        <div id="` + user_profile_id + `_notifications_list" class="notifications_list">
+                                                            <div id="` + user_profile_id + `_messages" class="notification_list_item">
+                                                                <div class="` + user_profile_id + `_item_details" class="items_details">
+                                                                    <div id="` + user_profile_id + `_messages_icon" class="messages_icon list_item_icon"></div>
+                                                                    <div id="` + user_profile_id + `_messages_text" class="list_item_text">Messages</div>
+                                                                </div>
+                                                                <div id="` + user_profile_id + `_messages_notifications" class="list_item_notifications">00</div>
+                                                            </div>
+                                                            <div id="` + user_profile_id + `_alerts" class="notification_list_item">
+                                                                <div class="` + user_profile_id + `_item_details" class="item_details">
+                                                                    <div id="` + user_profile_id + `_alerts_icon" class="alerts_icon list_item_icon"></div>
+                                                                    <div id="` + user_profile_id + `_alerts_text" class="list_item_text">Alerts</div>
+                                                                </div>
+                                                                <div id="` + user_profile_id + `_alerts_notifications" class="list_item_notifications">00</div>
+                                                            </div>
+                                                            <div id="` + user_profile_id + `_calendar" class="notification_list_item">
+                                                                <div class="` + user_profile_id + `_item_details" class="item_details">
+                                                                    <div id="` + user_profile_id + `_calendar_icon" class="calendar_icon list_item_icon"></div>
+                                                                    <div id="` + user_profile_id + `_calendar_text" class="list_item_text">Calendar</div>
+                                                                </div>
+                                                                <div id="` + user_profile_id + `_calendar_notifications" class="list_item_notifications">00</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="` + user_profile_id + `_logout" class="logout">
+                                                        <div id="` + user_profile_id + `_logout_icon" class="logout_icon"></div>
+                                                        <button id="` + user_profile_id + `_logout_button" class="button logout_button" type="button">Logout</button>
+                                                    </div>
+                                                </div>
+                                            </div>`;
 
             return true;
         };

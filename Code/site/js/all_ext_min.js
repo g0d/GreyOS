@@ -7111,53 +7111,52 @@ function forest()
  __dynamic_object.setAttribute('id', forest_id);
  __dynamic_object.setAttribute('class', 'forest');
  __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 45) + 'px;');
- __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' +
- '<div id="' + forest_id + '_forest_top_list" class="top_list">' +
- ' <a href="#" class="create_cat">' +
- 'Create new category</a>' +
- '</div>' +
- '<div id="' + forest_id + '_forest_cat_list" class="cat_list" style="height: ' +
- (window.innerHeight - 167) + 'px;">' +
- ' <div class="cat social">' +
- ' <a href="#" style="background-color: #5C5C5C;" title="Sample category!">' +
- 'My main category' +
- ' <span style="background: #FFF; color: #5C5C5C;" class="desktop_num">4</span>' +
- ' </a>' +
- ' <ul class="expanded">' +
- ' <li>' +
- ' <a href="#">' +
- ' <span class="cat_text">Social media desktop</span>' +
- ' <span class="desktop_num">3</span></a>' +
- ' <ul>' +
- ' <li><a href="#">App 1</a></li>' +
- ' <li><a href="#">App 2</a></li>' +
- ' <li><a href="#">App X</a></li>' +
- ' </ul>' +
- ' </li>' +
- ' <li>' +
- ' <a href="#">' +
- ' <span class="cat_text">Other desktop</span>' +
- ' <span class="desktop_num">1</span>' +
- ' </a>' +
- ' </li>' +
- ' <li class="create_new">' +
- ' <a href="#">New desktop</a>' +
- ' </li>' +
- ' </ul>' +
- ' </div>' +
- ' <div class="cat apps">' +
- ' <a href="#" title="Sample category!">Another category' +
- ' <span class="desktop_num">11</span>' +
- ' </a>' +
- ' </div>' +
- '</div>' +
- '<div class="drawer" title="Sorry, drawer is not available yet...">' +
- ' <input class="search_box" value="" placeholder="Search my drawer for apps...">' +
- ' <a href="#">' +
- ' <span class="cat_text">Drawer</span>' +
- ' <span class="drawer_apps_num">0</span>' +
- ' </a>' +
- '</div>';
+ __dynamic_object.innerHTML = `<div id="` + forest_id + `_trigger_bar" class="trigger_bar"></div>
+ <div id="` + forest_id + `_forest_top_list" class="top_list">
+ <a href="#" class="create_cat">Create new category</a>
+ </div>
+ <div id="` + forest_id + `_forest_cat_list" class="cat_list" style="height: ` + (window.innerHeight - 167) + `px;">
+ <div class="cat social">
+ <a href="#" style="background-color: #5C5C5C;" title="Sample category!">
+ My main category
+ <span style="background: #FFF; color: #5C5C5C;" class="desktop_num">4</span>
+ </a>
+ <ul class="expanded">
+ <li>
+ <a href="#">
+ <span class="cat_text">Social media desktop</span>
+ <span class="desktop_num">3</span></a>
+ <ul>
+ <li><a href="#">App 1</a></li>
+ <li><a href="#">App 2</a></li>
+ <li><a href="#">App X</a></li>
+ </ul>
+ </li>
+ <li>
+ <a href="#">
+ <span class="cat_text">Other desktop</span>
+ <span class="desktop_num">1</span>
+ </a>
+ </li>
+ <li class="create_new">
+ <a href="#">New desktop</a>
+ </li>
+ </ul>
+ </div>
+ <div class="cat apps">
+ <a href="#" title="Sample category!">
+ Another category
+ <span class="desktop_num">11</span>
+ </a>
+ </div>
+ </div>
+ <div class="drawer" title="Sorry, drawer is not available yet...">
+ <input class="search_box" value="" placeholder="Search my drawer for apps...">
+ <a href="#">
+ <span class="cat_text">Drawer</span>
+ <span class="drawer_apps_num">0</span>
+ </a>
+ </div>`;
  utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
  __handler = function(event) { me.coords(event); me.toggle_hive(); };
  morpheus.run(forest_id, 'mouse', 'mousemove', __handler, __forest_object);
@@ -8292,11 +8291,11 @@ function hive()
  'right: ' + left + 'px; ' +
  'width: ' + max_stack_width + 'px; ' +
  'height: 85px;');
- __dynamic_object.innerHTML = '<div id="' + hive_id + '_previous_arrow" class="stack_arrow left_arrow"></div>' +
- '<div id="' + hive_id + '_stack" class="stack_bar">' +
- ' <div id="' + hive_id + '_sliding_box" class="sliding_box"></div>' +
- '</div>' +
- '<div id="' + hive_id + '_next_arrow" class="stack_arrow right_arrow"></div>';
+ __dynamic_object.innerHTML = `<div id="` + hive_id + `_previous_arrow" class="stack_arrow left_arrow"></div>
+ <div id="` + hive_id + `_stack" class="stack_bar">
+ <div id="` + hive_id + `_sliding_box" class="sliding_box"></div>
+ </div>
+ <div id="` + hive_id + `_next_arrow" class="stack_arrow right_arrow"></div>`;
  utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
  __current_stack_width = utils_sys.graphics.pixels_value(__dynamic_object.style.width);
  utils_sys.objects.by_id(hive_id + '_stack').style.width =
@@ -8355,10 +8354,10 @@ function hive()
  __dynamic_object = document.createElement('div');
  __dynamic_object.setAttribute('id', 'hive_bee_' + bee_id);
  __dynamic_object.setAttribute('class', __ctrl_bar_class + ' hive_bee');
- __dynamic_object.innerHTML = '<div id="hive_bee_' + bee_id + '_icon" class="' + __ctrl_bar_icon_class + '"></div>' +
- '<div id="hive_bee_' + bee_id + '_title" class="' + __ctrl_bar_title_class + '">' +
+ __dynamic_object.innerHTML = `<div id="hive_bee_` + bee_id + `_icon" class="` + __ctrl_bar_icon_class + `"></div>
+ <div id="hive_bee_` + bee_id + `_title" class="` + __ctrl_bar_title_class + `">` +
  __bee_object.settings.data.window.labels.title() +
- '</div>';
+ `</div>`;
  if (__bee_object.settings.actions.can_close())
  __dynamic_object.innerHTML += '<div id="hive_bee_' + bee_id + '_close" class="' + __ctrl_bar_close_class + '"></div>';
  if (mode === 0)
@@ -10059,60 +10058,60 @@ function user_profile()
  if (__user_profile_div === null)
  return false;
  __user_profile_div.style = 'width: 182px; margin-left: 25px;';
- __user_profile_div.innerHTML = '<div id="' + user_profile_id + '" title="Manage profile">\
- <div id="' + user_profile_id + '_notifications_num" class="notifications_num">00</div>\
- <div id="' + user_profile_id + '_profile_access" class="profile_access">\
- <div id="' + user_profile_id + '_small_avatar" class="small_avatar"></div>\
- <div id="' + user_profile_id + '_my" class="my">My profile</div>\
- </div>\
- </div>\
- <div id="' + user_profile_id + '_area" class="user_profile_area">\
- <div id="' + user_profile_id + '_profile_left_side" class="profile_left_side">\
- <div id="' + user_profile_id + '_profile_info" class="profile_info">\
- <div id="' + user_profile_id + '_big_avatar" class="big_avatar"></div>\
- <div id="' + user_profile_id + '_user_data" class="user_data">\
- <div id="' + user_profile_id + '_user_profile_name" class="user_profile_name"></div>\
- <div id="' + user_profile_id + '_user_email" class="user_email"></div>\
- <div id="' + user_profile_id + '_user_account" class="user_account">Account</div>\
- <div id="' + user_profile_id + '_separator" class="profile_separator">|</div>\
- <div id="' + user_profile_id + '_user_settings" class="user_settings">Settings</div>\
- <div id="' + user_profile_id + '_user_reboot" class="user_reboot">Reload Interface</div>\
- </div>\
- </div>\
- </div>\
- <div id="' + user_profile_id + '_profile_right_side" class="profile_right_side">\
- <div id="' + user_profile_id + '_notifications" class="notifications">\
- <div id="' + user_profile_id + '_total_notifications" class="total_notifications"></div>\
- <div id="' + user_profile_id + '_notifications_list" class="notifications_list">\
- <div id="' + user_profile_id + '_messages" class="notification_list_item">\
- <div class="' + user_profile_id + '_item_details" class="items_details">\
- <div id="' + user_profile_id + '_messages_icon" class="messages_icon list_item_icon"></div>\
- <div id="' + user_profile_id + '_messages_text" class="list_item_text">Messages</div>\
- </div>\
- <div id="' + user_profile_id + '_messages_notifications" class="list_item_notifications">00</div>\
- </div>\
- <div id="' + user_profile_id + '_alerts" class="notification_list_item">\
- <div class="' + user_profile_id + '_item_details" class="item_details">\
- <div id="' + user_profile_id + '_alerts_icon" class="alerts_icon list_item_icon"></div>\
- <div id="' + user_profile_id + '_alerts_text" class="list_item_text">Alerts</div>\
- </div>\
- <div id="' + user_profile_id + '_alerts_notifications" class="list_item_notifications">00</div>\
- </div>\
- <div id="' + user_profile_id + '_calendar" class="notification_list_item">\
- <div class="' + user_profile_id + '_item_details" class="item_details">\
- <div id="' + user_profile_id + '_calendar_icon" class="calendar_icon list_item_icon"></div>\
- <div id="' + user_profile_id + '_calendar_text" class="list_item_text">Calendar</div>\
- </div>\
- <div id="' + user_profile_id + '_calendar_notifications" class="list_item_notifications">00</div>\
- </div>\
- </div>\
- </div>\
- <div id="' + user_profile_id + '_logout" class="logout">\
- <div id="' + user_profile_id + '_logout_icon" class="logout_icon"></div>\
- <button id="' + user_profile_id + '_logout_button" class="button logout_button" type="button">Logout</button>\
- </div>\
- </div>\
- </div>';
+ __user_profile_div.innerHTML = `<div id="` + user_profile_id + `" title="Manage profile">
+ <div id="` + user_profile_id + `_notifications_num" class="notifications_num">00</div>
+ <div id="` + user_profile_id + `_profile_access" class="profile_access">
+ <div id="` + user_profile_id + `_small_avatar" class="small_avatar"></div>
+ <div id="` + user_profile_id + `_my" class="my">My profile</div>
+ </div>
+ </div>
+ <div id="` + user_profile_id + `_area" class="user_profile_area">
+ <div id="` + user_profile_id + `_profile_left_side" class="profile_left_side">
+ <div id="` + user_profile_id + `_profile_info" class="profile_info">
+ <div id="` + user_profile_id + `_big_avatar" class="big_avatar"></div>
+ <div id="` + user_profile_id + `_user_data" class="user_data">
+ <div id="` + user_profile_id + `_user_profile_name" class="user_profile_name"></div>
+ <div id="` + user_profile_id + `_user_email" class="user_email"></div>
+ <div id="` + user_profile_id + `_user_account" class="user_account">Account</div>
+ <div id="` + user_profile_id + `_separator" class="profile_separator">|</div>
+ <div id="` + user_profile_id + `_user_settings" class="user_settings">Settings</div>
+ <div id="` + user_profile_id + `_user_reboot" class="user_reboot">Reload Interface</div>
+ </div>
+ </div>
+ </div>
+ <div id="` + user_profile_id + `_profile_right_side" class="profile_right_side">
+ <div id="` + user_profile_id + `_notifications" class="notifications">
+ <div id="` + user_profile_id + `_total_notifications" class="total_notifications"></div>
+ <div id="` + user_profile_id + `_notifications_list" class="notifications_list">
+ <div id="` + user_profile_id + `_messages" class="notification_list_item">
+ <div class="` + user_profile_id + `_item_details" class="items_details">
+ <div id="` + user_profile_id + `_messages_icon" class="messages_icon list_item_icon"></div>
+ <div id="` + user_profile_id + `_messages_text" class="list_item_text">Messages</div>
+ </div>
+ <div id="` + user_profile_id + `_messages_notifications" class="list_item_notifications">00</div>
+ </div>
+ <div id="` + user_profile_id + `_alerts" class="notification_list_item">
+ <div class="` + user_profile_id + `_item_details" class="item_details">
+ <div id="` + user_profile_id + `_alerts_icon" class="alerts_icon list_item_icon"></div>
+ <div id="` + user_profile_id + `_alerts_text" class="list_item_text">Alerts</div>
+ </div>
+ <div id="` + user_profile_id + `_alerts_notifications" class="list_item_notifications">00</div>
+ </div>
+ <div id="` + user_profile_id + `_calendar" class="notification_list_item">
+ <div class="` + user_profile_id + `_item_details" class="item_details">
+ <div id="` + user_profile_id + `_calendar_icon" class="calendar_icon list_item_icon"></div>
+ <div id="` + user_profile_id + `_calendar_text" class="list_item_text">Calendar</div>
+ </div>
+ <div id="` + user_profile_id + `_calendar_notifications" class="list_item_notifications">00</div>
+ </div>
+ </div>
+ </div>
+ <div id="` + user_profile_id + `_logout" class="logout">
+ <div id="` + user_profile_id + `_logout_icon" class="logout_icon"></div>
+ <button id="` + user_profile_id + `_logout_button" class="button logout_button" type="button">Logout</button>
+ </div>
+ </div>
+ </div>`;
  return true;
  };
  this.attach_events = function()
@@ -10293,6 +10292,16 @@ function search()
  function utilities()
  {
  var me = this;
+ function hide_serch_area_on_key(event)
+ {
+ if (utils_sys.validation.misc.is_undefined(event))
+ return false;
+ key_control.scan(event);
+ if (key_control.get() !== key_control.keys.ESCAPE)
+ return false;
+ self.hide();
+ return true;
+ }
  function key_down_tracer(event_object)
  {
  key_control.scan(event_object);
@@ -10317,15 +10326,28 @@ function search()
  }
  this.attach_events = function()
  {
- var __handler = null;
+ var __handler = null,
+ __desktop = utils_sys.objects.by_id('desktop');
  __handler = function(event) { key_down_tracer(event); };
- morpheus.run('search', 'key', 'keydown', __handler, document);
+ morpheus.run(search_id, 'key', 'keydown', __handler, document);
  __handler = function(event) { key_up_tracer(event); };
- morpheus.run('search', 'key', 'keyup', __handler, document);
+ morpheus.run(search_id, 'key', 'keyup', __handler, document);
+ __handler = function(event) { hide_serch_area_on_key(event); };
+ morpheus.run(search_id, 'key', 'keydown', __handler, document);
+ __handler = function() { self.hide(); };
+ morpheus.run(search_id, 'mouse', 'click', __handler, __desktop);
+ morpheus.run(search_id, 'touch', 'touchmove', __handler, __desktop);
  return true;
  };
  this.draw = function()
  {
+ var __desktop = utils_sys.objects.by_id('desktop');
+ __desktop.innerHTML += `<div id="`+ search_id + `" class="search">
+ <div id="philos" title="Philos :: Your personal AI assistant"></div>
+ <div id="eureka" title="Eureka :: Your own meta-search engine">
+ <input id="eureka_search_box" type="text" value="" maxlength="100" placeholder="What's next?">
+ </div>
+ </div>`;
  return true;
  };
  this.load_ui = function()
@@ -10336,11 +10358,38 @@ function search()
  me.attach_events();
  };
  }
+ function settings()
+ {
+ var __id = null,
+ __container = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ }
  this.show = function()
  {
  if (is_init === false)
  return false;
- utils_sys.objects.by_id('search').style.display = 'block';
+ utils_sys.objects.by_id(search_id).style.display = 'block';
  utils_sys.objects.by_id('eureka_search_box').focus();
  is_search_visible = true;
  return true;
@@ -10349,7 +10398,7 @@ function search()
  {
  if (is_init === false)
  return false;
- utils_sys.objects.by_id('search').style.display = 'none';
+ utils_sys.objects.by_id(search_id).style.display = 'none';
  is_search_visible = false;
  return true;
  };
@@ -10363,14 +10412,18 @@ function search()
  self.show();
  return true;
  };
- this.init = function()
+ this.init = function(container_id)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
  return false;
  if (is_init === true)
  return false;
  is_init = true;
+ self.settings.id('search_' + random.generate());
+ search_id = self.settings.id();
+ if (self.settings.container(container_id))
  return utils_int.load_ui();
+ return false;
  };
  this.cosmos = function(cosmos_object)
  {
@@ -10385,13 +10438,16 @@ function search()
  var is_init = false,
  search_on = false,
  is_search_visible = false,
+ search_id = null,
  cosmos = null,
  matrix = null,
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),
+ random = new pythia(),
  key_control = new key_manager(),
  utils_int = new utilities();
+ this.settings = new settings();
 }
 function chameleon()
 {
@@ -10942,8 +10998,8 @@ function tik_tok()
  __dynamic_object.setAttribute('id', __tik_tok_id);
  __dynamic_object.setAttribute('class', 'tik_tok');
  __dynamic_object.setAttribute('title', 'Time & calendar');
- __dynamic_object.innerHTML = '<div id="' + __tik_tok_id + '_date" class="clock_date"></div>' +
- '<div id="' + __tik_tok_id + '_time" class="clock_time"></div>';
+ __dynamic_object.innerHTML = `<div id="` + __tik_tok_id + `_date" class="clock_date"></div>
+ <div id="` + __tik_tok_id + `_time" class="clock_time"></div>`;
  __dynamic_object.style.display = 'block';
  __container.appendChild(__dynamic_object);
  clock.get_time_date(__tik_tok_id + '_time', __tik_tok_id + '_date');
@@ -13117,11 +13173,11 @@ function octopus()
  __dynamic_object.setAttribute('id', octopus_id);
  __dynamic_object.setAttribute('class', 'octopus');
  __dynamic_object.setAttribute('title', 'Manage devices');
- __dynamic_object.innerHTML += '<div id="' + octopus_id + '_manager" class="device"></div>\
- <div id="' + octopus_id + '_notification" class="notification">\
- <div id="' + octopus_id + '_icon" class="icon"></div>\
- <div id="' + octopus_id + '_message" class="message"></div>\
- </div>';
+ __dynamic_object.innerHTML += `<div id="` + octopus_id + `_manager" class="device"></div>
+ <div id="` + octopus_id + `_notification" class="notification">
+ <div id="` + octopus_id + `_icon" class="icon"></div>
+ <div id="` + octopus_id + `_message" class="message"></div>
+ </div>`;
  __container.appendChild(__dynamic_object);
  return true;
  };
@@ -13308,8 +13364,8 @@ function super_tray()
  __dynamic_object = document.createElement('div');
  __dynamic_object.setAttribute('id', super_tray_id);
  __dynamic_object.setAttribute('class', 'super_tray');
- __dynamic_object.innerHTML = '<div id="' + super_tray_id + '_arrow" class="access_icon" title="Access running services"></div>\
- <div id="' + super_tray_id + '_service_icons_tray" class="service_icons_area"></div>';
+ __dynamic_object.innerHTML = `<div id="` + super_tray_id + `_arrow" class="access_icon" title="Access running services"></div>
+ <div id="` + super_tray_id + `_service_icons_tray" class="service_icons_area"></div>`;
  __container.appendChild(__dynamic_object);
  return true;
  };

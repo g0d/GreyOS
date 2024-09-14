@@ -249,7 +249,7 @@ function boot_script()
             matrix_container.get('ui_controls').init('action_icons');
             matrix_container.get('dock').init('favorite_apps');
             matrix_container.get('user_profile').init('user_profile');
-            matrix_container.get('search').init();
+            matrix_container.get('search').init('desktop');
             matrix_container.get('forest').init('desktop');
             matrix_container.get('swarm').reset('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
             matrix_container.get('hive').init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
@@ -313,7 +313,7 @@ function boot_script()
                 new_ui_controls.init('action_icons');
                 new_dock.init('favorite_apps');
                 new_user_profile.init('user_profile');
-                new_search.init();
+                new_search.init('desktop');
                 new_forest.init('desktop');
                 new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
                 new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));
@@ -647,7 +647,7 @@ function boot_script()
             new_ui_controls.init('action_icons');
             new_dock.init('favorite_apps');
             new_user_profile.init('user_profile');
-            new_search.init();
+            new_search.init('desktop');
             //new_forest.init('desktop');
             new_swarm.init('desktop', 44, 60, window.innerWidth - 60, window.innerHeight - 76);
             //new_hive.init('desktop', 44, window.innerHeight - 85, os_settings.get('apps_per_view'), os_settings.get('stack_bars'));

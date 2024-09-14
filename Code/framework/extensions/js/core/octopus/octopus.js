@@ -169,11 +169,11 @@ function octopus()
             __dynamic_object.setAttribute('class', 'octopus');
             __dynamic_object.setAttribute('title', 'Manage devices');
 
-            __dynamic_object.innerHTML += '<div id="' + octopus_id + '_manager" class="device"></div>\
-                                           <div id="' + octopus_id + '_notification" class="notification">\
-                                               <div id="' + octopus_id + '_icon" class="icon"></div>\
-                                               <div id="' + octopus_id + '_message" class="message"></div>\
-                                           </div>';
+            __dynamic_object.innerHTML += `<div id="` + octopus_id + `_manager" class="device"></div>
+                                           <div id="` + octopus_id + `_notification" class="notification">
+                                               <div id="` + octopus_id + `_icon" class="icon"></div>
+                                               <div id="` + octopus_id + `_message" class="message"></div>
+                                           </div>`;
 
             __container.appendChild(__dynamic_object);
 

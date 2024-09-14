@@ -158,8 +158,8 @@ function tik_tok()
             __dynamic_object.setAttribute('class', 'tik_tok');
             __dynamic_object.setAttribute('title', 'Time & calendar');
 
-            __dynamic_object.innerHTML = '<div id="' + __tik_tok_id + '_date" class="clock_date"></div>' + 
-                                         '<div id="' + __tik_tok_id + '_time" class="clock_time"></div>';
+            __dynamic_object.innerHTML = `<div id="` + __tik_tok_id + `_date" class="clock_date"></div> 
+                                          <div id="` + __tik_tok_id + `_time" class="clock_time"></div>`;
 
             __dynamic_object.style.display = 'block';
 

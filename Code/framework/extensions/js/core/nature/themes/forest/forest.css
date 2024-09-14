@@ -309,9 +309,11 @@
 
 .drawer_apps_num
 {
-	float: right;
-	background: #5C5C5C;
-	border-radius: 25px;
-	text-indent: 0;
-    padding: 4px 8px;
+    float: right;
+    background: #5C5C5C;
+    min-width: 15px;
+    border-radius: 25px;
+    text-align: center;
+    text-indent: 0;
+    padding: 1px 9px;
 }

@@ -331,53 +331,52 @@ function forest()
             __dynamic_object.setAttribute('class', 'forest');
             __dynamic_object.setAttribute('style', 'height: ' + (window.innerHeight - 45) + 'px;');
 
-            __dynamic_object.innerHTML = '<div id="' + forest_id + '_trigger_bar" class="trigger_bar"></div>' + 
-                                         '<div id="' + forest_id + '_forest_top_list" class="top_list">' + 
-                                         '  <a href="#" class="create_cat">' + 
-                                                      'Create new category</a>' + 
-                                         '</div>' + 
-                                         '<div id="' + forest_id + '_forest_cat_list" class="cat_list" style="height: ' + 
-                                         (window.innerHeight - 167) + 'px;">' + 
-                                         '  <div class="cat social">' + 
-                                         '      <a href="#" style="background-color: #5C5C5C;" title="Sample category!">' + 
-                                                                                                     'My main category' + 
-                                         '          <span style="background: #FFF; color: #5C5C5C;" class="desktop_num">4</span>' + 
-                                         '      </a>' + 
-                                         '      <ul class="expanded">' + 
-                                         '          <li>' + 
-                                         '              <a href="#">' + 
-                                         '                  <span class="cat_text">Social media desktop</span>' + 
-                                         '                  <span class="desktop_num">3</span></a>' + 
-                                         '              <ul>' + 
-                                         '                  <li><a href="#">App 1</a></li>' + 
-                                         '                  <li><a href="#">App 2</a></li>' + 
-                                         '                  <li><a href="#">App X</a></li>' + 
-                                         '              </ul>' + 
-                                         '          </li>' + 
-                                         '          <li>' + 
-                                         '              <a href="#">' + 
-                                         '                  <span class="cat_text">Other desktop</span>' + 
-                                         '                  <span class="desktop_num">1</span>' + 
-                                         '              </a>' + 
-                                         '          </li>' + 
-                                         '          <li class="create_new">' + 
-                                         '              <a href="#">New desktop</a>' + 
-                                         '          </li>' + 
-                                         '      </ul>' + 
-                                         '  </div>' + 
-                                         '  <div class="cat apps">' + 
-                                         '      <a href="#" title="Sample category!">Another category' + 
-                                         '          <span class="desktop_num">11</span>' + 
-                                         '      </a>' + 
-                                         '  </div>' +   
-                                         '</div>' + 
-                                         '<div class="drawer" title="Sorry, drawer is not available yet...">' + 
-                                         '  <input class="search_box" value="" placeholder="Search my drawer for apps...">' + 
-                                         '  <a href="#">' + 
-                                         '      <span class="cat_text">Drawer</span>' + 
-                                         '      <span class="drawer_apps_num">0</span>' + 
-                                         '  </a>' + 
-                                         '</div>';
+            __dynamic_object.innerHTML = `<div id="` + forest_id + `_trigger_bar" class="trigger_bar"></div>
+                                          <div id="` + forest_id + `_forest_top_list" class="top_list">
+                                            <a href="#" class="create_cat">Create new category</a>
+                                          </div> 
+                                          <div id="` + forest_id + `_forest_cat_list" class="cat_list" style="height: ` + (window.innerHeight - 167) + `px;">
+                                            <div class="cat social"> 
+                                                <a href="#" style="background-color: #5C5C5C;" title="Sample category!">
+                                                    My main category
+                                                    <span style="background: #FFF; color: #5C5C5C;" class="desktop_num">4</span>
+                                                </a>
+                                                <ul class="expanded">
+                                                    <li> 
+                                                        <a href="#">
+                                                            <span class="cat_text">Social media desktop</span>
+                                                            <span class="desktop_num">3</span></a>
+                                                        <ul> 
+                                                            <li><a href="#">App 1</a></li>
+                                                            <li><a href="#">App 2</a></li>
+                                                            <li><a href="#">App X</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">
+                                                            <span class="cat_text">Other desktop</span>
+                                                            <span class="desktop_num">1</span>
+                                                        </a> 
+                                                    </li> 
+                                                    <li class="create_new">
+                                                        <a href="#">New desktop</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="cat apps">
+                                                <a href="#" title="Sample category!">
+                                                    Another category
+                                                    <span class="desktop_num">11</span>
+                                                </a>
+                                            </div>
+                                          </div>
+                                          <div class="drawer" title="Sorry, drawer is not available yet...">
+                                            <input class="search_box" value="" placeholder="Search my drawer for apps...">
+                                            <a href="#">
+                                                <span class="cat_text">Drawer</span> 
+                                                <span class="drawer_apps_num">0</span>
+                                            </a>
+                                          </div>`;
 
             utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
 
