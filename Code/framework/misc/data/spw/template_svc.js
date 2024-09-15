@@ -1,8 +1,8 @@
 /*
-    GreyOS - Template [Service] (Version: 0.5)
+    GreyOS - Template [Svc] (Version: 0.5)
 
-    File name: template_service.js
-    Description: This file contains the Template Service - Template service module.
+    File name: template_svc.js
+    Description: This file contains the Template Svc - Template service.
     Notes: Low Level API
 
     Coded by [Name Surname] ([Nickname])
@@ -10,14 +10,14 @@
     Open Software License (OSL 3.0)
 */
 
-// Template Service
-function template_service()
+// Template Svc
+function template_svc()
 {
     var self = this; // Use "self" to referense the whole class module easily so that you do no confuse "this" in various scopes
 
-    function template_service_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
+    function template_svc_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
     {
-        this.id = null; // Always have an "id" option to store the service name
+        this.id = null; // Always have an "id" option to store the svc name
 
         // Your code...
 
@@ -40,7 +40,7 @@ function template_service()
             this.pption_3 = 'test';
         }
 
-        this.namespace_1 = new template_model_1(); // Create the namespace as public attribute of the "template_service_config_model"
+        this.namespace_1 = new template_model_1(); // Create the namespace as public attribute of the "template_svc_config_model"
         this.namespace_2 = new template_model_2();
     }
 
@@ -109,12 +109,12 @@ function template_service()
         return template_svc_bat.exec_function(func_name, func_args);
     };
 
-    this.run = function(service_model, action) // Always have a public "run" method available with this code in the body
+    this.run = function(svc_model, action) // Always have a public "run" method available with this code in the body
     {
         if (!is_setup)
             return false;
 
-        return template_svc_bat.register(service_model, action);
+        return template_svc_bat.register(svc_model, action);
     };
 
     this.terminate = function() // Always have a public "terminate" method available with this code in the body
@@ -125,12 +125,12 @@ function template_service()
         return template_svc_bat.unregister();
     };
 
-    this.setup = function(service_id, icon = 'svc_default', in_super_tray = true) // Always have a public "setup" method available with this code in the body
+    this.setup = function(svc_id, icon = 'svc_default', in_super_tray = true) // Always have a public "setup" method available with this code in the body
     {
         if (!is_init)
             return false;
 
-        if (!template_svc_bat.init(service_id, icon, in_super_tray))
+        if (!template_svc_bat.init(svc_id, icon, in_super_tray))
             return false;
 
         // Your code...
@@ -184,7 +184,7 @@ function template_service()
         utils_sys = new vulcan(), // Always have a "utils_sys" internal variable that utilizes "vulcan"
         ajax = new taurus(), // Always have a "ajax" internal variable that utilizes "taurus"
         // Your code here...
-        config = new template_service_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model
+        config = new template_svc_config_model(), // Always have a "xxx_config" internal variable that utilizes "xxx_config_model" model
         // Your code here...
         utils_int = new utilities(); // Always have a "utils_int" internal variable that utilizes "utilities" model
 }

@@ -1,6 +1,6 @@
 <?php
 	/*
-		SPW (Programmable gate for system-level apps & services creation by template)
+		SPW (Programmable gate for system-level apps & services creation based on templates)
 
 		File name: spw.php
 		Description: This file contains the SPW gate.
@@ -22,70 +22,46 @@
 		return;
 	}
 
-	echo '1';
-	return
+	create_program($_POST['program_name'], $_POST['program_type']);
 
-	$program_name = trim($_POST['program_name']);
-
-	foreach ($my_profile['user_programs'][$_POST['program_type'] . 's'] as $this_program)
+	function create_program($program_name, $program_type)
 	{
-		if ($program_name === $this_program['name'])
+		$programs_registry_path = UTIL::Absolute_Path('framework/config/registry/js.json');
+		$programs_registry = json_decode(file_get_contents($programs_registry_path), true);
+
+		$normalized_program_name = str_replace(' ', '_', strtolower(trim($program_name)));
+
+		foreach ($programs_registry as $name => $level)
 		{
-			echo '1';
-
-			return;
-		}
-	}
-
-	function create_program($program)
-	{
-		$index = 0;
-		$is_match_found = false;
-		$program_id = str_replace(' ', '_', strtolower($program[0]));
-
-		foreach ($profile['user_programs'][$program[1]['type'] . 's'] as $this_program)
-		{
-			if ($program[0] === $this_program['name'])
+			if ($normalized_program_name === $name)
 			{
-				$profile['user_programs'][$program[1]['type'] . 's'][$index] = $new_program;
+				echo '0';
 
-				$is_match_found = true;
-
-				break;
+				return;
 			}
-
-			$index++;
 		}
 
-		$file_path = UTIL::Absolute_Path('fs/' . $uid);
-		$final_path = $file_path . '/programs/' . $program_id;
+		$programs_registry[$normalized_program_name] = 'user';
 
-		if (!$is_match_found)
-		{
-			
+		$templates_path = UTIL::Absolute_Path('framework/misc/data/spw');
+		$program_template = file_get_contents($templates_path . '/template_' . $program_type . '.js');
 
-			mkdir($final_path, 0700);
-			mkdir($final_path . '/data', 0700);
-			mkdir($final_path . '/data/window', 0700);
-			mkdir($final_path . '/data/casement', 0700);
-			mkdir($final_path . '/graphics', 0700);
-			mkdir($final_path . '/graphics/pix', 0700);
-			mkdir($final_path . '/graphics/icons', 0700);
-			mkdir($final_path . '/misc', 0700);
+		$new_program = str_replace('template_' . $program_type, $normalized_program_name, $program_template);
+		$new_program = str_replace('Template ' . ucfirst($program_type), $program_name, $new_program);
+		$new_program = str_replace('Template ', '', $new_program);
+		$new_program = str_replace('[' . ucfirst($program_type) . ']', $program_name, $new_program);
+		$new_program = str_replace('Version: 0.5', 'Version: xx.yy', $new_program);
 
-			file_put_contents($final_path . '/data/window/title.phtml', '');
-		}
+		$user_programs_path = UTIL::Absolute_Path('framework/extensions/js/user');
+		$user_program_folder = $user_programs_path . '/' . $normalized_program_name;
 
-		$program_settings_path = UTIL::Absolute_Path('framework/misc/data/default_program_settings.json');
-		$program_settings = json_decode(file_get_contents($program_settings_path), true);
+		mkdir($user_program_folder, 0700);
 
-		$program_settings['id'] = $program_id;
-		$program_settings['name'] = $program[0];
-		$program_settings['icon'] = $program_icon;
+		file_put_contents($user_program_folder . '/'. $normalized_program_name . '.js', $new_program);
+		file_put_contents($programs_registry_path, json_encode($programs_registry));
 
-		file_put_contents($final_path . '/settings.json', json_encode($program_settings));
-		file_put_contents($final_path . '/' . $program_id . '.ms', $program[2]);
+		echo '1';
 
-		return true;
+		return;
 	}
 ?>

@@ -15,7 +15,20 @@ body
     font-family: 'Ubuntu', sans-serif;
     font-size: 14px;
     color: white;
-    background-color: #0a1a1c;
+    background-color: #718385;
+}
+
+a
+{
+    cursor: pointer;
+    color: #647d7c;
+}
+
+input[type='button']
+{
+    cursor: pointer;
+    width: 75px;
+    padding: 4px;
 }
 
 #greyos_logo
@@ -23,7 +36,7 @@ body
     width: 1210px;
     height: 47px;
     zoom: 30%;
-    background-image: url('../../../site/pix/greyos_logo.png');
+    background-image: url('/site/pix/greyos_logo.png');
     margin: auto;
     margin-top: 300px;
 }
@@ -62,7 +75,7 @@ body
     text-align: justify;
     width: 70%;
     margin: auto;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 #new_program_name

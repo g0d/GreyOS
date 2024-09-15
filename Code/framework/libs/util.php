@@ -58,7 +58,7 @@
         }
         
         /**
-        * UTIL::Fetch_Extensions - Fetch all configured extensions for autoloading
+        * UTIL::Fetch_Autoload_Extensions - Fetch all configured extensions for autoloading
         *
         * @return array
         */

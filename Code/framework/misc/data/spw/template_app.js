@@ -184,8 +184,8 @@ function template_app()
         template_app_bee.gui.position.top(10);
         template_app_bee.gui.size.width(1024);
         template_app_bee.gui.size.height(720);
-        template_app_bee.gui.size.min.width(960);
-        template_app_bee.gui.size.min.height(680);
+        template_app_bee.gui.size.min.width(480);
+        template_app_bee.gui.size.min.height(360);
         template_app_bee.gui.size.max.width(1920);
         template_app_bee.gui.size.max.height(1080);
         template_app_bee.gui.fx.fade.settings.into.set(0.07, 25, 100); // Fade-in FX set (Optional)

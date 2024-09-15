@@ -19,22 +19,40 @@ function spw()
     function create_program()
     {
         var utils = new vulcan(),
-            data = 'gate=spw&program_name=' + utils.objects.by_id('new_program_name').value + 
-                   '&program_type=' + utils.objects.by_id('app').checked;
+            name =  utils.objects.by_id('new_program_name').value,
+            type = null,
+            data = null;
 
-        ajax_factory('post', data, function()
+        if (utils.objects.by_id('app').checked)
+            type = 'app';
+        else
+            type = 'svc';
+
+        data = 'gate=spw&program_name=' + name + '&program_type=' + type;
+
+        ajax_factory('post', data, function(result)
         {
             utils.objects.by_id('components').innerHTML = '<br><br><br>Done!<br><br><br>';
         },
-        function()
+        function(result)
         {
-            utils.objects.by_id('components').innerHTML = `<br><br><br>
-                                                           Error: Another program of the same type has the same name!
-                                                           <br><br><br>`;
+            if (result === '0')
+            {
+                utils.objects.by_id('components').innerHTML = `<br><br><br>
+                                                               Oops, another program has the same name!<br>
+                                                               Choose a different name and try again.
+                                                               <br><br><br>`;
+            }
+            else
+            {
+                utils.objects.by_id('components').innerHTML = `<br><br><br>
+                                                               Error: Try again!
+                                                               <br><br><br>`;
+            }
         },
         function()
         {
-            // Nothing...
+            utils.objects.by_id('components').innerHTML += `<a href="">Refresh</a>`;
         });
 
         return true;

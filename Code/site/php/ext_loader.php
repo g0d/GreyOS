@@ -30,4 +30,5 @@
     //UTIL::Load_Extension('i_linkedin', 'js');
     //UTIL::Load_Extension('i_youtube', 'js');
     UTIL::Load_Extension('banana', 'js');
+    //UTIL::Load_Extension('my_new_app', 'js');
 ?>
