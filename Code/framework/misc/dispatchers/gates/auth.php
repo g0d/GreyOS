@@ -1,10 +1,10 @@
 <?php
 	/*
 		Auth (Programmable gate for authentication)
-		
+
 		File name: auth.php
 		Description: This file contains the authentication gate (AJAX).
-		
+
 		Coded by George Delaportas (G0D)
 		Copyright (C) 2019 - 2024
 		Open Software License (OSL 3.0)

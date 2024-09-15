@@ -13,13 +13,6 @@
         <title><?=UTIL::Load_Content('title', 'static');?></title>
     </head>
     <body>
-        <script type="module">
-            import Hyperbeam, { getRegionInfo } from "https://unpkg.com/@hyperbeam/web@latest/dist/index.js";
-
-            const regionInfo = await getRegionInfo();
-
-            window.hyperbeam = Hyperbeam;
-        </script>
         <div id="greyos">
         <?php
             UTIL::Load_Section('header');
@@ -33,17 +26,32 @@
                 require('framework/errors/404.phtml');
             else
             {
-                /*
-                    [!] ATTENTION [!]
-                    If you use the "JS Compactor" do not call "Autoload_Extensions()" and "Load_Extension(..., 'js')" API for any pre-loaded JS
-                    If you do so, you will end up with duplicated non-optimized JS extensions with strange behavior.
-                */
-                //UTIL::Autoload_Extensions();
-                
-                require('site/php/ext_loader.php');
-                
                 if ($this_route === 'root')
+                {
+                    /*
+                        [!] ATTENTION [!]
+                        If you use the "JS Compactor" do not call "Autoload_Extensions()" and "Load_Extension(..., 'js')" API for any pre-loaded JS
+                        If you do so, you will end up with duplicated non-optimized JS extensions with strange behavior.
+                    */
+                    //UTIL::Autoload_Extensions();
+                    
+                    require('site/php/ext_loader.php');
+                    
                     MVC::Go_To($this_route);
+                ?>
+                    <script type="module">
+                        import Hyperbeam, { getRegionInfo } from "https://unpkg.com/@hyperbeam/web@latest/dist/index.js";
+
+                        const regionInfo = await getRegionInfo();
+                        
+                        window.hyperbeam = Hyperbeam;
+                    </script>
+                    <script src="/framework/extensions/js/user/ace/src/ace-min.js"></script>
+                    <script src="/framework/extensions/js/user/ace/src/ext-language_tools.js"></script>
+                    <script src="/framework/extensions/js/user/ace/src/ext-settings_menu.js"></script>
+                    <script src="/site/js/boot.js" defer></script>
+                <?php
+                }
                 else
                 {
                     $args = '';
@@ -51,10 +59,6 @@
                     MVC::Go_To($this_route, $args);
                 }
                 ?>
-                <script src="/framework/extensions/js/user/ace/src/ace-min.js"></script>
-                <script src="/framework/extensions/js/user/ace/src/ext-language_tools.js"></script>
-                <script src="/framework/extensions/js/user/ace/src/ext-settings_menu.js"></script>
-                <script src="/site/js/boot.js" defer></script>
             <?php
             }
             

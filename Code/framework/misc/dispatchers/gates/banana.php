@@ -1,10 +1,10 @@
 <?php
     /*
         GreyOS - Programmable gate for Banana
-        
+
         File name: banana.php
         Description: This file contains the Banana gate (AJAX).
-        
+
         Coded by George Delaportas (G0D)
         Copyright © 2013 - 2024
         Open Software License (OSL 3.0)

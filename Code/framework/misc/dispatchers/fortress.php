@@ -1,10 +1,10 @@
 <?php
 	/*
 		Fortress (AJAX dispatcher)
-		
+
 		File name: fortress.php
 		Description: This file contains the Fortress - AJAX dispatcher with controllable gates.
-		
+
 		Coded by George Delaportas (G0D)
 		Copyright (C) 2016
 		Open Software License (OSL 3.0)

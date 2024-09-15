@@ -610,8 +610,8 @@ function hive()
                                                    'height: 85px;');
 
             __dynamic_object.innerHTML = `<div id="` + hive_id + `_previous_arrow" class="stack_arrow left_arrow"></div>
-                                            <div id="` + hive_id + `_stack" class="stack_bar">
-                                            <div id="` + hive_id + `_sliding_box" class="sliding_box"></div>
+                                          <div id="` + hive_id + `_stack" class="stack_bar">
+                                              <div id="` + hive_id + `_sliding_box" class="sliding_box"></div>
                                           </div>
                                           <div id="` + hive_id + `_next_arrow" class="stack_arrow right_arrow"></div>`;
 
@@ -728,12 +728,12 @@ function hive()
 
             __dynamic_object.innerHTML = `<div id="hive_bee_` + bee_id + `_icon" class="` + __ctrl_bar_icon_class + `"></div> 
                                           <div id="hive_bee_` + bee_id + `_title" class="` + __ctrl_bar_title_class + `">` +
-                                            __bee_object.settings.data.window.labels.title() + 
-                                          `</div>`;
+                                          __bee_object.settings.data.window.labels.title() + 
+                                         `</div>`;
 
             if (__bee_object.settings.actions.can_close())
                 __dynamic_object.innerHTML += '<div id="hive_bee_' + bee_id + '_close" class="' + __ctrl_bar_close_class + '"></div>';
-
+ 
             if (mode === 0)
             {
                 utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
@@ -767,7 +767,7 @@ function hive()
                                 me.show_ghost_bee(event, 1);
                             };
                 morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[0]);
-                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[1]);
+                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[2]);
 
                 __handler = function(event)
                             {
@@ -790,7 +790,8 @@ function hive()
                                                           });
                                 __bee_object.gui.actions.close(event);
                             };
-                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[2]);
+
+                morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[3]);
             }
             else
             {

@@ -1,10 +1,10 @@
 <?php
 	/*
 		Send Email (Programmable gate for delivering emails)
-		
+
 		File name: send_email.php
 		Description: This file contains the send email gate.
-		
+
 		Coded by George Delaportas (G0D)
 		Copyright (C) 2019
 		Open Software License (OSL 3.0)

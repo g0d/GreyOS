@@ -8384,7 +8384,7 @@ function hive()
  me.show_ghost_bee(event, 1);
  };
  morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[0]);
- morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[1]);
+ morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[2]);
  __handler = function(event)
  {
  if (event.buttons !== 1)
@@ -8401,7 +8401,7 @@ function hive()
  });
  __bee_object.gui.actions.close(event);
  };
- morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[2]);
+ morpheus.run(hive_id, 'mouse', 'mousedown', __handler, __dynamic_object.childNodes[3]);
  }
  else
  {

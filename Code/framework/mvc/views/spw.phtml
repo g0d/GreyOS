@@ -1,0 +1,43 @@
+<div id="wizard">
+    <div id="greyos_logo"></div>
+    <div id="components">
+        <div id="subject">
+            <div id="title">System Program Wizard</div>
+            <div id="subtitle">Initialization & Setup</div>
+        </div>
+        <div id="details">
+            This wizard creates a template for a system-level app or service. 
+            All system-level apps uitlize the low-level GreyOS API, have direct access to the DOM and 
+            can manage browser-level API. The low-level coding requires some expertise. Use with caution 
+            as this may break everything!
+        </div>
+        <div id="form">
+            <div class="control">
+                <div class="control_label">Please enter program name</div>
+                <input type="text" id="new_program_name" value="my_program">
+            </div>
+            <div class="control">
+                <div class="control_label">Please choose program type</div>
+                <div id="options">
+                    <div class="radio_option radio_left">
+                        <label for="app">App</label>
+                        <input id="app" type="radio" name="program_type" checked="true">
+                    </div>
+                    <div class="radio_option radio_right">
+                        <label for="service">Service</label>
+                        <input id="service" type="radio" name="program_type">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input id="create_new_program" type="button" value="Create">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/framework/extensions/js/core/vulcan/vulcan.js"></script>
+<script src="/framework/extensions/js/core/jap/jap.js"></script>
+<script src="/framework/extensions/js/core/bull/bull.js"></script>
+<script src="/framework/extensions/js/core/ultron/ultron.js"></script>
+<script src="/framework/extensions/js/core/ajax_factory/ajax_factory.js"></script>
+<script src="/framework/mvc/views/assets/js/spw.js"></script>

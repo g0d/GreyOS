@@ -1,5 +1,5 @@
 /*
-    GreyOS - Banana (Version: 1.4)
+    GreyOS - Banana (Version: 1.5)
 
     File name: banana.js
     Description: This file contains the Banana - Suggestions manager widget.
@@ -19,48 +19,41 @@ function Banana()
         gfx = new fx(),
         utils = new vulcan();
 
-        // Banana post
-        function banana_post()
+    // Banana post
+    function banana_post()
+    {
+        var utils = new vulcan(),
+            data = 'gate=banana&suggestion=' + utils.objects.by_id('banana_suggestion').value;
+
+        ajax_factory('post', data, function(result)
         {
-            var utils = new vulcan(),
-                data = 'gate=banana&suggestion=' + utils.objects.by_id('banana_suggestion').value;
+            utils.objects.by_id('banana_suggestion').value = '';
 
-            ajax_factory('post', data, function(result)
-            {
-                    utils.objects.by_id('banana_suggestion').value = '';
+            if (result === '1')
+                utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
+            else
+                utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
 
-                    if (result === '1')
-                        utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
-                    else
-                        utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
+            setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
+        },
+        function()
+        {
+                // Nothing...
+        },
+        function()
+        {
+                // Nothing...
+        });
 
-                    setTimeout(function() { utils.objects.by_id('banana_info').innerHTML = ''; }, 1500);
-            },
-            function()
-            {
-                    // Nothing...
-            },
-            function()
-            {
-                    // Nothing...
-            });
+        return true;
+    }
 
-            return true;
-        }
-
-    __dynamic_object = document.createElement('link');
-
-    __dynamic_object.setAttribute('rel', 'Stylesheet');
-    __dynamic_object.setAttribute('type', 'text/css');
-    __dynamic_object.setAttribute('media', 'screen');
-    __dynamic_object.setAttribute('href', '/framework/extensions/js/user/banana/banana.css');
-
-    document.getElementsByTagName('head')[0].appendChild(__dynamic_object);
+    utils.graphics.apply_theme('/framework/extensions/js/user/banana', 'banana');
 
     __dynamic_object = document.createElement('div');
 
     __dynamic_object.id = 'banana';
-    __dynamic_object.innerHTML = `<div id="toggle" class="banana_trigger" title="Dudes, send us your suggestions!">
+    __dynamic_object.innerHTML = `<div id="banana_toggle" class="banana_trigger" title="Dudes, send us your suggestions!">
                                     <br><br><br>O<br>P<br>E<br>N<br><br>M<br>E</div>
                                     <div class="banana_body">
                                         <div class="banana_title">User Suggestions</div>
@@ -107,8 +100,8 @@ function Banana()
                             });
                         }
                     }
-                    utils.objects.by_id('toggle').addEventListener('click', function() { toggle(); }, false);
-                    utils.objects.by_id('banana_send').addEventListener('click', function() { banana_post(); }, false);
+                    utils.events.attach(__dynamic_object.id, utils.objects.by_id('banana_toggle'), 'click', function(){  toggle(); });
+                    utils.events.attach(__dynamic_object.id, utils.objects.by_id('banana_send'), 'click', function(){  banana_post(); });
                }, 1500);
 
     return true;

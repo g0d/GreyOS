@@ -1,10 +1,10 @@
 <?php
 	/*
-		Deploy Program (Programmable gate for apps & services deployment)
-		
+		Deploy Program (Programmable gate for meta apps & services deployment)
+
 		File name: deploy_program.php
 		Description: This file contains the deploy program gate.
-		
+
 		Coded by George Delaportas (G0D)
 		Copyright (C) 2023 - 2024
 		Open Software License (OSL 3.0)
