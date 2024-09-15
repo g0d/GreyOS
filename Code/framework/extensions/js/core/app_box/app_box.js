@@ -1,11 +1,11 @@
 /*
-    GreyOS - App Box (Version: 1.6)
+    GreyOS - App Box (Version: 1.8)
 
     File name: app_box.js
     Description: This file contains the App Box - Integrated applications container module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 
@@ -103,7 +103,10 @@ function app_box()
 
         for (var i = 0; i < __models_num; i++)
         {
-            if (!utils_sys.validation.misc.is_function(models_array[i]))
+            var __func = new Function('return new ' + models_array[i] + '()'),
+                __object_model = new __func;
+
+            if (!utils_sys.validation.misc.is_object(__object_model))
             {
                 if (backtrace === true)
                     frog('APP BOX', 'Models :: Invalid', models_array[i]);
@@ -112,8 +115,6 @@ function app_box()
 
                 return false;
             }
-
-            var __object_model = new models_array[i]();
 
             if (utils_int.model_exists(__object_model))
             {
@@ -181,7 +182,10 @@ function app_box()
 
         for (var i = 0; i < __models_num; i++)
         {
-            if (!utils_sys.validation.misc.is_function(models_array[i]))
+            var __func = new Function('return new ' + models_array[i] + '()'),
+                __object_model = new __func;
+
+            if (!utils_sys.validation.misc.is_object(__object_model))
             {
                 if (backtrace === true)
                     frog('APP BOX', 'Models :: Invalid', models_array[i]);

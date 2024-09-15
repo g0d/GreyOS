@@ -22,13 +22,15 @@ function spw()
             data = 'gate=spw&program_name=' + utils.objects.by_id('new_program_name').value + 
                    '&program_type=' + utils.objects.by_id('app').checked;
 
-        ajax_factory('post', data, function(result)
+        ajax_factory('post', data, function()
         {
             utils.objects.by_id('components').innerHTML = '<br><br><br>Done!<br><br><br>';
         },
         function()
         {
-            // Nothing...
+            utils.objects.by_id('components').innerHTML = `<br><br><br>
+                                                           Error: Another program of the same type has the same name!
+                                                           <br><br><br>`;
         },
         function()
         {

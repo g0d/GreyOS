@@ -3,7 +3,7 @@
         GreyOS - OZ (Version: 1.0)
 
         File name: oz.php
-        Description: This file contains the OZ - Gate (AJAX).
+        Description: This file contains the OZ gate (AJAX).
 
         Coded by George Delaportas (G0D)
         Copyright © 2013 - 2021

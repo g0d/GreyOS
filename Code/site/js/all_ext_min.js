@@ -5726,14 +5726,15 @@ function app_box()
  return false;
  for (var i = 0; i < __models_num; i++)
  {
- if (!utils_sys.validation.misc.is_function(models_array[i]))
+ var __func = new Function('return new ' + models_array[i] + '()'),
+ __object_model = new __func;
+ if (!utils_sys.validation.misc.is_object(__object_model))
  {
  if (backtrace === true)
  frog('APP BOX', 'Models :: Invalid', models_array[i]);
  self.clear();
  return false;
  }
- var __object_model = new models_array[i]();
  if (utils_int.model_exists(__object_model))
  {
  if (backtrace === true)
@@ -5783,7 +5784,9 @@ function app_box()
  return false;
  for (var i = 0; i < __models_num; i++)
  {
- if (!utils_sys.validation.misc.is_function(models_array[i]))
+ var __func = new Function('return new ' + models_array[i] + '()'),
+ __object_model = new __func;
+ if (!utils_sys.validation.misc.is_object(__object_model))
  {
  if (backtrace === true)
  frog('APP BOX', 'Models :: Invalid', models_array[i]);
@@ -5898,14 +5901,15 @@ function svc_box()
  return false;
  for (var i = 0; i < __models_num; i++)
  {
- if (!utils_sys.validation.misc.is_function(models_array[i]))
+ var __func = new Function('return new ' + models_array[i] + '()'),
+ __object_model = new __func;
+ if (!utils_sys.validation.misc.is_object(__object_model))
  {
  if (backtrace === true)
  frog('SVC BOX', 'Models :: Invalid', models_array[i]);
  self.clear();
  return false;
  }
- var __object_model = new models_array[i]();
  if (utils_int.model_exists(__object_model))
  {
  if (backtrace === true)
@@ -5955,7 +5959,9 @@ function svc_box()
  return false;
  for (var i = 0; i < __models_num; i++)
  {
- if (!utils_sys.validation.misc.is_function(models_array[i]))
+ var __func = new Function('return new ' + models_array[i] + '()'),
+ __object_model = new __func;
+ if (!utils_sys.validation.misc.is_object(__object_model))
  {
  if (backtrace === true)
  frog('SVC BOX', 'Models :: Invalid', models_array[i]);
@@ -13506,7 +13512,6 @@ function super_tray()
  __new_tray_service.action = action;
  tray_services.list.push(__new_tray_service);
  tray_services.num++;
- svc_box.replace([bat_object]);
  if (visible_in_super_tray)
  {
  utils_int.add_service_icon(tray_services.num);
@@ -19765,10 +19770,10 @@ function cloud_edit()
  cloud_edit_bee.settings.general.casement_width(60, 'fixed');
  cloud_edit_bee.gui.position.left(100);
  cloud_edit_bee.gui.position.top(40);
- cloud_edit_bee.gui.size.width(800);
+ cloud_edit_bee.gui.size.width(820);
  cloud_edit_bee.gui.size.height(530);
- cloud_edit_bee.gui.size.min.width(800);
- cloud_edit_bee.gui.size.min.height(530);
+ cloud_edit_bee.gui.size.min.width(600);
+ cloud_edit_bee.gui.size.min.height(480);
  cloud_edit_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
  cloud_edit_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
  cloud_edit_bee.on('open', function() { cloud_edit_bee.gui.fx.fade.into(); });

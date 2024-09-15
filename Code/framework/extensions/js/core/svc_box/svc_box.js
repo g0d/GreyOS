@@ -1,5 +1,5 @@
 /*
-    GreyOS - Svc Box (Version: 1.0)
+    GreyOS - Svc Box (Version: 1.2)
 
     File name: svc_box.js
     Description: This file contains the Svc Box - Integrated services container module.
@@ -103,7 +103,10 @@ function svc_box()
 
         for (var i = 0; i < __models_num; i++)
         {
-            if (!utils_sys.validation.misc.is_function(models_array[i]))
+            var __func = new Function('return new ' + models_array[i] + '()'),
+                __object_model = new __func;
+
+            if (!utils_sys.validation.misc.is_object(__object_model))
             {
                 if (backtrace === true)
                     frog('SVC BOX', 'Models :: Invalid', models_array[i]);
@@ -112,8 +115,6 @@ function svc_box()
 
                 return false;
             }
-
-            var __object_model = new models_array[i]();
 
             if (utils_int.model_exists(__object_model))
             {
@@ -181,7 +182,10 @@ function svc_box()
 
         for (var i = 0; i < __models_num; i++)
         {
-            if (!utils_sys.validation.misc.is_function(models_array[i]))
+            var __func = new Function('return new ' + models_array[i] + '()'),
+                __object_model = new __func;
+
+            if (!utils_sys.validation.misc.is_object(__object_model))
             {
                 if (backtrace === true)
                     frog('SVC BOX', 'Models :: Invalid', models_array[i]);

@@ -524,10 +524,10 @@ function cloud_edit()
         cloud_edit_bee.settings.general.casement_width(60, 'fixed');
         cloud_edit_bee.gui.position.left(100);
         cloud_edit_bee.gui.position.top(40);
-        cloud_edit_bee.gui.size.width(800);
+        cloud_edit_bee.gui.size.width(820);
         cloud_edit_bee.gui.size.height(530);
-        cloud_edit_bee.gui.size.min.width(800);
-        cloud_edit_bee.gui.size.min.height(530);
+        cloud_edit_bee.gui.size.min.width(600);
+        cloud_edit_bee.gui.size.min.height(480);
         cloud_edit_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);
         cloud_edit_bee.gui.fx.fade.settings.out.set(0.07, 25, 100);
         cloud_edit_bee.on('open', function() { cloud_edit_bee.gui.fx.fade.into(); });

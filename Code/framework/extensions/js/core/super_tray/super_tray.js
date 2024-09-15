@@ -1,5 +1,5 @@
 /*
-    GreyOS - Super Tray (Version: 2.0)
+    GreyOS - Super Tray (Version: 2.1)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area module.
@@ -321,8 +321,6 @@ function super_tray()
 
         tray_services.list.push(__new_tray_service);
         tray_services.num++;
-
-        svc_box.replace([bat_object]);
 
         if (visible_in_super_tray)
         {
