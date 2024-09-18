@@ -222,7 +222,9 @@ function ui_controls()
         is_init = true;
 
         self.settings.id('ui_controls_' + random.generate());
-        self.settings.container(container_id);
+
+        if (!self.settings.container(container_id))
+            return false;
 
         ui_controls_id = self.settings.id();
 

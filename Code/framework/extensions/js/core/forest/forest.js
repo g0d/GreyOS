@@ -692,7 +692,9 @@ function forest()
             is_init = true;
 
             self.settings.id('forest_' + random.generate());
-            self.settings.container(container_id);
+
+            if (!self.settings.container(container_id))
+                return false;
 
             forest_id = self.settings.id();
 

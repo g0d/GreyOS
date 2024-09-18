@@ -567,7 +567,10 @@ function swarm()
             is_init = true;
 
             self.settings.id('swarm_' + random.generate());
-            self.settings.container(container_id);
+
+            if (!self.settings.container(container_id))
+                return false;
+
             self.settings.left(left);
             self.settings.top(top);
             self.settings.right(right);

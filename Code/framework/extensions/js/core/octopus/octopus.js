@@ -150,6 +150,21 @@ function octopus()
             //navigator.mediaDevices.getUserMedia(__constraints).then(() => { device_manager(); });
             navigator.mediaDevices.ondevicechange = function() { device_manager(); };
 
+            // TODO: Work on managing the USB devices seamlessly with the maultimedia devices
+            navigator.usb.getDevices()
+            .then(devices =>
+            {
+                console.log("Total connected USB devices: " + devices.length);
+            
+                devices.forEach(device =>
+                {
+                    console.log("Product name: " + device.productName + ", serial number " + device.serialNumber);
+                });
+            });
+            
+            navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
+            navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
+
             is_component_active = true;
 
             return true;
@@ -278,10 +293,8 @@ function octopus()
             return utils_int.start_component();
         else
         {
-            if (utils_sys.validation.alpha.is_symbol(container_id))
+            if (!self.settings.container(container_id))
                 return false;
-
-            self.settings.container(container_id);
 
             return utils_int.load_ui();
         }

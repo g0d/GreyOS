@@ -392,7 +392,6 @@ function boot_script()
                                                                         if (event.buttons === 4)
                                                                             event.preventDefault();
                                                                     });
-            //document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false);
 
             var meta_description = os_utils.objects.selectors.first('meta[name="description"]').content;
 

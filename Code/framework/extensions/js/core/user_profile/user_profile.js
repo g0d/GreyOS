@@ -392,7 +392,9 @@ function user_profile()
         os_name = xenon.load('os_name');
 
         self.settings.id('user_profile_' + random.generate());
-        self.settings.container(container_id);
+
+        if (!self.settings.container(container_id))
+            return false;
 
         user_profile_id = self.settings.id();
         super_tray_id = super_tray.id();

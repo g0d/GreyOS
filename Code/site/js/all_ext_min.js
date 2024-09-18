@@ -7362,7 +7362,8 @@ function forest()
  {
  is_init = true;
  self.settings.id('forest_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  forest_id = self.settings.id();
  nature.themes.store('forest');
  nature.apply('new');
@@ -7826,7 +7827,8 @@ function swarm()
  return false;
  is_init = true;
  self.settings.id('swarm_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  self.settings.left(left);
  self.settings.top(top);
  self.settings.right(right);
@@ -8867,7 +8869,8 @@ function hive()
  var dynamic_bees_per_honeycomb = utils_int.setup_honeycomb_size(bees_per_honeycomb);
  is_init = true;
  self.settings.id('hive_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  self.settings.bees_per_honeycomb(dynamic_bees_per_honeycomb);
  self.settings.left(left);
  self.settings.top(top);
@@ -9568,7 +9571,8 @@ function ui_controls()
  return false;
  is_init = true;
  self.settings.id('ui_controls_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  ui_controls_id = self.settings.id();
  nature.themes.store('ui_controls');
  nature.apply('new');
@@ -9907,7 +9911,8 @@ function dock()
  return false;
  is_init = true;
  self.settings.id('dock_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  dock_id = self.settings.id();
  nature.themes.store('dock');
  nature.apply('new');
@@ -10242,7 +10247,8 @@ function user_profile()
  is_init = true;
  os_name = xenon.load('os_name');
  self.settings.id('user_profile_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  user_profile_id = self.settings.id();
  super_tray_id = super_tray.id();
  nature.themes.store('user_profile');
@@ -10853,7 +10859,8 @@ function eagle()
  }
  is_init = true;
  self.settings.id('eagle_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  eagle_id = self.settings.id();
  nature.themes.store('eagle');
  nature.apply('new');
@@ -11072,7 +11079,8 @@ function tik_tok()
  return false;
  is_init = true;
  self.settings.id('tik_tok_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  nature.themes.store('tik_tok');
  nature.apply('new');
  clock = new time_date_model();
@@ -13166,6 +13174,17 @@ function octopus()
  if (!navigator.mediaDevices)
  return false;
  navigator.mediaDevices.ondevicechange = function() { device_manager(); };
+ navigator.usb.getDevices()
+ .then(devices =>
+ {
+ console.log("Total connected USB devices: " + devices.length);
+ devices.forEach(device =>
+ {
+ console.log("Product name: " + device.productName + ", serial number " + device.serialNumber);
+ });
+ });
+ navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
+ navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
  is_component_active = true;
  return true;
  };
@@ -13259,9 +13278,8 @@ function octopus()
  return utils_int.start_component();
  else
  {
- if (utils_sys.validation.alpha.is_symbol(container_id))
+ if (!self.settings.container(container_id))
  return false;
- self.settings.container(container_id);
  return utils_int.load_ui();
  }
  };
@@ -13602,7 +13620,8 @@ function super_tray()
  return false;
  is_init = true;
  self.settings.id('super_tray_' + random.generate());
- self.settings.container(container_id);
+ if (!self.settings.container(container_id))
+ return false;
  super_tray_id = self.settings.id();
  return utils_int.load_ui(container_id);
  };
@@ -13931,9 +13950,8 @@ function parrot()
  {
  if (is_init === false)
  return false;
- if (utils_sys.validation.alpha.is_symbol(container_id))
+ if (!self.settings.container(container_id))
  return false;
- self.settings.container(container_id);
  utils_int.load_ui();
  return true;
  };
@@ -14177,7 +14195,7 @@ function xgc()
 function infinity()
 {
  var self = this;
- function status_model()
+ function status()
  {
  this.in_progress = function()
  {
@@ -14186,7 +14204,7 @@ function infinity()
  return self.settings.in_progress();
  };
  }
- function settings_model()
+ function settings()
  {
  var __id = null,
  __container = null,
@@ -14317,8 +14335,8 @@ function infinity()
  utils_sys = new vulcan(),
  random = new pythia(),
  utils_int = new utilities();
- this.status = new status_model();
- this.settings = new settings_model();
+ this.status = new status();
+ this.settings = new settings();
 }
 function scrollbar()
 {
@@ -19269,59 +19287,68 @@ function coyote()
 function max_screen()
 {
  var self = this;
+ function element_dimensions_model()
+ {
+ this.width = null;
+ this.height = null;
+ }
  function utilities()
  {
  var me = this;
  this.go_full_screen = function()
  {
- var __element = vulcan.objects.by_id(self.settings.container());
- vulcan.objects.by_id('max_screen_splash').style.display = 'none';
- if (__element.requestFullscreen)
+ var __max_screen = utils_sys.objects.by_id(max_screen_id),
+ __callback = self.settings.callback_function(),
+ __element = utils_sys.objects.by_id(self.settings.container());
+ __max_screen.innerHTML = 'X';
+ element_dimensions.width = __element.style.width;
+ element_dimensions.height = __element.style.height;
  __element.requestFullscreen();
- else if (__element.webkitRequestFullscreen)
- __element.webkitRequestFullscreen();
- else
- return false;
- self.settings.callback_function().call();
+ if (__callback)
+ __callback.call();
+ morpheus.delete(max_screen_id, 'click', __max_screen);
+ __handler = function() { me.go_normal_screen(); };
+ morpheus.run(max_screen_id, 'mouse', 'click', __handler, __max_screen);
+ __handler = function(event_object)
+ {
+ key_control.scan(event_object);
+ var __key_code = key_control.get();
+ if (__key_code === 192)
+ me.go_normal_screen();
+ };
+ morpheus.run(max_screen_id, 'key', 'keydown', __handler, document);
+ is_full_screen = true;
+ return true;
+ };
+ this.go_normal_screen = function()
+ {
+ var __max_screen = utils_sys.objects.by_id(max_screen_id),
+ __element = utils_sys.objects.by_id(self.settings.container());
+ __max_screen.innerHTML = '[]';
+ __element.style.width = element_dimensions.width;
+ __element.style.height = element_dimensions.height;
+ morpheus.delete(max_screen_id, 'click', __max_screen);
+ __handler = function() { me.go_full_screen(); };
+ morpheus.run(max_screen_id, 'mouse', 'click', __handler, __max_screen);
+ morpheus.delete(max_screen_id, 'keydown', document);
+ is_full_screen = false;
  return true;
  };
  this.setup = function(theme)
  {
  var __handler = null,
  __dynamic_object = null;
- if (!vulcan.graphics.apply_theme('/framework/extensions/js/max_screen/theme', theme))
+ if (theme === null)
+ theme = 'max_screen';
+ if (!utils_sys.graphics.apply_theme('/framework/extensions/js/user/max_screen/', theme))
  return false;
  __dynamic_object = document.createElement('div');
- __dynamic_object.setAttribute('id', 'max_screen_splash');
+ __dynamic_object.setAttribute('id', max_screen_id);
  __dynamic_object.setAttribute('class', 'max_screen');
- document.body.appendChild(__dynamic_object);
+ __dynamic_object.innerHTML = '[]';
+ utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
  __handler = function() { me.go_full_screen(); };
- vulcan.objects.by_id('max_screen_splash').onmousedown = __handler;
- return true;
- };
- }
- function settings()
- {
- var __container = null,
- __callback_function = null;
- this.container = function(val)
- {
- if (is_init === false)
- return false;
- if (vulcan.validation.misc.is_undefined(val))
- return __container;
- if (vulcan.validation.alpha.is_symbol(val))
- return false;
- __container = val;
- return true;
- };
- this.callback_function = function(val)
- {
- if (is_init === false)
- return false;
- if (vulcan.validation.misc.is_undefined(val))
- return __callback_function;
- __callback_function = val;
+ morpheus.run(max_screen_id, 'mouse', 'click', __handler, __dynamic_object);
  return true;
  };
  }
@@ -19330,47 +19357,85 @@ function max_screen()
  this.full_screen = function()
  {
  if (is_init === false)
- return false;
- if ((screen.height - window.innerHeight) < 5)
- return true;
- return false;
+ return null;
+ return is_full_screen;
  };
  }
- this.init = function(container_id, func, theme)
+ function settings()
+ {
+ var __id = null,
+ __container = null,
+ __callback_function = null;
+ this.id = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __id;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __id = val;
+ return true;
+ };
+ this.container = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __container;
+ if (utils_sys.validation.alpha.is_symbol(val))
+ return false;
+ __container = val;
+ return true;
+ };
+ this.callback_function = function(val)
+ {
+ if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(val))
+ return __callback_function;
+ __callback_function = val;
+ return true;
+ };
+ }
+ this.init = function(container_id, func = null, theme = null)
  {
  if (is_init === true)
  return false;
- if (vulcan.validation.misc.is_undefined(container_id) ||
- vulcan.validation.alpha.is_symbol(container_id) ||
- vulcan.objects.by_id(container_id) === null ||
- !vulcan.validation.misc.is_function(func))
+ if (utils_sys.validation.misc.is_undefined(container_id))
  return false;
+ is_init = true;
+ self.settings.id('max_screen_' + random.generate());
+ max_screen_id = self.settings.id();
  if (!self.settings.container(container_id))
  return false;
  self.settings.callback_function(func);
- if (!utils.setup(theme))
+ if (!utils_int.setup(theme))
  return false;
- is_init = true;
  return true;
  };
  this.cosmos = function(cosmos_object)
  {
- if (cosmos_exists === true)
- return false;
- if (cosmos_object === undefined)
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
  return false;
  cosmos = cosmos_object;
- vulcan = cosmos.hub.access('vulcan');
- cosmos_exists = true;
+ matrix = cosmos.hub.access('matrix');
+ morpheus = matrix.get('morpheus');
  return true;
  };
- var cosmos_exists = false,
- is_init = false,
+ var is_init = false,
+ is_full_screen = false,
+ max_screen_id = null,
  cosmos = null,
- vulcan = null,
- utils = new utilities();
- this.settings = new settings();
+ matrix = null,
+ morpheus = null,
+ utils_sys = new vulcan(),
+ random = new pythia(),
+ key_control = new key_manager(),
+ element_dimensions = new element_dimensions_model(),
+ utils_int = new utilities();
  this.status = new status();
+ this.settings = new settings();
 }
 function cloud_edit()
 {

@@ -245,10 +245,8 @@ function octopus_task()
             return utils_int.start_service();
         else
         {
-            if (utils_sys.validation.alpha.is_symbol(container_id))
+            if (!self.settings.container(container_id))
                 return false;
-
-            self.settings.container(container_id);
 
             utils_int.load_ui();
         }

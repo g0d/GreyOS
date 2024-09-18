@@ -252,7 +252,9 @@ function tik_tok()
         is_init = true;
 
         self.settings.id('tik_tok_' + random.generate());
-        self.settings.container(container_id);
+
+        if (!self.settings.container(container_id))
+            return false;
 
         nature.themes.store('tik_tok');
         nature.apply('new');

@@ -6,10 +6,14 @@ console.log(navigator.onLine);
 console.log(navigator.languages);
 console.log(navigator.userAgentData);
 
+
+
 var tk = new task();
 tk.create('/framework/extensions/js/core/task/worker.js');
 tk.message.receive((x) => { console.log(x.data); });
 tk.message.send('Test');
+
+
 
 var pl = new parallel();
 var tk_1 = pl.create('/framework/extensions/js/core/parallel/worker.js');
@@ -26,8 +30,12 @@ var tasks_config =
 //console.log(pl.run(tk_3, '3333', (e) => { console.log(e.data); }));
 console.log(pl.run_all(tasks_config));
 
+
+
 console.log('VM CPU: ', navigator.hardwareConcurrency, ' CORES');
 console.log('VM RAM: ', navigator.deviceMemory, ' GiB');
+
+
 
 setInterval(function()
 {
@@ -109,6 +117,14 @@ navigator.usb.getDevices()
 
 navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
 navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
+
+
+
+var greyos_bc = new BroadcastChannel("greyos-bc-2024-xxx");
+greyos_bc.addEventListener("message", (event) => { console.info(event.data); });
+greyos_bc.postMessage('GreyOS R0ckZ!!!');
+
+
 
 // HID API - https://developer.mozilla.org/en-US/docs/Web/API/HID
 // Keyboard API - https://developer.mozilla.org/en-US/docs/Web/API/Keyboard

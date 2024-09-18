@@ -410,10 +410,8 @@ function parrot()
         if (is_init === false)
             return false;
 
-        if (utils_sys.validation.alpha.is_symbol(container_id))
+        if (!self.settings.container(container_id))
             return false;
-
-        self.settings.container(container_id);
 
         utils_int.load_ui();
 

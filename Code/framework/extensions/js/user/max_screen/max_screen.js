@@ -1,5 +1,5 @@
 /*
-    GreyOS -  Max Screen (Version: 1.7)
+    GreyOS -  Max Screen (Version: 2.0)
 
     File name: max_screen.js
     Description: This file contains the Max Screen - App size manager module.
@@ -14,26 +14,74 @@ function max_screen()
 {
     var self = this;
 
+    function element_dimensions_model()
+    {
+        this.width = null;
+        this.height = null;
+    }
+
     function utilities()
     {
         var me = this;
 
         this.go_full_screen = function()
         {
-            var __element = vulcan.objects.by_id(self.settings.container());
+            var __max_screen = utils_sys.objects.by_id(max_screen_id),
+                __callback = self.settings.callback_function(),
+                __element = utils_sys.objects.by_id(self.settings.container());
 
-            vulcan.objects.by_id('max_screen_splash').style.display = 'none';
+            //__max_screen.style.display = 'none';
+            __max_screen.innerHTML = 'X';
 
-            if (__element.requestFullscreen)
-                __element.requestFullscreen();
-            else if (__element.webkitRequestFullscreen)
-                __element.webkitRequestFullscreen();
-            else
-                return false;
+            element_dimensions.width = __element.style.width;
+            element_dimensions.height = __element.style.height;
 
-           self.settings.callback_function().call();
+            __element.requestFullscreen();
 
-           return true;
+            if (__callback)
+                __callback.call();
+
+            morpheus.delete(max_screen_id, 'click', __max_screen);
+
+            __handler = function() { me.go_normal_screen(); };
+            morpheus.run(max_screen_id, 'mouse', 'click', __handler, __max_screen);
+
+            __handler = function(event_object)
+            {
+                key_control.scan(event_object);
+
+                var __key_code = key_control.get();
+
+                if (__key_code === 192)
+                    me.go_normal_screen();
+            };
+            morpheus.run(max_screen_id, 'key', 'keydown', __handler, document);
+
+            is_full_screen = true;
+
+            return true;
+        };
+
+        this.go_normal_screen = function()
+        {
+            var __max_screen = utils_sys.objects.by_id(max_screen_id),
+                __element = utils_sys.objects.by_id(self.settings.container());
+
+            __max_screen.innerHTML = '[]';
+            //__max_screen.style.display = 'block';
+
+            __element.style.width = element_dimensions.width;
+            __element.style.height = element_dimensions.height;
+
+            morpheus.delete(max_screen_id, 'click', __max_screen);
+
+            __handler = function() { me.go_full_screen(); };
+            morpheus.run(max_screen_id, 'mouse', 'click', __handler, __max_screen);
+            morpheus.delete(max_screen_id, 'keydown', document);
+
+            is_full_screen = false;
+
+            return true;
         };
 
         this.setup = function(theme)
@@ -41,37 +89,69 @@ function max_screen()
             var __handler = null,
                 __dynamic_object = null;
 
-            if (!vulcan.graphics.apply_theme('/framework/extensions/js/max_screen/theme', theme))
+            if (theme === null)
+                theme = 'max_screen';
+
+            if (!utils_sys.graphics.apply_theme('/framework/extensions/js/user/max_screen/', theme))
                 return false;
 
             __dynamic_object = document.createElement('div');
 
-            __dynamic_object.setAttribute('id', 'max_screen_splash');
+            __dynamic_object.setAttribute('id', max_screen_id);
             __dynamic_object.setAttribute('class', 'max_screen');
+            __dynamic_object.innerHTML = '[]';
 
-            document.body.appendChild(__dynamic_object);
+            utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
 
             __handler = function() { me.go_full_screen(); };
-            vulcan.objects.by_id('max_screen_splash').onmousedown = __handler;
+            morpheus.run(max_screen_id, 'mouse', 'click', __handler, __dynamic_object);
 
             return true;
         };
     }
 
+    function status()
+    {
+        this.full_screen = function()
+        {
+            if (is_init === false)
+                return null;
+
+            return is_full_screen;
+        };
+    }
+
     function settings()
     {
-        var __container = null,
+        var __id = null,
+            __container = null,
             __callback_function = null;
+
+        this.id = function(val)
+        {
+            if (is_init === false)
+                return false;
+
+            if (utils_sys.validation.misc.is_undefined(val))
+                return __id;
+
+            if (utils_sys.validation.alpha.is_symbol(val))
+                return false;
+
+            __id = val;
+
+            return true;
+        };
 
         this.container = function(val)
         {
             if (is_init === false)
                 return false;
 
-            if (vulcan.validation.misc.is_undefined(val))
+            if (utils_sys.validation.misc.is_undefined(val))
                 return __container;
 
-            if (vulcan.validation.alpha.is_symbol(val))
+            if (utils_sys.validation.alpha.is_symbol(val))
                 return false;
 
             __container = val;
@@ -84,7 +164,7 @@ function max_screen()
             if (is_init === false)
                 return false;
 
-            if (vulcan.validation.misc.is_undefined(val))
+            if (utils_sys.validation.misc.is_undefined(val))
                 return __callback_function;
 
             __callback_function = val;
@@ -93,67 +173,57 @@ function max_screen()
         };
     }
 
-    function status()
-    {
-        this.full_screen = function()
-        {
-            if (is_init === false)
-                return false;
-
-            if ((screen.height - window.innerHeight) < 5)
-                return true;
-
-            return false;
-        };
-    }
-
-    this.init = function(container_id, func, theme)
+    this.init = function(container_id, func = null, theme = null)
     {
         if (is_init === true)
             return false;
 
-        if (vulcan.validation.misc.is_undefined(container_id) || 
-            vulcan.validation.alpha.is_symbol(container_id) || 
-            vulcan.objects.by_id(container_id) === null || 
-            !vulcan.validation.misc.is_function(func))
+        if (utils_sys.validation.misc.is_undefined(container_id))
             return false;
+
+        is_init = true;
+
+        self.settings.id('max_screen_' + random.generate());
+
+        max_screen_id = self.settings.id();
 
         if (!self.settings.container(container_id))
             return false;
 
         self.settings.callback_function(func);
 
-        if (!utils.setup(theme))
+        if (!utils_int.setup(theme))
             return false;
-
-        is_init = true;
 
         return true;
     };
 
     this.cosmos = function(cosmos_object)
     {
-        if (cosmos_exists === true)
-            return false;
-
-        if (cosmos_object === undefined)
+        if (utils_sys.validation.misc.is_undefined(cosmos_object))
             return false;
 
         cosmos = cosmos_object;
 
-        vulcan = cosmos.hub.access('vulcan');
+        matrix = cosmos.hub.access('matrix');
 
-        cosmos_exists = true;
+        morpheus = matrix.get('morpheus');
 
         return true;
     };
 
-    var cosmos_exists = false,
-        is_init = false,
+    var is_init = false,
+        is_full_screen = false,
+        max_screen_id = null,
         cosmos = null,
-        vulcan = null,
-        utils = new utilities();
+        matrix = null,
+        morpheus = null,
+        utils_sys = new vulcan(),
+        random = new pythia(),
+        key_control = new key_manager(),
+        element_dimensions = new element_dimensions_model(),
+        utils_int = new utilities();
 
-    this.settings = new settings();
     this.status = new status();
+    this.settings = new settings();
 }

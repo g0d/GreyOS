@@ -404,7 +404,9 @@ function dock()
         is_init = true;
 
         self.settings.id('dock_' + random.generate());
-        self.settings.container(container_id);
+
+        if (!self.settings.container(container_id))
+            return false;
 
         dock_id = self.settings.id();
 

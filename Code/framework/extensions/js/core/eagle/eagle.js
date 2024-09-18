@@ -380,7 +380,9 @@ function eagle()
         is_init = true;
 
         self.settings.id('eagle_' + random.generate());
-        self.settings.container(container_id);
+
+        if (!self.settings.container(container_id))
+            return false;
 
         eagle_id = self.settings.id();
 

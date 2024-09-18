@@ -444,7 +444,9 @@ function super_tray()
         is_init = true;
 
         self.settings.id('super_tray_' + random.generate());
-        self.settings.container(container_id);
+
+        if (!self.settings.container(container_id))
+            return false;
 
         super_tray_id = self.settings.id();
 

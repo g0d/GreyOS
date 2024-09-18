@@ -14,7 +14,7 @@ function infinity()
 {
     var self = this;
 
-    function status_model()
+    function status()
     {
         this.in_progress = function()
         {
@@ -25,7 +25,7 @@ function infinity()
         };
     }
 
-    function settings_model()
+    function settings()
     {
         var __id = null,
             __container = null,
@@ -197,6 +197,7 @@ function infinity()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
+
         nature = matrix.get('nature');
 
         return true;
@@ -210,6 +211,6 @@ function infinity()
         random = new pythia(),
         utils_int = new utilities();
 
-    this.status = new status_model();
-    this.settings = new settings_model();
+    this.status = new status();
+    this.settings = new settings();
 }

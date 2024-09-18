@@ -1417,7 +1417,10 @@ function hive()
             is_init = true;
 
             self.settings.id('hive_' + random.generate());
-            self.settings.container(container_id);
+
+            if (!self.settings.container(container_id))
+                return false;
+
             self.settings.bees_per_honeycomb(dynamic_bees_per_honeycomb);
             self.settings.left(left);
             self.settings.top(top);
