@@ -5,7 +5,7 @@
     Description: This file contains the Octopus - Devices management module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2021 - 2023
+    Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */
 

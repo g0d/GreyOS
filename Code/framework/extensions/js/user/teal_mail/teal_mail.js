@@ -1967,7 +1967,7 @@ function teal_mail()
 
 			if (msg === '')
 			{
-				utils.show_notification('Sorry dude, you can\'t send email without content!');
+				utils.show_notification('You can\'t send email without content!');
 
 				return false;
 			}

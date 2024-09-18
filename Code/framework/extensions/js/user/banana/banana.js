@@ -30,7 +30,7 @@ function Banana()
             utils.objects.by_id('banana_suggestion').value = '';
 
             if (result === '1')
-                utils.objects.by_id('banana_info').innerHTML = 'Thank you dude!';
+                utils.objects.by_id('banana_info').innerHTML = 'Thank you!';
             else
                 utils.objects.by_id('banana_info').innerHTML = 'Houston, we have a problem...';
 
@@ -53,7 +53,7 @@ function Banana()
     __dynamic_object = document.createElement('div');
 
     __dynamic_object.id = 'banana';
-    __dynamic_object.innerHTML = `<div id="banana_toggle" class="banana_trigger" title="Dudes, send us your suggestions!">
+    __dynamic_object.innerHTML = `<div id="banana_toggle" class="banana_trigger" title="Send us your suggestions!">
                                     <br><br><br>O<br>P<br>E<br>N<br><br>M<br>E</div>
                                     <div class="banana_body">
                                         <div class="banana_title">User Suggestions</div>

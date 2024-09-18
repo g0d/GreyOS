@@ -655,6 +655,20 @@ function hive()
             __handler = function(event) { me.manage_stack_view(event, '+'); };
             morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_next_arrow'));
 
+            __handler = function(event)
+            {
+                var __hive_vertical_size = utils_sys.graphics.pixels_value(__dynamic_object.style.top) + 
+                                           utils_sys.graphics.pixels_value(__dynamic_object.style.height);
+
+                if (event.clientY >= __hive_vertical_size - 1 || event.clientX < coords.mouse_x || event.clientX > coords.mouse_x)
+                    me.hide_ghost_bee(event);
+            };
+            morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id('desktop'));
+
+            __handler = function(event) { me.hide_ghost_bee(event); };
+            morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_previous_arrow'));
+            morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_next_arrow'));
+
             //__handler = function(event) { me.redraw_hive(event); };
             //morpheus.run(hive_id, 'mouse', 'resize', __handler, window);
 

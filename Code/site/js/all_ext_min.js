@@ -6878,6 +6878,64 @@ function uniplex()
  utils_sys = new vulcan(),
  programs_collection = new programs_collection_model();
 }
+function wormhole()
+{
+ var self = this;
+ this.get_bc_id = function()
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ return greyos_bc;
+ };
+ this.setup = function(callback)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_function(callback))
+ {
+ if (backtrace === true)
+ frog('WORMHOLE', 'Setup :: Argument is not a callback function');
+ return false;
+ }
+ greyos_bc = new BroadcastChannel("greyos-bc-" + random.generate());
+ greyos_bc.addEventListener("message", (event) => { callback.call(event); });
+ if (backtrace === true)
+ frog('WORMHOLE', 'Broadcast Channel :: Initializated');
+ return true;
+ };
+ this.send_data = function(data)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ greyos_bc.postMessage(data);
+ return true;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ morpheus = matrix.get('morpheus');
+ return true;
+ };
+ var backtrace = false,
+ greyos_bc = null,
+ cosmos = null,
+ matrix = null,
+ morpheus = null,
+ utils_sys = new vulcan(),
+ random = new pythia();
+}
 function forest()
 {
  var self = this;
@@ -8333,6 +8391,17 @@ function hive()
  morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_previous_arrow'));
  __handler = function(event) { me.manage_stack_view(event, '+'); };
  morpheus.run(hive_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(hive_id + '_next_arrow'));
+ __handler = function(event)
+ {
+ var __hive_vertical_size = utils_sys.graphics.pixels_value(__dynamic_object.style.top) +
+ utils_sys.graphics.pixels_value(__dynamic_object.style.height);
+ if (event.clientY >= __hive_vertical_size - 1 || event.clientX < coords.mouse_x || event.clientX > coords.mouse_x)
+ me.hide_ghost_bee(event);
+ };
+ morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id('desktop'));
+ __handler = function(event) { me.hide_ghost_bee(event); };
+ morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_previous_arrow'));
+ morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id(hive_id + '_next_arrow'));
  return true;
  };
  this.draw_hive_bee = function(honeycomb_id, bee_id, mode)

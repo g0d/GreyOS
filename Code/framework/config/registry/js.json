@@ -46,6 +46,7 @@
     "xenon": "core",
     "owl": "core",
     "uniplex": "core",
+    "wormhole": "core",
     "forest": "core",
     "swarm": "core",
     "hive": "core",

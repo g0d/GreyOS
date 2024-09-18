@@ -1,12 +1,11 @@
 /*
-    Teal FS (Logical FS for GreyOS)
+    Teal FS (Logical Meta-FS for GreyOS)
 
     File name: teal_fs.js (Version: 1.0)
-    Description: This file contains the Teal FS - Logical FS system extension.
-    Dependencies: Vulcan
+    Description: This file contains the Teal FS - Logical Meta-FS system extension.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2022
+    Copyright © 2022 - 2024
     Open Software License (OSL 3.0)
 */
 
