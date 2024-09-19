@@ -8393,7 +8393,7 @@ function hive()
  {
  var __hive_vertical_size = utils_sys.graphics.pixels_value(__dynamic_object.style.top) +
  utils_sys.graphics.pixels_value(__dynamic_object.style.height);
- if (event.clientY >= __hive_vertical_size - 1 || event.clientX < coords.mouse_x || event.clientX > coords.mouse_x)
+ if (event.clientY >= __hive_vertical_size)
  me.hide_ghost_bee(event);
  };
  morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id('desktop'));
@@ -8515,7 +8515,7 @@ function hive()
  }
  if (!utils_sys.validation.alpha.is_symbol(symbol))
  return false;
- if (!utils_sys.validation.misc.is_undefined(event_object.buttons) && event_object.buttons !== 1)
+ if (event_object !== null && !utils_sys.validation.misc.is_undefined(event_object.buttons) && event_object.buttons !== 1)
  return false;
  if (honeycomb_views.swiping())
  return false;
@@ -8638,13 +8638,20 @@ function hive()
  {
  for (var i = 0; i < honeycomb_views.num(); i++)
  {
- if (honeycomb_views.list(i).id === honeycomb_views.visible() &&
- honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+ if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb())
+ {
+ honeycomb_views.visible(honeycomb_views.visible() + 1);
+ continue;
+ }
+ if (honeycomb_views.list(i).id === honeycomb_views.visible())
+ {
+ if (honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
  {
  honeycomb_views.list(i).bees.add(__bee_id);
  colony.get(__bee_id).settings.general.in_hive(true);
  utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
  break;
+ }
  }
  }
  }
@@ -8706,17 +8713,20 @@ function hive()
  {
  for (var i = 0; i < honeycomb_views.num(); i++)
  {
- var __tmp_bees_list = honeycomb_views.list(i).bees.list();
+ var __honeycomb = honeycomb_views.list(i),
+ __tmp_bees_list = Object.assign([], __honeycomb.bees.list());
  for (var j = 0; j < __tmp_bees_list.length; j++)
  {
  var __this_bee_id = __tmp_bees_list[j],
- __this_bee = colony.get(__this_bee_id);
- honeycomb_views.list(i).bees.remove(__this_bee_id);
+ __this_bee = colony.get(__this_bee_id),
+ __this_honeycomb_object = utils_sys.objects.by_id('honeycomb_' + __honeycomb.id),
+ __this_bee_object = utils_sys.objects.by_id('hive_bee_' + __this_bee_id);
+ __this_honeycomb_object.removeChild(__this_bee_object);
+ __honeycomb.bees.remove(__this_bee_id);
  __this_bee.settings.general.in_hive(false);
  swarm.settings.active_bee(__this_bee_id);
  utils_int.set_z_index(__this_bee_id);
  utils_int.hide_ghost_bee(event_object);
- utils_int.remove_bee(honeycomb_views.list(i).id, __this_bee_id);
  }
  }
  return true;
@@ -9488,9 +9498,8 @@ function ui_controls()
  var self = this;
  function config_model()
  {
- this.active_control = ['all_windows', 'view'];
  this.is_boxified = false;
- this.is_stack = false;
+ this.all_stacked = false;
  }
  function utilities()
  {
@@ -9503,21 +9512,18 @@ function ui_controls()
  };
  this.draw_controls = function()
  {
- var __controls_div = utils_sys.objects.selectors.first('#top_panel #action_icons');
+ var __controls_div = utils_sys.objects.by_id('action_icons');
  if (__controls_div === null)
  return false;
- __controls_div.innerHTML = '<div id="placement" class="actions">' +
- ' <div id="boxify_all" class="placement_icons" title="Switch among open apps"></div>' +
- ' <div id="stack_all" class="placement_icons" title="Stack / unstack all apps"></div>' +
+ __controls_div.innerHTML = '<div id="' + ui_controls_id + '" class="windows_placement">' +
+ ' <div id="' + ui_controls_id + '_boxify_all" class="boxify_all placement_icons" title="Switch among open apps"></div>' +
+ ' <div id="' + ui_controls_id + '_stack_all" class="stack_all placement_icons" title="Stack / unstack all apps"></div>' +
  '</div>';
  return true;
  };
  this.make_active = function(id)
  {
- if (utils_sys.validation.alpha.is_symbol(id))
- return false;
- var __selector = '#top_panel #action_icons #placement ' + '#' + id,
- __control = utils_sys.objects.selectors.first(__selector);
+ var __control = utils_sys.objects.by_id(ui_controls_id + '_' + id);
  if (id === 'boxify_all')
  __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify_hover.png')";
  else if (id === 'stack_all')
@@ -9528,10 +9534,7 @@ function ui_controls()
  };
  this.make_inactive = function(id)
  {
- if (utils_sys.validation.alpha.is_symbol(id))
- return false;
- var __selector = '#top_panel #action_icons #placement' + ' #' + id,
- __control = utils_sys.objects.selectors.first(__selector);
+ var __control = utils_sys.objects.by_id(ui_controls_id + '_' + id);
  if (id === 'boxify_all')
  __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify.png')";
  else if (id === 'stack_all')
@@ -9544,16 +9547,16 @@ function ui_controls()
  {
  var __handler = null;
  __handler = function() { self.placement.boxify(); };
- morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('boxify_all'));
- morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id('boxify_all'));
+ morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
+ morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
  __handler = function()
  {
  me.make_inactive('boxify_all');
  config.is_boxified = false;
  };
- morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id('boxify_all'));
+ morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
  __handler = function(event) { self.placement.stack(event); };
- morpheus.run(ui_controls_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id('stack_all'));
+ morpheus.run(ui_controls_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(ui_controls_id + '_stack_all'));
  return true;
  };
  }
@@ -9586,31 +9589,39 @@ function ui_controls()
  }
  function placement()
  {
- this.boxify = function()
+ this.boxify = function(activate = true)
  {
  if (is_init === false)
  return false;
- if (config.is_boxified === false)
- {
+ if (activate && config.is_boxified === false)
  utils_int.make_active('boxify_all');
- config.is_boxified = true;
- }
+ else
+ utils_int.make_inactive('boxify_all');
  return true;
  };
  this.stack = function(event)
  {
  if (is_init === false)
  return false;
- if (config.is_stack === false)
+ if (config.all_stacked === false)
  {
  var __bees = colony.list(),
- __bees_length = __bees.length;
+ __bees_length = __bees.length,
+ __is_bee_in_swarm = true;
  if (__bees_length === 0)
  return false;
  for (var i = 0; i < __bees_length; i++)
+ {
+ if (!__bees[i].status.system.in_hive())
+ {
  hive.stack.bees.insert(__bees[i], null);
+ __is_bee_in_swarm = false;
+ }
+ }
+ if (__is_bee_in_swarm)
+ return false;
  utils_int.make_active('stack_all');
- config.is_stack = true;
+ config.all_stacked = true;
  }
  else
  {
@@ -9618,14 +9629,8 @@ function ui_controls()
  return false;
  hive.stack.bees.expel(event, 0);
  utils_int.make_inactive('stack_all');
- config.is_stack = false;
+ config.all_stacked = false;
  }
- return true;
- };
- this.cascade = function()
- {
- if (is_init === false)
- return false;
  return true;
  };
  }
@@ -9658,7 +9663,6 @@ function ui_controls()
  colony = cosmos.hub.access('colony');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
- eagle = matrix.get('eagle');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
  return true;
@@ -9670,7 +9674,6 @@ function ui_controls()
  colony = null,
  swarm = null,
  hive = null,
- eagle = null,
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),
@@ -10687,6 +10690,7 @@ function eagle()
  {
  me.show_eagle();
  me.draw_windows();
+ ui_controls.placement.boxify(true);
  }
  me.switch_windows();
  event_object.preventDefault();
@@ -10702,6 +10706,7 @@ function eagle()
  var __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
  __eagle_apps.scrollTo(0, 1);
  me.hide_eagle();
+ ui_controls.placement.boxify(false);
  trace_keys.modifier_set = false;
  picked_window = 0;
  scroll_multiplier = 1;
@@ -10814,7 +10819,7 @@ function eagle()
  this.init_trace_keys = function()
  {
  var __handler = null,
- __boxify = utils_sys.objects.by_id('boxify_all');
+ __boxify = utils_sys.objects.by_id(ui_controls.settings.id() + '_boxify_all');
  __handler = function(event) { me.key_down_tracer(event); };
  morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
  __handler = function(event) { me.key_up_tracer(event); };
@@ -10945,6 +10950,7 @@ function eagle()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  colony = cosmos.hub.access('colony');
+ ui_controls = matrix.get('ui_controls');
  swarm = matrix.get('swarm');
  owl = matrix.get('owl');
  morpheus = matrix.get('morpheus');
@@ -10959,6 +10965,7 @@ function eagle()
  scroll_multiplier = 1,
  cosmos = null,
  matrix = null,
+ ui_controls = null,
  swarm = null,
  colony = null,
  morpheus = null,

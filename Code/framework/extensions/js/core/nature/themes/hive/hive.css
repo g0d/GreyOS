@@ -38,7 +38,7 @@
 .stack_arrow
 {
     cursor: pointer;
-    width: 32px;
+    width: 52px;
     height: 85px;
     opacity: 0.5;
 }
@@ -47,6 +47,8 @@
 {
     float: left;
     background-image: url('pix/previous_arrow.png');
+    background-position: left;
+    background-repeat: no-repeat;
 }
 
 .left_arrow:hover
@@ -58,6 +60,8 @@
 {
     float: right;
     background-image: url('pix/next_arrow.png');
+    background-position: right;
+    background-repeat: no-repeat;
 }
 
 .right_arrow:hover
@@ -69,7 +73,6 @@
 {
     position: relative;
     float: left;
-    left: 20px;
     height: 85px;
     border-radius: 12px;
     overflow: hidden;

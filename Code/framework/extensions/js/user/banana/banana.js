@@ -58,9 +58,9 @@ function Banana()
                                     <div class="banana_body">
                                         <div class="banana_title">User Suggestions</div>
                                             <div class="banana_box">
-                                                <textarea id="banana_suggestion" placeholder="Please write your suggestions in here..."></textarea>
+                                                <textarea id="banana_suggestion" tabindex="-1" placeholder="Please write your suggestions in here..."></textarea>
                                             </div>
-                                        <div><input id="banana_send" type="button" value="Send"></div>
+                                        <div><input id="banana_send" type="button" value="Send" tabindex="-1"></div>
                                     <div id="banana_info"></div>
                                   </div>`;
 

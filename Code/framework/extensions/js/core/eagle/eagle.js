@@ -43,6 +43,8 @@ function eagle()
                 {
                     me.show_eagle();
                     me.draw_windows();
+
+                    ui_controls.placement.boxify(true);
                 }
 
                 me.switch_windows();
@@ -66,6 +68,8 @@ function eagle()
                 __eagle_apps.scrollTo(0, 1);
 
                 me.hide_eagle();
+
+                ui_controls.placement.boxify(false);
 
                 trace_keys.modifier_set = false;
 
@@ -229,7 +233,7 @@ function eagle()
         this.init_trace_keys = function()
         {
             var __handler = null,
-                __boxify = utils_sys.objects.by_id('boxify_all');
+                __boxify = utils_sys.objects.by_id(ui_controls.settings.id() + '_boxify_all');
 
             __handler = function(event) { me.key_down_tracer(event); };
             morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
@@ -405,6 +409,7 @@ function eagle()
         matrix = cosmos.hub.access('matrix');
         colony = cosmos.hub.access('colony');
 
+        ui_controls = matrix.get('ui_controls');
         swarm = matrix.get('swarm');
         owl = matrix.get('owl');
         morpheus = matrix.get('morpheus');
@@ -421,6 +426,7 @@ function eagle()
         scroll_multiplier = 1,
         cosmos = null,
         matrix = null,
+        ui_controls = null,
         swarm = null,
         colony = null,
         morpheus = null,

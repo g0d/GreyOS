@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 4.0)
+    GreyOS - Hive (Version: 4.2)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -635,7 +635,7 @@ function hive()
                 var __hive_vertical_size = utils_sys.graphics.pixels_value(__dynamic_object.style.top) + 
                                            utils_sys.graphics.pixels_value(__dynamic_object.style.height);
 
-                if (event.clientY >= __hive_vertical_size - 1 || event.clientX < coords.mouse_x || event.clientX > coords.mouse_x)
+                if (event.clientY >= __hive_vertical_size)
                     me.hide_ghost_bee(event);
             };
             morpheus.run(hive_id, 'mouse', 'mousemove', __handler, utils_sys.objects.by_id('desktop'));
@@ -831,7 +831,7 @@ function hive()
             if (!utils_sys.validation.alpha.is_symbol(symbol))
                 return false;
 
-            if (!utils_sys.validation.misc.is_undefined(event_object.buttons) && event_object.buttons !== 1)
+            if (event_object !== null && !utils_sys.validation.misc.is_undefined(event_object.buttons) && event_object.buttons !== 1)
                 return false;
 
             if (honeycomb_views.swiping())
@@ -1000,26 +1000,31 @@ function hive()
                 {
                     for (var i = 0; i < honeycomb_views.num(); i++)
                     {
-                        if (honeycomb_views.list(i).id === honeycomb_views.visible() && 
-                            honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+                        if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb())
                         {
-                            honeycomb_views.list(i).bees.add(__bee_id);
+                            me.free_space_hc_view_swipe(null);
 
-                            colony.get(__bee_id).settings.general.in_hive(true);
+                            continue;
+                        }
 
-                            //console.log(swarm.bees.remove(__bee_id));
+                        if (honeycomb_views.list(i).id === honeycomb_views.visible())
+                        {
+                            if (honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+                            {
+                                honeycomb_views.list(i).bees.add(__bee_id);
 
-                            utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+                                colony.get(__bee_id).settings.general.in_hive(true);
 
-                            break;
+                                utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+
+                                break;
+                            }
                         }
                     }
                 }
                 else
                 {
                     honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id);
-
-                    //console.log(swarm.bees.remove(__bee_id));
 
                     utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
                 }
@@ -1099,14 +1104,19 @@ function hive()
                 {
                     for (var i = 0; i < honeycomb_views.num(); i++)
                     {
-                        var __tmp_bees_list = honeycomb_views.list(i).bees.list();
+                        var __honeycomb = honeycomb_views.list(i),
+                            __tmp_bees_list = Object.assign([], __honeycomb.bees.list());
 
                         for (var j = 0; j < __tmp_bees_list.length; j++)
                         {
                             var __this_bee_id = __tmp_bees_list[j],
-                                __this_bee = colony.get(__this_bee_id);
+                                __this_bee = colony.get(__this_bee_id),
+                                __this_honeycomb_object = utils_sys.objects.by_id('honeycomb_' + __honeycomb.id),
+                                __this_bee_object = utils_sys.objects.by_id('hive_bee_' + __this_bee_id);
 
-                            honeycomb_views.list(i).bees.remove(__this_bee_id);
+                            __this_honeycomb_object.removeChild(__this_bee_object);
+
+                            __honeycomb.bees.remove(__this_bee_id);
 
                             __this_bee.settings.general.in_hive(false);
 
@@ -1115,8 +1125,6 @@ function hive()
                             utils_int.set_z_index(__this_bee_id);
 
                             utils_int.hide_ghost_bee(event_object);
-
-                            utils_int.remove_bee(honeycomb_views.list(i).id, __this_bee_id);
                         }
                     }
 

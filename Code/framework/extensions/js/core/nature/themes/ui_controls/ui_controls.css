@@ -20,19 +20,19 @@
     margin-right: 27px;
 }
 
-#placement
+.windows_placement
 {
     float: right;
     margin-top: 13px;
 }
 
-#boxify_all
+.boxify_all
 {
     background-image: url('pix/boxify.png');
     width: 21px;
 }
 
-#stack_all
+.stack_all
 {
     background-image: url('pix/stack.png');
     width: 24px;

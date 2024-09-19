@@ -380,7 +380,7 @@ function boot_script()
                     (os_keys.get() === 82 || os_keys.get() === 68 || os_keys.get() === 79 || os_keys.get() === 80 || 
                      os_keys.get() === 83 || os_keys.get() === 70 || os_keys.get() === 71 || os_keys.get() === 72 || 
                      os_keys.get() === 74 || os_keys.get() === 75 || os_keys.get() === 84 || os_keys.get() === 87 || 
-                     os_keys.get() === 85 || os_keys.get() === 78 || os_keys.get() === 69))
+                     os_keys.get() === 85 || os_keys.get() === 78 || os_keys.get() === 69 || os_keys.get() === 9))
                     event.preventDefault();
 
                 if (event.altKey === true && (os_keys.get() === 68 || os_keys.get() === 69 || os_keys.get() === 70))

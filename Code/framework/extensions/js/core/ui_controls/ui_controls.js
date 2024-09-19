@@ -1,5 +1,5 @@
 /*
-    GreyOS - UI Controls (Version: 2.0)
+    GreyOS - UI Controls (Version: 2.2)
 
     File name: ui_controls.js
     Description: This file contains the UI Controls module.
@@ -16,9 +16,8 @@ function ui_controls()
 
     function config_model()
     {
-        this.active_control = ['all_windows', 'view'];
         this.is_boxified = false;
-        this.is_stack = false;
+        this.all_stacked = false;
     }
 
     function utilities()
@@ -35,14 +34,14 @@ function ui_controls()
 
         this.draw_controls = function()
         {
-            var __controls_div = utils_sys.objects.selectors.first('#top_panel #action_icons');
+            var __controls_div = utils_sys.objects.by_id('action_icons');
 
             if (__controls_div === null)
                 return false;
 
-            __controls_div.innerHTML = '<div id="placement" class="actions">' + 
-                                       '    <div id="boxify_all" class="placement_icons" title="Switch among open apps"></div>' + 
-                                       '    <div id="stack_all" class="placement_icons" title="Stack / unstack all apps"></div>' + 
+            __controls_div.innerHTML = '<div id="' + ui_controls_id + '" class="windows_placement">' + 
+                                       '    <div id="' + ui_controls_id + '_boxify_all" class="boxify_all placement_icons" title="Switch among open apps"></div>' + 
+                                       '    <div id="' + ui_controls_id + '_stack_all" class="stack_all placement_icons" title="Stack / unstack all apps"></div>' + 
                                        '</div>';
 
             return true;
@@ -50,11 +49,7 @@ function ui_controls()
 
         this.make_active = function(id)
         {
-            if (utils_sys.validation.alpha.is_symbol(id))
-                return false;
-
-            var __selector = '#top_panel #action_icons #placement ' + '#' + id,
-                __control = utils_sys.objects.selectors.first(__selector);
+            var __control = utils_sys.objects.by_id(ui_controls_id + '_' + id);
 
             if (id === 'boxify_all')
                 __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify_hover.png')";
@@ -68,11 +63,7 @@ function ui_controls()
 
         this.make_inactive = function(id)
         {
-            if (utils_sys.validation.alpha.is_symbol(id))
-                return false;
-
-            var __selector = '#top_panel #action_icons #placement' + ' #' + id,
-                __control = utils_sys.objects.selectors.first(__selector);
+            var __control = utils_sys.objects.by_id(ui_controls_id + '_' + id);
 
             if (id === 'boxify_all')
                 __control.style.backgroundImage = "url('/framework/extensions/js/core/nature/themes/ui_controls/pix/boxify.png')";
@@ -89,8 +80,8 @@ function ui_controls()
             var __handler = null;
 
             __handler = function() { self.placement.boxify(); };
-            morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('boxify_all'));
-            morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id('boxify_all'));
+            morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
+            morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
 
             __handler = function()
             {
@@ -98,10 +89,10 @@ function ui_controls()
 
                 config.is_boxified = false;
             };
-            morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id('boxify_all'));
+            morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
 
             __handler = function(event) { self.placement.stack(event); };
-            morpheus.run(ui_controls_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id('stack_all'));
+            morpheus.run(ui_controls_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(ui_controls_id + '_stack_all'));
 
             return true;
         };
@@ -147,17 +138,15 @@ function ui_controls()
 
     function placement()
     {
-        this.boxify = function()
+        this.boxify = function(activate = true)
         {
             if (is_init === false)
                 return false;
 
-            if (config.is_boxified === false)
-            {
+            if (activate && config.is_boxified === false)
                 utils_int.make_active('boxify_all');
-
-                config.is_boxified = true;
-            }
+            else
+                utils_int.make_inactive('boxify_all');
 
             return true;
         };
@@ -167,20 +156,31 @@ function ui_controls()
             if (is_init === false)
                 return false;
 
-            if (config.is_stack === false)
+            if (config.all_stacked === false)
             {
                 var __bees = colony.list(),
-                    __bees_length = __bees.length;
+                    __bees_length = __bees.length,
+                    __is_bee_in_swarm = true;
 
                 if (__bees_length === 0)
                     return false;
 
                 for (var i = 0; i < __bees_length; i++)
-                    hive.stack.bees.insert(__bees[i], null);
+                {
+                    if (!__bees[i].status.system.in_hive())
+                    {
+                        hive.stack.bees.insert(__bees[i], null);
+
+                        __is_bee_in_swarm = false;
+                    }
+                }
+
+                if (__is_bee_in_swarm)
+                    return false;
 
                 utils_int.make_active('stack_all');
 
-                config.is_stack = true;
+                config.all_stacked = true;
             }
             else
             {
@@ -191,16 +191,8 @@ function ui_controls()
 
                 utils_int.make_inactive('stack_all');
 
-                config.is_stack = false;
+                config.all_stacked = false;
             }
-
-            return true;
-        };
-
-        this.cascade = function()
-        {
-            if (is_init === false)
-                return false;
 
             return true;
         };
@@ -248,7 +240,6 @@ function ui_controls()
 
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
-        eagle = matrix.get('eagle');
         morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
@@ -262,7 +253,6 @@ function ui_controls()
         colony = null,
         swarm = null,
         hive = null,
-        eagle = null,
         morpheus = null,
         nature = null,
         utils_sys = new vulcan(),
