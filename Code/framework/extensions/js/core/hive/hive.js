@@ -402,7 +402,7 @@ function hive()
 
                             if (mode === 1)
                             {
-                                self.stack.bees.expel(event_object);
+                                self.stack.bees.expel(event_object, mode);
 
                                 __honeycomb.removeChild(__hive_bee);
                             }
@@ -444,33 +444,8 @@ function hive()
             {
                 var __this_hive_bee = colony.get(__active_bee_id);
 
-                if (utils_sys.objects.by_id(__active_bee_id) === null)
-                {
-                    console.error('{ *** [ ! ( ^ ) ! ] *** }');
-                /*
-                if (__this_hive_bee === false)
-                        return false;
-
-                    if (__this_hive_bee.status.gui.closed())
-                        return false;
-
-                    swarm.bees.insert(__this_hive_bee);
-
-                    __this_hive_bee.settings.general.in_hive(false);
-
-                    __this_hive_bee.gui.position.top(self.settings.top() - __this_hive_bee.gui.size.height() - 33);
-                    __this_hive_bee.gui.position.left(coords.mouse_x - 
-                                                      Math.floor(__this_hive_bee.gui.size.width() / 2) + 
-                                                      Math.floor(__this_hive_bee.gui.mouse.relative.x() / 2));
-
-                    __this_hive_bee.show();
-
-                    __this_hive_bee.drone.use('enable_drag', 'utils_int.coords(event, 2); utils_int.manage_drag_status();');
-                    __this_hive_bee.drone.execute('enable_drag');
-
-                    __this_hive_bee.gui.position.top(__this_hive_bee.gui.position.top() + __this_hive_bee.gui.size.height() - 85);
-                */
-                }
+                if (!__this_hive_bee)
+                    return false;
 
                 utils_sys.objects.by_id(__active_bee_id).style.display = 'block';
                 utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
@@ -1115,12 +1090,12 @@ function hive()
                 }
             };
 
-            this.expel = function(event_object)
+            this.expel = function(event_object, mode)
             {
                 if (is_init === false)
                     return false;
 
-                if (event_object === null)
+                if (mode === 0)
                 {
                     for (var i = 0; i < honeycomb_views.num(); i++)
                     {
@@ -1131,15 +1106,17 @@ function hive()
                             var __this_bee_id = __tmp_bees_list[j],
                                 __this_bee = colony.get(__this_bee_id);
 
-                            //honeycomb_views.list(i).bees.remove(__this_bee_id);
+                            honeycomb_views.list(i).bees.remove(__this_bee_id);
 
-                            //__this_bee.settings.general.in_hive(false);
-
-                            utils_int.set_z_index(__this_bee_id);
+                            __this_bee.settings.general.in_hive(false);
 
                             swarm.settings.active_bee(__this_bee_id);
 
-                            self.stack.bees.remove(__this_bee, i + 1);
+                            utils_int.set_z_index(__this_bee_id);
+
+                            utils_int.hide_ghost_bee(event_object);
+
+                            utils_int.remove_bee(honeycomb_views.list(i).id, __this_bee_id);
                         }
                     }
 

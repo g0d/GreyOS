@@ -8225,7 +8225,7 @@ function hive()
  utils_sys.graphics.pixels_value(__hive_object.style.width) + 250;
  if (mode === 1)
  {
- self.stack.bees.expel(event_object);
+ self.stack.bees.expel(event_object, mode);
  __honeycomb.removeChild(__hive_bee);
  }
  me.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 1);
@@ -8254,10 +8254,8 @@ function hive()
  if (__active_bee_id)
  {
  var __this_hive_bee = colony.get(__active_bee_id);
- if (utils_sys.objects.by_id(__active_bee_id) === null)
- {
- console.error('{ *** [ ! ( ^ ) ! ] *** }');
- }
+ if (!__this_hive_bee)
+ return false;
  utils_sys.objects.by_id(__active_bee_id).style.display = 'block';
  utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
  if (__this_hive_bee.status.gui.casement_deployed())
@@ -8700,11 +8698,11 @@ function hive()
  return false;
  }
  };
- this.expel = function(event_object)
+ this.expel = function(event_object, mode)
  {
  if (is_init === false)
  return false;
- if (event_object === null)
+ if (mode === 0)
  {
  for (var i = 0; i < honeycomb_views.num(); i++)
  {
@@ -8713,9 +8711,12 @@ function hive()
  {
  var __this_bee_id = __tmp_bees_list[j],
  __this_bee = colony.get(__this_bee_id);
- utils_int.set_z_index(__this_bee_id);
+ honeycomb_views.list(i).bees.remove(__this_bee_id);
+ __this_bee.settings.general.in_hive(false);
  swarm.settings.active_bee(__this_bee_id);
- self.stack.bees.remove(__this_bee, i + 1);
+ utils_int.set_z_index(__this_bee_id);
+ utils_int.hide_ghost_bee(event_object);
+ utils_int.remove_bee(honeycomb_views.list(i).id, __this_bee_id);
  }
  }
  return true;
@@ -9551,8 +9552,8 @@ function ui_controls()
  config.is_boxified = false;
  };
  morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id('boxify_all'));
- __handler = function() { self.placement.stack(); };
- morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('stack_all'));
+ __handler = function(event) { self.placement.stack(event); };
+ morpheus.run(ui_controls_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id('stack_all'));
  return true;
  };
  }
@@ -9596,7 +9597,7 @@ function ui_controls()
  }
  return true;
  };
- this.stack = function()
+ this.stack = function(event)
  {
  if (is_init === false)
  return false;
@@ -9615,7 +9616,7 @@ function ui_controls()
  {
  if (colony.list().length === 0)
  return false;
- hive.stack.bees.expel(null);
+ hive.stack.bees.expel(event, 0);
  utils_int.make_inactive('stack_all');
  config.is_stack = false;
  }

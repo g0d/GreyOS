@@ -100,8 +100,8 @@ function ui_controls()
             };
             morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id('boxify_all'));
 
-            __handler = function() { self.placement.stack(); };
-            morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('stack_all'));
+            __handler = function(event) { self.placement.stack(event); };
+            morpheus.run(ui_controls_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id('stack_all'));
 
             return true;
         };
@@ -162,7 +162,7 @@ function ui_controls()
             return true;
         };
 
-        this.stack = function()
+        this.stack = function(event)
         {
             if (is_init === false)
                 return false;
@@ -187,7 +187,7 @@ function ui_controls()
                 if (colony.list().length === 0)
                     return false;
 
-                hive.stack.bees.expel(null);
+                hive.stack.bees.expel(event, 0);
 
                 utils_int.make_inactive('stack_all');
 

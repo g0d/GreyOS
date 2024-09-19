@@ -236,6 +236,8 @@ function dock()
 
         this.draw = function()
         {
+            
+
             ajax_load(self.settings.container(), function()
                                                  {
                                                     create_dock_array();
