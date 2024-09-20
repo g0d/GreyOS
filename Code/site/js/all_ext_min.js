@@ -8627,7 +8627,7 @@ function hive()
  if (!colony.is_bee(object) ||
  (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view)))
  return false;
- if (honeycomb_views.swiping())
+ if (honeycomb_view !== null && honeycomb_views.swiping())
  return false;
  var __bee_id = object.settings.general.id();
  if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
@@ -8636,21 +8636,35 @@ function hive()
  return false;
  if (honeycomb_view === null)
  {
+ function push_to_stack()
+ {
+ colony.get(__bee_id).settings.general.in_hive(true);
+ utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+ }
  for (var i = 0; i < honeycomb_views.num(); i++)
  {
  if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb())
  {
- honeycomb_views.visible(honeycomb_views.visible() + 1);
- continue;
+ if (honeycomb_views.visible() === i + 1 && honeycomb_views.visible() < honeycomb_views.num())
+ {
+ utils_int.manage_stack_view(null, '+', () =>
+ {
+ honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__bee_id);
+ push_to_stack();
+ });
+ break;
  }
+ }
+ else
+ {
  if (honeycomb_views.list(i).id === honeycomb_views.visible())
  {
  if (honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
  {
  honeycomb_views.list(i).bees.add(__bee_id);
- colony.get(__bee_id).settings.general.in_hive(true);
- utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+ push_to_stack();
  break;
+ }
  }
  }
  }
@@ -8806,13 +8820,17 @@ function hive()
  return true;
  };
  }
- this.set_view = function(event_object, next_honeycomb_num)
+ this.set_view = function(event_object, next_honeycomb_num, callback = null)
  {
  function recursive_swipe(hc_view_delta)
  {
  var __sign = '+';
  if (hc_view_delta === 0)
+ {
+ if (utils_sys.validation.misc.is_function(callback))
+ callback.call();
  return;
+ }
  if (hc_view_delta < 0 )
  {
  hc_view_delta = -hc_view_delta;
@@ -8825,6 +8843,8 @@ function hive()
  if (__sign === '-')
  hc_view_delta = -hc_view_delta;
  recursive_swipe(hc_view_delta);
+ if (utils_sys.validation.misc.is_function(callback))
+ callback.call();
  });
  }
  if (is_init === false)
@@ -9614,22 +9634,30 @@ function ui_controls()
  {
  if (!__bees[i].status.system.in_hive())
  {
- hive.stack.bees.insert(__bees[i], null);
  __is_bee_in_swarm = false;
+ break;
  }
  }
  if (__is_bee_in_swarm)
  return false;
+ hive.stack.set_view(event, 1, () =>
+ {
+ for (var i = 0; i < __bees_length; i++)
+ hive.stack.bees.insert(__bees[i], null);
  utils_int.make_active('stack_all');
  config.all_stacked = true;
+ });
  }
  else
  {
  if (colony.list().length === 0)
  return false;
  hive.stack.bees.expel(event, 0);
+ hive.stack.set_view(event, 1, () =>
+ {
  utils_int.make_inactive('stack_all');
  config.all_stacked = false;
+ });
  }
  return true;
  };
@@ -13251,17 +13279,6 @@ function octopus()
  if (!navigator.mediaDevices)
  return false;
  navigator.mediaDevices.ondevicechange = function() { device_manager(); };
- navigator.usb.getDevices()
- .then(devices =>
- {
- console.log("Total connected USB devices: " + devices.length);
- devices.forEach(device =>
- {
- console.log("Product name: " + device.productName + ", serial number " + device.serialNumber);
- });
- });
- navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
- navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
  is_component_active = true;
  return true;
  };

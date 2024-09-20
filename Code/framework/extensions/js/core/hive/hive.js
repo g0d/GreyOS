@@ -985,7 +985,7 @@ function hive()
                     (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view)))
                     return false;
 
-                if (honeycomb_views.swiping())
+                if (honeycomb_view !== null && honeycomb_views.swiping())
                     return false;
 
                 var __bee_id = object.settings.general.id();
@@ -998,26 +998,41 @@ function hive()
 
                 if (honeycomb_view === null)
                 {
+                    function push_to_stack()
+                    {
+                        colony.get(__bee_id).settings.general.in_hive(true);
+
+                        utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+                    }
+
                     for (var i = 0; i < honeycomb_views.num(); i++)
                     {
                         if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb())
                         {
-                            me.free_space_hc_view_swipe(null);
-
-                            continue;
-                        }
-
-                        if (honeycomb_views.list(i).id === honeycomb_views.visible())
-                        {
-                            if (honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+                            if (honeycomb_views.visible() === i + 1 && honeycomb_views.visible() < honeycomb_views.num())
                             {
-                                honeycomb_views.list(i).bees.add(__bee_id);
+                                utils_int.manage_stack_view(null, '+', () =>
+                                {
+                                    honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__bee_id);
 
-                                colony.get(__bee_id).settings.general.in_hive(true);
-
-                                utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
+                                    push_to_stack();
+                                });
 
                                 break;
+                            }
+                        }
+                        else
+                        {
+                            if (honeycomb_views.list(i).id === honeycomb_views.visible())
+                            {
+                                if (honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+                                {
+                                    honeycomb_views.list(i).bees.add(__bee_id);
+
+                                    push_to_stack();
+
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1229,14 +1244,19 @@ function hive()
             };
         }
 
-        this.set_view = function(event_object, next_honeycomb_num)
+        this.set_view = function(event_object, next_honeycomb_num, callback = null)
         {
             function recursive_swipe(hc_view_delta)
             {
                 var __sign = '+';
 
                 if (hc_view_delta === 0)
+                {
+                    if (utils_sys.validation.misc.is_function(callback))
+                        callback.call();
+
                     return;
+                }
 
                 if (hc_view_delta < 0 )
                 {
@@ -1253,6 +1273,9 @@ function hive()
                         hc_view_delta = -hc_view_delta;
 
                     recursive_swipe(hc_view_delta);
+
+                    if (utils_sys.validation.misc.is_function(callback))
+                        callback.call();
                 });
             }
 

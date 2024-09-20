@@ -236,7 +236,7 @@ function dock()
 
         this.draw = function()
         {
-            
+            //TODO: Draw an extra layer behind to enable swipping!
 
             ajax_load(self.settings.container(), function()
                                                  {

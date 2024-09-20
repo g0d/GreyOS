@@ -150,7 +150,8 @@ function octopus()
             //navigator.mediaDevices.getUserMedia(__constraints).then(() => { device_manager(); });
             navigator.mediaDevices.ondevicechange = function() { device_manager(); };
 
-            // TODO: Work on managing the USB devices seamlessly with the maultimedia devices
+            // TODO: Work on managing the USB devices seamlessly with the maultimedia devices (Only Chrome-based browsers)
+            /*
             navigator.usb.getDevices()
             .then(devices =>
             {
@@ -164,6 +165,7 @@ function octopus()
             
             navigator.usb.onconnect = function(event) { console.log('CONNECTED!'); };
             navigator.usb.ondisconnect = function(event) { console.log('DISCONNECTED!'); };
+            */
 
             is_component_active = true;
 

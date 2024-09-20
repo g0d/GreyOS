@@ -1,5 +1,5 @@
 /*
-    GreyOS - UI Controls (Version: 2.2)
+    GreyOS - UI Controls (Version: 2.4)
 
     File name: ui_controls.js
     Description: This file contains the UI Controls module.
@@ -169,18 +169,24 @@ function ui_controls()
                 {
                     if (!__bees[i].status.system.in_hive())
                     {
-                        hive.stack.bees.insert(__bees[i], null);
-
                         __is_bee_in_swarm = false;
+
+                        break;
                     }
                 }
 
                 if (__is_bee_in_swarm)
                     return false;
 
-                utils_int.make_active('stack_all');
+                hive.stack.set_view(event, 1, () =>
+                {
+                    for (var i = 0; i < __bees_length; i++)
+                        hive.stack.bees.insert(__bees[i], null);
 
-                config.all_stacked = true;
+                    utils_int.make_active('stack_all');
+
+                    config.all_stacked = true;
+                });
             }
             else
             {
@@ -188,10 +194,12 @@ function ui_controls()
                     return false;
 
                 hive.stack.bees.expel(event, 0);
+                hive.stack.set_view(event, 1, () =>
+                {
+                    utils_int.make_inactive('stack_all');
 
-                utils_int.make_inactive('stack_all');
-
-                config.all_stacked = false;
+                    config.all_stacked = false;
+                });
             }
 
             return true;
