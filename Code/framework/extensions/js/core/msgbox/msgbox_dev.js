@@ -1,7 +1,7 @@
 /*
     GreyOS - MsgBox (Version: 3.6)
 
-    File name: msgbox.js
+    File name: msgbox_dev.js
     Description: This file contains the MsgBox - Window messages module.
 
     Coded by George Delaportas (G0D) 

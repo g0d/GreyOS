@@ -156,18 +156,18 @@ function ui_controls()
             if (is_init === false)
                 return false;
 
+            var __bees = colony.list();
+
             if (config.all_stacked === false)
             {
-                var __bees = colony.list(),
-                    __bees_length = __bees.length,
-                    __is_bee_in_swarm = true;
+                var __is_bee_in_swarm = true;
 
-                if (__bees_length === 0)
+                if ( __bees.length === 0)
                     return false;
 
-                for (var i = 0; i < __bees_length; i++)
+                for (var __this_bee of __bees)
                 {
-                    if (!__bees[i].status.system.in_hive())
+                    if (!__this_bee.status.system.in_hive())
                     {
                         __is_bee_in_swarm = false;
 
@@ -180,8 +180,7 @@ function ui_controls()
 
                 hive.stack.set_view(event, 1, () =>
                 {
-                    for (var i = 0; i < __bees_length; i++)
-                        hive.stack.bees.insert(__bees[i], null);
+                    hive.stack.bees.insert(__bees, null);
 
                     utils_int.make_active('stack_all');
 
@@ -190,10 +189,11 @@ function ui_controls()
             }
             else
             {
-                if (colony.list().length === 0)
+                if (__bees.length === 0)
                     return false;
 
                 hive.stack.bees.expel(event, 0);
+
                 hive.stack.set_view(event, 1, () =>
                 {
                     utils_int.make_inactive('stack_all');

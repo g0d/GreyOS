@@ -1072,8 +1072,7 @@ function msgbox()
  }
  if (!__found)
  return false;
- var i = 0;
- for (i = 0; i < hide_callback_array.length; i++)
+ for (var i = 0; i < hide_callback_array.length; i++)
  {
  if (!utils.validation.misc.is_function(hide_callback_array[i]))
  return false;
@@ -1093,7 +1092,7 @@ function msgbox()
  ((global_type === self.types.OK_CANCEL || global_type === self.types.YES_NO) && hide_callback_array.length > 2) ||
  (global_type === self.types.YES_NO_CANCEL && hide_callback_array.length > 3)))
  return false;
- for (i = 0; i < hide_callback_array.length; i++)
+ for (var i = 0; i < hide_callback_array.length; i++)
  {
  if (!utils.validation.misc.is_function(hide_callback_array[i]))
  return false;
@@ -4385,7 +4384,8 @@ function parallel()
  return false;
  if (!config_parser.verify(tasks_config_model, tasks_config))
  return false;
- var __task = null;
+ var __this_task_config = null,
+ __task = null;
  for (__this_task_config of tasks_config)
  {
  if (!utils.validation.misc.is_undefined(__this_task_config.callback) &&
@@ -8200,15 +8200,11 @@ function hive()
  return false;
  if (swarm.status.active_bee())
  {
- for (var i = 0; i < honeycomb_views.num(); i++)
- {
- if (honeycomb_views.list(i).id === honeycomb_views.visible())
- {
- if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb() &&
+ if (honeycomb_views.list(honeycomb_views.visible() - 1).bees.num() === self.settings.bees_per_honeycomb() &&
  stack_trace.internal_bee_drag === false)
  {
  me.free_space_hc_view_swipe(event_object);
- return true;
+ return false;
  }
  else
  {
@@ -8223,6 +8219,8 @@ function hive()
  __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
  __stack_offset_x_space = self.settings.left() +
  utils_sys.graphics.pixels_value(__hive_object.style.width) + 250;
+ __stack_offset_y_space = self.settings.top() +
+ utils_sys.graphics.pixels_value(__hive_object.style.height) - 12;
  if (mode === 1)
  {
  self.stack.bees.expel(event_object, mode);
@@ -8232,7 +8230,10 @@ function hive()
  if (__bee_x <= __stack_offset_x_space)
  {
  utils_sys.objects.by_id('hive_ghost_bee').style.left = coords.mouse_x + 10 + 'px';
- utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y + __ghost_bee_height - 10 + 'px';
+ if (__bee_y <= __stack_offset_y_space)
+ utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y + __ghost_bee_height - 16 + 'px';
+ else
+ utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y - __ghost_bee_height - 5 + 'px';
  }
  else
  {
@@ -8240,11 +8241,8 @@ function hive()
  utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
  }
  }
+ }
  return true;
- }
- }
- }
- return false;
  };
  this.hide_ghost_bee = function(event_object)
  {
@@ -8269,16 +8267,13 @@ function hive()
  {
  var __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_id),
  __bee = utils_sys.objects.by_id('hive_bee_' + bee_id);
- for (var i = 0; i < honeycomb_views.num(); i++)
- {
- if (honeycomb_views.list(i).id === honeycomb_id)
+ if (honeycomb_views.visible() === honeycomb_id)
  {
  __honeycomb.removeChild(__bee);
- honeycomb_views.list(i).bees.remove(bee_id);
+ honeycomb_views.list(honeycomb_views.visible() - 1).bees.remove(bee_id);
  if (colony.get(bee_id))
  colony.get(bee_id).settings.general.in_hive(false);
  return true;
- }
  }
  return false;
  };
@@ -8509,7 +8504,7 @@ function hive()
  {
  honeycomb_views.visible(honeycomb_views.visible() + __sign);
  honeycomb_views.swiping(false);
- if (callback !== null)
+ if (callback)
  callback.call();
  });
  }
@@ -8618,61 +8613,50 @@ function hive()
  }
  function stack()
  {
+ var me = this;
  function bees()
  {
- this.insert = function(object, honeycomb_view)
+ this.insert = function(objects_array, honeycomb_view)
  {
+ function push_to_stack(view, bee_id)
+ {
+ honeycomb_views.list(view - 1).bees.add(bee_id);
+ colony.get(bee_id).settings.general.in_hive(true);
+ utils_int.draw_hive_bee(view, bee_id, 0);
+ }
  if (is_init === false)
  return false;
- if (!colony.is_bee(object) ||
- (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view)))
+ if (!utils_sys.validation.misc.is_array(objects_array))
  return false;
- if (honeycomb_view !== null && honeycomb_views.swiping())
+ if (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view))
+ return false;
+ if (honeycomb_views.swiping())
+ return false;
+ var __dynamic_view = 0;
+ for (object of objects_array)
+ {
+ if (!colony.is_bee(object))
  return false;
  var __bee_id = object.settings.general.id();
  if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
  return false;
  if (colony.get(__bee_id).status.system.in_hive())
- return false;
+ continue;
  if (honeycomb_view === null)
  {
- function push_to_stack()
+ var __view = honeycomb_views.visible();
+ if (__dynamic_view === 0)
+ __dynamic_view = __view;
+ if (honeycomb_views.list(__dynamic_view - 1).bees.num() === self.settings.bees_per_honeycomb())
  {
- colony.get(__bee_id).settings.general.in_hive(true);
- utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
- }
- for (var i = 0; i < honeycomb_views.num(); i++)
- {
- if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb())
- {
- if (honeycomb_views.visible() === i + 1 && honeycomb_views.visible() < honeycomb_views.num())
- {
- utils_int.manage_stack_view(null, '+', () =>
- {
- honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__bee_id);
- push_to_stack();
- });
+ __dynamic_view++;
+ if (__dynamic_view > honeycomb_views.num())
  break;
  }
+ push_to_stack(__dynamic_view, __bee_id);
  }
  else
- {
- if (honeycomb_views.list(i).id === honeycomb_views.visible())
- {
- if (honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
- {
- honeycomb_views.list(i).bees.add(__bee_id);
- push_to_stack();
- break;
- }
- }
- }
- }
- }
- else
- {
- honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id);
- utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
+ push_to_stack(honeycomb_view, __bee_id);
  }
  swarm.settings.active_bee(null);
  return true;
@@ -8703,13 +8687,10 @@ function hive()
  return false;
  if (swarm.status.active_bee())
  {
- for (var i = 0; i < honeycomb_views.num(); i++)
- {
- if (honeycomb_views.list(i).id === honeycomb_views.visible() &&
- honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
+ if (honeycomb_views.list(honeycomb_views.visible() - 1).bees.num() < self.settings.bees_per_honeycomb())
  {
  var __active_bee_id = swarm.status.active_bee();
- honeycomb_views.list(i).bees.add(__active_bee_id);
+ honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__active_bee_id);
  colony.get(__active_bee_id).settings.general.in_hive(true);
  utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
  swarm.settings.active_bee(null);
@@ -8717,7 +8698,6 @@ function hive()
  }
  }
  return false;
- }
  };
  this.expel = function(event_object, mode)
  {
@@ -8729,10 +8709,9 @@ function hive()
  {
  var __honeycomb = honeycomb_views.list(i),
  __tmp_bees_list = Object.assign([], __honeycomb.bees.list());
- for (var j = 0; j < __tmp_bees_list.length; j++)
+ for (var __this_bee_id of __tmp_bees_list)
  {
- var __this_bee_id = __tmp_bees_list[j],
- __this_bee = colony.get(__this_bee_id),
+ var __this_bee = colony.get(__this_bee_id),
  __this_honeycomb_object = utils_sys.objects.by_id('honeycomb_' + __honeycomb.id),
  __this_bee_object = utils_sys.objects.by_id('hive_bee_' + __this_bee_id);
  __this_honeycomb_object.removeChild(__this_bee_object);
@@ -8751,19 +8730,12 @@ function hive()
  return false;
  if (swarm.status.active_bee())
  {
- for (var i = 0; i < honeycomb_views.num(); i++)
- {
- if (honeycomb_views.list(i).id === honeycomb_views.visible())
- {
  var __active_bee_id = swarm.status.active_bee();
- honeycomb_views.list(i).bees.remove(__active_bee_id);
+ honeycomb_views.list(honeycomb_views.visible() - 1).bees.remove(__active_bee_id);
  colony.get(__active_bee_id).settings.general.in_hive(false);
  swarm.settings.active_bee(__active_bee_id);
  utils_int.set_z_index(__active_bee_id);
  return true;
- }
- }
- return false;
  }
  }
  };
@@ -8843,8 +8815,6 @@ function hive()
  if (__sign === '-')
  hc_view_delta = -hc_view_delta;
  recursive_swipe(hc_view_delta);
- if (utils_sys.validation.misc.is_function(callback))
- callback.call();
  });
  }
  if (is_init === false)
@@ -8922,12 +8892,11 @@ function hive()
  return false;
  for (var i = 0; i < honeycomb_views.num(); i++)
  {
- var __this_honeycomb = honeycomb_views.list(i);
- var __bees_list = __this_honeycomb.bees.list();
- var __bees_list_length = __bees_list.length;
- for (var j = 0; j < __bees_list_length; j++)
+ var __this_honeycomb = honeycomb_views.list(i),
+ __bees_list = __this_honeycomb.bees.list();
+ for (var __this_bee of __bees_list)
  {
- if (__bees_list[j] === bee_id)
+ if (__this_bee === bee_id)
  return __this_honeycomb.id;
  }
  }
@@ -9623,16 +9592,15 @@ function ui_controls()
  {
  if (is_init === false)
  return false;
+ var __bees = colony.list();
  if (config.all_stacked === false)
  {
- var __bees = colony.list(),
- __bees_length = __bees.length,
- __is_bee_in_swarm = true;
- if (__bees_length === 0)
+ var __is_bee_in_swarm = true;
+ if ( __bees.length === 0)
  return false;
- for (var i = 0; i < __bees_length; i++)
+ for (var __this_bee of __bees)
  {
- if (!__bees[i].status.system.in_hive())
+ if (!__this_bee.status.system.in_hive())
  {
  __is_bee_in_swarm = false;
  break;
@@ -9642,15 +9610,14 @@ function ui_controls()
  return false;
  hive.stack.set_view(event, 1, () =>
  {
- for (var i = 0; i < __bees_length; i++)
- hive.stack.bees.insert(__bees[i], null);
+ hive.stack.bees.insert(__bees, null);
  utils_int.make_active('stack_all');
  config.all_stacked = true;
  });
  }
  else
  {
- if (colony.list().length === 0)
+ if (__bees.length === 0)
  return false;
  hive.stack.bees.expel(event, 0);
  hive.stack.set_view(event, 1, () =>

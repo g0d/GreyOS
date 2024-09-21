@@ -2,7 +2,7 @@
     "general"       :   {
                             "boot_mode"         :   0,
                             "os_name"           :   "GreyOS",
-                            "os_version"        :   "4.7 (alpha)"
+                            "os_version"        :   "4.8 (alpha)"
                         },
     "session"       :   {
                             "theme"             :   "morph",

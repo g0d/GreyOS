@@ -1,7 +1,7 @@
 /*
     MsgBox (Message Window)
 
-    File name: msgbox.js (Version: 2.7)
+    File name: msgbox.js (Version: 2.8)
     Description: This file contains the MsgBox extension.
     Dependencies: Vulcan.
 
@@ -249,9 +249,7 @@ function msgbox()
         if (!__found)
             return false;
 
-        var i = 0;
-
-        for (i = 0; i < hide_callback_array.length; i++)
+        for (var i = 0; i < hide_callback_array.length; i++)
         {
             if (!utils.validation.misc.is_function(hide_callback_array[i]))
                 return false;
@@ -279,7 +277,7 @@ function msgbox()
             (global_type === self.types.YES_NO_CANCEL && hide_callback_array.length > 3)))
             return false;
 
-        for (i = 0; i < hide_callback_array.length; i++)
+        for (var i = 0; i < hide_callback_array.length; i++)
         {
             if (!utils.validation.misc.is_function(hide_callback_array[i]))
                 return false;

@@ -1,12 +1,12 @@
 /*
     Parallel programming (Task parallelism)
 
-    File name: parallel.js (Version: 2.1)
+    File name: parallel.js (Version: 2.2)
     Description: This file contains the Parallel tasks framework extension.
     Dependencies: Vulcan, Pythia, JAP and Task.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2015 - 2021
+    Copyright (C) 2015 - 2024
     Open Software License (OSL 3.0)
 */
 
@@ -105,7 +105,8 @@ function parallel()
             if (!config_parser.verify(tasks_config_model, tasks_config))
                 return false;
 
-            var __task = null;
+            var __this_task_config = null,
+                __task = null;
 
             for (__this_task_config of tasks_config)
             {

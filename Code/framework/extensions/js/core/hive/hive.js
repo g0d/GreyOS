@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 4.2)
+    GreyOS - Hive (Version: 4.4)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -372,65 +372,57 @@ function hive()
 
             if (swarm.status.active_bee())
             {
-                for (var i = 0; i < honeycomb_views.num(); i++)
+                if (honeycomb_views.list(honeycomb_views.visible() - 1).bees.num() === self.settings.bees_per_honeycomb() && 
+                    stack_trace.internal_bee_drag === false)
                 {
-                    if (honeycomb_views.list(i).id === honeycomb_views.visible())
+                    me.free_space_hc_view_swipe(event_object);
+
+                    return false;
+                }
+                else
+                {
+                    stack_trace.bee_drag = true;
+
+                    var __active_bee_id = swarm.status.active_bee(),
+                        __hive_bee = utils_sys.objects.by_id('hive_bee_' + __active_bee_id),
+                        __hive_object = utils_sys.objects.by_id(hive_id),
+                        __ghost_bee_width = 230,
+                        __ghost_bee_height = 30,
+                        __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_views.visible()),
+                        __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
+                        __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
+                        __stack_offset_x_space = self.settings.left() + 
+                                                    utils_sys.graphics.pixels_value(__hive_object.style.width) + 250;
+                        __stack_offset_y_space = self.settings.top() + 
+                                                    utils_sys.graphics.pixels_value(__hive_object.style.height) - 12;
+
+                    if (mode === 1)
                     {
-                        if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb() && 
-                            stack_trace.internal_bee_drag === false)
-                        {
-                            me.free_space_hc_view_swipe(event_object);
+                        self.stack.bees.expel(event_object, mode);
 
-                            return true;
-                        }
+                        __honeycomb.removeChild(__hive_bee);
+                    }
+
+                    me.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 1);
+
+                    if (__bee_x <= __stack_offset_x_space)
+                    {
+                        utils_sys.objects.by_id('hive_ghost_bee').style.left = coords.mouse_x + 10 + 'px';
+
+                        if (__bee_y <= __stack_offset_y_space)
+                            utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y + __ghost_bee_height - 16 + 'px';
                         else
-                        {
-                            stack_trace.bee_drag = true;
-
-                            var __active_bee_id = swarm.status.active_bee(),
-                                __hive_bee = utils_sys.objects.by_id('hive_bee_' + __active_bee_id),
-                                __hive_object = utils_sys.objects.by_id(hive_id),
-                                __ghost_bee_width = 230,
-                                __ghost_bee_height = 30,
-                                __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_views.visible()),
-                                __bee_x = coords.mouse_x + 10 + __ghost_bee_width,
-                                __bee_y = coords.mouse_y + 10 + __ghost_bee_height,
-                                __stack_offset_x_space = self.settings.left() + 
-                                                         utils_sys.graphics.pixels_value(__hive_object.style.width) + 250;
-                                //__stack_offset_y_space = self.settings.top() + 
-                                //                         utils_sys.graphics.pixels_value(__hive_object.style.height);
-
-                            if (mode === 1)
-                            {
-                                self.stack.bees.expel(event_object, mode);
-
-                                __honeycomb.removeChild(__hive_bee);
-                            }
-
-                            me.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 1);
-
-                            if (__bee_x <= __stack_offset_x_space)
-                            {
-                                utils_sys.objects.by_id('hive_ghost_bee').style.left = coords.mouse_x + 10 + 'px';
-
-                                //if (__bee_y <= __stack_offset_y_space - 20)
-                                utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y + __ghost_bee_height - 10 + 'px';
-                                //else
-                                    //utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y - __ghost_bee_height - 10 + 'px';
-                            }
-                            else
-                            {
-                                if (!utils_sys.objects.by_id('hive_ghost_bee').style.top)
-                                    utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
-                            }
-                        }
-
-                        return true;
+                            utils_sys.objects.by_id('hive_ghost_bee').style.top = coords.mouse_y - __ghost_bee_height - 5 + 'px';
+                    }
+                    else
+                    {
+                        if (!utils_sys.objects.by_id('hive_ghost_bee').style.top)
+                            utils_sys.objects.by_id('hive_ghost_bee').style.display = 'none';
                     }
                 }
             }
 
-            return false;
+            return true;
         };
 
         this.hide_ghost_bee = function(event_object)
@@ -466,19 +458,16 @@ function hive()
             var __honeycomb = utils_sys.objects.by_id('honeycomb_' + honeycomb_id),
                 __bee = utils_sys.objects.by_id('hive_bee_' + bee_id);
 
-            for (var i = 0; i < honeycomb_views.num(); i++)
+            if (honeycomb_views.visible() === honeycomb_id)
             {
-                if (honeycomb_views.list(i).id === honeycomb_id)
-                {
-                    __honeycomb.removeChild(__bee);
+                __honeycomb.removeChild(__bee);
 
-                    honeycomb_views.list(i).bees.remove(bee_id);
+                honeycomb_views.list(honeycomb_views.visible() - 1).bees.remove(bee_id);
 
-                    if (colony.get(bee_id))
-                        colony.get(bee_id).settings.general.in_hive(false);
+                if (colony.get(bee_id))
+                    colony.get(bee_id).settings.general.in_hive(false);
 
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -820,10 +809,9 @@ function hive()
                                     function()
                                     {
                                         honeycomb_views.visible(honeycomb_views.visible() + __sign);
-
                                         honeycomb_views.swiping(false);
 
-                                        if (callback !== null)
+                                        if (callback)
                                             callback.call();
                                     });
             }
@@ -974,74 +962,67 @@ function hive()
 
     function stack()
     {
+        var me = this;
+
         function bees()
         {
-            this.insert = function(object, honeycomb_view)
+            this.insert = function(objects_array, honeycomb_view)
             {
+                function push_to_stack(view, bee_id)
+                {
+                    honeycomb_views.list(view - 1).bees.add(bee_id);
+
+                    colony.get(bee_id).settings.general.in_hive(true);
+
+                    utils_int.draw_hive_bee(view, bee_id, 0);
+                }
+
                 if (is_init === false)
                     return false;
 
-                if (!colony.is_bee(object) || 
-                    (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view)))
+                if (!utils_sys.validation.misc.is_array(objects_array))
                     return false;
 
-                if (honeycomb_view !== null && honeycomb_views.swiping())
+                if (honeycomb_view !== null && !utils_int.validate_honeycomb_range(honeycomb_view))
                     return false;
 
-                var __bee_id = object.settings.general.id();
-
-                if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+                if (honeycomb_views.swiping())
                     return false;
 
-                if (colony.get(__bee_id).status.system.in_hive())
-                    return false;
+                var __dynamic_view = 0;
 
-                if (honeycomb_view === null)
+                for (object of objects_array)
                 {
-                    function push_to_stack()
-                    {
-                        colony.get(__bee_id).settings.general.in_hive(true);
+                    if (!colony.is_bee(object))
+                        return false;
 
-                        utils_int.draw_hive_bee(honeycomb_views.visible(), __bee_id, 0);
-                    }
+                    var __bee_id = object.settings.general.id();
 
-                    for (var i = 0; i < honeycomb_views.num(); i++)
+                    if (utils_sys.validation.misc.is_invalid(__bee_id) || utils_sys.validation.misc.is_bool(__bee_id))
+                        return false;
+
+                    if (colony.get(__bee_id).status.system.in_hive())
+                        continue;
+
+                    if (honeycomb_view === null)
                     {
-                        if (honeycomb_views.list(i).bees.num() === self.settings.bees_per_honeycomb())
+                        var __view = honeycomb_views.visible();
+
+                        if (__dynamic_view === 0)
+                            __dynamic_view = __view;
+
+                        if (honeycomb_views.list(__dynamic_view - 1).bees.num() === self.settings.bees_per_honeycomb())
                         {
-                            if (honeycomb_views.visible() === i + 1 && honeycomb_views.visible() < honeycomb_views.num())
-                            {
-                                utils_int.manage_stack_view(null, '+', () =>
-                                {
-                                    honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__bee_id);
+                            __dynamic_view++;
 
-                                    push_to_stack();
-                                });
-
+                            if (__dynamic_view > honeycomb_views.num())
                                 break;
-                            }
                         }
-                        else
-                        {
-                            if (honeycomb_views.list(i).id === honeycomb_views.visible())
-                            {
-                                if (honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
-                                {
-                                    honeycomb_views.list(i).bees.add(__bee_id);
 
-                                    push_to_stack();
-
-                                    break;
-                                }
-                            }
-                        }
+                        push_to_stack(__dynamic_view, __bee_id);
                     }
-                }
-                else
-                {
-                    honeycomb_views.list(honeycomb_view - 1).bees.add(__bee_id);
-
-                    utils_int.draw_hive_bee(honeycomb_view, __bee_id, 0);
+                    else
+                        push_to_stack(honeycomb_view, __bee_id);
                 }
 
                 swarm.settings.active_bee(null);
@@ -1068,8 +1049,6 @@ function hive()
                 if (!colony.remove(__bee_id))
                     return false;
 
-                //object.settings.general.in_hive(false);
-
                 return true;
             };
 
@@ -1087,27 +1066,23 @@ function hive()
 
                 if (swarm.status.active_bee())
                 {
-                    for (var i = 0; i < honeycomb_views.num(); i++)
+                    if (honeycomb_views.list(honeycomb_views.visible() - 1).bees.num() < self.settings.bees_per_honeycomb())
                     {
-                        if (honeycomb_views.list(i).id === honeycomb_views.visible() && 
-                            honeycomb_views.list(i).bees.num() < self.settings.bees_per_honeycomb())
-                        {
-                            var __active_bee_id = swarm.status.active_bee();
+                        var __active_bee_id = swarm.status.active_bee();
 
-                            honeycomb_views.list(i).bees.add(__active_bee_id);
+                        honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__active_bee_id);
 
-                            colony.get(__active_bee_id).settings.general.in_hive(true);
+                        colony.get(__active_bee_id).settings.general.in_hive(true);
 
-                            utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
+                        utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
 
-                            swarm.settings.active_bee(null);
+                        swarm.settings.active_bee(null);
 
-                            return true;
-                        }
+                        return true;
                     }
-
-                    return false;
                 }
+
+                return false;
             };
 
             this.expel = function(event_object, mode)
@@ -1122,10 +1097,9 @@ function hive()
                         var __honeycomb = honeycomb_views.list(i),
                             __tmp_bees_list = Object.assign([], __honeycomb.bees.list());
 
-                        for (var j = 0; j < __tmp_bees_list.length; j++)
+                        for (var __this_bee_id of __tmp_bees_list)
                         {
-                            var __this_bee_id = __tmp_bees_list[j],
-                                __this_bee = colony.get(__this_bee_id),
+                            var __this_bee = colony.get(__this_bee_id),
                                 __this_honeycomb_object = utils_sys.objects.by_id('honeycomb_' + __honeycomb.id),
                                 __this_bee_object = utils_sys.objects.by_id('hive_bee_' + __this_bee_id);
 
@@ -1152,25 +1126,17 @@ function hive()
 
                     if (swarm.status.active_bee())
                     {
-                        for (var i = 0; i < honeycomb_views.num(); i++)
-                        {
-                            if (honeycomb_views.list(i).id === honeycomb_views.visible())
-                            {
-                                var __active_bee_id = swarm.status.active_bee();
+                        var __active_bee_id = swarm.status.active_bee();
 
-                                honeycomb_views.list(i).bees.remove(__active_bee_id);
+                        honeycomb_views.list(honeycomb_views.visible() - 1).bees.remove(__active_bee_id);
 
-                                colony.get(__active_bee_id).settings.general.in_hive(false);
+                        colony.get(__active_bee_id).settings.general.in_hive(false);
 
-                                swarm.settings.active_bee(__active_bee_id);
+                        swarm.settings.active_bee(__active_bee_id);
 
-                                utils_int.set_z_index(__active_bee_id);
+                        utils_int.set_z_index(__active_bee_id);
 
-                                return true;
-                            }
-                        }
-
-                        return false;
+                        return true;
                     }
                 }
             };
@@ -1273,9 +1239,6 @@ function hive()
                         hc_view_delta = -hc_view_delta;
 
                     recursive_swipe(hc_view_delta);
-
-                    if (utils_sys.validation.misc.is_function(callback))
-                        callback.call();
                 });
             }
 
@@ -1380,13 +1343,12 @@ function hive()
 
                 for (var i = 0; i < honeycomb_views.num(); i++)
                 {
-                    var __this_honeycomb = honeycomb_views.list(i);
-                    var __bees_list = __this_honeycomb.bees.list();
-                    var __bees_list_length = __bees_list.length;
+                    var __this_honeycomb = honeycomb_views.list(i),
+                        __bees_list = __this_honeycomb.bees.list();
 
-                    for (var j = 0; j < __bees_list_length; j++)
+                    for (var __this_bee of __bees_list)
                     {
-                        if (__bees_list[j] === bee_id)
+                        if (__this_bee === bee_id)
                             return __this_honeycomb.id;
                     }
                 }
