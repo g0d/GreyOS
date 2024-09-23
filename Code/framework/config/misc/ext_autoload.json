@@ -3,11 +3,11 @@
                  "stopwatch", "heartbeat", "workbox", "msgbox", "task", "parallel", "key_manager", "ajax_factory", "content_fetcher", 
                  "armadillo", "ultron", "boot_screen", "loading_screen", "f5", "linux_mode", "firefox_mode", "tablet_mode", 
                  "frog", "teletraan", "meta_os", "scenario", "multiverse", "cosmos", "matrix", "wormhole", 
-                 "dev_box", "app_box", "svc_box", "event_proxy", "colony", "roost", 
+                 "dev_box", "app_box", "svc_box", "colony", "roost", 
                  "xenon", "teal_fs", "owl", "forest", "swarm", "hive", "trinity", 
                  "krator", "ui_controls", "dock", "user_profile", "search", "chameleon", "nature", "eagle", "tik_tok", 
                  "meta_program_config", "meta_script", "meta_executor", "x_runner", "morpheus", 
-                 "panda", "octopus", "super_tray", "parrot", "uniplex", "xgc", "infinity", "scrollbar", "max_screen", 
+                 "panda", "octopus", "super_tray", "parrot", "uniplex", "model_proxy", "xgc", "infinity", "scrollbar", "max_screen", 
                  "bee", "bat", "oz", "coyote", "radio_dude", "cloud_edit"],
     "php"   :   ["arkangel", "splash", "eureka", "woody", "chaos"]
 }

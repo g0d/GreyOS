@@ -40,10 +40,11 @@ function boot_script()
         var containers_list = [dev_box, app_box, svc_box, matrix, colony, roost];
 
         // List of development tools
-        var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, infinity, scrollbar];
+        var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, 
+                         model_proxy, infinity, scrollbar];
 
         // List of system components
-        var sys_components = [xenon, morpheus, event_proxy, x_runner, panda, xgc, owl, uniplex, wormhole, teal_fs, 
+        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, wormhole, teal_fs, 
                               octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
                               user_profile, tik_tok, eagle, search, nature, chameleon];
 

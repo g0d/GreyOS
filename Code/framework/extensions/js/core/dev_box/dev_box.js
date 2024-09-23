@@ -5,7 +5,7 @@
     Description: This file contains the Dev Box - Development tools container module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */
 

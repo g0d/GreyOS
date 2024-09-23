@@ -20026,7 +20026,7 @@ function radio_dude()
  streams[1] = 'https://stream.zeno.fm/qmqe8k5e74zuv';
  streams[2] = 'https://i4.streams.ovh/sc/musicfactory/stream';
  streams[3] = 'https://c30.radioboss.fm:18119/stream';
- streams[4] = 'https://ais-sa2.cdnstream1.com/1963_128.mp3';
+ streams[4] = 'https://hydra.cdnstream.com/1924_64';
  selected_stream = streams[stream_id];
  config.player.pause();
  config.player.src = streams[stream_id];
