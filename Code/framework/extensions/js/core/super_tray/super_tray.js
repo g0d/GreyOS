@@ -1,5 +1,5 @@
 /*
-    GreyOS - Super Tray (Version: 2.1)
+    GreyOS - Super Tray (Version: 2.2)
 
     File name: super_tray.js
     Description: This file contains the Super Tray - Service icons tray area module.
@@ -124,14 +124,15 @@ function super_tray()
 
         this.attach_events = function()
         {
-            var __handler = null;
+            var __handler = null,
+                __desktop = utils_sys.objects.by_id('desktop');
 
             __handler = function() { me.toggle_tray_area(); };
             morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
 
             __handler = function() {  me.hide_tray_area(); };
-            morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
-            morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
+            morpheus.run(super_tray_id, 'mouse', 'click', __handler, __desktop);
+            morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, __desktop);
 
             __handler = function(event) {  hide_tray_area_on_key(event); };
             morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
@@ -147,13 +148,8 @@ function super_tray()
 
             is_super_tray_visible = true;
 
-            search.hide();
-
-            //morpheus.execute(super_tray_id + '_user_profile_call', 'mouse', 'click');
-            //morpheus.execute(super_tray_id + '_user_profile_call', 'touch', 'touchstart');
-
-            //morpheus.delete(super_tray_id + '_user_profile_call', 'click', utils_sys.objects.by_id(super_tray_id + '_arrow'));
-            //morpheus.delete(super_tray_id + '_user_profile_call', 'touchmove', utils_sys.objects.by_id(super_tray_id + '_arrow'));
+            imc_proxy.execute('user_profile').hide();
+            imc_proxy.execute('search').hide();
 
             return true;
         };
@@ -461,11 +457,12 @@ function super_tray()
         cosmos = cosmos_object;
 
         matrix = cosmos.hub.access('matrix');
+        dev_box = cosmos.hub.access('dev_box');
         svc_box = cosmos.hub.access('svc_box');
         roost = cosmos.hub.access('roost');
 
+        imc_proxy = matrix.get('imc_proxy');
         morpheus = matrix.get('morpheus');
-        search = matrix.get('search');
         nature = matrix.get('nature');
 
         return true;
@@ -478,7 +475,7 @@ function super_tray()
         matrix = null,
         svc_box = null,
         roost = null,
-        search = null,
+        imc_proxy = null,
         morpheus = null,
         nature = null,
         utils_sys = new vulcan(),

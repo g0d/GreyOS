@@ -231,41 +231,26 @@ option
     
 }
 
-#eureka
+.search .philos
 {
-    float: left;
-    clear: right;
-}
-
-#philos
-{
-    cursor: pointer;
-    float: left;
-    clear: none;
     background-image: url('pix/icons/philos/eye.png');
-    width: 36px;
-    height: 20px;
-    margin-top: 13px;
-    margin-right: 10px;
 }
 
-#eureka_search_box
+.search .eureka
 {
-    font-size: 12px;
-    height: 25px;
-    padding: 0 5px;
-    width: 238px;
-    height: 27px;
-    margin-top: 6px;
-    border-radius: 2px;
-    color: white;
+
+}
+
+.search .eureka .eureka_search_box
+{
+    color: white !important;
     background-color: #0000005e;
-    border-color: #2f2f2f;
+    border-color: #2f2f2f !important;
 }
 
-#eureka_search_box:focus
+.search .eureka .eureka_search_box:focus
 {
-    outline: white;
+    
 }
 
 #desktop

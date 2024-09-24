@@ -41,10 +41,10 @@ function boot_script()
 
         // List of development tools
         var dev_tools = [bee, bat, meta_program_config, meta_script, meta_executor, 
-                         model_proxy, infinity, scrollbar];
+                         infinity, scrollbar];
 
         // List of system components
-        var sys_components = [xenon, morpheus, x_runner, panda, xgc, owl, uniplex, wormhole, teal_fs, 
+        var sys_components = [xenon, morpheus, imc_proxy, x_runner, panda, xgc, owl, uniplex, wormhole, teal_fs, 
                               octopus, parrot, super_tray, swarm, hive, forest, ui_controls, dock, 
                               user_profile, tik_tok, eagle, search, nature, chameleon];
 

@@ -11,10 +11,44 @@
 
 .search
 {
-    display: none;
     position: relative;
     float: right;
     margin-right: 31px;
     margin-top: 10px;
     z-index: 2147483643;
+}
+
+.search .philos
+{
+    cursor: pointer;
+    float: left;
+    clear: none;
+    background-image: url(pix/philos.png);
+    width: 36px;
+    height: 20px;
+    margin-top: 13px;
+}
+
+.search .eureka
+{
+    display: none;
+    float: left;
+    clear: right;
+}
+
+.search .eureka .eureka_search_box
+{
+    font-size: 12px;
+    width: 238px;
+    height: 27px;
+    color: #666666;
+    background-color: white;
+    margin-top: 6px;
+    border-radius: 2px;
+    padding: 0 5px;
+}
+
+.search .eureka .eureka_search_box:focus
+{
+    outline: white;
 }

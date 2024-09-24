@@ -1,52 +1,41 @@
 /*
-    GreyOS - Model Proxy (Version: 1.0)
+    GreyOS - IMC Proxy (Version: 1.0)
 
-    File name: model_proxy.js
-    Description: This file contains the Model Proxy - Model proxy development module.
+    File name: imc_proxy.js
+    Description: This file contains the IMC Proxy - Inter-Model Communication proxy system module.
 
     Coded by George Delaportas (G0D)
     Copyright © 2024
     Open Software License (OSL 3.0)
 */
 
-// Model Proxy
-function model_proxy()
+// IMC Proxy
+function imc_proxy()
 {
     var self = this;
 
-    this.execute = function(model_id, command)
+    this.execute = function(model_id)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
             return false;
 
-        if (utils_sys.validation.alpha.is_symbol(model_id) || utils_sys.validation.misc.is_symbol(command))
+        if (utils_sys.validation.alpha.is_symbol(model_id))
             return false;
 
-        var __dynamic_model = matrix.get(model_id),
-            __result = null;
+        var __dynamic_model = matrix.get(model_id);
 
         if (!__dynamic_model)
         {
             if (backtrace === true)
-                frog('MODEL PROXY', 'Model :: Failed initialization', model_id);
-
-            return false;
-        }
-
-        __result = eval(__dynamic_model + '.' + command);
-
-        if (!__result)
-        {
-            if (backtrace === true)
-                frog('MODEL PROXY', 'Model :: Failed execution', model_id);
+                frog('IMC PROXY', 'Model :: Failed initialization', model_id);
 
             return false;
         }
 
         if (backtrace === true)
-            frog('MODEL PROXY', 'Model :: Successful execution', model_id);
+            frog('IMC PROXY', 'Model :: Successful initialization', model_id);
 
-        return __result;
+        return __dynamic_model;
     };
 
     this.backtrace = function(val)

@@ -6006,59 +6006,6 @@ function svc_box()
  svcs = new svc_box_model(),
  utils_int = new utilities();
 }
-function event_proxy()
-{
- var self = this;
- this.execute = function(event_id, context, event)
- {
- if (utils_sys.validation.misc.is_nothing(cosmos))
- return false;
- if (utils_sys.validation.alpha.is_symbol(event_id) ||
- utils_sys.validation.alpha.is_symbol(context) ||
- utils_sys.validation.alpha.is_symbol(event))
- return false;
- if (any_model)
- {
- var __result = null;
- __result = morpheus.execute(event_id, context, event);
- if (!__result)
- {
- if (backtrace === true)
- frog('MODEL PROXY', 'Model :: Failed execution', model_id);
- return false;
- }
- if (backtrace === true)
- frog('MODEL PROXY', 'Model :: Successful execution', model_id);
- return __result;
- }
- if (backtrace === true)
- frog('MODEL PROXY', 'Model :: Failed initialization', model_id);
- return false;
- };
- this.backtrace = function(val)
- {
- if (utils_sys.validation.misc.is_nothing(cosmos))
- return false;
- if (!utils_sys.validation.misc.is_bool(val))
- return false;
- backtrace = val;
- return true;
- };
- this.cosmos = function(cosmos_object)
- {
- if (utils_sys.validation.misc.is_undefined(cosmos_object))
- return false;
- cosmos = cosmos_object;
- matrix = cosmos.hub.access('matrix');
- morpheus = matrix.get('morpheus');
- return true;
- };
- var backtrace = false,
- cosmos = null,
- matrix = null,
- morpheus = null,
- utils_sys = new vulcan();
-}
 function colony()
 {
  var self = this;
@@ -10195,16 +10142,17 @@ function user_profile()
  };
  this.attach_events = function()
  {
- var __handler = null;
+ var __handler = null,
+ __desktop = utils_sys.objects.by_id('desktop');
  __handler = function() { me.toggle_profile_area(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id));
  __handler = function() { me.reboot_os(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_user_reboot'));
  __handler = function() { me.logout(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_logout'));
- __handler = function() { me.hide_profile_area(); };
- morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
- morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
+ __handler = function() { me.hide_profile_area(false); };
+ morpheus.run(user_profile_id, 'mouse', 'click', __handler, __desktop);
+ morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, __desktop);
  __handler = function(event) { hide_profile_area_on_key(event); };
  morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
  return true;
@@ -10217,11 +10165,10 @@ function user_profile()
  __my_profile_label.classList.remove('user_profile_hidden');
  __my_profile_label.classList.add('user_profile_active');
  is_profile_area_visible = true;
- super_tray.hide();
- search.hide();
+ imc_proxy.execute('search').hide(true);
  return true;
  };
- this.hide_profile_area = function()
+ this.hide_profile_area = function(hide_search = true)
  {
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
  __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
@@ -10229,7 +10176,8 @@ function user_profile()
  __my_profile_label.classList.remove('user_profile_active');
  __my_profile_label.classList.add('user_profile_hidden');
  is_profile_area_visible = false;
- super_tray.hide();
+ if (hide_search)
+ imc_proxy.execute('search').hide();
  return true;
  };
  this.toggle_profile_area = function()
@@ -10238,6 +10186,7 @@ function user_profile()
  me.hide_profile_area();
  else
  me.show_profile_area();
+ imc_proxy.execute('super_tray').hide();
  return true;
  };
  this.reboot_os = function()
@@ -10279,11 +10228,11 @@ function user_profile()
  return false;
  return utils_int.show_profile_area();
  };
- this.hide = function()
+ this.hide = function(hide_search = true)
  {
  if (is_init === false)
  return false;
- return utils_int.hide_profile_area();
+ return utils_int.hide_profile_area(hide_search);
  };
  this.toggle = function()
  {
@@ -10318,7 +10267,6 @@ function user_profile()
  if (!self.settings.container(container_id))
  return false;
  user_profile_id = self.settings.id();
- super_tray_id = super_tray.id();
  nature.themes.store('user_profile');
  nature.apply('new');
  utils_int.draw_user_profile();
@@ -10334,9 +10282,8 @@ function user_profile()
  xenon = matrix.get('xenon');
  swarm = matrix.get('swarm');
  hive = matrix.get('hive');
+ imc_proxy = matrix.get('imc_proxy');
  morpheus = matrix.get('morpheus');
- super_tray = matrix.get('super_tray');
- search = matrix.get('search');
  parrot = matrix.get('parrot');
  chameleon = matrix.get('chameleon');
  nature = matrix.get('nature');
@@ -10352,12 +10299,10 @@ function user_profile()
  xenon = null,
  swarm = null,
  hive = null,
- search = null,
+ imc_proxy = null,
  morpheus = null,
- super_tray = null,
  chameleon = null,
  nature = null,
- super_tray_id = null,
  utils_sys = new vulcan(),
  random = new pythia(),
  key_control = new key_manager(),
@@ -10388,10 +10333,10 @@ function search()
  var __key_code = key_control.get();
  if (__key_code === 114)
  {
- if (search_on === true)
+ if (is_search_on === true)
  return false;
  self.toggle();
- search_on = true;
+ is_search_on = true;
  }
  return true;
  }
@@ -10401,12 +10346,22 @@ function search()
  var __key_code = key_control.get();
  if (__key_code !== 114)
  return false;
- search_on = false;
+ is_search_on = false;
  return true;
  }
+ this.show_eureka = function()
+ {
+ utils_sys.objects.by_id(search_id + '_philos').style.display = 'block';
+ utils_sys.objects.by_id(search_id + '_philos').style.marginRight = '10px';
+ utils_sys.objects.by_id(search_id + '_eureka').style.display = 'block';
+ utils_sys.objects.by_id(search_id + '_eureka_search_box').focus();
+ is_search_visible = true;
+ };
  this.attach_events = function()
  {
  var __handler = null,
+ __search = utils_sys.objects.by_id(search_id),
+ __philos = utils_sys.objects.by_id(search_id + '_philos'),
  __desktop = utils_sys.objects.by_id('desktop');
  __handler = function(event) { key_down_tracer(event); };
  morpheus.run(search_id, 'key', 'keydown', __handler, document);
@@ -10414,8 +10369,17 @@ function search()
  morpheus.run(search_id, 'key', 'keyup', __handler, document);
  __handler = function(event) { hide_serch_area_on_key(event); };
  morpheus.run(search_id, 'key', 'keydown', __handler, document);
- __handler = function() { self.hide(); };
- morpheus.run(search_id, 'mouse', 'click', __handler, __desktop);
+ __handler = function() { self.show(); };
+ morpheus.run(search_id, 'mouse', 'mousedown', __handler, __philos);
+ morpheus.run(search_id, 'touch', 'touchstart', __handler, __philos);
+ __handler = function() { me.show_eureka(); };
+ morpheus.run(search_id, 'mouse', 'mouseup', __handler, __search);
+ __handler = function(event)
+ {
+ if (event.target.id !== search_id + '_eureka_search_box')
+ self.hide();
+ };
+ morpheus.run(search_id, 'mouse', 'mousedown', __handler, __desktop);
  morpheus.run(search_id, 'touch', 'touchmove', __handler, __desktop);
  return true;
  };
@@ -10423,9 +10387,10 @@ function search()
  {
  var __desktop = utils_sys.objects.by_id('desktop');
  __desktop.innerHTML += `<div id="`+ search_id + `" class="search">
- <div id="philos" title="Philos :: Your personal AI assistant"></div>
- <div id="eureka" title="Eureka :: Your own meta-search engine">
- <input id="eureka_search_box" type="text" value="" maxlength="100" placeholder="What's next?">
+ <div id="`+ search_id + `_philos" class="philos" title="Philos :: Your personal Meta AI assistant"></div>
+ <div id="`+ search_id + `_eureka" class="eureka" title="Eureka :: Your own Meta Search engine">
+ <input id="`+ search_id + `_eureka_search_box" class="eureka_search_box" type="text"
+ value="" maxlength="100" placeholder="What's next?">
  </div>
  </div>`;
  return true;
@@ -10469,16 +10434,22 @@ function search()
  {
  if (is_init === false)
  return false;
- utils_sys.objects.by_id(search_id).style.display = 'block';
- utils_sys.objects.by_id('eureka_search_box').focus();
- is_search_visible = true;
+ utils_int.show_eureka();
+ imc_proxy.execute('super_tray', '').hide();
+ imc_proxy.execute('user_profile', '').hide(false);
  return true;
  };
- this.hide = function()
+ this.hide = function(hide_eye = false)
  {
  if (is_init === false)
  return false;
- utils_sys.objects.by_id(search_id).style.display = 'none';
+ if (hide_eye)
+ utils_sys.objects.by_id(search_id + '_philos').style.display = 'none';
+ else
+ utils_sys.objects.by_id(search_id + '_philos').style.display = 'block';
+ utils_sys.objects.by_id(search_id + '_philos').style.marginRight = '0px';
+ utils_sys.objects.by_id(search_id + '_eureka').style.display = 'none';
+ utils_sys.objects.by_id(search_id + '_eureka_search_box').value = '';
  is_search_visible = false;
  return true;
  };
@@ -10511,16 +10482,18 @@ function search()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
+ imc_proxy = matrix.get('imc_proxy');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
  return true;
  };
  var is_init = false,
- search_on = false,
+ is_search_on = false,
  is_search_visible = false,
  search_id = null,
  cosmos = null,
  matrix = null,
+ imc_proxy = null,
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),
@@ -12745,6 +12718,48 @@ function morpheus()
  utils_sys = new vulcan(),
  global_events_scheduler = new events_scheduler();
 }
+function imc_proxy()
+{
+ var self = this;
+ this.execute = function(model_id)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (utils_sys.validation.alpha.is_symbol(model_id))
+ return false;
+ var __dynamic_model = matrix.get(model_id);
+ if (!__dynamic_model)
+ {
+ if (backtrace === true)
+ frog('IMC PROXY', 'Model :: Failed initialization', model_id);
+ return false;
+ }
+ if (backtrace === true)
+ frog('IMC PROXY', 'Model :: Successful initialization', model_id);
+ return __dynamic_model;
+ };
+ this.backtrace = function(val)
+ {
+ if (utils_sys.validation.misc.is_nothing(cosmos))
+ return false;
+ if (!utils_sys.validation.misc.is_bool(val))
+ return false;
+ backtrace = val;
+ return true;
+ };
+ this.cosmos = function(cosmos_object)
+ {
+ if (utils_sys.validation.misc.is_undefined(cosmos_object))
+ return false;
+ cosmos = cosmos_object;
+ matrix = cosmos.hub.access('matrix');
+ return true;
+ };
+ var backtrace = false,
+ cosmos = null,
+ matrix = null,
+ utils_sys = new vulcan();
+}
 function x_runner()
 {
  var self = this;
@@ -13456,12 +13471,13 @@ function super_tray()
  };
  this.attach_events = function()
  {
- var __handler = null;
+ var __handler = null,
+ __desktop = utils_sys.objects.by_id('desktop');
  __handler = function() { me.toggle_tray_area(); };
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
  __handler = function() { me.hide_tray_area(); };
- morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
- morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
+ morpheus.run(super_tray_id, 'mouse', 'click', __handler, __desktop);
+ morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, __desktop);
  __handler = function(event) { hide_tray_area_on_key(event); };
  morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);
  return true;
@@ -13471,7 +13487,8 @@ function super_tray()
  var __service_icons_tray = utils_sys.objects.by_id(super_tray_id + '_service_icons_tray');
  __service_icons_tray.style.display = 'block';
  is_super_tray_visible = true;
- search.hide();
+ imc_proxy.execute('user_profile').hide();
+ imc_proxy.execute('search').hide();
  return true;
  };
  this.hide_tray_area = function()
@@ -13692,10 +13709,11 @@ function super_tray()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
+ dev_box = cosmos.hub.access('dev_box');
  svc_box = cosmos.hub.access('svc_box');
  roost = cosmos.hub.access('roost');
+ imc_proxy = matrix.get('imc_proxy');
  morpheus = matrix.get('morpheus');
- search = matrix.get('search');
  nature = matrix.get('nature');
  return true;
  };
@@ -13706,7 +13724,7 @@ function super_tray()
  matrix = null,
  svc_box = null,
  roost = null,
- search = null,
+ imc_proxy = null,
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),

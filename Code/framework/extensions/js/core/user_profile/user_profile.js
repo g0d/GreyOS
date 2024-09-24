@@ -222,7 +222,8 @@ function user_profile()
 
         this.attach_events = function()
         {
-            var __handler = null;
+            var __handler = null,
+                __desktop = utils_sys.objects.by_id('desktop');
 
             __handler = function() { me.toggle_profile_area(); };
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id));
@@ -233,12 +234,9 @@ function user_profile()
             __handler = function() {  me.logout(); };
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_logout'));
 
-            __handler = function() {  me.hide_profile_area(); };
-            morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
-            morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, utils_sys.objects.by_id('desktop'));
-
-            //morpheus.store(super_tray_id + '_user_profile_call', 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
-            //morpheus.store(super_tray_id + '_user_profile_call', 'touch', 'touchmove', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
+            __handler = function() {  me.hide_profile_area(false); };
+            morpheus.run(user_profile_id, 'mouse', 'click', __handler, __desktop);
+            morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, __desktop);
 
             __handler = function(event) {  hide_profile_area_on_key(event); };
             morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
@@ -257,13 +255,12 @@ function user_profile()
 
             is_profile_area_visible = true;
 
-            super_tray.hide();
-            search.hide();
+            imc_proxy.execute('search').hide(true);
 
             return true;
         };
 
-        this.hide_profile_area = function()
+        this.hide_profile_area = function(hide_search = true)
         {
             var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
                 __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
@@ -274,7 +271,8 @@ function user_profile()
 
             is_profile_area_visible = false;
 
-            super_tray.hide();
+            if (hide_search)
+                imc_proxy.execute('search').hide();
 
             return true;
         };
@@ -285,6 +283,8 @@ function user_profile()
                 me.hide_profile_area();
             else
                 me.show_profile_area();
+
+            imc_proxy.execute('super_tray').hide();
 
             return true;
         };
@@ -343,12 +343,12 @@ function user_profile()
         return utils_int.show_profile_area();
     };
 
-    this.hide = function()
+    this.hide = function(hide_search = true)
     {
         if (is_init === false)
             return false;
 
-        return utils_int.hide_profile_area();
+        return utils_int.hide_profile_area(hide_search);
     };
 
     this.toggle = function()
@@ -397,7 +397,6 @@ function user_profile()
             return false;
 
         user_profile_id = self.settings.id();
-        super_tray_id = super_tray.id();
 
         nature.themes.store('user_profile');
         nature.apply('new');
@@ -420,9 +419,8 @@ function user_profile()
         xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
+        imc_proxy = matrix.get('imc_proxy');
         morpheus = matrix.get('morpheus');
-        super_tray = matrix.get('super_tray');
-        search = matrix.get('search');
         parrot = matrix.get('parrot');
         chameleon = matrix.get('chameleon');
         nature = matrix.get('nature');
@@ -440,12 +438,10 @@ function user_profile()
         xenon = null,
         swarm = null,
         hive = null,
-        search = null,
+        imc_proxy = null,
         morpheus = null,
-        super_tray = null,
         chameleon = null,
         nature = null,
-        super_tray_id = null,
         utils_sys = new vulcan(),
         random = new pythia(),
         key_control = new key_manager(),
