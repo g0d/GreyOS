@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 2.7)
+    GreyOS - Dock (Version: 2.8)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -153,8 +153,8 @@ function dock()
 
         function enable_drag()
         {
-            var __dock_div = utils_sys.objects.by_id(self.settings.container()),
-                __dock_apps = utils_sys.objects.selectors.all('#top_panel #favorite_apps .favorites'),
+            var __dock_div = utils_sys.objects.by_id(dock_id),
+                __dock_apps = utils_sys.objects.selectors.all('#favorite_apps .dock .favorites'),
                 __dock_apps_length = __dock_apps.length,
                 __handler = null;
 
@@ -236,13 +236,20 @@ function dock()
 
         this.draw = function()
         {
-            //TODO: Draw an extra layer behind to enable swipping!
+            var __dynamic_object = null;
 
-            ajax_load(self.settings.container(), function()
-                                                 {
-                                                    create_dock_array();
-                                                    attach_events();
-                                                 });
+            __dynamic_object = document.createElement('div');
+
+            __dynamic_object.setAttribute('id', dock_id);
+            __dynamic_object.setAttribute('class', 'dock');
+
+            utils_sys.objects.by_id(self.settings.container()).appendChild(__dynamic_object);
+
+            ajax_load(__dynamic_object.id, function()
+                                        {
+                                            create_dock_array();
+                                            attach_events();
+                                        });
 
             return true;
         };

@@ -9,17 +9,6 @@
     Open Software License (OSL 3.0)
 */
 
-#action_icons
-{
-    float: left;
-    clear: none;
-    mix-blend-mode: screen;
-    width: 65px;
-    height: 100%;
-    margin-left: 43px;
-    margin-right: 27px;
-}
-
 .windows_placement
 {
     float: right;

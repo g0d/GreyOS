@@ -17,25 +17,23 @@
   user-select: none;
 }
 
-#favorite_apps
+.dock
 {
-    float: left;
-    clear: none;
-    mix-blend-mode: hard-light;
+    width: 100%;
     height: 100%;
-    width: 1004px;
 }
 
 .favorites
 {
+    float: left;
     width: 30px;
     height: 30px;
-    margin-top: 6px;
-    padding: 0px;
+    mix-blend-mode: hard-light;
     border: 1px solid transparent;
-    float: left;
-    margin-right: 20px;
     cursor: pointer;
+    margin-top: 6px;
+    margin-right: 20px;
+    padding: 0px;
 	-webkit-transition: background-image 0.1s ease-out;
 	-moz-transition: background-image 0.1s ease-out;
 	-ms-transition: background-image 0.1s ease-out;
@@ -96,46 +94,6 @@
     background-image: url('pix/favorites/active/icon_app.png') !important;
 }
 
-.svc_default
-{
-    background-image: url('pix/favorites/inactive/icon_box.png') !important;
-}
-
-.svc_default:hover
-{
-    background-image: url('pix/favorites/hover/icon_box.png') !important;
-}
-
-#app_rooster
-{
-    background-image: url('pix/favorites/inactive/icon_clock.png');
-}
-
-#app_rooster:hover
-{
-    background-image: url('pix/favorites/hover/icon_clock.png') !important;
-}
-
-.app_rooster_on
-{
-    background-image: url('pix/favorites/active/icon_clock.png') !important;
-}
-
-#app_greyos_cloud
-{
-    background-image: url('pix/favorites/inactive/icon_cloud.png');
-}
-
-#app_greyos_cloud:hover
-{
-    background-image: url('pix/favorites/hover/icon_cloud.png') !important;
-}
-
-.app_greyos_cloud_on
-{
-    background-image: url('pix/favorites/active/icon_cloud.png') !important;
-}
-
 #app_coyote
 {
     background-image: url('pix/favorites/inactive/icon_coyote.png');
@@ -149,81 +107,6 @@
 .app_coyote_on
 {
     background-image: url('pix/favorites/active/icon_coyote.png') !important;
-}
-
-#app_greyos_mail
-{
-    background-image: url('pix/favorites/inactive/icon_email.png');
-}
-
-#app_greyos_mail:hover
-{
-    background-image: url('pix/favorites/hover/icon_email.png') !important;
-}
-
-.app_greyos_mail_on
-{
-    background-image: url('pix/favorites/active/icon_email.png') !important;
-}
-
-#app_i_youtube
-{
-    background-image: url('pix/favorites/inactive/icon_youtube.png');
-}
-
-#app_i_youtube:hover
-{
-    background-image: url('pix/favorites/hover/icon_youtube.png') !important;
-}
-
-.app_i_youtube_on
-{
-    background-image: url('pix/favorites/active/icon_youtube.png') !important;
-}
-
-#app_i_fb
-{
-    background-image: url('pix/favorites/inactive/icon_facebook.png');
-}
-
-#app_i_fb:hover
-{
-    background-image: url('pix/favorites/hover/icon_facebook.png') !important;
-}
-
-.app_i_fb_on
-{
-    background-image: url('pix/favorites/active/icon_facebook.png') !important;
-}
-
-#app_twitter
-{
-    background-image: url('pix/favorites/inactive/icon_twitter.png');
-}
-
-#app_twitter:hover
-{
-    background-image: url('pix/favorites/hover/icon_twitter.png') !important;
-}
-
-.app_twitter_on
-{
-    background-image: url('pix/favorites/active/icon_twitter.png') !important;
-}
-
-#app_i_linkedin
-{
-    background-image: url('pix/favorites/inactive/icon_linkedin.png');
-}
-
-#app_i_linkedin:hover
-{
-    background-image: url('pix/favorites/hover/icon_linkedin.png') !important;
-}
-
-.app_i_linkedin_on
-{
-    background-image: url('pix/favorites/active/icon_linkedin.png') !important;
 }
 
 #app_radio_dude
@@ -279,7 +162,6 @@
 #app_i_quakejs:hover
 {
     background-image: url('pix/favorites/hover/icon_games.png') !important;
-
 }
 
 .app_i_quakejs_on
@@ -410,7 +292,6 @@
 #app_i_ganttio
 {
     background-image: url('pix/favorites/inactive/icon_box.png');
-
 }
 
 #app_i_ganttio:hover
@@ -436,101 +317,4 @@
 .app_i_webgl_preview_on
 {
     background-image: url('pix/favorites/active/icon_star.png') !important;
-}
-
-#app_games
-{
-    background-image: url('pix/favorites/inactive/icon_games.png');
-}
-
-#app_games:hover
-{
-    background-image: url('pix/favorites/hover/icon_games.png') !important;
-}
-
-.app_games_on
-{
-    background-image: url('pix/favorites/active/icon_games.png') !important;
-}
-
-#app_map_fuzion
-{
-    background-image: url('pix/favorites/inactive/icon_maps.png');
-}
-
-#app_map_fuzion:hover
-{
-    background-image: url('pix/favorites/hover/icon_maps.png') !important;
-}
-
-.app_map_fuzion_on
-{
-    background-image: url('pix/favorites/active/icon_maps.png') !important;
-}
-
-#app_greyos_talk
-{
-    background-image: url('pix/favorites/inactive/icon_chat.png');
-}
-
-#app_greyos_talk:hover
-{
-    background-image: url('pix/favorites/hover/icon_chat.png') !important;
-}
-
-.app_greyos_talk_on
-{
-    background-image: url('pix/favorites/active/icon_chat.png') !important;
-}
-
-#app_other
-{
-    width: 10px;
-}
-
-#app_bookmarks
-{
-    background-image: url('pix/favorites/inactive/icon_star.png');
-}
-
-#app_bookmarks:hover
-{
-    background-image: url('pix/favorites/hover/icon_star.png') !important;
-}
-
-.app_bookmarks_on
-{
-    background-image: url('pix/favorites/active/icon_star.png') !important;
-}
-
-.games_list
-{
-    display: none;
-    position: relative;
-    float: left;
-    clear: both;
-    font-size: 14px;
-    width: 140px;
-    height: 68px;
-    cursor: pointer;
-    background-color: #FFF;
-    margin-top: 30px;
-    padding: 4px;
-    color: #FFFFFF;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    z-index: 2147483645;
-}
-
-.game_option
-{
-    background-color: #35BAB2;
-    height: 18px;
-    margin-bottom: 1px;
-    padding: 2px;
-}
-
-.game_option:hover
-{
-    color: #FFFFFF;
-    background-color: #5C5C5C;
 }

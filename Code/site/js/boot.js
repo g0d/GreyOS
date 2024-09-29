@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 4.2)
+    GreyOS - Bootstrap facility (Version: 4.3)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -131,6 +131,14 @@ function boot_script()
             });
         }
 
+        function remove_bg_video()
+        {
+            var bg_video = os_utils.objects.by_id('bg_video');
+
+            if (bg_video)
+                os_utils.objects.by_id('greyos').removeChild(bg_video);
+        }
+
         function load_login_ui()
         {
             // Iniatilaze loading screen
@@ -253,6 +261,9 @@ function boot_script()
             matrix_container.get('swarm').bees.show();
             matrix_container.get('hive').stack.bees.show();
 
+            // Remove background video (if it exists)
+            remove_bg_video();
+
             // Banana (User suggestions widget)
             Banana();
 
@@ -317,6 +328,9 @@ function boot_script()
                 // Show preloaded or saved bees (apps)
                 new_swarm.bees.show();
                 new_hive.stack.bees.show();
+
+                // Remove background video (if it exists)
+                remove_bg_video();
 
                 // Banana (User suggestions widget)
                 Banana();

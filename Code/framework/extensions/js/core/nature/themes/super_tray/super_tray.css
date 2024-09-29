@@ -54,6 +54,31 @@
     cursor: pointer;
     float: left;
     clear: none;
+    mix-blend-mode: hard-light;
     width: 30px;
     height: 30px;
+	-webkit-transition: background-image 0.1s ease-out;
+	-moz-transition: background-image 0.1s ease-out;
+	-ms-transition: background-image 0.1s ease-out;
+	-o-transition: background-image 0.1s ease-out;
+	transition: background-image 0.1s ease-out;
+}
+
+.super_tray_service:hover
+{
+	-webkit-transition: background-image 0.1s ease-in;
+	-moz-transition: background-image 0.1s ease-in;
+	-ms-transition: background-image 0.1s ease-in;
+	-o-transition: background-image 0.1s ease-in;
+	transition: background-image 0.1s ease-in;
+}
+
+.svc_default
+{
+    background-image: url('pix/icon_box.png') !important;
+}
+
+.svc_default:hover
+{
+    background-image: url('pix/icon_box_hover.png') !important;
 }

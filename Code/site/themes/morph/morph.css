@@ -87,32 +87,21 @@ option
     background: #15cfe27d;
 }
 
-#keywords_area
-{
-    display: none;
-}
-
-#greyos
-{
-    width: 100%;
-    height: 100%;
-}
-
 #top_panel
 {
+    display: block;
     background-color: #b3edef2b;
     box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
 
 #logo
 {
-    float: left;
-    clear: left;
-    background-image: url('pix/greyos.png');
-    width: 250px;
-    height: 10px;
-    margin-left: 35px;
-    margin-top: 18px;
+    mix-blend-mode: color-dodge;
+}
+
+#action_icons
+{
+    mix-blend-mode: screen;
 }
 
 .notifications_num
@@ -127,7 +116,7 @@ option
 
 .user_profile_area
 {
-    background-color: #2727271f !important;
+    background-color: #b3edef2b !important;
     border: 2px solid #ffffff4a !important;
     border-radius: 12px
 }
@@ -245,7 +234,7 @@ option
 .search .eureka .eureka_search_box
 {
     color: white !important;
-    background-color: #2727271f !important;
+    background-color: #b3edef2b !important;
     border: 2px solid #ffffff4a !important;
     border-radius: 12px !important;
 }
@@ -264,6 +253,17 @@ option
     overflow: auto;
     margin-left: auto;
     margin-right: auto;
+}
+
+#bg_video
+{
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
 }
 
 .actions
@@ -641,7 +641,7 @@ option
 
 .service_icons_area
 {
-    background-color: #2727271f !important;
+    background-color: #b3edef2b !important;
     border: 2px solid #ffffff4a !important;
     border-radius: 12px;
 }

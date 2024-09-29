@@ -143,6 +143,30 @@ body
     margin-top: 80px;
 }
 
+#greyos
+{
+    width: 100%;
+    height: 100%;
+}
+
+#top_panel
+{
+    display: none;
+    height: 45px;
+}
+
+#logo
+{
+    float: left;
+    clear: left;
+    background-image: url('../pix/greyos_logo_mini.png');
+    background-repeat: no-repeat;
+    width: 250px;
+    height: 26px;
+    margin-left: 35px;
+    margin-top: 18px;
+}
+
 #version
 {
     float: right;
@@ -151,9 +175,47 @@ body
     margin-top: 14px;
 }
 
-#top_panel
+#action_icons
 {
-    height: 45px;
+    float: left;
+    clear: none;
+    width: 65px;
+    height: 100%;
+    margin-left: 43px;
+    margin-right: 27px;
+}
+
+#favorite_apps
+{
+    float: left;
+    clear: none;
+    height: 100%;
+    width: 1004px;
+    overflow: hidden;
+}
+
+#service_tray
+{
+    float: right;
+    clear: none;
+}
+
+#device_manager
+{
+    float: right;
+    clear: none;
+}
+
+#audio
+{
+    float: right;
+    clear: none;
+}
+
+#clock
+{
+    float: right;
+    clear: none;
 }
 
 #user_profile
@@ -161,6 +223,11 @@ body
     float: right;
     clear: right;
     margin-top: 7px;
+}
+
+#bg_video
+{
+    display: none;
 }
 
 .error
