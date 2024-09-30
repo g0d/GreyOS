@@ -9,6 +9,11 @@
     Open Software License (OSL 3.0)
 */
 
+#bg_video
+{
+    display: none !important;
+}
+
 .favorites
 {
     margin-right: 5px !important;
