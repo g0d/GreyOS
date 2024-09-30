@@ -9372,6 +9372,7 @@ function krator()
  krator_bee.settings.actions.can_use_menu(false);
  krator_bee.settings.actions.can_close(false);
  krator_bee.settings.general.single_instance(true);
+ krator_bee.settings.general.casement_width(70, 'fixed');
  krator_bee.gui.size.width(420);
  krator_bee.gui.size.height(400);
  krator_bee.gui.position.static(true);

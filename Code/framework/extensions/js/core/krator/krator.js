@@ -1,5 +1,5 @@
 /*
-    GreyOS - Krator :: Login & registration form (Version: 2.0)
+    GreyOS - Krator :: Login & registration form (Version: 2.1)
 
     File name: krator.js
     Description: This file contains the Krator :: Login & registration form application.
@@ -403,6 +403,7 @@ function krator()
         krator_bee.settings.actions.can_use_menu(false);
         krator_bee.settings.actions.can_close(false);
         krator_bee.settings.general.single_instance(true);
+        krator_bee.settings.general.casement_width(70, 'fixed');
         krator_bee.gui.size.width(420);
         krator_bee.gui.size.height(400);
         krator_bee.gui.position.static(true);
