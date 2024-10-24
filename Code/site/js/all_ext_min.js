@@ -7427,8 +7427,6 @@ function swarm()
  function bee_status_model()
  {
  this.active_bee_id = null;
- this.boxified = false;
- this.stacked = false;
  this.z_index = 0;
  }
  function utilities()
@@ -7592,24 +7590,6 @@ function swarm()
  bees_status.active_bee_id = val;
  return true;
  };
- this.boxified = function(val)
- {
- if (is_init === false)
- return false;
- if (!utils_sys.validation.misc.is_bool(val))
- return false;
- bees_status.boxified = val;
- return true;
- };
- this.stacked = function(val)
- {
- if (is_init === false)
- return false;
- if (!utils_sys.validation.misc.is_bool(val))
- return false;
- bees_status.stacked = val;
- return true;
- };
  this.z_index = function(val)
  {
  if (is_init === false)
@@ -7758,18 +7738,6 @@ function swarm()
  if (is_init === false)
  return false;
  return bees_status.active_bee_id;
- };
- this.boxified = function()
- {
- if (is_init === false)
- return false;
- return bees_status.boxified;
- };
- this.stacked = function()
- {
- if (is_init === false)
- return false;
- return bees_status.stacked;
  };
  this.z_index = function()
  {
@@ -8636,9 +8604,11 @@ function hive()
  {
  if (honeycomb_views.list(honeycomb_views.visible() - 1).bees.num() < self.settings.bees_per_honeycomb())
  {
- var __active_bee_id = swarm.status.active_bee();
+ var __active_bee_id = swarm.status.active_bee(),
+ __this_bee = colony.get(__active_bee_id);
  honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__active_bee_id);
- colony.get(__active_bee_id).settings.general.in_hive(true);
+ __this_bee.settings.general.in_hive(true);
+ __this_bee.gui.actions.release(event_object);
  utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
  swarm.settings.active_bee(null);
  return true;
@@ -8649,6 +8619,8 @@ function hive()
  this.expel = function(event_object, mode)
  {
  if (is_init === false)
+ return false;
+ if (utils_sys.validation.misc.is_undefined(event_object) || (mode !== 0 && mode !== 1))
  return false;
  if (mode === 0)
  {
@@ -8673,7 +8645,7 @@ function hive()
  }
  else
  {
- if (utils_sys.validation.misc.is_undefined(event_object) || (navigator.maxTouchPoints === 0 && event_object.buttons !== 1))
+ if (navigator.maxTouchPoints === 0 && event_object.buttons !== 1)
  return false;
  if (swarm.status.active_bee())
  {
@@ -17607,6 +17579,8 @@ function bee()
  __msg_win.show(xenon.load('os_name'), 'The casement can not be opened here as it overflows your screen!');
  return false;
  }
+ if (ui_objects.window.status_bar.resize)
+ ui_objects.window.status_bar.resize.style.visibility = 'hidden';
  ui_objects.window.ui.classList.add('gui_casement_open');
  __casement.style.left = __window_pos_x + 'px';
  if (self.status.gui.fx.fading.into.finished())
@@ -17626,6 +17600,8 @@ function bee()
  function()
  {
  gfx.visibility.toggle(ui_config.casement.id, 1);
+ if (ui_objects.window.status_bar.resize)
+ ui_objects.window.status_bar.resize.style.visibility = 'visible';
  ui_objects.window.ui.classList.remove('gui_casement_open');
  __is_animating = false;
  bee_statuses.casement_deployed(false);
@@ -18045,10 +18021,8 @@ function bee()
  me.size.width() + __resize_x_offset;
  __size_y = swarm.area.mouse.y() - me.position.top() -
  me.size.height() + __resize_y_offset;
- if (__size_x < (swarm.settings.right() -
- me.position.left() - me.size.width()) &&
- __size_y < (swarm.settings.bottom() -
- me.position.top() - me.size.height()))
+ if (__size_x < (swarm.settings.right() - me.position.left() - me.size.width()) &&
+ __size_y < (swarm.settings.bottom() - me.position.top() - me.size.height()))
  {
  var __new_width = me.size.width() + __size_x,
  __new_height = me.size.height() + __size_y;

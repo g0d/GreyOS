@@ -1,5 +1,5 @@
 /*
-    GreyOS - Hive (Version: 4.4)
+    GreyOS - Hive (Version: 4.5)
 
     File name: hive.js
     Description: This file contains the Hive - Bees stack bar module.
@@ -1068,11 +1068,13 @@ function hive()
                 {
                     if (honeycomb_views.list(honeycomb_views.visible() - 1).bees.num() < self.settings.bees_per_honeycomb())
                     {
-                        var __active_bee_id = swarm.status.active_bee();
+                        var __active_bee_id = swarm.status.active_bee(),
+                            __this_bee = colony.get(__active_bee_id);
 
                         honeycomb_views.list(honeycomb_views.visible() - 1).bees.add(__active_bee_id);
 
-                        colony.get(__active_bee_id).settings.general.in_hive(true);
+                        __this_bee.settings.general.in_hive(true);
+                        __this_bee.gui.actions.release(event_object);
 
                         utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
 
@@ -1088,6 +1090,9 @@ function hive()
             this.expel = function(event_object, mode)
             {
                 if (is_init === false)
+                    return false;
+
+                if (utils_sys.validation.misc.is_undefined(event_object) || (mode !== 0 && mode !== 1))
                     return false;
 
                 if (mode === 0)
@@ -1121,7 +1126,7 @@ function hive()
                 }
                 else
                 {
-                    if (utils_sys.validation.misc.is_undefined(event_object) || (navigator.maxTouchPoints === 0 && event_object.buttons !== 1))
+                    if (navigator.maxTouchPoints === 0 && event_object.buttons !== 1)
                         return false;
 
                     if (swarm.status.active_bee())

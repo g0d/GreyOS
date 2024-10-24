@@ -1,5 +1,5 @@
 /*
-    GreyOS - Swarm (Version: 3.3)
+    GreyOS - Swarm (Version: 3.4)
 
     File name: swarm.js
     Description: This file contains the Swarm - Bees action area module.
@@ -29,8 +29,6 @@ function swarm()
     function bee_status_model()
     {
         this.active_bee_id = null;
-        this.boxified = false;
-        this.stacked = false;
         this.z_index = 0;
     }
 
@@ -251,32 +249,6 @@ function swarm()
             return true;
         };
 
-        this.boxified = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (!utils_sys.validation.misc.is_bool(val))
-                return false;
-
-            bees_status.boxified = val;
-
-            return true;
-        };
-
-        this.stacked = function(val)
-        {
-            if (is_init === false)
-                return false;
-
-            if (!utils_sys.validation.misc.is_bool(val))
-                return false;
-
-            bees_status.stacked = val;
-
-            return true;
-        };
-
         this.z_index = function(val)
         {
             if (is_init === false)
@@ -473,22 +445,6 @@ function swarm()
                 return false;
 
             return bees_status.active_bee_id;
-        };
-
-        this.boxified = function()
-        {
-            if (is_init === false)
-                return false;
-
-            return bees_status.boxified;
-        };
-
-        this.stacked = function()
-        {
-            if (is_init === false)
-                return false;
-
-            return bees_status.stacked;
         };
 
         this.z_index = function()

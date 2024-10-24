@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.8)
+    GreyOS - Bee (Version: 5.9)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -3827,6 +3827,9 @@ function bee()
                         return false;
                     }
 
+                    if (ui_objects.window.status_bar.resize)
+                        ui_objects.window.status_bar.resize.style.visibility = 'hidden';
+
                     ui_objects.window.ui.classList.add('gui_casement_open');
 
                     __casement.style.left = __window_pos_x + 'px';
@@ -3852,6 +3855,9 @@ function bee()
                         function()
                         {
                             gfx.visibility.toggle(ui_config.casement.id, 1);
+
+                            if (ui_objects.window.status_bar.resize)
+                                ui_objects.window.status_bar.resize.style.visibility = 'visible';
 
                             ui_objects.window.ui.classList.remove('gui_casement_open');
 
@@ -4415,10 +4421,8 @@ function bee()
                     __size_y = swarm.area.mouse.y() - me.position.top() - 
                                me.size.height() + __resize_y_offset;
 
-                    if (__size_x < (swarm.settings.right() - 
-                                    me.position.left() - me.size.width()) && 
-                        __size_y < (swarm.settings.bottom() - 
-                                    me.position.top() - me.size.height()))
+                    if (__size_x < (swarm.settings.right() - me.position.left() - me.size.width()) && 
+                        __size_y < (swarm.settings.bottom() - me.position.top() - me.size.height()))
                     {
                         var __new_width = me.size.width() + __size_x,
                             __new_height = me.size.height() + __size_y;
