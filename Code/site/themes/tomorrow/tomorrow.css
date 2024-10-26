@@ -14,17 +14,8 @@ body
 {
     font-family: 'Ubuntu', sans-serif;
     font-size: 18px;
-    background-image: url("pix/desktop.jpg");
     background-color: #72bbc5;
-    background-attachment: fixed;
-    min-width: 1280px;
-    min-height: 700px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-position: bottom;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url("pix/desktop.jpg");
 }
 
 /* Anchor */
@@ -89,7 +80,6 @@ option
 
 #top_panel
 {
-    display: block;
     background-color: #00000094;
     box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
@@ -109,7 +99,6 @@ option
     background-color: #181c2bc4 !important;
     border: 2px solid #577b844a !important;
     border-radius: 6px;
-    right: 90px !important;
 }
 
 .user_profile_area:before
@@ -162,22 +151,10 @@ option
     background-color: #ca424280 !important;
 }
 
-.total_notifications
-{
-    border-bottom: none !important;
-}
-
-.notifications_list
-{
-    height: 102px !important;
-}
-
 .notification_list_item
 {
     color: #40edffa8 !important;
     border-left: #83838380 solid 1px !important;
-    border-right: none !important;
-    border-bottom: none !important;
 }
 
 .notification_list_item:hover
@@ -197,12 +174,18 @@ option
     cursor: pointer;
     color: #ffffff !important;
     background-color: transparent;
-    padding: 8px;
 }
 
 .logout_button:hover
 {
     color: #c58a8ad1 !important;
+}
+
+.service_icons_area
+{
+    background-color: #181c2bc4 !important;
+    border-color: #577b844a !important;
+    border-radius: 6px;
 }
 
 .search
@@ -223,8 +206,9 @@ option
 .search .eureka .eureka_search_box
 {
     color: white !important;
-    background-color: #0000005e;
-    border-color: #2f2f2f !important;
+    background-color: #181c2bc4 !important;
+    border-radius: 6px !important;
+    border: 2px solid #577b844a !important;
 }
 
 .search .eureka .eureka_search_box:focus
@@ -290,14 +274,6 @@ option
     border: 1px solid #0c4443 !important;
     border-radius: 6px !important;
     box-shadow: inset 2px 2px 4px 0px #000000ba !important;
-}
-
-.tik_tok
-{
-    background-color: transparent !important;
-    height: 37px !important;
-    border: none !important;
-    margin-top: 0px !important;
 }
 
 .tik_tok .clock_time
@@ -370,7 +346,7 @@ option
 
 .honeycomb
 {
-    background-color: #4b719d33 !important;
+    background-color: #4b719d42 !important;
 }
 
 .honeycomb .widget_ctrl_bar
@@ -434,6 +410,11 @@ option
 {
     color: #FFFFFF;
     background-color: #50748bb3;
+}
+
+.menu_option_disabled
+{
+    background-color: #5e88874f !important;
 }
 
 .gui
@@ -548,6 +529,11 @@ option
 .resize
 {
     background: url('pix/icons/bee/window/resize.png') no-repeat !important;
+}
+
+.register_new_account
+{
+    color: #c9ff72;
 }
 
 #radio_dude_ctlr

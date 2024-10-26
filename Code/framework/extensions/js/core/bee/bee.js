@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bee (Version: 5.9)
+    GreyOS - Bee (Version: 6.0)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
@@ -442,13 +442,13 @@ function bee()
                           '    <div id="' + ui_config.window.menu.ids.put_to_stack + '" ' + 
                           '         class="menu_option put_to_stack">Put to stack</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.mini_mode + '" ' + 
-                          '         class="menu_option mini_mode">Mini mode</div>' + 
+                          '         class="menu_option menu_option_disabled mini_mode">Mini mode</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.max_mode + '" ' + 
-                          '         class="menu_option max_mode">Max mode</div>' + 
+                          '         class="menu_option menu_option_disabled max_mode">Max mode</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.manage_casement + '" ' + 
                           '         class="menu_option manage_casement">Show casement</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.send_to_desktop + '" ' + 
-                          '         class="menu_option send_to_desktop">Send to desktop...</div>' + 
+                          '         class="menu_option menu_option_disabled send_to_desktop">Send to desktop...</div>' + 
                           '    <div id="' + ui_config.window.menu.ids.close + '" ' + 
                           '         class="menu_option menu_close">Close</div>' + 
                           '</div>';
@@ -654,6 +654,9 @@ function bee()
 
             if (__bee_settings.actions.can_use_menu())
             {
+                __handler = function(event) { put_to_stack(event); };
+                morpheus.store(my_bee_id, 'mouse', 'mousedown', __handler, ui_objects.window.menu.put_to_stack);
+
                 if (__bee_settings.actions.can_use_casement())
                 {
                     __handler = function(event) { manage_casement(event); };
@@ -850,6 +853,19 @@ function bee()
 
             morpheus.execute(my_bee_id, 'gui', 'drag');
             morpheus.execute(my_bee_id, 'system', 'active');
+
+            return true;
+        }
+
+        function put_to_stack(event_object)
+        {
+            if (bee_statuses.close())
+                return false;
+
+            if (utils_sys.validation.misc.is_undefined(event_object) || event_object.buttons !== 1)
+                return false;
+
+            ui_controls.placement.stack.one(event_object, self);
 
             return true;
         }
@@ -2806,7 +2822,7 @@ function bee()
                 {
                     error_code = self.error.codes.POSITION;
 
-                    owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                    owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                     bee_statuses.error(true);
 
@@ -2826,7 +2842,7 @@ function bee()
                         {
                             error_code = self.error.codes.POSITION;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -2840,7 +2856,7 @@ function bee()
                     {
                         error_code = self.error.codes.POSITION;
 
-                        owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                        owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                         bee_statuses.error(true);
 
@@ -2855,7 +2871,7 @@ function bee()
                         {
                             error_code = self.error.codes.POSITION;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -2966,7 +2982,7 @@ function bee()
                 {
                     error_code = self.error.codes.SIZE;
 
-                    owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                    owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                     bee_statuses.error(true);
 
@@ -2981,7 +2997,7 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -2994,7 +3010,7 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -3010,7 +3026,7 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -3023,7 +3039,7 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -3039,7 +3055,7 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -3052,7 +3068,7 @@ function bee()
                         {
                             error_code = self.error.codes.SIZE;
 
-                            owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                            owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                             bee_statuses.error(true);
 
@@ -3976,7 +3992,7 @@ function bee()
                 {
                     if (!colony.is_bee(__child_bee))
                     {
-                        owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
+                        owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                         utils_int.log('Run', 'INVALID CHILD BEES');
     
@@ -3996,12 +4012,11 @@ function bee()
                 if (utils_int.is_lonely_bee(my_bee_id))
                     return false;
 
-                var __app_id = self.settings.general.app_id(),
-                    __is_running_instance = owl.status.applications.get.by_proc_id(__app_id, 'RUN');
+                var __is_running_instance = owl.status.applications.get.by_proc_id(my_bee_app_id, 'RUN');
 
                 if (__is_running_instance)
                 {
-                    if (colony.is_single_instance(__app_id))
+                    if (colony.is_single_instance(my_bee_app_id))
                         return false;
                 }
 
@@ -4009,7 +4024,7 @@ function bee()
                 {
                     if (!utils_int.gui_init())
                     {
-                        owl.status.applications.set(my_bee_id, __app_id, 'FAIL');
+                        owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                         utils_int.log('Show', 'ERROR');
 
@@ -4025,7 +4040,7 @@ function bee()
                 for (__child_bee in child_bees)
                     __child_bee.show();
 
-                owl.status.applications.set(my_bee_id, __app_id, 'RUN');
+                owl.status.applications.set(my_bee_id, my_bee_app_id, 'RUN');
 
                 if (headless === false)
                     utils_int.log('Show', 'OK');
@@ -4067,15 +4082,13 @@ function bee()
                             return false;
                     }
 
-                    dock.instances.decrease(__app_id);
+                    dock.instances.decrease(my_bee_app_id);
 
                     return true;
                 }
 
                 if ((event_object === null || event_object.buttons === 1) && bee_statuses.opened() && !bee_statuses.close())
                 {
-                    var __app_id = self.settings.general.app_id();
-
                     if (!self.settings.actions.can_close())
                         return false;
 
@@ -4086,7 +4099,7 @@ function bee()
                     if (bee_statuses.in_hive())
                         ui_objects.casement.ui.style.visibility = 'hidden';
 
-                    owl.status.applications.set(my_bee_id, __app_id, 'END');
+                    owl.status.applications.set(my_bee_id, my_bee_app_id, 'END');
 
                     me.actions.casement.retract(event_object, 
                     function()
@@ -4903,8 +4916,7 @@ function bee()
         if (error_code !== null)
             return false;
 
-        var __app_id = self.settings.general.app_id(),
-            __all_bees = colony.list(),
+        var __all_bees = colony.list(),
             __this_bee = null,
             __max_allowed_instances = self.settings.general.allowed_instances(),
             __currrent_running_instances_num = 0;
@@ -4913,7 +4925,7 @@ function bee()
         {
             for (__this_bee of __all_bees)
             {
-                if (__this_bee.settings.general.app_id() === __app_id)
+                if (__this_bee.settings.general.app_id() === my_bee_app_id)
                 {
                     __currrent_running_instances_num++;
 
@@ -4921,7 +4933,7 @@ function bee()
                     {
                         error_code = self.error.codes.INSTANCE_NUM_LIMIT;
 
-                        owl.status.applications.set(my_bee_id, self.settings.general.app_id(), 'FAIL');
+                        owl.status.applications.set(my_bee_id, my_bee_app_id, 'FAIL');
 
                         bee_statuses.error(true);
 
@@ -4936,7 +4948,7 @@ function bee()
         if (!self.gui.actions.show(child_bees, headless))
             return false;
 
-        dock.instances.increase(__app_id);
+        dock.instances.increase(my_bee_app_id);
 
         my_child_bees = child_bees;
 
@@ -4970,6 +4982,7 @@ function bee()
             return false;
 
         my_bee_id = self.settings.general.id();
+        my_bee_app_id = self.settings.general.app_id();
 
         self.gui.size.max.width(swarm.settings.right());
         self.gui.size.max.height(swarm.settings.bottom());
@@ -4994,6 +5007,7 @@ function bee()
         xenon = matrix.get('xenon');
         morpheus = matrix.get('morpheus');
         owl = matrix.get('owl');
+        ui_controls = matrix.get('ui_controls');
         dock = matrix.get('dock');
         swarm = matrix.get('swarm');
         hive = matrix.get('hive');
@@ -5004,12 +5018,14 @@ function bee()
     var is_init = false,
         error_code = null,
         my_bee_id = null,
+        my_bee_app_id = null,
         my_child_bees = [],
         cosmos = null,
         matrix = null,
         xenon = null,
         morpheus = null,
         owl = null,
+        ui_controls = null,
         dock = null,
         swarm = null,
         hive = null,

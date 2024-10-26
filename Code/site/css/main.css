@@ -14,6 +14,12 @@ body
 {
     font-family: 'Ubuntu', sans-serif;
     background-color: #000000;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-width: 1280px;
+    min-height: 700px;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -151,7 +157,7 @@ body
 
 #top_panel
 {
-    display: none;
+    background-color: #00000017;
     height: 45px;
 }
 

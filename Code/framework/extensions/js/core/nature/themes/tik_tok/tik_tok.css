@@ -15,12 +15,7 @@
     float: right;
     clear: none;
     cursor: pointer;
-    background-color: #FCFCFC;
-    border-color: #F1F1F1;
-    border-style: none solid;
-    border-width: 2px;
-    height: 39px;
-    margin-top: -2px;
+    height: 37px;
     padding: 4px;
 }
 

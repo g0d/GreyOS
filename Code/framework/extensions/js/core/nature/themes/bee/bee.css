@@ -239,6 +239,12 @@
     background-color: #739DA7;
 }
 
+.menu_option_disabled
+{
+    color: #5C5C5C !important;
+    background-color: #ababab !important;
+}
+
 .content
 {
     position: relative;

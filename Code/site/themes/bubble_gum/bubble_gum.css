@@ -16,15 +16,6 @@ body
     font-size: 18px;
     background-color: #777B7C;
     background-image: url('pix/desktop.jpg');
-    background-attachment: fixed;
-    min-width: 1280px;
-    min-height: 700px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-position: top;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 /* Anchor */
@@ -94,9 +85,13 @@ option
 
 #top_panel
 {
-    display: block;
-    background-color: #ffffff;
+    background-color: white;
     box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
+}
+
+#logo
+{
+    mix-blend-mode: difference !important;
 }
 
 .my
@@ -129,21 +124,6 @@ option
     background-color: #32c089 !important;
 }
 
-.notifications_list
-{
-    height: 105px !important;
-}
-
-.logout
-{
-    margin-top: 10px !important;
-}
-
-.logout_icon
-{
-    margin-top: -4px !important;
-}
-
 .logout_button:hover
 {
     color: #ffbc00;
@@ -152,7 +132,7 @@ option
 .service_icons_area
 {
     background-color: white !important;
-    border: 2px solid #dcdcdc !important;
+    border-color: #dcdcdc !important;
 }
 
 .super_tray .access_icon
@@ -240,12 +220,6 @@ option
     color: white !important;
 }
 
-.tik_tok
-{
-    height: 37px !important;
-    margin-top: 0px !important;
-}
-
 .tik_tok .clock_date
 {
     margin-top: 4px !important;
@@ -322,7 +296,7 @@ option
 
 .menu_option:hover
 {
-    background-color: #398cda !important;
+    background-color: #398cda;
 }
 
 .error
@@ -345,7 +319,7 @@ option
 
 .register_new_account
 {
-    color: #84cc30 !important;
+    color: #84cc30;
 }
 
 .control_item .button

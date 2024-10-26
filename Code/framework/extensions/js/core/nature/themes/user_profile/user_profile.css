@@ -219,7 +219,6 @@
 {
     float: left;
     clear: both;
-    border-bottom: #C5C5C5 solid 1px;
     width: 186px;
     height: 32px;
     padding: 4px;
@@ -231,8 +230,8 @@
     clear: both;
     font-size: 13px;
     width: 210px;
-    height: 114px;
-    overflow-y: scroll;
+    height: 108px;
+    overflow: hidden;
 }
 
 .messages_icon
@@ -263,8 +262,6 @@
     cursor: pointer;
     color: #5C5C5C;
     border-left: #C5C5C5 solid 1px;
-    border-right: 1px solid #C5C5C5;
-    border-bottom: #C5C5C5 solid 1px;
     width: 184px;
     padding: 4px;
 }
@@ -315,7 +312,6 @@
     clear: left;
     float: right;
     margin-right: 10px;
-    margin-top: 4px;
 }
 
 .logout_icon
@@ -342,4 +338,9 @@
 .control_item .button:hover
 {
     color: #b4b4b4;
+}
+
+.logout_button
+{
+    padding: 8px;
 }

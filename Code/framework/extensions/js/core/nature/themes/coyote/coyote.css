@@ -207,13 +207,9 @@
     z-index: 2147483646;
 }
 
-.casement_data, .casement_status
-{
-    color: #333333;
-}
-
 .coyote_meta_info
 {
+    color: #333333;
     background-color: #FFFFFF;
     text-align: center;
     overflow-y: scroll;

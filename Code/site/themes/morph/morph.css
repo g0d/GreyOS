@@ -14,17 +14,8 @@ body
 {
     font-family: 'Ubuntu', sans-serif;
     font-size: 18px;
-    background-image: url("pix/wallpaper.png");
     background-color: #72bbc5;
-    background-attachment: fixed;
-    min-width: 1280px;
-    min-height: 700px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-position: bottom;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url("pix/wallpaper.png");
 }
 
 /* Anchor */
@@ -89,7 +80,6 @@ option
 
 #top_panel
 {
-    display: block;
     background-color: #b3edef2b;
     box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
 }
@@ -171,23 +161,10 @@ option
     background-color: #0fe7f9a8 !important;
 }
 
-.total_notifications
-{
-    border-bottom: none !important;
-}
-
-.notifications_list
-{
-    height: 102px !important;
-    overflow: hidden !important;
-}
-
 .notification_list_item
 {
     color: white !important;
     border-left: #ffffff5c solid 1px !important;
-    border-right: none !important;
-    border-bottom: none !important;
 }
 
 .notification_list_item:hover
@@ -203,12 +180,7 @@ option
 
 .logout_button
 {
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
     color: #ffffff !important;
-    background-color: transparent;
-    padding: 8px;
 }
 
 .logout_button:hover
@@ -313,14 +285,6 @@ option
 {
     border-radius: 6px !important;
     box-shadow: inset 1px 1px 4px 0px #000000ba !important;
-}
-
-.tik_tok
-{
-    background-color: transparent !important;
-    height: 37px !important;
-    border: none !important;
-    margin-top: 0px !important;
 }
 
 .tik_tok .clock_time
@@ -462,6 +426,11 @@ option
     background-color: #50748bb3;
 }
 
+.menu_option_disabled
+{
+    background-color: #4777764f !important;
+}
+
 .gui
 {
     background-color: #55339f66 !important;
@@ -586,6 +555,11 @@ option
     background: url('pix/icons/bee/window/resize.png') no-repeat !important;
 }
 
+.register_new_account
+{
+    color: #c9ff72;
+}
+
 #radio_dude_ctlr
 {
     background-color: #f1f3f4;
@@ -643,7 +617,7 @@ option
 .service_icons_area
 {
     background-color: #b3edef2b !important;
-    border: 2px solid #ffffff4a !important;
+    border-color: #ffffff4a !important;
     border-radius: 12px;
 }
 

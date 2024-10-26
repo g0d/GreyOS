@@ -91,7 +91,7 @@ function ui_controls()
             };
             morpheus.run(ui_controls_id, 'mouse', 'mouseout', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
 
-            __handler = function(event) { self.placement.stack(event); };
+            __handler = function(event) { self.placement.stack.all(event); };
             morpheus.run(ui_controls_id, 'mouse', 'mousedown', __handler, utils_sys.objects.by_id(ui_controls_id + '_stack_all'));
 
             return true;
@@ -151,59 +151,85 @@ function ui_controls()
             return true;
         };
 
-        this.stack = function(event)
+        function stack()
         {
-            if (is_init === false)
-                return false;
-
-            var __bees = colony.list();
-
-            if (config.all_stacked === false)
+            this.one = function(event, bee)
             {
-                var __is_bee_in_swarm = true;
-
-                if ( __bees.length === 0)
+                if (is_init === false)
                     return false;
 
-                for (var __this_bee of __bees)
-                {
-                    if (!__this_bee.status.system.in_hive())
-                    {
-                        __is_bee_in_swarm = false;
-
-                        break;
-                    }
-                }
-
-                if (__is_bee_in_swarm)
+                if (utils_sys.validation.misc.is_undefined(event))
                     return false;
 
                 hive.stack.set_view(event, 1, () =>
                 {
-                    hive.stack.bees.insert(__bees, null);
+                    hive.stack.bees.insert([bee], null);
 
                     utils_int.make_active('stack_all');
-
-                    config.all_stacked = true;
                 });
-            }
-            else
+
+                return true;
+            };
+
+            this.all = function(event)
             {
-                if (__bees.length === 0)
+                if (is_init === false)
                     return false;
 
-                hive.stack.bees.expel(event, 0);
+                if (utils_sys.validation.misc.is_undefined(event))
+                    return false;
 
-                hive.stack.set_view(event, 1, () =>
+                var __bees = colony.list();
+
+                if (config.all_stacked === false)
                 {
-                    utils_int.make_inactive('stack_all');
+                    var __is_bee_in_swarm = true;
 
-                    config.all_stacked = false;
-                });
-            }
+                    if ( __bees.length === 0)
+                        return false;
 
-            return true;
-        };
+                    for (var __this_bee of __bees)
+                    {
+                        if (!__this_bee.status.system.in_hive())
+                        {
+                            __is_bee_in_swarm = false;
+
+                            break;
+                        }
+                    }
+
+                    if (__is_bee_in_swarm)
+                        return false;
+
+                    hive.stack.set_view(event, 1, () =>
+                    {
+                        hive.stack.bees.insert(__bees, null);
+
+                        utils_int.make_active('stack_all');
+
+                        config.all_stacked = true;
+                    });
+                }
+                else
+                {
+                    if (__bees.length === 0)
+                        return false;
+
+                    hive.stack.bees.expel(event, 0);
+
+                    hive.stack.set_view(event, 1, () =>
+                    {
+                        utils_int.make_inactive('stack_all');
+
+                        config.all_stacked = false;
+                    });
+                }
+
+                return true;
+            };
+        }
+
+        this.stack = new stack();
     }
 
     this.init = function(container_id)

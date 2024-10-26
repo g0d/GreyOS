@@ -1,5 +1,5 @@
 /*
-    GreyOS - User Profile (Version: 2.7)
+    GreyOS - User Profile (Version: 2.8)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
@@ -52,7 +52,7 @@ function user_profile()
                                __msg_win.types.OK, 
                                [() =>
                                 {
-                                    parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout_fresh.mp3');
+                                    parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout.mp3');
 
                                     setTimeout(function(){ location.reload();
                                 }, 1000); }]);
@@ -123,7 +123,7 @@ function user_profile()
 
             ajax_factory('post', __data, function()
                                          {
-                                             parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout_fresh.mp3');
+                                             parrot.play('sys', '/site/themes/' + chameleon.get() + '/sounds/logout.mp3');
 
                                              cc_reload.init('Logging out...');
                                          },
