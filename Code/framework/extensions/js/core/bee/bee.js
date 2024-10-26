@@ -4430,152 +4430,23 @@ function bee()
                         bee_statuses.mouse_clicked(true);
                         bee_statuses.resizing(true);
 
-                        if (__new_width >= me.size.max.width() && __new_height >= me.size.max.height())
-                        {
-                            if (__new_width - __size_x >= me.size.max.width() && 
-                                __new_height - __size_y >= me.size.max.height())
-                            {
-                                ui_objects.window.ui.style.width = me.size.max.width() + 'px';
-                                ui_objects.window.ui.style.height = me.size.max.height() + 'px';
-
-                                ui_objects.window.control_bar.title.style.width = 
-                                me.size.max.width() - __resize_title_diff + 'px';
-
-                                ui_objects.window.content.data.style.height = 
-                                me.size.max.height() - __resize_data_diff + 'px';
-
-                                ui_objects.window.status_bar.message.style.width = 
-                                me.size.max.width() - __resize_status_msg_diff + 'px';
-
-                                ui_objects.casement.data.style.height = 
-                                me.size.height() + 'px';
-                            }
-                        }
-                        else
-                        {
-                            if (__new_width >= me.size.max.width())
-                            {
-                                if (__new_width - __size_x >= me.size.max.width())
-                                {
-                                    ui_objects.window.ui.style.width = me.size.max.width() + 'px';
-                                    ui_objects.window.ui.style.height = __new_height + 'px';
-
-                                    ui_objects.window.control_bar.title.style.width = 
-                                    me.size.max.width() - __resize_title_diff + 'px';
-
-                                    ui_objects.window.content.data.style.height = 
-                                    __new_height - __resize_data_diff + 'px';
-
-                                    ui_objects.window.status_bar.message.style.width = 
-                                    me.size.max.width() - __resize_status_msg_diff + 'px';
-
-                                    ui_objects.casement.data.style.height = 
-                                    __new_height + 'px';
-                                }
-                            }
-
-                            if (__new_height >= me.size.max.height())
-                            {
-                                if (__new_height - __size_y >= me.size.max.height())
-                                {
-                                    ui_objects.window.ui.style.width = __new_width + 'px';
-                                    ui_objects.window.ui.style.height =  me.size.max.height() + 'px';
-
-                                    ui_objects.window.control_bar.title.style.width = 
-                                    __new_width - __resize_title_diff + 'px';
-
-                                    ui_objects.window.content.data.style.height = 
-                                    me.size.max.height() - __resize_data_diff + 'px';
-
-                                    ui_objects.window.status_bar.message.style.width = 
-                                    __new_width - __resize_status_msg_diff + 'px';
-
-                                    ui_objects.casement.data.style.height = 
-                                    me.size.height() + 'px';
-                                }
-                            }
-                        }
-
-                        if (__new_width <= me.size.min.width() && 
-                            __new_height <= me.size.min.height())
-                        {
-                            if (__size_x >= 0 && __size_y >= 0)
-                            {
-                                ui_objects.window.ui.style.width = me.size.min.width() + 'px';
-                                ui_objects.window.ui.style.height = me.size.min.height() + 'px';
-
-                                ui_objects.window.control_bar.title.style.width = 
-                                me.size.min.width() - __resize_title_diff + 'px';
-
-                                ui_objects.window.content.data.style.height = 
-                                me.size.min.height() - __resize_data_diff + 'px';
-
-                                ui_objects.window.status_bar.message.style.width = 
-                                me.size.min.width() - __resize_status_msg_diff + 'px';
-
-                                ui_objects.casement.data.style.height = 
-                                me.size.height() + 'px';
-                            }
-                        }
-                        else
-                        {
-                            if (__new_width <= me.size.min.width())
-                            {
-                                if (__size_x >= 0)
-                                {
-                                    ui_objects.window.ui.style.width = me.size.min.width() + 'px';
-                                    ui_objects.window.ui.style.height = __new_height + 'px';
-
-                                    ui_objects.window.control_bar.title.style.width = 
-                                    me.size.min.width() - __resize_title_diff + 'px';
-
-                                    ui_objects.window.content.data.style.height = 
-                                    __new_height - __resize_data_diff + 'px';
-
-                                    ui_objects.window.status_bar.message.style.width = 
-                                    me.size.min.width() - __resize_status_msg_diff + 'px';
-
-                                    ui_objects.casement.data.style.height = 
-                                    __new_height + 'px';
-                                }
-                            }
-
-                            if (__new_height <= me.size.min.height())
-                            {
-                                if (__size_y >= 0)
-                                {
-                                    ui_objects.window.ui.style.width = __new_width + 'px';
-                                    ui_objects.window.ui.style.height = me.size.min.height() + 'px';
-
-                                    ui_objects.window.control_bar.title.style.width = 
-                                    __new_width - __resize_title_diff + 'px';
-
-                                    ui_objects.window.content.data.style.height = 
-                                    me.size.min.height() - __resize_data_diff + 'px';
-
-                                    ui_objects.window.status_bar.message.style.width = 
-                                    __new_width - __resize_status_msg_diff + 'px';
-
-                                    ui_objects.casement.data.style.height = 
-                                    me.size.height() + 'px';
-                                }
-                            }
-                        }
-
-                        if (__new_width > me.size.min.width() && __new_height > me.size.min.height() && 
-                            __new_width < me.size.max.width() && __new_height < me.size.max.height())
+                        if (__new_width > me.size.min.width() && __new_width < me.size.max.width())
                         {
                             ui_objects.window.ui.style.width = __new_width + 'px';
-                            ui_objects.window.ui.style.height = __new_height + 'px';
 
                             ui_objects.window.control_bar.title.style.width = 
                             __new_width - __resize_title_diff + 'px';
 
-                            ui_objects.window.content.data.style.height = 
-                            __new_height - __resize_data_diff + 'px';
-
                             ui_objects.window.status_bar.message.style.width = 
                             __new_width - __resize_status_msg_diff + 'px';
+                        }
+
+                        if (__new_height > me.size.min.height() && __new_height < me.size.max.height())
+                        {
+                            ui_objects.window.ui.style.height = __new_height + 'px';
+
+                            ui_objects.window.content.data.style.height = 
+                            __new_height - __resize_data_diff + 'px';
 
                             ui_objects.casement.data.style.height = 
                             __new_height + 'px';
