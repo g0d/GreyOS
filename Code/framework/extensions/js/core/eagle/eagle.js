@@ -1,5 +1,5 @@
 /*
-    GreyOS - Eagle (Version: 2.2)
+    GreyOS - Eagle (Version: 2.3)
 
     File name: eagle.js
     Description: This file contains the Eagle - "Alt-Tab"-like keys facility module.
@@ -44,10 +44,10 @@ function eagle()
                     me.show_eagle();
                     me.draw_windows();
 
-                    ui_controls.placement.boxify(true);
+                    imc_proxy.execute('ui_controls').placement.boxify(event_object, true);
                 }
 
-                me.switch_windows();
+                me.switch_windows(event_object);
 
                 event_object.preventDefault();
             }
@@ -69,7 +69,7 @@ function eagle()
 
                 me.hide_eagle();
 
-                ui_controls.placement.boxify(false);
+                imc_proxy.execute('ui_controls').placement.boxify(event_object, false);
 
                 trace_keys.modifier_set = false;
 
@@ -96,9 +96,7 @@ function eagle()
 
         this.show_eagle = function()
         {
-            var __eagle = utils_sys.objects.by_id(eagle_id);
-
-            __eagle.style.display = 'block';
+            my_eagle.style.display = 'block';
 
             is_visible = true;
 
@@ -107,9 +105,7 @@ function eagle()
 
         this.hide_eagle = function()
         {
-            var __eagle = utils_sys.objects.by_id(eagle_id);
-
-            __eagle.style.display = 'none';
+            my_eagle.style.display = 'none';
 
             picked_window = 0;
             scroll_multiplier = 1;
@@ -174,7 +170,7 @@ function eagle()
             return true;
         };
 
-        this.switch_windows = function()
+        this.switch_windows = function(event_object)
         {
             var __running_apps = owl.list('RUN', 'app'),
                 __running_apps_num = 0,
@@ -225,6 +221,8 @@ function eagle()
 
             __this_picked_app.gui.actions.set_top();
 
+            //imc_proxy.execute('ui_controls').placement.stack.one(event_object, __this_picked_app);
+
             picked_window++;
 
             return true;
@@ -232,8 +230,7 @@ function eagle()
 
         this.init_trace_keys = function()
         {
-            var __handler = null,
-                __boxify = utils_sys.objects.by_id(ui_controls.settings.id() + '_boxify_all');
+            var __handler = null;
 
             __handler = function(event) { me.key_down_tracer(event); };
             morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
@@ -241,24 +238,7 @@ function eagle()
             __handler = function(event) { me.key_up_tracer(event); };
             morpheus.run(eagle_id, 'key', 'keyup', __handler, document);
 
-            __handler = function(event_object)
-            {
-                trace_keys.trigger_set = true;
-
-                if (is_visible === false)
-                {
-                    me.show_eagle();
-                    me.draw_windows();
-                }
-
-                me.switch_windows();
-
-                event_object.preventDefault();
-            };
-            morpheus.run(eagle_id, 'mouse', 'click', __handler, __boxify);
-
             __handler = function() { me.hide_eagle(); };
-            morpheus.run(eagle_id, 'mouse', 'mouseout', __handler, __boxify);
             morpheus.run(eagle_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
 
             return true;
@@ -352,6 +332,18 @@ function eagle()
         this.trigger = new trigger();
     }
 
+    this.show = function(event_object)
+    {
+        utils_int.show_eagle();
+        utils_int.draw_windows();
+        utils_int.switch_windows(event_object);
+    };
+
+    this.hide = function()
+    {
+        utils_int.hide_eagle();
+    };
+
     this.init = function(container_id, modifier, trigger)
     {
         if (utils_sys.validation.misc.is_nothing(cosmos))
@@ -396,6 +388,8 @@ function eagle()
         utils_int.draw_eagle();
         utils_int.init_trace_keys();
 
+        my_eagle = utils_sys.objects.by_id(eagle_id);
+
         return true;
     };
 
@@ -409,9 +403,8 @@ function eagle()
         matrix = cosmos.hub.access('matrix');
         colony = cosmos.hub.access('colony');
 
-        ui_controls = matrix.get('ui_controls');
-        swarm = matrix.get('swarm');
         owl = matrix.get('owl');
+        imc_proxy = matrix.get('imc_proxy');
         morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
@@ -421,13 +414,13 @@ function eagle()
     var is_init = false,
         is_visible = false,
         eagle_id = null,
+        my_eagle = null,
         picked_app = null,
         picked_window = 0,
         scroll_multiplier = 1,
         cosmos = null,
         matrix = null,
-        ui_controls = null,
-        swarm = null,
+        imc_proxy = null,
         colony = null,
         morpheus = null,
         owl = null,

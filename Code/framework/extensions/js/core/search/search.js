@@ -180,8 +180,8 @@ function search()
 
         utils_int.show_eureka();
 
-        imc_proxy.execute('super_tray', '').hide();
-        imc_proxy.execute('user_profile', '').hide(false);
+        imc_proxy.execute('super_tray').hide();
+        imc_proxy.execute('user_profile').hide(false);
 
         return true;
     };

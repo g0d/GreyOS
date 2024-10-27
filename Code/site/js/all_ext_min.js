@@ -9455,11 +9455,12 @@ function ui_controls()
  this.attach_events = function()
  {
  var __handler = null;
- __handler = function() { self.placement.boxify(); };
+ __handler = function(event) { self.placement.boxify(event); };
  morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
  morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
  __handler = function()
  {
+ imc_proxy.execute('eagle').hide();
  me.make_inactive('boxify_all');
  config.is_boxified = false;
  };
@@ -9498,14 +9499,20 @@ function ui_controls()
  }
  function placement()
  {
- this.boxify = function(activate = true)
+ this.boxify = function(event_object, activate = true)
  {
  if (is_init === false)
  return false;
  if (activate && config.is_boxified === false)
+ {
+ imc_proxy.execute('eagle').show(event_object);
  utils_int.make_active('boxify_all');
+ }
  else
+ {
+ imc_proxy.execute('eagle').hide();
  utils_int.make_inactive('boxify_all');
+ }
  return true;
  };
  function stack()
@@ -9516,11 +9523,18 @@ function ui_controls()
  return false;
  if (utils_sys.validation.misc.is_undefined(event))
  return false;
+ if (bee.status.system.in_hive())
+ {
+ hive.stack.bees.expel(event, 1);
+ }
+ else
+ {
  hive.stack.set_view(event, 1, () =>
  {
  hive.stack.bees.insert([bee], null);
  utils_int.make_active('stack_all');
  });
+ }
  return true;
  };
  this.all = function(event)
@@ -9530,11 +9544,11 @@ function ui_controls()
  if (utils_sys.validation.misc.is_undefined(event))
  return false;
  var __bees = colony.list();
+ if (__bees.length === 0)
+ return false;
  if (config.all_stacked === false)
  {
  var __is_bee_in_swarm = true;
- if ( __bees.length === 0)
- return false;
  for (var __this_bee of __bees)
  {
  if (!__this_bee.status.system.in_hive())
@@ -9554,8 +9568,6 @@ function ui_controls()
  }
  else
  {
- if (__bees.length === 0)
- return false;
  hive.stack.bees.expel(event, 0);
  hive.stack.set_view(event, 1, () =>
  {
@@ -9595,8 +9607,8 @@ function ui_controls()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  colony = cosmos.hub.access('colony');
- swarm = matrix.get('swarm');
  hive = matrix.get('hive');
+ imc_proxy = matrix.get('imc_proxy');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
  return true;
@@ -9605,8 +9617,8 @@ function ui_controls()
  ui_controls_id = null,
  cosmos = null,
  matrix = null,
+ imc_proxy = null,
  colony = null,
- swarm = null,
  hive = null,
  morpheus = null,
  nature = null,
@@ -10432,8 +10444,8 @@ function search()
  if (is_init === false)
  return false;
  utils_int.show_eureka();
- imc_proxy.execute('super_tray', '').hide();
- imc_proxy.execute('user_profile', '').hide(false);
+ imc_proxy.execute('super_tray').hide();
+ imc_proxy.execute('user_profile').hide(false);
  return true;
  };
  this.hide = function(hide_eye = false)
@@ -10655,9 +10667,9 @@ function eagle()
  {
  me.show_eagle();
  me.draw_windows();
- ui_controls.placement.boxify(true);
+ imc_proxy.execute('ui_controls').placement.boxify(event_object, true);
  }
- me.switch_windows();
+ me.switch_windows(event_object);
  event_object.preventDefault();
  }
  return true;
@@ -10671,7 +10683,7 @@ function eagle()
  var __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
  __eagle_apps.scrollTo(0, 1);
  me.hide_eagle();
- ui_controls.placement.boxify(false);
+ imc_proxy.execute('ui_controls').placement.boxify(event_object, false);
  trace_keys.modifier_set = false;
  picked_window = 0;
  scroll_multiplier = 1;
@@ -10690,15 +10702,13 @@ function eagle()
  };
  this.show_eagle = function()
  {
- var __eagle = utils_sys.objects.by_id(eagle_id);
- __eagle.style.display = 'block';
+ my_eagle.style.display = 'block';
  is_visible = true;
  return true;
  };
  this.hide_eagle = function()
  {
- var __eagle = utils_sys.objects.by_id(eagle_id);
- __eagle.style.display = 'none';
+ my_eagle.style.display = 'none';
  picked_window = 0;
  scroll_multiplier = 1;
  is_visible = false;
@@ -10743,7 +10753,7 @@ function eagle()
  }
  return true;
  };
- this.switch_windows = function()
+ this.switch_windows = function(event_object)
  {
  var __running_apps = owl.list('RUN', 'app'),
  __running_apps_num = 0,
@@ -10783,26 +10793,12 @@ function eagle()
  };
  this.init_trace_keys = function()
  {
- var __handler = null,
- __boxify = utils_sys.objects.by_id(ui_controls.settings.id() + '_boxify_all');
+ var __handler = null;
  __handler = function(event) { me.key_down_tracer(event); };
  morpheus.run(eagle_id, 'key', 'keydown', __handler, document);
  __handler = function(event) { me.key_up_tracer(event); };
  morpheus.run(eagle_id, 'key', 'keyup', __handler, document);
- __handler = function(event_object)
- {
- trace_keys.trigger_set = true;
- if (is_visible === false)
- {
- me.show_eagle();
- me.draw_windows();
- }
- me.switch_windows();
- event_object.preventDefault();
- };
- morpheus.run(eagle_id, 'mouse', 'click', __handler, __boxify);
  __handler = function() { me.hide_eagle(); };
- morpheus.run(eagle_id, 'mouse', 'mouseout', __handler, __boxify);
  morpheus.run(eagle_id, 'mouse', 'click', __handler, utils_sys.objects.by_id('desktop'));
  return true;
  };
@@ -10873,6 +10869,16 @@ function eagle()
  this.modifier = new modifier();
  this.trigger = new trigger();
  }
+ this.show = function(event_object)
+ {
+ utils_int.show_eagle();
+ utils_int.draw_windows();
+ utils_int.switch_windows(event_object);
+ };
+ this.hide = function()
+ {
+ utils_int.hide_eagle();
+ };
  this.init = function(container_id, modifier, trigger)
  {
  if (utils_sys.validation.misc.is_nothing(cosmos))
@@ -10906,6 +10912,7 @@ function eagle()
  nature.apply('new');
  utils_int.draw_eagle();
  utils_int.init_trace_keys();
+ my_eagle = utils_sys.objects.by_id(eagle_id);
  return true;
  };
  this.cosmos = function(cosmos_object)
@@ -10915,9 +10922,8 @@ function eagle()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  colony = cosmos.hub.access('colony');
- ui_controls = matrix.get('ui_controls');
- swarm = matrix.get('swarm');
  owl = matrix.get('owl');
+ imc_proxy = matrix.get('imc_proxy');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
  return true;
@@ -10925,13 +10931,13 @@ function eagle()
  var is_init = false,
  is_visible = false,
  eagle_id = null,
+ my_eagle = null,
  picked_app = null,
  picked_window = 0,
  scroll_multiplier = 1,
  cosmos = null,
  matrix = null,
- ui_controls = null,
- swarm = null,
+ imc_proxy = null,
  colony = null,
  morpheus = null,
  owl = null,

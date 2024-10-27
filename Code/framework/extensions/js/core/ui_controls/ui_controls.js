@@ -1,5 +1,5 @@
 /*
-    GreyOS - UI Controls (Version: 2.4)
+    GreyOS - UI Controls (Version: 2.5)
 
     File name: ui_controls.js
     Description: This file contains the UI Controls module.
@@ -79,12 +79,14 @@ function ui_controls()
         {
             var __handler = null;
 
-            __handler = function() { self.placement.boxify(); };
+            __handler = function(event) { self.placement.boxify(event); };
             morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
             morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
 
             __handler = function()
             {
+                imc_proxy.execute('eagle').hide();
+
                 me.make_inactive('boxify_all');
 
                 config.is_boxified = false;
@@ -138,15 +140,23 @@ function ui_controls()
 
     function placement()
     {
-        this.boxify = function(activate = true)
+        this.boxify = function(event_object, activate = true)
         {
             if (is_init === false)
                 return false;
 
             if (activate && config.is_boxified === false)
+            {
+                imc_proxy.execute('eagle').show(event_object);
+
                 utils_int.make_active('boxify_all');
+            }
             else
+            {
+                imc_proxy.execute('eagle').hide();
+
                 utils_int.make_inactive('boxify_all');
+            }
 
             return true;
         };
@@ -161,12 +171,19 @@ function ui_controls()
                 if (utils_sys.validation.misc.is_undefined(event))
                     return false;
 
-                hive.stack.set_view(event, 1, () =>
+                if (bee.status.system.in_hive())
                 {
-                    hive.stack.bees.insert([bee], null);
+                    hive.stack.bees.expel(event, 1);
+                }
+                else
+                {
+                    hive.stack.set_view(event, 1, () =>
+                    {
+                        hive.stack.bees.insert([bee], null);
 
-                    utils_int.make_active('stack_all');
-                });
+                        utils_int.make_active('stack_all');
+                    });
+                }
 
                 return true;
             };
@@ -181,12 +198,12 @@ function ui_controls()
 
                 var __bees = colony.list();
 
+                if (__bees.length === 0)
+                    return false;
+
                 if (config.all_stacked === false)
                 {
                     var __is_bee_in_swarm = true;
-
-                    if ( __bees.length === 0)
-                        return false;
 
                     for (var __this_bee of __bees)
                     {
@@ -212,9 +229,6 @@ function ui_controls()
                 }
                 else
                 {
-                    if (__bees.length === 0)
-                        return false;
-
                     hive.stack.bees.expel(event, 0);
 
                     hive.stack.set_view(event, 1, () =>
@@ -272,8 +286,8 @@ function ui_controls()
         matrix = cosmos.hub.access('matrix');
         colony =  cosmos.hub.access('colony');
 
-        swarm = matrix.get('swarm');
         hive = matrix.get('hive');
+        imc_proxy = matrix.get('imc_proxy');
         morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
 
@@ -284,8 +298,8 @@ function ui_controls()
         ui_controls_id = null,
         cosmos = null,
         matrix = null,
+        imc_proxy = null,
         colony = null,
-        swarm = null,
         hive = null,
         morpheus = null,
         nature = null,
