@@ -10695,7 +10695,7 @@ function eagle()
  if (trace_keys.trigger === __key_code && trace_keys.modifier_set === true)
  {
  trace_keys.trigger_set = true;
- if (is_visible === false)
+ if (!is_activated)
  {
  me.show_eagle();
  me.draw_windows();
@@ -10735,7 +10735,7 @@ function eagle()
  this.show_eagle = function()
  {
  my_eagle.style.display = 'block';
- is_visible = true;
+ is_activated = true;
  return true;
  };
  this.hide_eagle = function()
@@ -10743,7 +10743,7 @@ function eagle()
  my_eagle.style.display = 'none';
  picked_window = 0;
  scroll_multiplier = 1;
- is_visible = false;
+ is_activated = false;
  return true;
  };
  this.draw_windows = function()
@@ -10903,8 +10903,11 @@ function eagle()
  }
  this.show = function(event_object)
  {
+ if (!is_activated)
+ {
  utils_int.show_eagle();
  utils_int.draw_windows();
+ }
  utils_int.switch_windows(event_object);
  };
  this.hide = function()
@@ -10961,7 +10964,7 @@ function eagle()
  return true;
  };
  var is_init = false,
- is_visible = false,
+ is_activated = false,
  eagle_id = null,
  my_eagle = null,
  picked_app = null,

@@ -39,7 +39,7 @@ function eagle()
             {
                 trace_keys.trigger_set = true;
 
-                if (is_visible === false)
+                if (!is_activated)
                 {
                     me.show_eagle();
                     me.draw_windows();
@@ -98,7 +98,7 @@ function eagle()
         {
             my_eagle.style.display = 'block';
 
-            is_visible = true;
+            is_activated = true;
 
             return true;
         };
@@ -109,7 +109,7 @@ function eagle()
 
             picked_window = 0;
             scroll_multiplier = 1;
-            is_visible = false;
+            is_activated = false;
 
             return true;
         };
@@ -334,8 +334,12 @@ function eagle()
 
     this.show = function(event_object)
     {
-        utils_int.show_eagle();
-        utils_int.draw_windows();
+        if (!is_activated)
+        {
+            utils_int.show_eagle();
+            utils_int.draw_windows();
+        }
+
         utils_int.switch_windows(event_object);
     };
 
@@ -412,7 +416,7 @@ function eagle()
     };
 
     var is_init = false,
-        is_visible = false,
+        is_activated = false,
         eagle_id = null,
         my_eagle = null,
         picked_app = null,
