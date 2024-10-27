@@ -869,6 +869,14 @@ function hive()
 
             return true;
         };
+
+        this.update_ui_controls = function()
+        {
+            if (self.status.bees.num() === colony.num())
+                imc_proxy.execute('ui_controls').placement.stack.activate();
+            else
+                imc_proxy.execute('ui_controls').placement.stack.deactivate();
+        };
     }
 
     function settings()
@@ -1027,6 +1035,8 @@ function hive()
 
                 swarm.settings.active_bee(null);
 
+                utils_int.update_ui_controls();
+
                 return true;
             };
 
@@ -1080,6 +1090,8 @@ function hive()
 
                         swarm.settings.active_bee(null);
 
+                        utils_int.update_ui_controls();
+
                         return true;
                     }
                 }
@@ -1121,8 +1133,6 @@ function hive()
                             utils_int.hide_ghost_bee(event_object);
                         }
                     }
-
-                    return true;
                 }
                 else
                 {
@@ -1140,10 +1150,12 @@ function hive()
                         swarm.settings.active_bee(__active_bee_id);
 
                         utils_int.set_z_index(__active_bee_id);
-
-                        return true;
                     }
                 }
+
+                utils_int.update_ui_controls();
+
+                return true;
             };
 
             this.show = function(honeycomb_view)
@@ -1435,6 +1447,7 @@ function hive()
         matrix = cosmos.hub.access('matrix');
         colony = cosmos.hub.access('colony');
 
+        imc_proxy = matrix.get('imc_proxy');
         xenon = matrix.get('xenon');
         swarm = matrix.get('swarm');
         forest = matrix.get('forest');
@@ -1448,6 +1461,7 @@ function hive()
         hive_id = null,
         cosmos = null,
         matrix = null,
+        imc_proxy = null,
         colony = null,
         xenon = null,
         swarm = null,

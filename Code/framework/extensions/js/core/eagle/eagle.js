@@ -44,7 +44,7 @@ function eagle()
                     me.show_eagle();
                     me.draw_windows();
 
-                    imc_proxy.execute('ui_controls').placement.boxify(event_object, true);
+                    imc_proxy.execute('ui_controls').placement.grid.activate();
                 }
 
                 me.switch_windows(event_object);
@@ -69,7 +69,7 @@ function eagle()
 
                 me.hide_eagle();
 
-                imc_proxy.execute('ui_controls').placement.boxify(event_object, false);
+                imc_proxy.execute('ui_controls').placement.grid.deactivate();
 
                 trace_keys.modifier_set = false;
 

@@ -8462,6 +8462,13 @@ function hive()
  __bee_object.gui.actions.set_top();
  return true;
  };
+ this.update_ui_controls = function()
+ {
+ if (self.status.bees.num() === colony.num())
+ imc_proxy.execute('ui_controls').placement.stack.activate();
+ else
+ imc_proxy.execute('ui_controls').placement.stack.deactivate();
+ };
  }
  function settings()
  {
@@ -8574,6 +8581,7 @@ function hive()
  push_to_stack(honeycomb_view, __bee_id);
  }
  swarm.settings.active_bee(null);
+ utils_int.update_ui_controls();
  return true;
  };
  this.remove = function(object, honeycomb_view)
@@ -8611,6 +8619,7 @@ function hive()
  __this_bee.gui.actions.release(event_object);
  utils_int.draw_hive_bee(honeycomb_views.visible(), __active_bee_id, 0);
  swarm.settings.active_bee(null);
+ utils_int.update_ui_controls();
  return true;
  }
  }
@@ -8641,7 +8650,6 @@ function hive()
  utils_int.hide_ghost_bee(event_object);
  }
  }
- return true;
  }
  else
  {
@@ -8654,9 +8662,10 @@ function hive()
  colony.get(__active_bee_id).settings.general.in_hive(false);
  swarm.settings.active_bee(__active_bee_id);
  utils_int.set_z_index(__active_bee_id);
+ }
+ }
+ utils_int.update_ui_controls();
  return true;
- }
- }
  };
  this.show = function(honeycomb_view)
  {
@@ -8876,6 +8885,7 @@ function hive()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  colony = cosmos.hub.access('colony');
+ imc_proxy = matrix.get('imc_proxy');
  xenon = matrix.get('xenon');
  swarm = matrix.get('swarm');
  forest = matrix.get('forest');
@@ -8887,6 +8897,7 @@ function hive()
  hive_id = null,
  cosmos = null,
  matrix = null,
+ imc_proxy = null,
  colony = null,
  xenon = null,
  swarm = null,
@@ -9455,7 +9466,7 @@ function ui_controls()
  this.attach_events = function()
  {
  var __handler = null;
- __handler = function(event) { self.placement.boxify(event); };
+ __handler = function(event) { self.placement.grid.boxify(event); };
  morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
  morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
  __handler = function()
@@ -9499,6 +9510,16 @@ function ui_controls()
  }
  function placement()
  {
+ function grid()
+ {
+ this.activate = function()
+ {
+ return utils_int.make_active('boxify_all');
+ };
+ this.deactivate = function()
+ {
+ return utils_int.make_inactive('boxify_all');
+ };
  this.boxify = function(event_object, activate = true)
  {
  if (is_init === false)
@@ -9515,8 +9536,19 @@ function ui_controls()
  }
  return true;
  };
+ }
  function stack()
  {
+ this.activate = function()
+ {
+ config.all_stacked = true;
+ return utils_int.make_active('stack_all');
+ };
+ this.deactivate = function()
+ {
+ config.all_stacked = false;
+ return utils_int.make_inactive('stack_all');
+ };
  this.one = function(event, bee)
  {
  if (is_init === false)
@@ -9525,14 +9557,13 @@ function ui_controls()
  return false;
  if (bee.status.system.in_hive())
  {
- hive.stack.bees.expel(event, 1);
+ imc_proxy.execute('hive').stack.bees.expel(event, 1);
  }
  else
  {
- hive.stack.set_view(event, 1, () =>
+ imc_proxy.execute('hive').stack.set_view(event, 1, () =>
  {
- hive.stack.bees.insert([bee], null);
- utils_int.make_active('stack_all');
+ imc_proxy.execute('hive').stack.bees.insert([bee], null);
  });
  }
  return true;
@@ -9559,17 +9590,17 @@ function ui_controls()
  }
  if (__is_bee_in_swarm)
  return false;
- hive.stack.set_view(event, 1, () =>
+ imc_proxy.execute('hive').stack.set_view(event, 1, () =>
  {
- hive.stack.bees.insert(__bees, null);
+ imc_proxy.execute('hive').stack.bees.insert(__bees, null);
  utils_int.make_active('stack_all');
  config.all_stacked = true;
  });
  }
  else
  {
- hive.stack.bees.expel(event, 0);
- hive.stack.set_view(event, 1, () =>
+ imc_proxy.execute('hive').stack.bees.expel(event, 0);
+ imc_proxy.execute('hive').stack.set_view(event, 1, () =>
  {
  utils_int.make_inactive('stack_all');
  config.all_stacked = false;
@@ -9578,6 +9609,7 @@ function ui_controls()
  return true;
  };
  }
+ this.grid = new grid();
  this.stack = new stack();
  }
  this.init = function(container_id)
@@ -9607,7 +9639,6 @@ function ui_controls()
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
  colony = cosmos.hub.access('colony');
- hive = matrix.get('hive');
  imc_proxy = matrix.get('imc_proxy');
  morpheus = matrix.get('morpheus');
  nature = matrix.get('nature');
@@ -9619,7 +9650,6 @@ function ui_controls()
  matrix = null,
  imc_proxy = null,
  colony = null,
- hive = null,
  morpheus = null,
  nature = null,
  utils_sys = new vulcan(),
@@ -9739,7 +9769,7 @@ function dock()
  else
  __is_sys_level = false;
  if (x_runner.start('app', __app_id, __is_sys_level))
- ;
+ imc_proxy.execute('ui_controls').placement.stack.deactivate();
  };
  morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['id']));
  }
@@ -9949,6 +9979,7 @@ function dock()
  return false;
  cosmos = cosmos_object;
  matrix = cosmos.hub.access('matrix');
+ imc_proxy = matrix.get('imc_proxy');
  morpheus = matrix.get('morpheus');
  x_runner = matrix.get('x_runner');
  parrot = matrix.get('parrot');
@@ -9961,6 +9992,7 @@ function dock()
  dock_id = null,
  cosmos = null,
  matrix = null,
+ imc_proxy = null,
  morpheus = null,
  x_runner = null,
  parrot = null,
@@ -10667,7 +10699,7 @@ function eagle()
  {
  me.show_eagle();
  me.draw_windows();
- imc_proxy.execute('ui_controls').placement.boxify(event_object, true);
+ imc_proxy.execute('ui_controls').placement.grid.activate();
  }
  me.switch_windows(event_object);
  event_object.preventDefault();
@@ -10683,7 +10715,7 @@ function eagle()
  var __eagle_apps = utils_sys.objects.by_id(eagle_id + '_apps');
  __eagle_apps.scrollTo(0, 1);
  me.hide_eagle();
- imc_proxy.execute('ui_controls').placement.boxify(event_object, false);
+ imc_proxy.execute('ui_controls').placement.grid.deactivate();
  trace_keys.modifier_set = false;
  picked_window = 0;
  scroll_multiplier = 1;

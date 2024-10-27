@@ -79,7 +79,7 @@ function ui_controls()
         {
             var __handler = null;
 
-            __handler = function(event) { self.placement.boxify(event); };
+            __handler = function(event) { self.placement.grid.boxify(event); };
             morpheus.run(ui_controls_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
             morpheus.run(ui_controls_id, 'touch', 'touchstart', __handler, utils_sys.objects.by_id(ui_controls_id + '_boxify_all'));
 
@@ -140,29 +140,56 @@ function ui_controls()
 
     function placement()
     {
-        this.boxify = function(event_object, activate = true)
+        function grid()
         {
-            if (is_init === false)
-                return false;
-
-            if (activate && config.is_boxified === false)
+            this.activate = function()
             {
-                imc_proxy.execute('eagle').show(event_object);
-
-                utils_int.make_active('boxify_all');
-            }
-            else
+                return utils_int.make_active('boxify_all');
+            };
+        
+            this.deactivate = function()
             {
-                imc_proxy.execute('eagle').hide();
+                return utils_int.make_inactive('boxify_all');
+            };
 
-                utils_int.make_inactive('boxify_all');
-            }
+            this.boxify = function(event_object, activate = true)
+            {
+                if (is_init === false)
+                    return false;
 
-            return true;
-        };
+                if (activate && config.is_boxified === false)
+                {
+                    imc_proxy.execute('eagle').show(event_object);
+
+                    utils_int.make_active('boxify_all');
+                }
+                else
+                {
+                    imc_proxy.execute('eagle').hide();
+
+                    utils_int.make_inactive('boxify_all');
+                }
+
+                return true;
+            };
+        }
 
         function stack()
         {
+            this.activate = function()
+            {
+                config.all_stacked = true;
+
+                return utils_int.make_active('stack_all');
+            };
+        
+            this.deactivate = function()
+            {
+                config.all_stacked = false;
+
+                return utils_int.make_inactive('stack_all');
+            };
+
             this.one = function(event, bee)
             {
                 if (is_init === false)
@@ -173,15 +200,13 @@ function ui_controls()
 
                 if (bee.status.system.in_hive())
                 {
-                    hive.stack.bees.expel(event, 1);
+                    imc_proxy.execute('hive').stack.bees.expel(event, 1);
                 }
                 else
                 {
-                    hive.stack.set_view(event, 1, () =>
+                    imc_proxy.execute('hive').stack.set_view(event, 1, () =>
                     {
-                        hive.stack.bees.insert([bee], null);
-
-                        utils_int.make_active('stack_all');
+                        imc_proxy.execute('hive').stack.bees.insert([bee], null);
                     });
                 }
 
@@ -218,9 +243,9 @@ function ui_controls()
                     if (__is_bee_in_swarm)
                         return false;
 
-                    hive.stack.set_view(event, 1, () =>
+                    imc_proxy.execute('hive').stack.set_view(event, 1, () =>
                     {
-                        hive.stack.bees.insert(__bees, null);
+                        imc_proxy.execute('hive').stack.bees.insert(__bees, null);
 
                         utils_int.make_active('stack_all');
 
@@ -229,9 +254,9 @@ function ui_controls()
                 }
                 else
                 {
-                    hive.stack.bees.expel(event, 0);
+                    imc_proxy.execute('hive').stack.bees.expel(event, 0);
 
-                    hive.stack.set_view(event, 1, () =>
+                    imc_proxy.execute('hive').stack.set_view(event, 1, () =>
                     {
                         utils_int.make_inactive('stack_all');
 
@@ -243,6 +268,7 @@ function ui_controls()
             };
         }
 
+        this.grid = new grid();
         this.stack = new stack();
     }
 
@@ -286,7 +312,6 @@ function ui_controls()
         matrix = cosmos.hub.access('matrix');
         colony =  cosmos.hub.access('colony');
 
-        hive = matrix.get('hive');
         imc_proxy = matrix.get('imc_proxy');
         morpheus = matrix.get('morpheus');
         nature = matrix.get('nature');
@@ -300,7 +325,6 @@ function ui_controls()
         matrix = null,
         imc_proxy = null,
         colony = null,
-        hive = null,
         morpheus = null,
         nature = null,
         utils_sys = new vulcan(),

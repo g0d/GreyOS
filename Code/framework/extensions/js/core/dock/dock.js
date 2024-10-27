@@ -1,5 +1,5 @@
 /*
-    GreyOS - Dock (Version: 2.8)
+    GreyOS - Dock (Version: 2.9)
 
     File name: dock.js
     Description: This file contains the Dock module.
@@ -146,7 +146,7 @@ function dock()
                                     __is_sys_level = false;
 
                                 if (x_runner.start('app', __app_id, __is_sys_level))
-                                    ;
+                                    imc_proxy.execute('ui_controls').placement.stack.deactivate();
                             };
             morpheus.run(dock_id, 'mouse', 'mouseup', __handler, utils_sys.objects.by_id('app_' + dock_app['id']));
         }
@@ -436,6 +436,7 @@ function dock()
 
         matrix = cosmos.hub.access('matrix');
 
+        imc_proxy = matrix.get('imc_proxy');
         morpheus = matrix.get('morpheus');
         x_runner = matrix.get('x_runner');
         parrot = matrix.get('parrot');
@@ -450,6 +451,7 @@ function dock()
         dock_id = null,
         cosmos = null,
         matrix = null,
+        imc_proxy = null,
         morpheus = null,
         x_runner = null,
         parrot = null,
