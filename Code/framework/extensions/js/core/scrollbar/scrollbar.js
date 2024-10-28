@@ -23,7 +23,7 @@ function scrollbar()
         this.offset_pos = 0;
         this.is_scrolling = false;
         this.is_wheel = false;
-        this.side = null;           // 1 is for right side, 2 is for left side
+        this.side = null;           // [1] : right side | [2] : left side
         this.handle_width = null;
     }
 
@@ -33,14 +33,12 @@ function scrollbar()
         {
             var __content = vulcan.objects.by_id(id);
 
-            // Setup content and scrollbar HTML / CSS
             __content.innerHTML = '<div id="' + config.id + '_content" class="scrollbar-content">' + __content.innerHTML + '</div>';
 
             var __container = vulcan.objects.by_id(id);
 
             __content = vulcan.objects.by_id(config.id + '_content');
 
-            // Add scrollbar
             var __track_div = document.createElement('div');
 
             __track_div.id = config.id + '_track';
@@ -49,7 +47,6 @@ function scrollbar()
 
             __container.appendChild(__track_div);
 
-            // Calculate scrollbar to content scrolling ratio (to align the handle correctly)
             var __content = vulcan.objects.by_id(config.id + '_content'),
                 __track = vulcan.objects.by_id(config.id + '_track'),
                 __handle = vulcan.objects.by_id(config.id + '_handle'),
@@ -57,7 +54,6 @@ function scrollbar()
                 __container_height = __content.parentNode.clientHeight,
                 __scroll_ratio = (__content_height - __container_height) / (__container_height - __handle.clientHeight - 8);
 
-            // No need for scrollbar on this content
             if (__scroll_ratio <= 1.0)
                 return false;
 
@@ -65,14 +61,13 @@ function scrollbar()
             //__content.style.width = (__content.offsetWidth - __handle.offsetWidth) + 'px';
             //__track.style.height = (__container_height - 4) + 'px';
 
-            // Apply Scroll Bar on the right side
             if (config.side === 1)
             {
                __track.style.right = '5px';
                __track.style.cssFloat = 'right';
                __content.style.cssFloat = 'left';
             }
-            else    // Apply Scroll Bar on the left side
+            else
                 __content.style.marginLeft = __handle.offsetWidth + 'px';
 
             config.scroll_ratio = __scroll_ratio;
@@ -185,7 +180,7 @@ function scrollbar()
     
     function status()
     {
-        // TO DO:...
+        // TODO:...
     }
 
     function side()
@@ -279,7 +274,7 @@ function scrollbar()
         if (vulcan.validation.alpha.is_symbol(container_id))
             return false;
 
-        // TO DO:...
+        // TODO:...
 
         return true;
     };

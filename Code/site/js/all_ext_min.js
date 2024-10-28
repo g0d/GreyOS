@@ -14467,7 +14467,7 @@ function scrollbar()
  this.offset_pos = 0;
  this.is_scrolling = false;
  this.is_wheel = false;
- this.side = null; // 1 is for right side, 2 is for left side
+ this.side = null; // [1] : right side | [2] : left side
  this.handle_width = null;
  }
  function utilities()
@@ -14498,7 +14498,7 @@ function scrollbar()
  __track.style.cssFloat = 'right';
  __content.style.cssFloat = 'left';
  }
- else // Apply Scroll Bar on the left side
+ else
  __content.style.marginLeft = __handle.offsetWidth + 'px';
  config.scroll_ratio = __scroll_ratio;
  config.handle_width = __handle.offsetWidth;
@@ -17819,6 +17819,8 @@ function bee()
  return false;
  }
  dock.instances.decrease(my_bee_app_id);
+ if (hive.status.bees.num() !== 0 && hive.status.bees.num() === colony.num())
+ ui_controls.placement.stack.activate();
  return true;
  }
  if ((event_object === null || event_object.buttons === 1) && bee_statuses.opened() && !bee_statuses.close())

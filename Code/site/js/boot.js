@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 4.4)
+    GreyOS - Bootstrap facility (Version: 4.5)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -377,6 +377,22 @@ function boot_script()
         {
             var cc_reload = new f5();
             var new_msgbox = new msgbox();
+            var init_window_width = window.innerWidth;
+            var init_window_height = window.innerHeight;
+
+            function screen_size_prompt()
+            {
+                if ((screen.width - window.outerWidth <= 17 && screen.height - window.outerHeight <= 18) &&
+                    (init_window_width === window.innerWidth || init_window_height === window.innerHeight))
+                    return;
+
+                var new_msgbox = new msgbox();
+
+                new_msgbox.init('desktop');
+                new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + 
+                                os_settings.get('name') + ' will now reload!',
+                new_msgbox.types.OK, [() => { cc_reload.init(); }]);
+            }
 
             // Initialize MsgBox
             new_msgbox.init('desktop');
@@ -478,21 +494,7 @@ function boot_script()
                         if (navigator.maxTouchPoints > 0)
                             return;
 
-                        os_utils.events.attach('greyos', window, 'resize', 
-                        function()
-                        {
-                            var new_msgbox = new msgbox();
-
-                            new_msgbox.init('desktop');
-                            /*
-                            new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + os_settings.get('name') + 
-                                            ' will now reload to the new dimensions!', 
-                                            new_msgbox.types.OK, [() => { cc_reload.init(); }]);
-                            */
-                            new_msgbox.show(os_settings.get('name'), 'Screen size changed. ' + 
-                                            os_settings.get('name') + ' will now reload!',
-                            new_msgbox.types.OK, [() => { cc_reload.init(); }]);
-                        });
+                        os_utils.events.attach('greyos', window, 'resize', function() { screen_size_prompt(); });
                     }, 1000);
                 }]);
             }
@@ -501,6 +503,8 @@ function boot_script()
                 os_utils.objects.by_id('version').innerHTML = os_settings.get('version');
 
                 auth_verification();
+
+                os_utils.events.attach('greyos', window, 'resize', function() { screen_size_prompt(); });
             }
         }
 
@@ -574,7 +578,7 @@ function boot_script()
         },
         function()
         {
-            // TO DO: Inform user of errors!
+            // TODO: Inform user of errors!
         },
         function()
         {
