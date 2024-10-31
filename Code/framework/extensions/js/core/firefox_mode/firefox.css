@@ -17,12 +17,12 @@
 
 .eagle
 {
-    width: 508px !important;
+    width: 512px !important;
 }
 
 .eagle_apps
 {
-    width: 480px !important;
+    width: 484px !important;
 }
 
 .eagle_window
@@ -32,5 +32,11 @@
 
 .radio_dude_list
 {
-    height: 128px !important;
+    height: 133px !important;
+    overflow:  hidden !important;
+}
+
+.i_quakejs
+{
+    overflow: hidden;
 }
