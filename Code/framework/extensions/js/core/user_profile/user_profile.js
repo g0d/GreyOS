@@ -235,7 +235,7 @@ function user_profile()
             morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_logout'));
 
             __handler = function() {  me.hide_profile_area(false); };
-            morpheus.run(user_profile_id, 'mouse', 'click', __handler, __desktop);
+            morpheus.run(user_profile_id, 'mouse', 'mousedown', __handler, __desktop);
             morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, __desktop);
 
             __handler = function(event) {  hide_profile_area_on_key(event); };
@@ -249,13 +249,13 @@ function user_profile()
             var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
                 __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
 
+            imc_proxy.execute('search').hide(true);
+
             __user_profile_area.style.display = 'block';
             __my_profile_label.classList.remove('user_profile_hidden');
             __my_profile_label.classList.add('user_profile_active');
 
             is_profile_area_visible = true;
-
-            imc_proxy.execute('search').hide(true);
 
             return true;
         };
@@ -265,14 +265,14 @@ function user_profile()
             var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
                 __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
 
+            if (hide_search)
+                imc_proxy.execute('search').hide();
+
             __user_profile_area.style.display = 'none';
             __my_profile_label.classList.remove('user_profile_active');
             __my_profile_label.classList.add('user_profile_hidden');
 
             is_profile_area_visible = false;
-
-            if (hide_search)
-                imc_proxy.execute('search').hide();
 
             return true;
         };
