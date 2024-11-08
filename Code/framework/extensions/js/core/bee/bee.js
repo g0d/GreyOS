@@ -4084,8 +4084,13 @@ function bee()
 
                     dock.instances.decrease(my_bee_app_id);
 
-                    if (hive.status.bees.num() !== 0 && hive.status.bees.num() === colony.num())
-                        ui_controls.placement.stack.activate();
+                    if (hive.status.bees.num() === 0)
+                        ui_controls.placement.stack.deactivate();
+                    else
+                    {
+                        if (hive.status.bees.num() === colony.num())
+                            ui_controls.placement.stack.activate();
+                    }
 
                     return true;
                 }

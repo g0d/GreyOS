@@ -28,16 +28,16 @@ function template_app()
 
         function template_model_1() // Internal private models keep information catrgorized under namespaces
         {
-            this.pption_1 = false;
-            this.pption_2 = null;
-            this.pption_3 = 10.98;
+            this.option_1 = false;
+            this.option_2 = null;
+            this.option_3 = 10.98;
         }
 
         function template_model_2()
         {
-            this.pption_1 = new test_object_model();
-            this.pption_2 = false;
-            this.pption_3 = 'test';
+            this.option_1 = new test_object_model();
+            this.option_2 = false;
+            this.option_3 = 'test';
         }
 
         this.namespace_1 = new template_model_1(); // Create the namespace as public attribute of the "template_app_config_model"

@@ -4735,7 +4735,7 @@ function boot_screen()
  var firefox_browser = new firefox_mode();
  if (firefox_browser.check())
  firefox_browser.init();
- else if (navigator.onLine === false)
+ if (navigator.onLine === false)
  {
  utils_int.draw_boot_screen();
  var __boot_message = utils_sys.objects.by_id('boot_screen_message');
@@ -4744,7 +4744,7 @@ function boot_screen()
  'Check your Internet connection and reload.';
  return false;
  }
- else if (window.innerWidth < 1280 || window.innerHeight < 600)
+ if (window.outerWidth < 1280 || window.outerHeight < 600)
  {
  utils_int.draw_boot_screen();
  var __boot_message = utils_sys.objects.by_id('boot_screen_message');
@@ -10192,7 +10192,7 @@ function user_profile()
  __handler = function() { me.logout(); };
  morpheus.run(user_profile_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(user_profile_id + '_logout'));
  __handler = function() { me.hide_profile_area(false); };
- morpheus.run(user_profile_id, 'mouse', 'click', __handler, __desktop);
+ morpheus.run(user_profile_id, 'mouse', 'mousedown', __handler, __desktop);
  morpheus.run(user_profile_id, 'touch', 'touchmove', __handler, __desktop);
  __handler = function(event) { hide_profile_area_on_key(event); };
  morpheus.run(user_profile_id, 'key', 'keydown', __handler, document);
@@ -10202,23 +10202,23 @@ function user_profile()
  {
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
  __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
+ imc_proxy.execute('search').hide(true);
  __user_profile_area.style.display = 'block';
  __my_profile_label.classList.remove('user_profile_hidden');
  __my_profile_label.classList.add('user_profile_active');
  is_profile_area_visible = true;
- imc_proxy.execute('search').hide(true);
  return true;
  };
  this.hide_profile_area = function(hide_search = true)
  {
  var __user_profile_area = utils_sys.objects.by_id(user_profile_id + '_area'),
  __my_profile_label = utils_sys.objects.by_id(user_profile_id + '_my');
+ if (hide_search)
+ imc_proxy.execute('search').hide();
  __user_profile_area.style.display = 'none';
  __my_profile_label.classList.remove('user_profile_active');
  __my_profile_label.classList.add('user_profile_hidden');
  is_profile_area_visible = false;
- if (hide_search)
- imc_proxy.execute('search').hide();
  return true;
  };
  this.toggle_profile_area = function()
@@ -17819,8 +17819,13 @@ function bee()
  return false;
  }
  dock.instances.decrease(my_bee_app_id);
- if (hive.status.bees.num() !== 0 && hive.status.bees.num() === colony.num())
+ if (hive.status.bees.num() === 0)
+ ui_controls.placement.stack.deactivate();
+ else
+ {
+ if (hive.status.bees.num() === colony.num())
  ui_controls.placement.stack.activate();
+ }
  return true;
  }
  if ((event_object === null || event_object.buttons === 1) && bee_statuses.opened() && !bee_statuses.close())
