@@ -263,7 +263,7 @@ function bull()
         if (utils.validation.misc.is_invalid(user_config.data))
             user_config.data = null;
         
-        if (user_config.type === 'data')        // [AJAX Data] => Modes: Asynchronous / Methods: POST
+        if (user_config.type === 'data')        // [AJAX Data] => Modes: Asynchronous / Method: POST
         {
             if (utils.validation.misc.is_invalid(user_config.data) || 
                 !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) || 

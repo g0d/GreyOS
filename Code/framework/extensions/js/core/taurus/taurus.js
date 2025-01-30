@@ -1,12 +1,12 @@
 /*
     Taurus (Advanced AJAX System/Framework)
 
-    File name: taurus.js (Version: 1.2)
+    File name: taurus.js (Version: 1.3)
     Description: This file contains the Taurus extension.
     Dependencies: Vulcan, JAP and BULL.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2022 - 2023
+    Copyright (C) 2022 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -234,7 +234,7 @@ function taurus()
         
         if (window.fetch)
         {
-            if (user_config.type === 'data')                    // [AJAX Data] => Modes: Asynchronous / Methods: POST
+            if (user_config.type === 'data')                    // [AJAX Data] => Modes: Asynchronous / Method: POST
             {
                 if (utils.validation.misc.is_invalid(user_config.data) || 
                     !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) || 
@@ -249,13 +249,15 @@ function taurus()
             {
                 if (user_config.ajax_mode === 'asynchronous')   // Fetch => Asynchronous mode
                 {
-                    if (utils.validation.misc.is_invalid(user_config.ajax_mode))
-                        return false;
-                    
                     if (utils.validation.misc.is_invalid(user_config.method))
-                        user_config.method = 'get';
+                        user_config.method = 'post';
                     else
+                    {
                         user_config.method = user_config.method.toLowerCase();
+
+                        if (user_config.method === 'get')
+                            return false;
+                    }
                     
                     return new ajax_core().request(user_config.url, user_config.data, user_config.method, 
                                                    user_config.on_success, user_config.on_fail, 
