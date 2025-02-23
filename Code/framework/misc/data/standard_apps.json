@@ -40,11 +40,6 @@
         "hint"      :   "iAmpedStudio :: 3rd-party integrated DAW. Click me!"
     },
     {
-        "id"        :   "i_vectorink",
-        "icon"      :   "app_i_vectorink",
-        "hint"      :   "iVectorInk :: 3rd-party integrated vector graphics designer. Click me!"
-    },
-    {
         "id"        :   "i_ganttio",
         "icon"      :   "app_i_ganttio",
         "hint"      :   "iGanttIO :: 3rd-party integrated Gantt charts creator. Click me!"

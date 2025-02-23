@@ -1,5 +1,5 @@
 /*
-    GreyOS - Meta-Executor (Version: 1.8)
+    GreyOS - Meta-Executor (Version: 1.9)
 
     File name: meta_executor.js
     Description: This file contains the Meta-Executor - Meta-Script program execution module.
@@ -58,7 +58,12 @@ function meta_executor()
         if (utils_sys.validation.misc.is_nothing(new_program) || !utils_sys.validation.alpha.is_string(new_program))
             return false;
 
-        program = '"use strict";\r\n' + new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
+        var user_code = new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
+
+        if (utils_sys.validation.misc.is_nothing(user_code))
+            return false;
+
+        program = '"use strict";\r\n' + user_code;
 
         is_program_loaded = true;
 

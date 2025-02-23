@@ -274,21 +274,6 @@
     background-image: url('pix/favorites/active/icon_box.png') !important;
 }
 
-#app_i_vectorink
-{
-    background-image: url('pix/favorites/inactive/icon_box.png');
-}
-
-#app_i_vectorink:hover
-{
-    background-image: url('pix/favorites/hover/icon_box.png') !important;
-}
-
-.app_i_vectorink_on
-{
-    background-image: url('pix/favorites/active/icon_box.png') !important;
-}
-
 #app_i_ganttio
 {
     background-image: url('pix/favorites/inactive/icon_box.png');

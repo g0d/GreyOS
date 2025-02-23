@@ -239,7 +239,7 @@ function bull()
  return false;
  if (utils.validation.misc.is_invalid(user_config.data))
  user_config.data = null;
- if (user_config.type === 'data') // [AJAX Data] => Modes: Asynchronous / Methods: POST
+ if (user_config.type === 'data') // [AJAX Data] => Modes: Asynchronous / Method: POST
  {
  if (utils.validation.misc.is_invalid(user_config.data) ||
  !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) ||
@@ -2052,7 +2052,7 @@ function taurus()
  user_config.data = null;
  if (window.fetch)
  {
- if (user_config.type === 'data') // [AJAX Data] => Modes: Asynchronous / Methods: POST
+ if (user_config.type === 'data') // [AJAX Data] => Modes: Asynchronous / Method: POST
  {
  if (utils.validation.misc.is_invalid(user_config.data) ||
  !utils.validation.misc.is_invalid(user_config.method) || !utils.validation.misc.is_invalid(user_config.ajax_mode) ||
@@ -2066,12 +2066,14 @@ function taurus()
  {
  if (user_config.ajax_mode === 'asynchronous') // Fetch => Asynchronous mode
  {
- if (utils.validation.misc.is_invalid(user_config.ajax_mode))
- return false;
  if (utils.validation.misc.is_invalid(user_config.method))
- user_config.method = 'get';
+ user_config.method = 'post';
  else
+ {
  user_config.method = user_config.method.toLowerCase();
+ if (user_config.method === 'get')
+ return false;
+ }
  return new ajax_core().request(user_config.url, user_config.data, user_config.method,
  user_config.on_success, user_config.on_fail,
  user_config.response_timeout, user_config.on_timeout);
@@ -12392,7 +12394,10 @@ function meta_executor()
  return false;
  if (utils_sys.validation.misc.is_nothing(new_program) || !utils_sys.validation.alpha.is_string(new_program))
  return false;
- program = '"use strict";\r\n' + new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
+ var user_code = new_program.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|^\/\/.*/g,'').trim();
+ if (utils_sys.validation.misc.is_nothing(user_code))
+ return false;
+ program = '"use strict";\r\n' + user_code;
  is_program_loaded = true;
  return true;
  };

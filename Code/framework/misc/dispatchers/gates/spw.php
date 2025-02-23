@@ -1,6 +1,6 @@
 <?php
 	/*
-		SPW (Programmable gate for system-level apps & services creation based on templates)
+		SPW (Programmable gate for system-level apps & services creation - based on templates)
 
 		File name: spw.php
 		Description: This file contains the SPW gate.
