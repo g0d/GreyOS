@@ -1,12 +1,12 @@
 /*
     Yoda (Local dynamic content manager for JS)
 
-    File name: yoda.js (Version: 1.0)
+    File name: yoda.js (Version: 1.1)
     Description: This file contains the Yoda extension.
     Dependencies: Vulcan.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2023
+    Copyright (C) 2023 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -27,9 +27,11 @@ function yoda()
                 if (this_record.hasOwnProperty(label))
                     return this_record[label];
             }
-        }
 
-        return dynamic_contents[lang];
+            return false;
+        }
+        else
+            return dynamic_contents[lang];
     };
 
     this.get = function(dynamic_contents, lang, label = null)
@@ -52,9 +54,11 @@ function yoda()
                 if (this_record.hasOwnProperty(label))
                     return this_record[label];
             }
-        }
 
-        return dynamic_contents[lang];
+            return false;
+        }
+        else
+            return dynamic_contents[lang];
     };
 
     this.set = function(dynamic_contents, lang, label)
