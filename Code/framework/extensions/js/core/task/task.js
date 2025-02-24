@@ -13,8 +13,6 @@
 // Task
 function task()
 {
-    var self = this;
-
     function task_model()
     {
         this.id = null;

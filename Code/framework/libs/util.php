@@ -417,7 +417,7 @@
         * @param string $log_data Log data
         * @param string $log_type Log type ("info" / "error")
         *
-        * @return bool 
+        * @return bool
         */
         public static function Log($log_data, $log_type)
         {
@@ -578,34 +578,32 @@
         {
             if (is_dir($dir))
             {
-                 $files = scandir($dir);
-                 
-                 foreach ($files as $this_file)
-                 {
-                   if ($this_file !== '.' && $this_file !== '..')
-                   {
-                       if (filetype($dir . '/' . $this_file) === 'dir')
-                       {
-                           $result = Delete_Dir($dir . '/' . $this_file);
-                           
-                           if ($result === false)
-                               return false;
-                       }
-                       else
-                       {
-                           $result = unlink($dir . '/' . $this_file);
-                           
-                           if ($result === false)
-                               return false;
-                       }
-                   }
-                 }
-                 
-                 reset($files);
-                 
-                 $result = rmdir($dir);
-                 
-                 return $result;
+                $files = scandir($dir);
+                
+                foreach ($files as $this_file)
+                {
+                    if ($this_file !== '.' && $this_file !== '..')
+                    {
+                        if (filetype($dir . '/' . $this_file) === 'dir')
+                        {
+                            $result = Delete_Dir($dir . '/' . $this_file);
+                            
+                            if ($result === false)
+                                return false;
+                        }
+                        else
+                        {
+                            $result = unlink($dir . '/' . $this_file);
+                            
+                            if ($result === false)
+                                return false;
+                        }
+                    }
+                }
+                
+                reset($files);
+                
+                return rmdir($dir);
             }
             else
                 return false;

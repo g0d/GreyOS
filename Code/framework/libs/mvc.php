@@ -6,7 +6,7 @@
         Description: This file contains the "MVC" class.
         
         Coded by George Delaportas (G0D)
-        Copyright (C) 2015 - 2023
+        Copyright (C) 2015 - 2025
         Open Software License (OSL 3.0)
     */
     
@@ -65,12 +65,13 @@
         * @param string $option "this" / "all"
         * @param bool $lang_relative Set whether route is relative or absolute to language code (default: true)
         *
-        * @return string The route URL
+        * @return mixed The route URL or false otherwise
         */
         public static function Get_Route($option, $lang_relative = true)
         {
             if ($option === 'this')
             {
+                $url = false;
                 $full_url = UTIL::Normalize_Route(substr($_SERVER['QUERY_STRING'], 4));
                 
                 if ($lang_relative === true)
@@ -164,9 +165,7 @@
             if (empty($mvc_var))
                 return false;
             
-            $result = self::$__mvc_vars[$mvc_var];
-            
-            return $result;
-        }    
+            return self::$__mvc_vars[$mvc_var];
+        }
     }
 ?>

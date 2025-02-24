@@ -18,7 +18,6 @@
     class ADI
     {
         // Shared flags
-        private static $__user_logged = false;
         private static $__ldap_conn = false;
 
         // Initialize a connection to Active Directory

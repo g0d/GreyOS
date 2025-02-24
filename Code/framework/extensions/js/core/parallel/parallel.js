@@ -13,8 +13,6 @@
 // Parallel
 function parallel()
 {
-    var self = this;
-
     function tasks_manager_model()
     {
         function tasks_list_model()

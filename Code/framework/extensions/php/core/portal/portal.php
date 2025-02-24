@@ -2,7 +2,7 @@
 	/*
 		Portal (REST Framework for GET / POST)
 
-		File name: portal.php (Version: 3.0)
+		File name: portal.php (Version: 3.1)
 		Description: This file contains the Portal extension.
 
 		Coded by George Delaportas (G0D)
@@ -74,7 +74,7 @@
 					foreach ($post_params_mixed as $key => $value)
 						$post_params .= $key . '=' . $value . '&';
 
-					rtrim($post_params, '&');
+					$post_params = rtrim($post_params, '&');
 
 					curl_setopt($curl, CURLOPT_POST, count($post_params_mixed));
 				}

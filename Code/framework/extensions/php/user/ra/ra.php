@@ -2,12 +2,12 @@
     /*
         RA (Easy ORM & Secure SQL)
 
-        File name: ra.php (Version: 1.1)
+        File name: ra.php (Version: 1.2)
         Description: This file contains the RA extension.
         Dependencies: micro-MVC framework, MS-SQL.
 
 		Coded by George Delaportas (G0D)
-		Copyright (C) 2020
+		Copyright (C) 2020 - 2025
 		Open Software License (OSL 3.0)
     */
 

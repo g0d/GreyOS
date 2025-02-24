@@ -2,7 +2,7 @@
     /*
         SQL (RA class)
 
-        File name: sql.php (Version: 1.1)
+        File name: sql.php (Version: 1.2)
         Description: This file contains the SQL - RA class.
 
         Coded by George Delaportas (G0D)
@@ -563,10 +563,10 @@
                     if (!empty($count_array))
                     {
                         $user_count = 'COUNT(?) ? "?" ?';
-                        $user_columns = array_merge($user_columns, array($values_array[0], 
+                        $user_columns = array_merge($user_columns, array($count_array[0], 
                                                                          $count_array[1],
-                                                                         $values_array[2], 
-                                                                         strtoupper($values_array[3])));
+                                                                         $count_array[2], 
+                                                                         strtoupper($count_array[3])));
                     }
 
                     foreach ($conditions_array as $values_array)

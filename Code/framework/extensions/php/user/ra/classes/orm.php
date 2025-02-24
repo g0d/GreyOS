@@ -2,11 +2,11 @@
     /*
         ORM (RA class)
 
-        File name: orm.php (Version: 1.1)
+        File name: orm.php (Version: 1.2)
         Description: This file contains the ORM - RA class.
 
         Coded by George Delaportas (G0D)
-        Copyright (C) 2020
+        Copyright (C) 2020 - 2025
         Open Software License (OSL 3.0)
     */
 
@@ -521,7 +521,7 @@
 
                 array_push($params, array(strtoupper($table)));
 
-                foreach ($object_value as $key => $value)
+                foreach ($table_object as $key => $value)
                 {
                     if ($key == 'ID' || $key == 'id')
                     {
