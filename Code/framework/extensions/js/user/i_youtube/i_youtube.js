@@ -311,31 +311,31 @@ function i_youtube()
                     '<div class="yt_player_content" data-link="share">' +
                     '<ul class="yt_a_share_buttons">' +
                     '<li><a href="https://www.facebook.com/sharer/sharer.php?u=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_facebook"></a></li>' +
                     '<li><a href="https://twitter.com/intent/tweet?url=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_twitter"></a></li>' +
                     '<li><a href="https://plus.google.com/u/0/share?url=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank" ' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank" ' +
                     'class="yt_share_socail_media" id="yt_share_gplus"></a></li>' +
-                    '<li><a href="http://blogger.com/blog-this.g?t=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+                    '<li><a href="https://blogger.com/blog-this.g?t=' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_blogger"></a></li>' +
-                    '<li><a href="http://www.linkedin.com/shareArticle?url=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+                    '<li><a href="https://www.linkedin.com/shareArticle?url=' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_linkedin"></a></li>' +
-                    '<li><a href="http://www.reddit.com/submit?url=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+                    '<li><a href="https://www.reddit.com/submit?url=' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_reddit"></a></li>' +
-                    '<li><a href="http://www.tumblr.com/share?v=3&u=' +
+                    '<li><a href="https://www.tumblr.com/share?v=3&u=' +
                     'http%3A//www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_tumblr"></a></li>' +
                     '<li><a href="https://www.stumbleupon.com/submit?url=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_stumbleupon"></a></li>' +
-                    '<li><a href="http://www.pinterest.com/pin/create/button/?url=' +
-                    'http://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
+                    '<li><a href="https://www.pinterest.com/pin/create/button/?url=' +
+                    'https://www.youtube.com/watch?v=' + config.video_id + '" target="_blank"' +
                     'class="yt_share_socail_media" id="yt_share_pinterest"></a></li>' +
                     '</ul>' +
                     '</div>' +
@@ -1859,7 +1859,7 @@ function i_youtube()
                                 __video_link = vulcan.objects.selectors.first('.yt_email_link_share'),
                                 __remaining = 0;
                                 
-                            __video_link.innerHTML = 'http://www.youtube.com/watch?v=' + config.video_id;
+                            __video_link.innerHTML = 'https://www.youtube.com/watch?v=' + config.video_id;
 
                             __handler = function(e)
                             {
@@ -2339,7 +2339,7 @@ function i_youtube()
 
                 };
 
-                __get_json('http://gdata.youtube.com/feeds/api/videos/' +
+                __get_json('https://gdata.youtube.com/feeds/api/videos/' +
                         config.video_id + '?v=2&alt=jsonc', function(data)
                         {
 

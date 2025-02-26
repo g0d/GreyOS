@@ -28,14 +28,14 @@ $rcmail_config['debug_level'] = 1;
 $rcmail_config['log_driver'] = 'file';
 
 // date format for log entries
-// (read http://php.net/manual/en/function.date.php for all format characters)  
+// (read https://php.net/manual/en/function.date.php for all format characters)  
 $rcmail_config['log_date_format'] = 'd-M-Y H:i:s O';
 
 // Syslog ident string to use, if using the 'syslog' log driver.
 $rcmail_config['syslog_id'] = 'roundcube';
 
 // Syslog facility to use, if using the 'syslog' log driver.
-// For possible values see installer or http://php.net/manual/en/function.openlog.php
+// For possible values see installer or https://php.net/manual/en/function.openlog.php
 $rcmail_config['syslog_facility'] = LOG_USER;
 
 // Log sent messages to <log_dir>/sendmail or to syslog
@@ -123,7 +123,7 @@ $rcmail_config['imap_force_caps'] = false;
 
 // By default list of subscribed folders is determined using LIST-EXTENDED
 // extension if available. Some servers (dovecot 1.x) returns wrong results
-// for shared namespaces in this case. http://trac.roundcube.net/ticket/1486225
+// for shared namespaces in this case. https://trac.roundcube.net/ticket/1486225
 // Enable this option to force LSUB command usage instead.
 $rcmail_config['imap_force_lsub'] = false;
 
@@ -160,7 +160,7 @@ $rcmail_config['dont_override'] = array();
 
 // provide an URL where a user can get support for this Roundcube installation
 // PLEASE DO NOT LINK TO THE ROUNDCUBE.NET WEBSITE HERE!
-$rcmail_config['support_url'] = 'http://greyos.gr/help';
+$rcmail_config['support_url'] = 'https://greyos.gr/help';
 
 // replace Roundcube logo with this image
 // specify an URL relative to the document root of this Roundcube installation
@@ -227,7 +227,7 @@ $rcmail_config['session_path'] = null;
 
 // Backend to use for session storage. Can either be 'db' (default) or 'memcache'
 // If set to memcache, a list of servers need to be specified in 'memcache_hosts'
-// Make sure the Memcache extension (http://pecl.php.net/package/memcache) version >= 2.0.0 is installed
+// Make sure the Memcache extension (https://pecl.php.net/package/memcache) version >= 2.0.0 is installed
 $rcmail_config['session_storage'] = 'db';
 
 // Use these hosts for accessing memcached
@@ -293,7 +293,7 @@ $rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;
 $rcmail_config['product_name'] = 'GreyOS M@il';
 
 // try to load host-specific configuration
-// see http://trac.roundcube.net/wiki/Howto_Config for more details
+// see https://trac.roundcube.net/wiki/Howto_Config for more details
 $rcmail_config['include_host_config'] = false;
 
 // path to a text file which will be added to each sent message
@@ -348,7 +348,7 @@ $rcmail_config['mime_magic'] = null;
 // Absolute path to a local mime.types mapping table file.
 // This is used to derive mime-types from the filename extension or vice versa.
 // Such a file is usually part of the apache webserver. If you don't find a file named mime.types on your system,
-// download it from http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+// download it from https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
 $rcmail_config['mime_types'] = null;
 
 // path to imagemagick identify binary
@@ -466,7 +466,7 @@ $rcmail_config['spellcheck_dictionary'] = false;
 $rcmail_config['spellcheck_engine'] = 'googie';
 
 // For a locally installed Nox Spell Server, please specify the URI to call it.
-// Get Nox Spell Server from http://orangoo.com/labs/?page_id=72
+// Get Nox Spell Server from https://orangoo.com/labs/?page_id=72
 // Leave empty to use the Google spell checking service, what means
 // that the message content will be sent to Google in order to check spelling
 $rcmail_config['spellcheck_uri'] = '';

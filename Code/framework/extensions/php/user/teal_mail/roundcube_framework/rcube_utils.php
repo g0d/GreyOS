@@ -522,7 +522,7 @@ class rcube_utils
 
     /**
      * Decode escaped entities used by known XSS exploits.
-     * See http://downloads.securityfocus.com/vulnerabilities/exploits/26800.eml for examples
+     * See https://downloads.securityfocus.com/vulnerabilities/exploits/26800.eml for examples
      *
      * @param string CSS content to decode
      *
@@ -887,7 +887,7 @@ class rcube_utils
 
     /**
      * Safe password prompt for command line
-     * from http://blogs.sitepoint.com/2009/05/01/interactive-cli-password-prompt-in-php/
+     * from https://blogs.sitepoint.com/2009/05/01/interactive-cli-password-prompt-in-php/
      *
      * @return string Password
      */

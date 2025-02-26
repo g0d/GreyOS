@@ -48,8 +48,8 @@
         }
 
         /**
-         * Get link to redirect users to Linkedin application permissions (see http://developer.linkedin.com/documents/authentication)
-         * @param string $scope Application permissions scope (see http://developer.linkedin.com/documents/authentication#granting)
+         * Get link to redirect users to Linkedin application permissions (see https://developer.linkedin.com/documents/authentication)
+         * @param string $scope Application permissions scope (see https://developer.linkedin.com/documents/authentication#granting)
          * @return string Link to redirect users to to confirm application permissions
          */
         public function Get_Auth_Code_Link($scope = '')
@@ -123,7 +123,7 @@
 
         /**
          * Search for jobs
-         * @param array $params Parameters to filter by (see http://developer.linkedin.com/documents/job-search-api)
+         * @param array $params Parameters to filter by (see https://developer.linkedin.com/documents/job-search-api)
          * @return SimpleXMLElement Job search results
          */
         public function Search_Jobs(array $params = [])
@@ -275,7 +275,7 @@
 
         /**
          * Search for people
-         * @param array $params Parameters to filter by (see http://developer.linkedin.com/documents/people-search-api)
+         * @param array $params Parameters to filter by (see https://developer.linkedin.com/documents/people-search-api)
          * @return SimpleXMLElement People search results
          */
         public function Search_People(array $params = [])
@@ -287,7 +287,7 @@
 
         /**
          * Search for companies
-         * @param array $params Parameters to filter by (see http://developer.linkedin.com/documents/company-search)
+         * @param array $params Parameters to filter by (see https://developer.linkedin.com/documents/company-search)
          * @return SimpleXMLElement Company search results
          */
         public function Search_Companies(array $params = [])

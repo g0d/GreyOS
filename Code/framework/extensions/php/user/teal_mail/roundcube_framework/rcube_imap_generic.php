@@ -16,7 +16,7 @@
  |   of whether or not the PHP build it's running on has IMAP            |
  |   functionality built-in.                                             |
  |                                                                       |
- |   Based on Iloha IMAP Library. See http://ilohamail.org/ for details  |
+ |   Based on Iloha IMAP Library. See https://ilohamail.org/ for details  |
  +-----------------------------------------------------------------------+
  | Author: Aleksander Machniak <alec@alec.pl>                            |
  | Author: Ryo Chijiiwa <Ryo@IlohaMail.org>                              |

@@ -234,7 +234,8 @@ function coyote()
 
         this.mnanage_fullscreen_events = function(choice)
         {
-            var __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen');
+            var __full_screen = utils_sys.objects.by_id(coyote_bee_id + '_full_screen'),
+                __handler = null;
 
             morpheus.delete(config.id, 'click', __full_screen);
 

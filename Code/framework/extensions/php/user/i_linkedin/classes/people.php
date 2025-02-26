@@ -21,7 +21,7 @@
 
     /**
      * Class PEOPLE
-     * Provides People API functionality (see http://developer.linkedin.com/documents/people)
+     * Provides People API functionality (see https://developer.linkedin.com/documents/people)
      */
     class PEOPLE extends BASE
     {

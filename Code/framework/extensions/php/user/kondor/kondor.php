@@ -48,7 +48,7 @@
         {
             $confirm_code = $user_id . ':' . md5($user_id . '_' . $user_name . '_' . $user_email . '_' . $user_type);
 
-            $result = '<a href="http://' . $_SERVER['HTTP_HOST'] . '/' . $user_lang_code . '/reg-confirm/' . $confirm_code . '/">
+            $result = '<a href="https://' . $_SERVER['HTTP_HOST'] . '/' . $user_lang_code . '/reg-confirm/' . $confirm_code . '/">
                         <strong>' . UTILS::Load_Content('new_user_reg_email_activation_label', 'content', $user_lang_code) . '</strong>
                      </a>';
 

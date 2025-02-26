@@ -1,11 +1,11 @@
 /*
-    GreyOS - ACE Editor (Version: 1.0)
+    GreyOS - ACE Editor (Version: 1.1)
 
     File name: ace.js
     Description: This file contains the ACE Editor - Auto loader extension.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2021
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 

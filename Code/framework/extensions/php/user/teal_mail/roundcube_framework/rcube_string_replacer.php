@@ -83,7 +83,7 @@ class rcube_string_replacer
         }
         else if (preg_match('/^(\W*)(www\.)$/i', $matches[1], $m)) {
             $url        = $m[2] . $matches[2];
-            $url_prefix = 'http://';
+            $url_prefix = 'https://';
             $prefix     = $m[1];
         }
 
@@ -158,9 +158,9 @@ class rcube_string_replacer
     {
         // #1487672: special handling of square brackets,
         // URL regexp allows [] characters in URL, for example:
-        // "http://example.com/?a[b]=c". However we need to handle
+        // "https://example.com/?a[b]=c". However we need to handle
         // properly situation when a bracket is placed at the end
-        // of the link e.g. "[http://example.com]"
+        // of the link e.g. "[https://example.com]"
         // Yes, this is not perfect handles correctly only paired characters
         // but it should work for common cases
 

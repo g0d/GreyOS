@@ -108,7 +108,7 @@
 
             $id = $id_temp['v'];
 
-            $thumb = 'http://i4.ytimg.com/vi/' . $id . '/default.jpg';
+            $thumb = 'https://i4.ytimg.com/vi/' . $id . '/default.jpg';
 
             $title = $titles;
             $description = $descriptions;

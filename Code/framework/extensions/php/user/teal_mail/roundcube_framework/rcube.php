@@ -725,7 +725,7 @@ class rcube
         /*-
          * Add a single canary byte to the end of the clear text, which
          * will help find out how much of padding will need to be removed
-         * upon decryption; see http://php.net/mcrypt_generic#68082
+         * upon decryption; see https://php.net/mcrypt_generic#68082
          */
         $clear = pack("a*H2", $clear, "80");
 
@@ -813,7 +813,7 @@ class rcube
 
         /*-
          * Trim PHP's padding and the canary byte; see note in
-         * rcube::encrypt() and http://php.net/mcrypt_generic#68082
+         * rcube::encrypt() and https://php.net/mcrypt_generic#68082
          */
         $clear = substr(rtrim($clear, "\0"), 0, -1);
 

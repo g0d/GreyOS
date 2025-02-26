@@ -551,7 +551,7 @@ abstract class FB_BASE
 
         // use port if non default
         
-        $Port = isset($Parts['port']) && (($Protocol === 'http://' && $Parts['port'] !== 80) || ($Protocol === 'https://' && $Parts['port'] !== 443)) ? ':' . $Parts['port'] : '';
+        $Port = isset($Parts['port']) && (($Protocol === 'https://' && $Parts['port'] !== 80) || ($Protocol === 'https://' && $Parts['port'] !== 443)) ? ':' . $Parts['port'] : '';
 
         // rebuild
         
@@ -1397,7 +1397,7 @@ abstract class FB_BASE
     public function Xmpp_Connect($Options, $Access_Token, $Output = true)
     {
 
-        $Stream_Xml = '<stream:stream xmlns:stream="http://etherx.jabber.org/streams" version="1.0" xmlns="jabber:client" to="chat.facebook.com" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">';
+        $Stream_Xml = '<stream:stream xmlns:stream="https://etherx.jabber.org/streams" version="1.0" xmlns="jabber:client" to="chat.facebook.com" xml:lang="en" xmlns:xml="https://www.w3.org/XML/1998/namespace">';
         $Auth_Xml = '<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="X-FACEBOOK-PLATFORM"></auth>';
         $Close_Xml = '</stream:stream>';
         $Resource_Xml = '<iq type="set" id="3"><bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"><resource>fb_xmpp_script</resource></bind></iq>';

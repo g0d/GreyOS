@@ -409,7 +409,7 @@ function teal_mail()
 
 					var __video_id = message.utils.yt_anchor_parse(this.href);
 
-					//$.getJSON('http://gdata.youtube.com/feeds/api/videos/'+video_id+'?v=2&alt=jsonc',function(data,status,xhr){
+					//$.getJSON('https://gdata.youtube.com/feeds/api/videos/'+video_id+'?v=2&alt=jsonc',function(data,status,xhr){
 					//__Open_YT_Video_Bee(data.data.title, video_id, __global_yt_swarm, __global_yt_pythia);	});
 				});
 			}

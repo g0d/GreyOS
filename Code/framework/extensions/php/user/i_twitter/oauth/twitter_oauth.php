@@ -46,7 +46,7 @@
             foreach ($config as $key => $value)
                 $this->Config[$key] = $value;
 
-            $this->Config['oauth_callback'] = 'http://' . $_SERVER['HTTP_HOST'] . '/framework/extensions/ajax/i_twitter/i_twitter.php';
+            $this->Config['oauth_callback'] = 'https://' . $_SERVER['HTTP_HOST'] . '/framework/extensions/ajax/i_twitter/i_twitter.php';
 
         }
 

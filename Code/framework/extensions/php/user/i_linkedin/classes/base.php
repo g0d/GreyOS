@@ -48,9 +48,9 @@
         }
 
         /**
-         * Get link to redirect users to Linkedin application permissions (see http://developer.linkedin.com/documents/authentication)
+         * Get link to redirect users to Linkedin application permissions (see https://developer.linkedin.com/documents/authentication)
          * @param string $redirect_url URL to redirect back to after authorisation
-         * @param string $scope Application permissions scope (see http://developer.linkedin.com/documents/authentication#granting)
+         * @param string $scope Application permissions scope (see https://developer.linkedin.com/documents/authentication#granting)
          * @return string Link to redirect users to to confirm application permissions
          */
         public function Get_Auth_Code_Link($redirect_url, $scope = '')

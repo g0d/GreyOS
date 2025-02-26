@@ -21,7 +21,7 @@
 
     /**
      * Class GROUPS
-     * Provides Groups API functionality (see http://developer.linkedin.com/documents/groups)
+     * Provides Groups API functionality (see https://developer.linkedin.com/documents/groups)
      */
     class GROUPS extends BASE
     {

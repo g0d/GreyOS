@@ -22,7 +22,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 The NuSOAP project home is:
-http://sourceforge.net/projects/nusoap/
+https://sourceforge.net/projects/nusoap/
 
 The primary support for NuSOAP is the Help forum on the project home page.
 
@@ -30,22 +30,22 @@ If you have any questions or comments, please email:
 
 Dietrich Ayala
 dietrich@ganx4.com
-http://dietrich.ganx4.com/nusoap
+https://dietrich.ganx4.com/nusoap
 
 NuSphere Corporation
-http://www.nusphere.com
+https://www.nusphere.com
 
 */
 
 /*
  *	Some of the standards implmented in whole or part by NuSOAP:
  *
- *	SOAP 1.1 (http://www.w3.org/TR/2000/NOTE-SOAP-20000508/)
- *	WSDL 1.1 (http://www.w3.org/TR/2001/NOTE-wsdl-20010315)
- *	SOAP Messages With Attachments (http://www.w3.org/TR/SOAP-attachments)
- *	XML 1.0 (http://www.w3.org/TR/2006/REC-xml-20060816/)
- *	Namespaces in XML 1.0 (http://www.w3.org/TR/2006/REC-xml-names-20060816/)
- *	XML Schema 1.0 (http://www.w3.org/TR/xmlschema-0/)
+ *	SOAP 1.1 (https://www.w3.org/TR/2000/NOTE-SOAP-20000508/)
+ *	WSDL 1.1 (https://www.w3.org/TR/2001/NOTE-wsdl-20010315)
+ *	SOAP Messages With Attachments (https://www.w3.org/TR/SOAP-attachments)
+ *	XML 1.0 (https://www.w3.org/TR/2006/REC-xml-20060816/)
+ *	Namespaces in XML 1.0 (https://www.w3.org/TR/2006/REC-xml-names-20060816/)
+ *	XML Schema 1.0 (https://www.w3.org/TR/xmlschema-0/)
  *	RFC 2045 Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies
  *	RFC 2068 Hypertext Transfer Protocol -- HTTP/1.1
  *	RFC 2617 HTTP Authentication: Basic and Digest Access Authentication
@@ -70,7 +70,7 @@ require_once('class.wsdl.php');
 require_once('class.soap_server.php');*/
 
 // class variable emulation
-// cf. http://www.webkreator.com/php/techniques/php-static-class-variables.html
+// cf. https://www.webkreator.com/php/techniques/php-static-class-variables.html
 $GLOBALS['_transient']['static']['nusoap_base']['globalDebugLevel'] = 9;
 
 /**
@@ -140,7 +140,7 @@ class nusoap_base {
 	* @var      string
 	* @access   public
 	*/
-	var $XMLSchemaVersion = 'http://www.w3.org/2001/XMLSchema';
+	var $XMLSchemaVersion = 'https://www.w3.org/2001/XMLSchema';
 	
     /**
 	* charset encoding for outgoing messages
@@ -160,10 +160,10 @@ class nusoap_base {
 	* @access   public
 	*/
 	var $namespaces = array(
-		'SOAP-ENV' => 'http://schemas.xmlsoap.org/soap/envelope/',
-		'xsd' => 'http://www.w3.org/2001/XMLSchema',
-		'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-		'SOAP-ENC' => 'http://schemas.xmlsoap.org/soap/encoding/'
+		'SOAP-ENV' => 'https://schemas.xmlsoap.org/soap/envelope/',
+		'xsd' => 'https://www.w3.org/2001/XMLSchema',
+		'xsi' => 'https://www.w3.org/2001/XMLSchema-instance',
+		'SOAP-ENC' => 'https://schemas.xmlsoap.org/soap/encoding/'
 		);
 
 	/**
@@ -182,7 +182,7 @@ class nusoap_base {
 	* @access   public
 	*/
 	var $typemap = array(
-	'http://www.w3.org/2001/XMLSchema' => array(
+	'https://www.w3.org/2001/XMLSchema' => array(
 		'string'=>'string','boolean'=>'boolean','float'=>'double','double'=>'double','decimal'=>'double',
 		'duration'=>'','dateTime'=>'string','time'=>'string','date'=>'string','gYearMonth'=>'',
 		'gYear'=>'','gMonthDay'=>'','gDay'=>'','gMonth'=>'','hexBinary'=>'string','base64Binary'=>'string',
@@ -193,17 +193,17 @@ class nusoap_base {
 		'IDREF'=>'','IDREFS'=>'','ENTITY'=>'','ENTITIES'=>'','integer'=>'integer','nonPositiveInteger'=>'integer',
 		'negativeInteger'=>'integer','long'=>'integer','int'=>'integer','short'=>'integer','byte'=>'integer','nonNegativeInteger'=>'integer',
 		'unsignedLong'=>'','unsignedInt'=>'','unsignedShort'=>'','unsignedByte'=>'','positiveInteger'=>''),
-	'http://www.w3.org/2000/10/XMLSchema' => array(
+	'https://www.w3.org/2000/10/XMLSchema' => array(
 		'i4'=>'','int'=>'integer','boolean'=>'boolean','string'=>'string','double'=>'double',
 		'float'=>'double','dateTime'=>'string',
 		'timeInstant'=>'string','base64Binary'=>'string','base64'=>'string','ur-type'=>'array'),
-	'http://www.w3.org/1999/XMLSchema' => array(
+	'https://www.w3.org/1999/XMLSchema' => array(
 		'i4'=>'','int'=>'integer','boolean'=>'boolean','string'=>'string','double'=>'double',
 		'float'=>'double','dateTime'=>'string',
 		'timeInstant'=>'string','base64Binary'=>'string','base64'=>'string','ur-type'=>'array'),
-	'http://soapinterop.org/xsd' => array('SOAPStruct'=>'struct'),
-	'http://schemas.xmlsoap.org/soap/encoding/' => array('base64'=>'string','array'=>'array','Array'=>'array'),
-    'http://xml.apache.org/xml-soap' => array('Map')
+	'https://soapinterop.org/xsd' => array('SOAPStruct'=>'struct'),
+	'https://schemas.xmlsoap.org/soap/encoding/' => array('base64'=>'string','array'=>'array','Array'=>'array'),
+    'https://xml.apache.org/xml-soap' => array('Map')
 	);
 
 	/**
@@ -637,7 +637,7 @@ class nusoap_base {
 					}
 					foreach($val as $k => $v){
 						// Apache Map
-						if ($type == 'Map' && $type_ns == 'http://xml.apache.org/xml-soap') {
+						if ($type == 'Map' && $type_ns == 'https://xml.apache.org/xml-soap') {
 							$xml .= '<item>';
 							$xml .= $this->serialize_val($k,'key',false,false,false,false,$use);
 							$xml .= $this->serialize_val($v,'value',false,false,false,false,$use);
@@ -666,11 +666,11 @@ class nusoap_base {
     * @param array $namespaces optional the namespaces used in generating the body and headers
     * @param string $style optional (rpc|document)
     * @param string $use optional (encoded|literal)
-    * @param string $encodingStyle optional (usually 'http://schemas.xmlsoap.org/soap/encoding/' for encoded)
+    * @param string $encodingStyle optional (usually 'https://schemas.xmlsoap.org/soap/encoding/' for encoded)
     * @return string the message
     * @access public
     */
-    function serializeEnvelope($body,$headers=false,$namespaces=array(),$style='rpc',$use='encoded',$encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'){
+    function serializeEnvelope($body,$headers=false,$namespaces=array(),$style='rpc',$use='encoded',$encodingStyle='https://schemas.xmlsoap.org/soap/encoding/'){
     // TODO: add an option to automatically run utf8_encode on $body and $headers
     // if $this->soap_defencoding is UTF-8.  Not doing this automatically allows
     // one to send arbitrary UTF-8 characters, not just characters that map to ISO-8859-1

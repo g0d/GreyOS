@@ -95,8 +95,8 @@ You're always welcome to send a message to the project admins:
 hello(at)roundcube(dot)net
 
 
-[pear]:         http://pear.php.net
-[gpl]:          http://www.gnu.org/licenses/
-[license]:      http://roundcube.net/license
-[support]:      http://roundcube.net/support
-[tracreport]:   http://trac.roundcube.net/wiki/Howto_ReportIssues
+[pear]:         https://pear.php.net
+[gpl]:          https://www.gnu.org/licenses/
+[license]:      https://roundcube.net/license
+[support]:      https://roundcube.net/support
+[tracreport]:   https://trac.roundcube.net/wiki/Howto_ReportIssues

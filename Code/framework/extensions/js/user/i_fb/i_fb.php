@@ -109,13 +109,13 @@
      * 
      * SHARE BUTTON
      * <div class="fb-share-button" 
-     * data-href="http://developers.facebook.com/docs/plugins/" 
+     * data-href="https://developers.facebook.com/docs/plugins/" 
      * data-type="button_count">
      * </div>
      * 
      * SEND BUTTON
      * <div class="fb-send" 
-     * data-href="http://facebook.com/docs/plugins/" 
+     * data-href="https://facebook.com/docs/plugins/" 
      * data-colorscheme="light">
      * </div>
      * 

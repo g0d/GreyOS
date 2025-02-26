@@ -211,7 +211,7 @@ class nusoap_xmlschema extends nusoap_base  {
 							$this->namespaces['ns'.(count($this->namespaces)+1)] = $v;
 						}
 					}
-					if($v == 'http://www.w3.org/2001/XMLSchema' || $v == 'http://www.w3.org/1999/XMLSchema' || $v == 'http://www.w3.org/2000/10/XMLSchema'){
+					if($v == 'https://www.w3.org/2001/XMLSchema' || $v == 'https://www.w3.org/1999/XMLSchema' || $v == 'https://www.w3.org/2000/10/XMLSchema'){
 						$this->XMLSchemaVersion = $v;
 						$this->namespaces['xsi'] = $v.'-instance';
 					}
@@ -240,29 +240,29 @@ class nusoap_xmlschema extends nusoap_base  {
 				//}
 			break;
 			case 'attribute':	// complexType attribute
-            	//$this->xdebug("parsing attribute $attrs[name] $attrs[ref] of value: ".$attrs['http://schemas.xmlsoap.org/wsdl/:arrayType']);
+            	//$this->xdebug("parsing attribute $attrs[name] $attrs[ref] of value: ".$attrs['https://schemas.xmlsoap.org/wsdl/:arrayType']);
             	$this->xdebug("parsing attribute:");
             	$this->appendDebug($this->varDump($attrs));
 				if (!isset($attrs['form'])) {
 					// TODO: handle globals
 					$attrs['form'] = $this->schemaInfo['attributeFormDefault'];
 				}
-            	if (isset($attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'])) {
-					$v = $attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'];
+            	if (isset($attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'])) {
+					$v = $attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'];
 					if (!strpos($v, ':')) {
 						// no namespace in arrayType attribute value...
 						if ($this->defaultNamespace[$pos]) {
 							// ...so use the default
-							$attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'] = $this->defaultNamespace[$pos] . ':' . $attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'];
+							$attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'] = $this->defaultNamespace[$pos] . ':' . $attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'];
 						}
 					}
             	}
                 if(isset($attrs['name'])){
 					$this->attributes[$attrs['name']] = $attrs;
 					$aname = $attrs['name'];
-				} elseif(isset($attrs['ref']) && $attrs['ref'] == 'http://schemas.xmlsoap.org/soap/encoding/:arrayType'){
-					if (isset($attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'])) {
-	                	$aname = $attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'];
+				} elseif(isset($attrs['ref']) && $attrs['ref'] == 'https://schemas.xmlsoap.org/soap/encoding/:arrayType'){
+					if (isset($attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'])) {
+	                	$aname = $attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'];
 	                } else {
 	                	$aname = '';
 	                }
@@ -275,11 +275,11 @@ class nusoap_xmlschema extends nusoap_base  {
 					$this->complexTypes[$this->currentComplexType]['attrs'][$aname] = $attrs;
 				}
 				// arrayType attribute
-				if(isset($attrs['http://schemas.xmlsoap.org/wsdl/:arrayType']) || $this->getLocalPart($aname) == 'arrayType'){
+				if(isset($attrs['https://schemas.xmlsoap.org/wsdl/:arrayType']) || $this->getLocalPart($aname) == 'arrayType'){
 					$this->complexTypes[$this->currentComplexType]['phpType'] = 'array';
                 	$prefix = $this->getPrefix($aname);
-					if(isset($attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'])){
-						$v = $attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'];
+					if(isset($attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'])){
+						$v = $attrs['https://schemas.xmlsoap.org/wsdl/:arrayType'];
 					} else {
 						$v = '';
 					}
@@ -596,7 +596,7 @@ class nusoap_xmlschema extends nusoap_base  {
 					foreach ($aParts as $a => $v) {
 						if ($a == 'ref' || $a == 'type') {
 							$contentStr .= " $a=\"".$this->contractQName($v).'"';
-						} elseif ($a == 'http://schemas.xmlsoap.org/wsdl/:arrayType') {
+						} elseif ($a == 'https://schemas.xmlsoap.org/wsdl/:arrayType') {
 							$this->usedNamespaces['wsdl'] = $this->namespaces['wsdl'];
 							$contentStr .= ' wsdl:arrayType="'.$this->contractQName($v).'"';
 						} else {
@@ -767,7 +767,7 @@ class nusoap_xmlschema extends nusoap_base  {
 					if (isset($etype['extensionBase'])) {
 						$this->elements[$type]['extensionBase'] = $etype['extensionBase'];
 					}
-				} elseif ($ns == 'http://www.w3.org/2001/XMLSchema') {
+				} elseif ($ns == 'https://www.w3.org/2001/XMLSchema') {
 					$this->xdebug("in getTypeDef, element $type is an XSD type");
 					$this->elements[$type]['phpType'] = 'scalar';
 				}
@@ -780,7 +780,7 @@ class nusoap_xmlschema extends nusoap_base  {
 			$this->xdebug("in getTypeDef, have an untyped element $type");
 			$typeDef['typeClass'] = 'simpleType';
 			$typeDef['phpType'] = 'scalar';
-			$typeDef['type'] = 'http://www.w3.org/2001/XMLSchema:string';
+			$typeDef['type'] = 'https://www.w3.org/2001/XMLSchema:string';
 			return $typeDef;
 		}
 		$this->xdebug("in getTypeDef, did not find $type");
@@ -891,15 +891,15 @@ class nusoap_xmlschema extends nusoap_base  {
 	* @param typeClass (complexType|simpleType|attribute)
 	* @param phpType: currently supported are array and struct (php assoc array)
 	* @param compositor (all|sequence|choice)
-	* @param restrictionBase namespace:name (http://schemas.xmlsoap.org/soap/encoding/:Array)
+	* @param restrictionBase namespace:name (https://schemas.xmlsoap.org/soap/encoding/:Array)
 	* @param elements = array ( name = array(name=>'',type=>'') )
 	* @param attrs = array(
 	* 	array(
-	*		'ref' => "http://schemas.xmlsoap.org/soap/encoding/:arrayType",
-	*		"http://schemas.xmlsoap.org/wsdl/:arrayType" => "string[]"
+	*		'ref' => "https://schemas.xmlsoap.org/soap/encoding/:arrayType",
+	*		"https://schemas.xmlsoap.org/wsdl/:arrayType" => "string[]"
 	* 	)
 	* )
-	* @param arrayType: namespace:name (http://www.w3.org/2001/XMLSchema:string)
+	* @param arrayType: namespace:name (https://www.w3.org/2001/XMLSchema:string)
 	* @access public
 	* @see getTypeDef
 	*/
@@ -923,7 +923,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	* adds a simple type to the schema
 	*
 	* @param string $name
-	* @param string $restrictionBase namespace:name (http://schemas.xmlsoap.org/soap/encoding/:Array)
+	* @param string $restrictionBase namespace:name (https://schemas.xmlsoap.org/soap/encoding/:Array)
 	* @param string $typeClass (should always be simpleType)
 	* @param string $phpType (should always be scalar)
 	* @param array $enumeration array of values

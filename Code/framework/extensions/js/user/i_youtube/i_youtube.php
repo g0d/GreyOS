@@ -63,7 +63,7 @@
     require_once (UTILS::Absolute_Path('framework/extensions/php/i_youtube/classes/front.php'));
 
     $url = 'https://accounts.google.com/o/oauth2/auth';
-    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/framework/extensions/ajax/i_youtube/i_youtube.php';
+    $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/framework/extensions/ajax/i_youtube/i_youtube.php';
     $access_type = "offline";
     $approval_prompt = "force";
     $scope = "https://gdata.youtube.com";

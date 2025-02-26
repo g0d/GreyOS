@@ -21,8 +21,8 @@
      * Class Http allows you to HTTP GET and POST to URLs
      * Example usage:
      *     $http = new Http();
-     *     $getData = $http->get('http://google.com');
-     *     $postData = $http->post('http://google.com', ['foo' => 'bar']);
+     *     $getData = $http->get('https://google.com');
+     *     $postData = $http->post('https://google.com', ['foo' => 'bar']);
      */
     class HTTP
     {

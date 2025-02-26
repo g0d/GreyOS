@@ -70,7 +70,7 @@
                 
                 $user = $this->Get_User();
                 
-                $name = json_decode(file_get_contents('http://graph.facebook.com/' . $user .'?fields=name'))->name;
+                $name = json_decode(file_get_contents('https://graph.facebook.com/' . $user .'?fields=name'))->name;
 
                 $result = DB::Execute_SQL_Command('INSERT INTO `oauth_facebook` (`user_id`, `facebook_access_token`, 
                                                                                         `facebook_id`, `facebook_name`,

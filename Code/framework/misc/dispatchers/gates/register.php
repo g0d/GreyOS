@@ -92,6 +92,7 @@
 
 		return true;
 
+		/*
 		global $db_conn_link;
 
 		if (empty($db_conn_link))
@@ -162,6 +163,7 @@
 		}
 
 		return true;
+		*/
 	}
 
 	function create_new_user($email, $password)

@@ -405,7 +405,7 @@
                 $post_id = $wall[$i]['post_id'];
                     
                 $actor_name = ($this->Get_User_By_Id($wall[$i]['actor_id'])) ?: 
-                               json_decode(file_get_contents('http://graph.facebook.com/' . $wall[$i]['actor_id'] .'?fields=name'))->name;
+                               json_decode(file_get_contents('https://graph.facebook.com/' . $wall[$i]['actor_id'] .'?fields=name'))->name;
                 
                 if ($wall[$i]['description'] !== null)
                 {
@@ -957,7 +957,7 @@
                                                                                          'class' => 'profile_link'));
                 
                 $mutual_count = $mutual_friends[$i]['mutual_friend_count'];
-                $redirect = 'http://www.facebook.com/dialog/friends?id=' . $friend_requests[$i]['uid_from'] . 
+                $redirect = 'https://www.facebook.com/dialog/friends?id=' . $friend_requests[$i]['uid_from'] . 
                             '&app_id=387173768076606&display=popup&redirect_uri=' . $redirect_url . '?friend=1';
                 
                 $confirm_button = $splash_html->Button(1, array('type' => 'button',
@@ -1155,7 +1155,7 @@
                         {
 
                             $author_name = ($this->Get_User_By_Id($recipient_id)) ?: 
-                            json_decode(file_get_contents('http://graph.facebook.com/' . $recipient_id .'?fields=name'))->name;
+                            json_decode(file_get_contents('https://graph.facebook.com/' . $recipient_id .'?fields=name'))->name;
                             
                             $image = $splash_html->Image(1, array('class' => 'profile_picture',
                                                                   'title' => $author_name,
@@ -1220,7 +1220,7 @@
                         {
                             
                             $author_name = ($this->Get_User_By_Id($recipient_id)) ?:
-                                    json_decode(file_get_contents('http://graph.facebook.com/' . $recipient_id .'?fields=name'))->name;
+                                    json_decode(file_get_contents('https://graph.facebook.com/' . $recipient_id .'?fields=name'))->name;
                             
                             $link = $splash_html->Link(1, $author_name, array('class' => 'profile_link',
                                                                               'href' => '#'));
@@ -1245,7 +1245,7 @@
                         {
 
                             $author_name = ($this->Get_User_By_Id($fql_inbox[$i]['recent_authors'][$j])) ?:
-                                    json_decode(file_get_contents('http://graph.facebook.com/' . $fql_inbox[$i]['recent_authors'][$j] .'?fields=name'))->name;
+                                    json_decode(file_get_contents('https://graph.facebook.com/' . $fql_inbox[$i]['recent_authors'][$j] .'?fields=name'))->name;
 
                             if (($fql_inbox[$i]['recent_authors'][$j] != $user) || ($counts === 0))
                             {
@@ -1357,7 +1357,7 @@
                 {
 
                     $author_name = ($this->Get_User_By_Id($author_id)) ?:
-                            json_decode(file_get_contents('http://graph.facebook.com/' . $author_id .'?fields=name'))->name;
+                            json_decode(file_get_contents('https://graph.facebook.com/' . $author_id .'?fields=name'))->name;
                     
                     $link = $splash_html->Link(1, $author_name, array('class' => 'profile_link',
                                                                       'href' => '#'));
@@ -1380,7 +1380,7 @@
             {
                 
                 $author_name = ($this->Get_User_By_Id($fql_message[$i]['author_id'])) ?:
-                        json_decode(file_get_contents('http://graph.facebook.com/' . $fql_message[$i]['author_id'] .'?fields=name'))->name;
+                        json_decode(file_get_contents('https://graph.facebook.com/' . $fql_message[$i]['author_id'] .'?fields=name'))->name;
                 
                 $profile_picture = $splash_html->Image(1, array('class' => 'profile_picture',
                                                                 'alt' => 'author',
@@ -1502,7 +1502,7 @@
                         }
 
                         $author_of_post = ($this->Get_User_By_Id($notification[0]['actor_id'])) ?:
-                              json_decode(file_get_contents('http://graph.facebook.com/' . $notification[0]['actor_id'] .'?fields=name'))->name;
+                              json_decode(file_get_contents('https://graph.facebook.com/' . $notification[0]['actor_id'] .'?fields=name'))->name;
 
                         $post_id = $notification[0]['post_id'];
 
@@ -1895,7 +1895,7 @@
                     $event = $this->Api('/' . $object[0]['object_id']);
                     
                     $invited_you = ($this->Get_User_By_Id($object[0]['sender_id'])) ?:
-                              json_decode(file_get_contents('http://graph.facebook.com/' . $object[0]['sender_id'] .'?fields=name'))->name;
+                              json_decode(file_get_contents('https://graph.facebook.com/' . $object[0]['sender_id'] .'?fields=name'))->name;
                     
                     $name_of_event = $splash_html->Div(1, $event['name'], array('class' => 'name_of_event'));
                     

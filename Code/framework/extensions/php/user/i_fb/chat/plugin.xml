@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e107Plugin name="FB Chat" lan="LAN_PLUGIN__FB_CHAT_NAME" version="1.0" date="2013-11-21" compatibility="2.0" installRequired="true" >
-    <author name="lonalore" url="http://lonalore.hu" />
+    <author name="lonalore" url="https://lonalore.hu" />
     <summary lan="LAN_PLUGIN__FB_CHAT_SUMM">Facebook styled chat</summary>
     <description lan="LAN_PLUGIN__FB_CHAT_DESC">Facebook styled chat...</description>
     <keywords>

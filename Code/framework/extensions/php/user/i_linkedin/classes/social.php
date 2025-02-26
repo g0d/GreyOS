@@ -21,7 +21,7 @@
 
     /**
      * Class SOCIAL
-     * Provides Social API functionality (see http://developer.linkedin.com/documents/share-and-social-stream)
+     * Provides Social API functionality (see https://developer.linkedin.com/documents/share-and-social-stream)
      */
     class SOCIAL extends BASE
     {

@@ -21,7 +21,7 @@
 
     /**
      * Class JOBS
-     * Provides Jobs API functionality (see http://developer.linkedin.com/documents/jobs)
+     * Provides Jobs API functionality (see https://developer.linkedin.com/documents/jobs)
      */
     class JOBS extends BASE
     {
@@ -43,7 +43,7 @@
 
         /**
          * Search for jobs
-         * @param array $params Parameters to filter by (see http://developer.linkedin.com/documents/job-search-api)
+         * @param array $params Parameters to filter by (see https://developer.linkedin.com/documents/job-search-api)
          * @return SimpleXMLElement Job search results
          */
         public function Search_Jobs(array $params = [])

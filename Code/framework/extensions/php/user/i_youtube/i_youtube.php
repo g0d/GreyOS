@@ -268,7 +268,7 @@
         public function Create_New_Channel($name)
         {
 
-            $params = '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+            $params = '<entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <yt:username>' . $name . '</yt:username>
                        </entry>';
 
@@ -292,9 +292,9 @@
             );
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom"
-                       xmlns:yt="http://gdata.youtube.com/schemas/2007"
-                       xmlns:gd="http://schemas.google.com/g/2005">
+                       <entry xmlns="https://www.w3.org/2005/Atom"
+                       xmlns:yt="https://gdata.youtube.com/schemas/2007"
+                       xmlns:gd="https://schemas.google.com/g/2005">
                             <yt:option name="channel.global.title.string">' . $title . '</yt:option>
                             <yt:option name="channel.global.title.description">' . $about . '</yt:option>
                             <yt:option name="channel.global.keywords.string">' . $tags . '</yt:option>
@@ -325,9 +325,9 @@
             {
 
                 $params = '<?xml version="1.0" encoding="UTF-8"?>
-                           <entry xmlns="http://www.w3.org/2005/Atom"
-                           xmlns:gd="http://schemas.google.com/g/2005"
-                           xmlns:yt="http://gdata.youtube.com/schemas/2007"
+                           <entry xmlns="https://www.w3.org/2005/Atom"
+                           xmlns:gd="https://schemas.google.com/g/2005"
+                           xmlns:yt="https://gdata.youtube.com/schemas/2007"
                            gd:fields="yt:option[@name="channel.background.image.url" or
                            @name="channel.banner.image_height.int"]">
                                 <yt:option name="channel.background.image.url">' . $background . '</yt:option>
@@ -592,7 +592,7 @@
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom">
+                       <entry xmlns="https://www.w3.org/2005/Atom">
                        </entry>';
 
             $url = self::URI_BASE . $this->Feed['watch_history'] . '/actions/clear';
@@ -641,8 +641,8 @@
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
-                            <category scheme="http://gdata.youtube.com/schemas/2007/subscriptiontypes.cat" term="user"/>
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
+                            <category scheme="https://gdata.youtube.com/schemas/2007/subscriptiontypes.cat" term="user"/>
                             <yt:username>' . $user . '</yt:username>
                        </entry>';
 
@@ -658,8 +658,8 @@
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
-                            <category scheme="http://gdata.youtube.com/schemas/2007/subscriptiontypes.cat" term="channel"/>
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
+                            <category scheme="https://gdata.youtube.com/schemas/2007/subscriptiontypes.cat" term="channel"/>
                             <yt:username>' . $channel . '</yt:username>
                        </entry>';
 
@@ -712,7 +712,7 @@
         public function Playlist_Thumbnail($playlist)
         {
 
-            $url = 'http://www.youtube.com/view_play_list?p=' . $playlist;
+            $url = 'https://www.youtube.com/view_play_list?p=' . $playlist;
 
             $response = $this->Api_Call($url);
             
@@ -784,7 +784,7 @@
             $url = self::URI_BASE . $this->Feed['playlists'];
             
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <title type="text">' . $title . '</title>
                             <summary>' . $description . '</summary>
                        </entry>';
@@ -813,7 +813,7 @@
             $url = self::URI_BASE . $this->Feed['public_playlists'] . $playlistId;
             
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <id>' . $video_id . '</id>
                        </entry>';
             
@@ -839,7 +839,7 @@
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <yt:position>' . $number . '</yt:position>
                        </entry>';
 
@@ -871,7 +871,7 @@
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom">
+                       <entry xmlns="https://www.w3.org/2005/Atom">
                             <id>' . $video_id . '</id>
                        </entry>';
 
@@ -912,7 +912,7 @@
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <content>' . $comment . '</content>
                        </entry>';
 
@@ -928,7 +928,7 @@
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <id>' . $video_id . '</id>
                             <summary>' . $message .'</summary>
                        </entry>';
@@ -966,13 +966,13 @@
             $f_data = file_get_contents($file);
             
             $xml_data = '<?xml version="1.0"?>
-                         <entry xmlns="http://www.w3.org/2005/Atom"
-                         xmlns:media="http://search.yahoo.com/mrss/"
-                         xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                         <entry xmlns="https://www.w3.org/2005/Atom"
+                         xmlns:media="https://search.yahoo.com/mrss/"
+                         xmlns:yt="https://gdata.youtube.com/schemas/2007">
                          <media:group>
                          <media:title type="plain">' . $title . '</media:title>
                          <media:description type="plain">' . $description . '</media:description>
-                         <media:category scheme="http://gdata.youtube.com/schemas/2007/categories.cat">' . $category . '</media:category>
+                         <media:category scheme="https://gdata.youtube.com/schemas/2007/categories.cat">' . $category . '</media:category>
                          <media:keywords>' . $tag . '</media:keywords>
                          </media:group>
                          </entry>';
@@ -1022,14 +1022,14 @@ Content-Transfer-Encoding: binary
 
                 $xml = $validate['xml'];
 
-                $web_site = 'http://www.youtube.com/';
+                $web_site = 'https://www.youtube.com/';
                 $criteria = 'uploads';
                 $media_info = array();
                 
-                $gd_media = $xml->children('http://schemas.google.com/g/2005');
-                $media = $xml->children('http://search.yahoo.com/mrss/');
-                $yt_media = $xml->children('http://gdata.youtube.com/schemas/2007');
-                $georss_media = $xml->children('http://www.georss.org/georss');
+                $gd_media = $xml->children('https://schemas.google.com/g/2005');
+                $media = $xml->children('https://search.yahoo.com/mrss/');
+                $yt_media = $xml->children('https://gdata.youtube.com/schemas/2007');
+                $georss_media = $xml->children('https://www.georss.org/georss');
 
                 if ($media->group->title)
                     $media_info['title'] = sprintf('%s', $media->group->title[0]);
@@ -1115,7 +1115,7 @@ Content-Transfer-Encoding: binary
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <yt:rating value="like"/>
                        </entry>';
 
@@ -1131,7 +1131,7 @@ Content-Transfer-Encoding: binary
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:yt="https://gdata.youtube.com/schemas/2007">
                             <yt:rating value="dislike"/>
                        </entry>';
 
@@ -1147,7 +1147,7 @@ Content-Transfer-Encoding: binary
         {
 
             $params = '<?xml version="1.0" encoding="UTF-8"?>
-                       <entry xmlns="http://www.w3.org/2005/Atom" xmlns:gd="http://schemas.google.com/g/2005">
+                       <entry xmlns="https://www.w3.org/2005/Atom" xmlns:gd="https://schemas.google.com/g/2005">
                             <gd:rating value="' . $value . '" min="1" max="5"/>
                        </entry>';
 
@@ -1267,7 +1267,7 @@ Content-Transfer-Encoding: binary
         public function Simple_Youtube_Parse($url)
         {
             
-            $youtube = "http://www.youtube.com/oembed?url=". $url ."&format=json";
+            $youtube = "https://www.youtube.com/oembed?url=". $url ."&format=json";
             
             $curl = curl_init($youtube);
  

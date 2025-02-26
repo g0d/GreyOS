@@ -21,7 +21,7 @@
 
     /**
      * Class COMPANIES
-     * Provides Companies API functionality (see http://developer.linkedin.com/documents/companies)
+     * Provides Companies API functionality (see https://developer.linkedin.com/documents/companies)
      */
     class COMPANIES extends BASE
     {
@@ -34,7 +34,7 @@
 
         /**
          * Search for companies
-         * @param array $params Parameters to filter by (see http://developer.linkedin.com/documents/company-search)
+         * @param array $params Parameters to filter by (see https://developer.linkedin.com/documents/company-search)
          * @return SimpleXMLElement Company search results
          */
         public function Search_Companies(array $params = [])
