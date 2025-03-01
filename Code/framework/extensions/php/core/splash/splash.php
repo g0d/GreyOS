@@ -7,7 +7,7 @@
         Dependencies: micro-MVC framework, Vulcan, BULL and JAP.
 
         Coded by George Delaportas (G0D)
-        Copyright (C) 2013
+        Copyright (C) 2013 - 2025
         Open Software License (OSL 3.0)
     */
 

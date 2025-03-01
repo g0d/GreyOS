@@ -6,7 +6,7 @@
     Dependencies: Vulcan and BULL.
 
     Coded by George Delaportas (G0D)
-    Copyright (C) 2013 - 2023
+    Copyright (C) 2013 - 2025 - 2023
     Open Software License (OSL 3.0)
 */
 

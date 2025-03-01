@@ -6,7 +6,7 @@
         Description: This file contains the "HELPERS" class.
 
         Coded by George Delaportas (G0D)
-        Copyright (C) 2013
+        Copyright (C) 2013 - 2025
         Open Software License (OSL 3.0)
     */
 
@@ -143,74 +143,39 @@
 
         public static function Unroll_Select_Structure($structure_map)
         {
-            $is_label = false;
-            $is_content = false;
-            $is_options = false;
-            $is_selected = false;
-            $row_res = null;
-            $result = null;
+            $row_res = '';
+            $result = '';
 
-            foreach ($structure_map as $key => $value)
+            foreach ($structure_map as $key => $record)
             {
-                if (is_array($value))
-                    $row_res = self::Unroll_Select_Structure($value);
+                if (is_array($record))
+                    $row_res = self::Unroll_Select_Structure($record);
 
-                if ($key === 'value')
-                {
-                    if (empty($value))
-                        return false;
-
-                    $result = 'value="' . $value . '"';
-                }
-                else if ($key === 'selected' && self::Is_Logic($value) && $value === true)
-                    $is_selected = true;
-                else if ($key === 'content' && $is_label === false)
-                {
-                    if (empty($value))
-                        return false;
-
-                    $is_content = true;
-
-                    if ($is_selected === true)
-                        $result .= 'selected>' . $value;
-                    else
-                        $result .= '>' . $value;
-                }
-                else if ($key === 'label' && $is_content === false)
-                {
-                    if (empty($value))
-                        return false;
-
-                    $is_label = true;
-
-                    if ($is_selected === true)
-                        $result = 'label="' . $value . '" selected>';
-                    else
-                        $result = 'label="' . $value . '">';
-                }
-                else if ($key === 'optlabel')
-                {
-                    if (empty($value))
-                        return false;
-
-                    $tmp = $result;
-                    $result = 'label="' . $value . '">' . $tmp;
-                }
-                else if ($key === 'options')
-                {
-                    $is_options = true;
-
-                    $result = $row_res;
-                }
-                else if (strstr($key, 'option'))
-                {
-                    if (strstr($row_res, 'label'))
-                        $result .= '<option ' . $row_res;
-                    else
-                        $result .= '<option ' . $row_res . '</option>';
-                }
-                else if (strstr($key, 'optgroup'))
+                if ($key === 'optgroup')
                     $result .= '<optgroup ' . $row_res;
+                else if ($key === 'optlabel' && !empty($record))
+                    $result .= 'label="' . $record . '">' . $row_res;
+                else if ($key === 'options' && is_array($record))
+                {
+                    $label = '';
+                    $selected = '';
+
+                    foreach ($record as $option)
+                    {
+                        if (!empty($option['label']))
+                            $label = 'label="' . $option['label'] . '" ';
+
+                        $value = 'value="' . $option['value'] . '"';
+
+                        if (!empty($option['selected']) && self::Is_Logic($option['selected']) && $option['selected'] === true)
+                            $selected = ' selected';
+
+                        $result .= '<option ' . $label . $value . $selected . '>' . $option['content'] . '</option>';
+
+                        $label = '';
+                        $selected = '';
+                    }
+                }
             }
 
             return $result;
