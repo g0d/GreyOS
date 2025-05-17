@@ -5,7 +5,7 @@
     Description: This file contains the BULL extension.
     Dependencies: Vulcan and JAP.
 
-    Coded by George Delaportas (G0D) / Contributions by Catalin Maftei
+    Coded by George Delaportas (G0D/ViR4X) / Contributions by Catalin Maftei
     Copyright (C) 2013 - 2023
     Open Software License (OSL 3.0)
 */

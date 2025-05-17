@@ -4,7 +4,7 @@
     File name: i_ampedstudio.js
     Description: This file contains the iAmpedStudio - Online audio creation application.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2022
     Open Software License (OSL 3.0)
 */

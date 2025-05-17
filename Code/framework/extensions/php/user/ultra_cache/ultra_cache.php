@@ -5,7 +5,7 @@
         File name: ultra_cache.php (Version: 3.0)
         Description: This file contains the Ultra Cache extension.
         
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
         Copyright (C) 2017
         Open Software License (OSL 3.0)
     */

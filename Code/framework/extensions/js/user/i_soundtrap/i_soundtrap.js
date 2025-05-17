@@ -4,8 +4,8 @@
     File name: i_soundtrap.js
     Description: This file contains the iSoundTrap - Online audio creation application.
 
-    Coded by George Delaportas (G0D)
-    Copyright © 2022 - 2024
+    Coded by George Delaportas (G0D/ViR4X)
+    Copyright © 2022 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -130,7 +130,7 @@ function i_soundtrap()
         i_soundtrap_bee.gui.position.left(120);
         i_soundtrap_bee.gui.position.top(20);
         i_soundtrap_bee.gui.size.width(900);
-        i_soundtrap_bee.gui.size.height(600);
+        i_soundtrap_bee.gui.size.height(640);
         i_soundtrap_bee.gui.size.min.width(900);
         i_soundtrap_bee.gui.size.min.height(600);
         i_soundtrap_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

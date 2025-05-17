@@ -5,7 +5,7 @@
     Description: This file contains the Parallel tasks framework extension.
     Dependencies: Vulcan, Pythia, JAP and Task.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2015 - 2024
     Open Software License (OSL 3.0)
 */

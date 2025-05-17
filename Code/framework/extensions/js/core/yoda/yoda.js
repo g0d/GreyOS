@@ -5,7 +5,7 @@
     Description: This file contains the Yoda extension.
     Dependencies: Vulcan.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2023 - 2025
     Open Software License (OSL 3.0)
 */

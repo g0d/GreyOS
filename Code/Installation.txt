@@ -12,7 +12,7 @@
 
 
 Best,
-George Delaportas (G0D)
+George Delaportas (G0D/ViR4X)
 Copyright (C) 2015 - 2023 micro-MVC
 Open Software License (OSL 3.0)
 Supported by PROBOTEK (https://probotek.eu/)

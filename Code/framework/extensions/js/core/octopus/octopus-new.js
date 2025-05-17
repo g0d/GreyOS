@@ -4,7 +4,7 @@
     File name: octopus-new.js
     Description: This file contains the Octopus - Devices management service module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2021 - 2023
     Open Software License (OSL 3.0)
 */

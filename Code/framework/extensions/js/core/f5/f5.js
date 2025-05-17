@@ -4,7 +4,7 @@
     File name: f5.js
     Description: This file contains the F5 - Screen refresh handler utility.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */

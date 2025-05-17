@@ -4,7 +4,7 @@
     File name: meta_executor.js
     Description: This file contains the Meta-Executor - Meta-Script program execution module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */

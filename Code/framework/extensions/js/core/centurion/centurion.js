@@ -4,7 +4,7 @@
     File name: centurion.js (Version: 1.6)
     Description: This file contains the Centurion extension.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2014
     Open Software License (OSL 3.0)
 */

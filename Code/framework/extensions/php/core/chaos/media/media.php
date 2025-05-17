@@ -9,7 +9,7 @@
         File name: media.php
         Description: This file contains the CHAOS - GreyOS Kernel :: Media Module.
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
 
         GreyOS Inc.
         Copyright (C) 2013

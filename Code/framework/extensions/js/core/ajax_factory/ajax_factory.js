@@ -5,7 +5,7 @@
     Description: This file contains the AJAX Factory extension.
     Dependencies: Vulcan and BULL.
 
-    Coded by George Delaportas (G0D) 
+    Coded by George Delaportas (G0D/ViR4X) 
     Copyright (C) 2019 - 2024
     Open Software License (OSL 3.0)
 */

@@ -4,7 +4,7 @@
     File name: imc_proxy.js
     Description: This file contains the IMC Proxy - Inter-Model Communication proxy system module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2024
     Open Software License (OSL 3.0)
 */

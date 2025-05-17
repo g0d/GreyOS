@@ -4,7 +4,7 @@
     File name: i_ganttio.js
     Description: This file contains the iGanttIO - Online Gantt charts creator application.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2022
     Open Software License (OSL 3.0)
 */

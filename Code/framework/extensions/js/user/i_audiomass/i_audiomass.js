@@ -4,8 +4,8 @@
     File name: i_audiomass.js
     Description: This file contains the iAudioMass - Online audio editor application.
 
-    Coded by George Delaportas (G0D)
-    Copyright © 2022
+    Coded by George Delaportas (G0D/ViR4X)
+    Copyright © 2022 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -129,8 +129,8 @@ function i_audiomass()
         i_audiomass_bee.settings.actions.can_use_menu(false);
         i_audiomass_bee.gui.position.left(20);
         i_audiomass_bee.gui.position.top(20);
-        i_audiomass_bee.gui.size.width(1100);
-        i_audiomass_bee.gui.size.height(600);
+        i_audiomass_bee.gui.size.width(1070);
+        i_audiomass_bee.gui.size.height(680);
         i_audiomass_bee.gui.size.min.width(900);
         i_audiomass_bee.gui.size.min.height(600);
         i_audiomass_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

@@ -4,7 +4,7 @@
     File name: bat.js
     Description: This file contains the Bat - System services development module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */

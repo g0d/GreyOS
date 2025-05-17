@@ -4,7 +4,7 @@
     File name: i_webgl_preview.js
     Description: This file contains the iWebGL Preview (Featuring a BMW).
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2021
     Open Software License (OSL 3.0)
 */

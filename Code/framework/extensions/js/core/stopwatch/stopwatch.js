@@ -5,7 +5,7 @@
     Description: This file contains the Stopwatch extension.
     Dependencies: Vulcan.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2017 - 2022
     Open Software License (OSL 3.0)
 */

@@ -4,7 +4,7 @@
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
@@ -67,25 +67,11 @@ function cloud_edit()
 
         function load_theme()
         {
-            var data = 'gate=boot_config';
+            var __boot_config = boot_config_loader();
 
-            ajax_factory('post', data, 
-            function(response)
-            {
-                boot_config = JSON.parse(response);
+            config.theme = __boot_config['app_settings']['cloud_edit']['theme'][__boot_config['session']['theme']]['name'];
 
-                config.theme = boot_config['app_settings']['cloud_edit']['theme'][boot_config['session']['theme']]['name'];
-
-                config.ce.editor.setTheme('ace/theme/' + config.theme);
-            },
-            function()
-            {
-                // Nothing...
-            },
-            function()
-            {
-                // Nothing...
-            });
+            config.ce.editor.setTheme('ace/theme/' + config.theme);
         }
 
         function check_system_run_limits()

@@ -4,7 +4,7 @@
     File name: trinity.js
     Description: This file contains the Trinity - Process Management UI (front-end) application.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2021 - 2024
     Open Software License (OSL 3.0)
 */

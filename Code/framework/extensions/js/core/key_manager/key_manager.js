@@ -4,7 +4,7 @@
     File name: key_manager.js (Version: 0.6)
     Description: This file contains the Key Manager extension.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2016 - 2021
     Open Software License (OSL 3.0)
 */

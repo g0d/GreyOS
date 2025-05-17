@@ -4,7 +4,7 @@
     File name: meta_os.js
     Description: This file contains the Meta-OS - Interface module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */

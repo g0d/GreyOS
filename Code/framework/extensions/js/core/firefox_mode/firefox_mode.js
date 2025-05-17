@@ -4,7 +4,7 @@
     File name: firefox_mode.js
     Description: This file contains the Firefox Mode utility.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2024
     Open Software License (OSL 3.0)
 */

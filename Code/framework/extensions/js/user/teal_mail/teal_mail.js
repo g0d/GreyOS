@@ -4,7 +4,7 @@
     File name: teal_mail.js
     Description: This file contains the Teal Mail application.
 
-    Coded by Mirko Lučić (mands) and George Delaportas (G0D)
+    Coded by Mirko Lučić (mands) and George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */

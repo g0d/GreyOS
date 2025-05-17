@@ -5,7 +5,7 @@
         File name: meta_info.php
         Description: This file contains the Meta-Info Bing search results gate (AJAX).
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
         Copyright © 2024
         Open Software License (OSL 3.0)
     */

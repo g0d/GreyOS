@@ -4,7 +4,7 @@
     File name: agora.ms
     Description: This file contains the AGORA - Marketplace meta-application.
 
-    Coded in Meta-Script by George Delaportas (G0D)
+    Coded in Meta-Script by George Delaportas (G0D/ViR4X)
     Copyright © 2024
     Open Software License (OSL 3.0)
 */

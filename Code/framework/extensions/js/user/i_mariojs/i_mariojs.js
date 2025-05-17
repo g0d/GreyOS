@@ -4,7 +4,7 @@
     File name: i_mariojs.js
     Description: This file contains the iMarioJS - Online game.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2023
     Open Software License (OSL 3.0)
 */

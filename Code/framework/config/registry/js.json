@@ -13,6 +13,7 @@
     "stopwatch": "core",
     "vulcan": "core",
     "meta_os": "core",
+    "boot_config_loader": "core",
     "taurus": "core",
     "aether": "core",
     "armadillo": "core",

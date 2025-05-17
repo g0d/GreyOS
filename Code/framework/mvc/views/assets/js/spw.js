@@ -4,7 +4,7 @@
     File name: spw.js
     Description: This file contains the control script for the spw view.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2024
     Open Software License (OSL 3.0)
 */

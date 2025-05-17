@@ -5,7 +5,7 @@
         File name: woody.php (Version: 1.0)
         Description: This file contains the Woody extension.
 
-		Coded by George Delaportas (G0D)
+		Coded by George Delaportas (G0D/ViR4X)
 		Copyright (C) 2019
 		Open Software License (OSL 3.0)
     */

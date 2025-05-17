@@ -4,7 +4,7 @@
     File name: dock.js
     Description: This file contains the Dock module.
 
-    Coded by John Inglessis (negle) and George Delaportas (G0D)
+    Coded by John Inglessis (negle) and George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */

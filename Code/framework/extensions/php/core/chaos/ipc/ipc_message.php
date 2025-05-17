@@ -9,7 +9,7 @@
         File name: ipc_message.php
         Description: This file contains the CHAOS - GreyOS Kernel :: IPC Message Module.
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
 
         GreyOS Inc.
         Copyright (C) 2013

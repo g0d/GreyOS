@@ -5,7 +5,7 @@
         File name: js_compactor.php (Version: 1.3)
         Description: This file contains the JS Compactor - Deployment utility that optimizes (minimizes and compacts) all JS extensions into one file.
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
         Copyright (C) 2023
         Open Software License (OSL 3.0)
     */

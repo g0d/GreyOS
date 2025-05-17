@@ -5,7 +5,7 @@
     File name: i_linkedin.js (Version: 1.0)
     Description: This file contains the LinkedIn application.
 
-    Coded by Arron Bailiss (abailiss) and George Delaportas (G0D)
+    Coded by Arron Bailiss (abailiss) and George Delaportas (G0D/ViR4X)
 
     GreyOS Inc.
     Copyright © 2014

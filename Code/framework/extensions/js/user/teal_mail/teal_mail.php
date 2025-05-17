@@ -5,7 +5,7 @@
         File name: teal_mail.php
         Description: This file contains the Teal Mail extension.
 
-		Coded by George Delaportas (G0D)
+		Coded by George Delaportas (G0D/ViR4X)
 		Copyright © 2013 - 2021
 		Open Software License (OSL 3.0)
     */

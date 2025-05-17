@@ -5,7 +5,7 @@
     Description: This file contains the Task framework extension.
     Dependencies: Vulcan and Pythia.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2021
     Open Software License (OSL 3.0)
 */

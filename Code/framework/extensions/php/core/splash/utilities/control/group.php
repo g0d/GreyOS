@@ -5,7 +5,7 @@
         File name: group.php (Version: 4.6)
         Description: This file contains the "GROUP" abstract class.
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
         Copyright (C) 2013 - 2025
         Open Software License (OSL 3.0)
     */

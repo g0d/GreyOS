@@ -4,7 +4,7 @@
     File name: scenario.js
     Description: This file contains the Scenario - Scenario-based loader & manager module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)
 */

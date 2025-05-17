@@ -5,7 +5,7 @@
     Description: This file contains the Snail extension.
     Dependencies: Vulcan and Centurion.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2014 - 2021
     Open Software License (OSL 3.0)
 */

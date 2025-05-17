@@ -5,8 +5,8 @@
     Description: This file contains the spl@sh JS utility.
     Dependencies: Vulcan and BULL.
 
-    Coded by George Delaportas (G0D)
-    Copyright (C) 2013 - 2025 - 2023
+    Coded by George Delaportas (G0D/ViR4X)
+    Copyright (C) 2013 - 2023
     Open Software License (OSL 3.0)
 */
 

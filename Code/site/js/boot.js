@@ -1,11 +1,11 @@
 /*
-    GreyOS - Bootstrap facility (Version: 4.5)
+    GreyOS - Bootstrap facility (Version: 4.6)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
 
-    Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2024
+    Coded by George Delaportas (G0D/ViR4X)
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -555,35 +555,24 @@ function boot_script()
     // Load boot config
     function load_boot_config()
     {
-        var data = 'gate=boot_config';
+        boot_config = boot_config_loader();
 
-        ajax_factory('post', data, 
-        function(response)
-        {
-            boot_config = JSON.parse(response);
+        if (!boot_config)
+            return;
 
-            // Set global settings
-            os_settings.set('boot_mode', boot_config['general']['boot_mode']);           // Boot modes: Normal (0) / Development (1)
-            os_settings.set('name', boot_config['general']['os_name']);                  // Meta-OS name
-            os_settings.set('version', boot_config['general']['os_version']);            // Meta-OS version
-            os_settings.set('theme', boot_config['session']['theme']);                   // Session theme
-            os_settings.set('max_apps', boot_config['session']['max_apps']);             // Maximum number of allowed active apps per session
-            os_settings.set('max_services', boot_config['session']['max_services']);     // Maximum number of allowed active services per session
-            os_settings.set('apps_per_view', boot_config['session']['apps_per_view']);   // Apps per stack bar view (This is buggy / Auto resize usually fails)
-            os_settings.set('stack_bars', boot_config['session']['stack_bars']);         // Number of stack bars
+        // Set global settings
+        os_settings.set('boot_mode', boot_config['general']['boot_mode']);           // Boot modes: Normal (0) / Development (1)
+        os_settings.set('name', boot_config['general']['os_name']);                  // Meta-OS name
+        os_settings.set('version', boot_config['general']['os_version']);            // Meta-OS version
+        os_settings.set('theme', boot_config['session']['theme']);                   // Session theme
+        os_settings.set('max_apps', boot_config['session']['max_apps']);             // Maximum number of allowed active apps per session
+        os_settings.set('max_services', boot_config['session']['max_services']);     // Maximum number of allowed active services per session
+        os_settings.set('apps_per_view', boot_config['session']['apps_per_view']);   // Apps per stack bar view (This is buggy / Auto resize usually fails)
+        os_settings.set('stack_bars', boot_config['session']['stack_bars']);         // Number of stack bars
 
-            //os_loader.backtrace(true);
-            os_loader.use([init_script, init_script_dev]);
-            os_loader.execute([os_settings.get('boot_mode')]);
-        },
-        function()
-        {
-            // TODO: Inform user of errors!
-        },
-        function()
-        {
-            // Nothing...
-        });
+        //os_loader.backtrace(true);
+        os_loader.use([init_script, init_script_dev]);
+        os_loader.execute([os_settings.get('boot_mode')]);
     }
 
     function check_system_compatibility()

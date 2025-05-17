@@ -4,7 +4,7 @@
     File name: scrollbar.js
     Description: This file contains the Scrollbar development module.
 
-    Coded by Arron Bailiss (abailiss), George Delaportas (G0D) and John Inglessis (negle).
+    Coded by Arron Bailiss (abailiss), George Delaportas (G0D/ViR4X) and John Inglessis (negle).
     Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */

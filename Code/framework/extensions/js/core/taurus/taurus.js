@@ -5,7 +5,7 @@
     Description: This file contains the Taurus extension.
     Dependencies: Vulcan, JAP and BULL.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2022 - 2025
     Open Software License (OSL 3.0)
 */

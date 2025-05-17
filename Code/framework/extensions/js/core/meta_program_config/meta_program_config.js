@@ -4,7 +4,7 @@
     File name: meta_program_config.js
     Description: This file contains the Meta-Program Config validator development module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2022 - 2024
     Open Software License (OSL 3.0)
 */

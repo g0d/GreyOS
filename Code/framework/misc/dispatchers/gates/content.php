@@ -5,7 +5,7 @@
 		File name: content.php
 		Description: This file contains the content gate.
 
-		Coded by George Delaportas (G0D)
+		Coded by George Delaportas (G0D/ViR4X)
 		Copyright (C) 2017
 		Open Software License (OSL 3.0)
 	*/

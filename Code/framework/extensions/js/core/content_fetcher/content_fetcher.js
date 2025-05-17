@@ -5,7 +5,7 @@
     Description: This file contains the Content Fetcher extension.
     Dependencies: Vulcan and BULL.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2016 - 2024
     Open Software License (OSL 3.0)
 */

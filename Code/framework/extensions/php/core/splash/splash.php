@@ -6,7 +6,7 @@
         Description: This file contains the "SPLASH" wrapper class.
         Dependencies: micro-MVC framework, Vulcan, BULL and JAP.
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
         Copyright (C) 2013 - 2025
         Open Software License (OSL 3.0)
     */

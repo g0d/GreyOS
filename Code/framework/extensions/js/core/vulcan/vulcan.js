@@ -4,7 +4,7 @@
     File name: vulcan.js (Version: 2.7)
     Description: This file contains the Vulcan library.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2014 - 2025
     Open Software License (OSL 3.0)
 */

@@ -5,7 +5,7 @@
 		File name: portal.php (Version: 3.1)
 		Description: This file contains the Portal extension.
 
-		Coded by George Delaportas (G0D)
+		Coded by George Delaportas (G0D/ViR4X)
 		Copyright (C) 2016 - 2023
 		Open Software License (OSL 3.0)
 	*/

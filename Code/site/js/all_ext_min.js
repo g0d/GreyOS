@@ -1830,6 +1830,18 @@ function meta_os()
  this.system = new system();
  this.utilities = new utilities();
 }
+function boot_config_loader()
+{
+ var ajax = new bull(),
+ ajax_config = {
+ "type" : "request",
+ "url" : "/",
+ "data" : "gate=boot_config",
+ "method" : "post",
+ "ajax_mode" : "synchronous"
+ };
+ return JSON.parse(ajax.run(ajax_config));
+}
 function taurus()
 {
  function init_config()
@@ -10041,7 +10053,9 @@ function user_profile()
  };
  this.details = function()
  {
- var __data = 'gate=auth&mode=details';
+ var __data = 'gate=auth&mode=details',
+ __boot_config = null,
+ __is_strict = null;
  ajax_factory('post', __data, function(result)
  {
  var __auth_details = JSON.parse(result);
@@ -10051,25 +10065,17 @@ function user_profile()
  user_profile_data.wallpaper = __auth_details.ui.wallpaper;
  utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
  utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
- data = 'gate=boot_config';
- ajax_factory('post', data, function(response)
- {
- boot_config = JSON.parse(response);
- var is_strict = boot_config['app_settings']['cloud_edit']['theme'][boot_config['session']['theme']]['strict'];
- if (!is_strict)
+ __boot_config = boot_config_loader();
+ if (!__boot_config)
+ return;
+ __is_strict = __boot_config['app_settings']['cloud_edit']['theme'][__boot_config['session']['theme']]['strict'];
+ if (!__is_strict)
  {
  if (user_profile_data.wallpaper === '')
  document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
  else
  document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
  }
- },
- function()
- {
- },
- function()
- {
- });
  },
  function()
  {
@@ -19513,20 +19519,9 @@ function cloud_edit()
  var me = this;
  function load_theme()
  {
- var data = 'gate=boot_config';
- ajax_factory('post', data,
- function(response)
- {
- boot_config = JSON.parse(response);
- config.theme = boot_config['app_settings']['cloud_edit']['theme'][boot_config['session']['theme']]['name'];
+ var __boot_config = boot_config_loader();
+ config.theme = __boot_config['app_settings']['cloud_edit']['theme'][__boot_config['session']['theme']]['name'];
  config.ce.editor.setTheme('ace/theme/' + config.theme);
- },
- function()
- {
- },
- function()
- {
- });
  }
  function check_system_run_limits()
  {

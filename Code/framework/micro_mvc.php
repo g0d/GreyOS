@@ -5,7 +5,7 @@
         File name: micro_mvc.php
         Description: This file contains the micro-MVC framework.
         
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
         Copyright (C) 2015
         Open Software License (OSL 3.0)
     */

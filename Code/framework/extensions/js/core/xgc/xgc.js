@@ -4,7 +4,7 @@
     File name: xgc.js
     Description: This file contains the XGC - Extended Gaming Controller module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2023
     Open Software License (OSL 3.0)
 */

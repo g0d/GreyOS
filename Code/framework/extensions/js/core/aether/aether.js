@@ -5,7 +5,7 @@
     Description: This file contains the Aether extension.
     Dependencies: Vulcan, BULL, Pythia, JAP, Centurion, Stopwatch and Sensei.
 
-    Coded by George Delaportas (G0D) 
+    Coded by George Delaportas (G0D/ViR4X) 
     Copyright (C) 2014 - 2023
     Open Software License (OSL 3.0)
 */

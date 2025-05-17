@@ -6,7 +6,7 @@
         File name: chaos.php
         Description: This file contains the CHAOS - GreyOS Kernel.
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
 
         GreyOS Inc.
         Copyright (C) 2013

@@ -5,7 +5,7 @@
 		File name: hijack_protection.php
 		Description: This file contains the hijack protection gate (AJAX).
 
-		Coded by George Delaportas (G0D)
+		Coded by George Delaportas (G0D/ViR4X)
 		Copyright (C) 2019 - 2023
 		Open Software License (OSL 3.0)
 	*/

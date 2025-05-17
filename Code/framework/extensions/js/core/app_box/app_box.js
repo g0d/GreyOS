@@ -4,7 +4,7 @@
     File name: app_box.js
     Description: This file contains the App Box - Integrated applications container module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2023
     Open Software License (OSL 3.0)
 */

@@ -5,7 +5,7 @@
 		File name: spw.php
 		Description: This file contains the SPW gate.
 
-		Coded by George Delaportas (G0D)
+		Coded by George Delaportas (G0D/ViR4X)
 		Copyright (C) 2024
 		Open Software License (OSL 3.0)
 	*/

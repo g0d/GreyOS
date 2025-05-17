@@ -5,7 +5,7 @@
 		File name: splash_event.php
 		Description: This file contains the spl@sh-Event gate (AJAX).
 
-		Coded by George Delaportas (G0D)
+		Coded by George Delaportas (G0D/ViR4X)
 		Copyright (C) 2020
 		Open Software License (OSL 3.0)
 	*/

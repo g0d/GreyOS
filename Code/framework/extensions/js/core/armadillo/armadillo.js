@@ -5,7 +5,7 @@
 	Description: This file contains the Armadillo extension.
 	Dependencies: Vulcan, Pythia and Sensei.
 
-	Coded by George Delaportas (G0D)
+	Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2017 - 2024
     Open Software License (OSL 3.0)
 */

@@ -4,7 +4,7 @@
     File name: infinity.js
     Description: This file contains the Infinity - Progress indicator development module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2024
     Open Software License (OSL 3.0)
 */

@@ -5,7 +5,7 @@
     Description: This file contains the L.A.Va extension.
     Dependencies: Vulcan and Sensei.
 
-    Coded by George Delaportas (G0D) 
+    Coded by George Delaportas (G0D/ViR4X) 
     Copyright (C) 2016
     Open Software License (OSL 3.0)
 */

@@ -3,7 +3,7 @@
 # === micro-MVC - Awesome! ====
 # A folder structure that assists web development by separating code from design which
 # provides a concrete platform for front-end, back-end programmers and designers.
-# Coded by George Delaportas (G0D)
+# Coded by George Delaportas (G0D/ViR4X)
 # Copyright (C) 2020
 
 rm -rf Awesome!

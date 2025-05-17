@@ -4,7 +4,7 @@
     File name: user_profile.js
     Description: This file contains the User Profile module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
@@ -88,7 +88,9 @@ function user_profile()
 
         this.details = function()
         {
-            var __data = 'gate=auth&mode=details';
+            var __data = 'gate=auth&mode=details',
+                __boot_config = null,
+                __is_strict = null;
 
             ajax_factory('post', __data, function(result)
                                          {
@@ -102,30 +104,20 @@ function user_profile()
                                             utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
                                             utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
 
-                                            data = 'gate=boot_config';
+                                            __boot_config = boot_config_loader();
 
-                                            ajax_factory('post', data, function(response)
-                                            {
-                                                boot_config = JSON.parse(response);
+                                            if (!__boot_config)
+                                                return;
 
-                                                var is_strict = boot_config['app_settings']['cloud_edit']['theme'][boot_config['session']['theme']]['strict'];
+                                            __is_strict = __boot_config['app_settings']['cloud_edit']['theme'][__boot_config['session']['theme']]['strict'];
 
-                                                if (!is_strict)
-                                                {
-                                                    if (user_profile_data.wallpaper === '')
-                                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
-                                                    else
-                                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
-                                                }
-                                            },
-                                            function()
+                                            if (!__is_strict)
                                             {
-                                                // Nothing...
-                                            },
-                                            function()
-                                            {
-                                                // Nothing...
-                                            });
+                                                if (user_profile_data.wallpaper === '')
+                                                    document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
+                                                else
+                                                    document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
+                                            }
                                          },
                                          function()
                                          {

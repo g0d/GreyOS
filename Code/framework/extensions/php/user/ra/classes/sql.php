@@ -5,7 +5,7 @@
         File name: sql.php (Version: 1.2)
         Description: This file contains the SQL - RA class.
 
-        Coded by George Delaportas (G0D)
+        Coded by George Delaportas (G0D/ViR4X)
         Copyright (C) 2020
         Open Software License (OSL 3.0)
     */

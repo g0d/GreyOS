@@ -4,7 +4,7 @@
     File name: task.js (Version: 1.2)
     Description: This file contains the Octopus - Task.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright (C) 2021
     Open Software License (OSL 3.0)
 */

@@ -4,7 +4,7 @@
     File name: sand_box.js
     Description: This file contains the Sand Box - Development sand box container & manager module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2013 - 2021
     Open Software License (OSL 3.0)
 */

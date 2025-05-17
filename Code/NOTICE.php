@@ -22,9 +22,9 @@
     * needs please refer to https://github.com/g0d/micro-MVC for more information.
     *
     *
-    *  @author George Delaportas (G0D) <g.delaportas@gmail.com>
+    *  @author George Delaportas (G0D/ViR4X) <g.delaportas@gmail.com>
     *  @copyright  2015 - 2023 micro-MVC
     *  @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-    *  International Registered Trademark & Property of George Delaportas (G0D)
+    *  International Registered Trademark & Property of George Delaportas (G0D/ViR4X)
     */
 ?>

@@ -4,7 +4,7 @@
     File name: xenon.js
     Description: This file contains the Xenon - System-wide information holder module.
 
-    Coded by George Delaportas (G0D)
+    Coded by George Delaportas (G0D/ViR4X)
     Copyright © 2022 - 2024
     Open Software License (OSL 3.0)
 */
