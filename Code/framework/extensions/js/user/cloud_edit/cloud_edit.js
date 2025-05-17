@@ -1,11 +1,11 @@
 /*
-    GreyOS - Cloud Edit (Version: 2.6)
+    GreyOS - Cloud Edit (Version: 2.7)
 
     File name: cloud_edit.js
     Description: This file contains the Cloud Edit - Code editor application.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2024
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -34,6 +34,7 @@ function cloud_edit()
 
         this.id = null;
         this.content = null;
+        this.theme = null;
         this.program = new program_model();
         this.ce = new ce_model();
     }
@@ -63,6 +64,29 @@ function cloud_edit()
     function utilities()
     {
         var me = this;
+
+        function load_theme()
+        {
+            var data = 'gate=boot_config';
+
+            ajax_factory('post', data, 
+            function(response)
+            {
+                boot_config = JSON.parse(response);
+
+                config.theme = boot_config['app_settings']['cloud_edit']['theme'][boot_config['session']['theme']]['name'];
+
+                config.ce.editor.setTheme('ace/theme/' + config.theme);
+            },
+            function()
+            {
+                // Nothing...
+            },
+            function()
+            {
+                // Nothing...
+            });
+        }
 
         function check_system_run_limits()
         {
@@ -391,7 +415,6 @@ function cloud_edit()
 
             ace.require('ace/ext/settings_menu').init(config.ce.editor);
 
-            config.ce.editor.setTheme('ace/theme/tomorrow_night');
             config.ce.editor.session.setMode('ace/mode/javascript');
             config.ce.editor.setOptions({ enableBasicAutocompletion: true,
                                           enableSnippets: true,
@@ -403,6 +426,8 @@ function cloud_edit()
             config.ce.editor.commands.addCommands([ { name: 'showSettingsMenu', bindKey: {win: 'Ctrl-q', mac: 'Ctrl-q'}, 
                                                       exec: function(this_editor) { this_editor.showSettingsMenu(); } } ]);
             config.ce.editor.getSession().on('change', () => { trigger_buttons(); });
+
+            load_theme();
 
             return true;
         };

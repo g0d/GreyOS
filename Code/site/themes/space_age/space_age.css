@@ -1,0 +1,734 @@
+/*
+    GreyOS theme (SPACE AGE)
+
+    File name: space_age.css
+    Description: This file contains the GreyOS - SPACE AGE CSS theme.
+
+    Coded by George Delaportas (G0D)
+    Copyright © 2025
+    Open Software License (OSL 3.0)
+*/
+
+/* Body */
+body
+{
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 18px;
+    background-color: #020e14;
+    background: linear-gradient(to top right, #020e14, #001f27);
+}
+
+/* Anchor */
+a
+{
+    text-decoration: none;
+    color: #A070A0;
+}
+
+/* Anchor [Hover] */
+a:hover
+{
+    text-decoration: none;
+    color: #9C95A1;
+}
+
+/* Input */
+input
+{
+    background-color: transparent;
+    border: 1px solid #b3edef;
+}
+
+/* Image */
+img
+{
+    border: none;
+}
+
+/* List */
+li
+{
+    font-weight: normal;
+    list-style: disc;
+    margin-bottom: 10px;
+}
+
+/* Option */
+option
+{
+    width: 107px;
+}
+
+::-webkit-scrollbar
+{
+    width: 14px;
+}
+
+::-webkit-scrollbar-track
+{
+    background: #47424b94;
+}
+
+::-webkit-scrollbar-thumb
+{
+    background: #15cfe24f;
+}
+
+::-webkit-scrollbar-thumb:hover
+{
+    background: #15cfe27d;
+}
+
+#loading_screen
+{
+    background-color: #011418 !important;
+}
+
+#loading_indicator
+{
+    color: #006c6d !important;
+}
+
+#loading_screen img
+{
+    mix-blend-mode: hard-light;
+    filter: brightness(3.8);
+}
+
+#f5_screen
+{
+    background-color: #06090c;
+}
+
+#top_panel
+{
+    background-color: #03272b2b;
+    box-shadow: 0px 3px 8px rgb(0 0 0 / 40%);
+}
+
+#logo
+{
+    mix-blend-mode: screen;
+}
+
+#version
+{
+    color: #b3edef !important;
+}
+
+#action_icons
+{
+    mix-blend-mode: screen;
+}
+
+.favorites
+{
+    mix-blend-mode: luminosity !important;
+}
+
+.notifications_num
+{
+    background-color: #2beeffa8 !important;
+}
+
+.my:hover
+{
+    color: white !important;
+}
+
+.user_profile_area
+{
+    background-color: #0114162b !important;
+    border: 2px solid #ffffff17 !important;
+    border-radius: 12px
+}
+
+.user_profile_active
+{
+    color: white;
+}
+
+.user_profile_hidden
+{
+    color: white;
+}
+
+.user_profile_name
+{
+    color: #ffffffd1 !important;
+}
+
+.user_email
+{
+    color: #3bffca !important;
+}
+
+.profile_separator
+{
+    color: #ffffff5c !important;
+}
+
+.user_account, .user_settings
+{
+    color: #ffd5ff !important;
+}
+
+.user_account:hover, .user_settings:hover
+{
+    color: white !important;
+}
+
+.separator
+{
+    color: #9b9b9bd1 !important;
+}
+
+.user_reboot
+{
+    background-color: #2beeffa8 !important;
+}
+
+.user_reboot:hover
+{
+    background-color: #0fe7f9a8 !important;
+}
+
+.notification_list_item
+{
+    color: white !important;
+    border-left: none !important;
+}
+
+.notification_list_item:hover
+{
+    color: #2dffe4 !important;
+    background-color: #03222bc9 !important;
+    border-radius: 4px;
+}
+
+.list_item_notifications
+{
+    background: none repeat scroll 0 0 #ffffff !important;
+}
+
+.logout_button
+{
+    color: #ffffff !important;
+}
+
+.logout_button:hover
+{
+    color: white !important;
+}
+
+.search
+{
+    
+}
+
+.search .philos
+{
+    background-image: url('pix/icons/philos/eye.png');
+}
+
+.search .eureka
+{
+
+}
+
+.search .eureka .eureka_search_box
+{
+    color: white !important;
+    background-color: #38b5c70f !important;
+    border: 2px solid #ffffff17 !important;
+    border-radius: 12px !important;
+}
+
+.search .eureka .eureka_search_box:focus
+{
+    
+}
+
+#desktop
+{
+    float: none;
+    clear: both;
+    color: #000000;
+    height: 100vh;
+    overflow: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#bg_video
+{
+    display: block;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    scale: 1.2;
+    z-index: -1;
+}
+
+.actions
+{
+    float: left;
+    clear: none;
+}
+
+.view_icons
+{
+    float: left;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.placement_icons
+{
+    float: left;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.error
+{
+    background-color: #EAC0AE !important;
+}
+
+.verify_msg
+{
+    text-align: center;
+    font-size: 20px;
+    color: #5C5C5C;
+    width: 500px;
+    border-bottom: solid 4px #35BAB2;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 10px;
+}
+
+.dock_replace
+{
+    border-radius: 6px !important;
+    box-shadow: inset 1px 1px 4px 0px #000000ba !important;
+}
+
+.tik_tok .clock_time
+{
+    color: #9c88b5 !important;
+}
+
+.tik_tok .clock_date
+{
+    color: #778b8b !important;
+}
+
+.forest .trigger_bar
+{
+    background: #05222d4a !important;
+    box-shadow: 3px 3px 8px rgb(0 0 0 / 40%) !important;
+    border: none !important;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.forest .trigger_bar:hover
+{
+    background-color: #05222d80 !important;
+}
+
+.top_list, .cat_list
+{
+    background: #969eab08 !important;
+}
+
+.cat .apps a
+{
+    background: #a296aba1 url(pix/apps.png) no-repeat 10px !important;
+}
+
+.cat_list .cat li a
+{
+    background: #ffffff24 !important;
+    color: #96d6d9;
+}
+
+.cat_list .cat a:hover span
+{
+    color: white !important;
+}
+
+.cat_list .cat li li a
+{
+    background: #b9b2d412 !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    color: #FFFFFF !important;
+}
+
+.cat_list .cat a
+{
+    width: 100% !important;
+    background-color: #f0ffff4d !important;
+}
+
+.cat_list .cat li.create_new a
+{
+    color: #7d84eb !important;
+}
+
+.cat_list .cat li.create_new a:hover
+{
+    color: #bfc4ff !important;
+}
+
+.drawer
+{
+    background: none !important;
+}
+
+.drawer a
+{
+    background: #9696ab3d url(/framework/extensions/js/core/nature/themes/forest/pix/storage.png) no-repeat 10px !important;
+}
+
+.drawer .search_box
+{
+    width: 278px !important;
+    background-color: #0000005e !important;
+    border: none !important;
+}
+
+.drawer_apps_num
+{
+    background-color: #5ca3a77a !important;
+}
+
+.honeycomb
+{
+    background-color: #05253138 !important;
+}
+
+.honeycomb .widget_ctrl_bar
+{
+    background-color: #082c32b8 !important;
+}
+
+.honeycomb .widget_title
+{
+    color: #FFFFFF !important;
+}
+
+.honeycomb .box_ctrl_bar
+{
+    background-color: #07151cb8 !important;
+}
+
+.eagle
+{
+    color: #ffffff !important;
+    background-color: #0a36477a !important;
+    border: 2px solid #0b1216bd !important;
+}
+
+.eagle_apps
+{
+    scrollbar-color: #5463d1 #15cfe226;
+}
+
+.eagle_window
+{
+    border: 2px solid #81d6f342 !important;
+}
+
+.eagle_window_title
+{
+    background-color: #1c4c59c7 !important;
+}
+
+.eagle_window_body
+{
+    background-color: #ffffffcf !important;
+}
+
+.eagle_window_selected
+{
+    border: 2px solid #dbf878a6 !important;
+    background-color: #ffffff85 !important;
+}
+
+.menu
+{
+    background-color: #0b1735c7;
+    border-width: 1px;
+    border-radius: 12px;
+    border-color: #9c88b55c;
+    box-shadow: 0px 0px 4px #222222;
+}
+
+.menu_option
+{
+    color: white;
+    background-color: #2885834f;
+    border-radius: 2px;
+}
+
+.menu_option:hover
+{
+    color: #FFFFFF;
+    background-color: #50748bb3;
+}
+
+.menu_option_disabled
+{
+    background-color: #4777764f !important;
+}
+
+.gui
+{
+    background-color: #030e14e0 !important;
+    border-color: #11292fc7 !important;
+    border-radius: 12px;
+    box-shadow: 0 0 8px #23272954 !important;
+}
+
+.ctrl_bar
+{
+    border-radius: 12px;
+}
+
+.widget_ctrl_bar
+{
+    background-color: #05131ae0  !important;
+    border: 1px solid #34646d4f !important;
+    color: #FFFFFF;
+}
+
+.widget_ctrl_bar:hover
+{
+    background-color: #071923e0 !important;
+}
+
+.widget_title
+{
+    color: #3a7477 !important;
+}
+
+.widget_title:hover
+{
+    color: #3aa0a5 !important;
+}
+
+.edit_win_title
+{
+    color: #10535a !important;
+}
+
+.widget_separator
+{
+    border-left: 1px solid #daeff34f !important;
+}
+
+.box_ctrl_bar
+{
+    background-color: #05131ae0 !important;
+    border: 1px solid #34646d4f !important;
+}
+
+.box_ctrl_bar:hover
+{
+    background-color: #071923e0 !important;
+}
+
+.box_title
+{
+    color: #3a7477 !important;
+}
+
+.box_title:hover
+{
+    color: #3aa0a5 !important;
+}
+
+.box_separator
+{
+    border-left: 1px solid #9c88b55e !important;
+}
+
+.content
+{
+    color: #ffffff !important;
+    background-color: transparent !important;
+}
+
+.status_bar
+{
+    background-color: transparent !important;
+}
+
+.status_msg
+{
+    color: #FFFFFF !important;
+    margin-top: 0px !important;
+}
+
+.casement
+{
+    background-color: #030e14e0 !important;
+    border-color: #11292fc7 !important;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 0 0 8px #23272954 !important;
+}
+
+.casement_title
+{
+    background-color: #030e14e0 !important;
+}
+
+.casement_data
+{
+    background-color: #030e14e0 !important;
+    padding: 0px;
+}
+
+.casement_status
+{
+    color: #FFFFFF;
+    background-color: transparent !important;
+}
+
+.box_close
+{
+    background-image: url('pix/icons/bee/window/close_1.png') !important;
+}
+
+.box_close:hover
+{
+    background-image: url('pix/icons/bee/window/close_2.png') !important;
+}
+
+.widget_close
+{
+    background-image: url('pix/icons/bee/window/close_1.png') !important;
+}
+
+.widget_close:hover
+{
+    background-image: url('pix/icons/bee/window/close_2.png') !important;
+}
+
+.resize
+{
+    background: url('pix/icons/bee/window/resize.png') no-repeat !important;
+}
+
+.control_item .button
+{
+    background-color: #61ffe0 !important;
+}
+
+.control_item .button:hover
+{
+    background-color: #87f1dd !important;
+}
+
+.register_new_account
+{
+    color: #9c88b5;
+}
+
+#radio_dude_ctlr
+{
+    background-color: #f1f3f4;
+}
+
+.stream_genres div
+{
+    background-color: transparent !important;
+    width: 284px !important;
+}
+
+.stream_genres
+{
+    padding: 0px !important;
+}
+
+.stream_genres div:hover
+{
+    background-color: #0a636b38 !important;
+    border-radius: 4px;
+}
+
+.radio_dude_selected_stream
+{
+    color: #00ffa3 !important;
+}
+
+.radio_dude_selected_stream:hover
+{
+    color: #ffffff !important;
+}
+
+.mb_screen
+{
+    background: #010008ad;
+}
+
+.msg_window
+{
+    background-color: #08151ead !important;
+}
+
+#msgbox_title
+{
+    background-color: #00252db3 !important;
+
+}
+
+.msgbox_button
+{
+    background-color: #1f1a27cf !important;
+    border: solid 1px #362f3f73 !important;
+}
+
+.msgbox_button:hover
+{
+    background-color: #383045cf !important;
+}
+
+.service_icons_area
+{
+    background-color: #0114162b !important;
+    border-color: #ffffff17 !important;
+    border-radius: 12px;
+}
+
+.infinity
+{
+    background-color: #01070a !important;
+}
+
+.progress_indicator
+{
+    filter: invert(1);
+}
+
+#xmas
+{
+    position: absolute;
+    display: block;
+    right: 0px;
+    bottom: 0px;
+    width: 786px;
+    height: 740px;
+    background-image: url('/site/pix/xmas/snowman_presents.png');
+    zoom: 40%;
+}

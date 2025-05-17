@@ -5,11 +5,25 @@
                             "os_version"        :   "5.1 (alpha)"
                         },
     "session"       :   {
-                            "theme"             :   "morph",
+                            "theme"             :   "space_age",
                             "max_apps"          :   50,
                             "max_services"      :   100,
                             "apps_per_view"     :   10,
                             "stack_bars"        :   4
+                        },
+    "app_settings"  :   {
+                            "cloud_edit"        :   {
+                                                        "theme"     :   {
+                                                                            "tomorrow"      :   {
+                                                                                                    "name"      :   "tomorrow_night",
+                                                                                                    "strict"    :   false
+                                                                                                },
+                                                                            "space_age"     :   {
+                                                                                                    "name"      :   "solarized_dark",
+                                                                                                    "strict"    :   true
+                                                                                                }
+                                                                        }
+                                                    }
                         },
     "apps"          :   ["trinity", "krator", "coyote", "radio_dude", "cloud_edit", 
                          "i_bassoon", "i_youdj", "i_audiomass", "i_soundtrap", 

@@ -1,11 +1,11 @@
 /*
-    GreyOS - User Profile (Version: 2.8)
+    GreyOS - User Profile (Version: 2.9)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
 
     Coded by George Delaportas (G0D)
-    Copyright © 2013 - 2024
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -102,10 +102,30 @@ function user_profile()
                                             utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
                                             utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;
 
-                                            if (user_profile_data.wallpaper === '')
-                                                document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
-                                            else
-                                                document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
+                                            data = 'gate=boot_config';
+
+                                            ajax_factory('post', data, function(response)
+                                            {
+                                                boot_config = JSON.parse(response);
+
+                                                var is_strict = boot_config['app_settings']['cloud_edit']['theme'][boot_config['session']['theme']]['strict'];
+
+                                                if (!is_strict)
+                                                {
+                                                    if (user_profile_data.wallpaper === '')
+                                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
+                                                    else
+                                                        document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
+                                                }
+                                            },
+                                            function()
+                                            {
+                                                // Nothing...
+                                            },
+                                            function()
+                                            {
+                                                // Nothing...
+                                            });
                                          },
                                          function()
                                          {
