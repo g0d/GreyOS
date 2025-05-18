@@ -35,6 +35,7 @@ a:hover
 /* Input */
 input
 {
+    color: #ffffff;
     background-color: transparent;
     border: 1px solid #b3edef;
 }
