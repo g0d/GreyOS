@@ -5,7 +5,7 @@
     Description: This file contains the Eagle theme CSS.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2013 - 2024
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -15,7 +15,7 @@
     position: fixed;
     float: none;
     left: calc(100vw/2 - 250px);
-    width: 506px;
+    width: 511px;
     height: 240px;
     color: #808080;
     background-color: #eeeeee;
@@ -30,7 +30,7 @@
 .eagle_apps
 {
     float: none;
-    width: 478px;
+    width: 483px;
     height: 204px;
     margin-top: 12px;
     padding: 12px;

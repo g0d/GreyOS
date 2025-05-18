@@ -5,7 +5,7 @@
     Description: This file contains the iGanttIO - Online Gantt charts creator application.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2022
+    Copyright © 2022 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -129,8 +129,8 @@ function i_ganttio()
         i_ganttio_bee.settings.actions.can_use_menu(false);
         i_ganttio_bee.gui.position.left(50);
         i_ganttio_bee.gui.position.top(20);
-        i_ganttio_bee.gui.size.width(1100);
-        i_ganttio_bee.gui.size.height(600);
+        i_ganttio_bee.gui.size.width(950);
+        i_ganttio_bee.gui.size.height(850);
         i_ganttio_bee.gui.size.min.width(900);
         i_ganttio_bee.gui.size.min.height(600);
         i_ganttio_bee.gui.fx.fade.settings.into.set(0.07, 25, 100);

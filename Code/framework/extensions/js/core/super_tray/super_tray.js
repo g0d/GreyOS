@@ -5,7 +5,7 @@
     Description: This file contains the Super Tray - Service icons tray area module.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2021 - 2024
+    Copyright © 2021 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -131,7 +131,7 @@ function super_tray()
             morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
 
             __handler = function() {  me.hide_tray_area(); };
-            morpheus.run(super_tray_id, 'mouse', 'click', __handler, __desktop);
+            morpheus.run(super_tray_id, 'mouse', 'mousedown', __handler, __desktop);
             morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, __desktop);
 
             __handler = function(event) {  hide_tray_area_on_key(event); };

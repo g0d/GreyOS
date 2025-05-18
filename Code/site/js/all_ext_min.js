@@ -13511,7 +13511,7 @@ function super_tray()
  __handler = function() { me.toggle_tray_area(); };
  morpheus.run(super_tray_id, 'mouse', 'click', __handler, utils_sys.objects.by_id(super_tray_id + '_arrow'));
  __handler = function() { me.hide_tray_area(); };
- morpheus.run(super_tray_id, 'mouse', 'click', __handler, __desktop);
+ morpheus.run(super_tray_id, 'mouse', 'mousedown', __handler, __desktop);
  morpheus.run(super_tray_id, 'touch', 'touchmove', __handler, __desktop);
  __handler = function(event) { hide_tray_area_on_key(event); };
  morpheus.run(super_tray_id, 'key', 'keydown', __handler, document);

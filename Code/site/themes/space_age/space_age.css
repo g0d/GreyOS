@@ -139,8 +139,8 @@ option
 
 .user_profile_area
 {
-    background-color: #0114162b !important;
-    border: 2px solid #ffffff17 !important;
+    background-color: #02131ac9 !important;
+    border: 2px solid #0b1e2742 !important;
     border-radius: 12px
 }
 
@@ -209,6 +209,7 @@ option
 
 .list_item_notifications
 {
+    color: #5b2c85 !important;
     background: none repeat scroll 0 0 #ffffff !important;
 }
 
@@ -219,7 +220,7 @@ option
 
 .logout_button:hover
 {
-    color: white !important;
+    color: #deff35 !important;
 }
 
 .search
@@ -439,11 +440,6 @@ option
     border: 2px solid #0b1216bd !important;
 }
 
-.eagle_apps
-{
-    scrollbar-color: #5463d1 #15cfe226;
-}
-
 .eagle_window
 {
     border: 2px solid #81d6f342 !important;
@@ -467,29 +463,30 @@ option
 
 .menu
 {
-    background-color: #0b1735c7;
+    background-color: #06151ca8;
     border-width: 1px;
     border-radius: 12px;
-    border-color: #9c88b55c;
+    border-color: #274b5f57;
     box-shadow: 0px 0px 4px #222222;
 }
 
 .menu_option
 {
     color: white;
-    background-color: #2885834f;
+    background-color: #288583c7;
     border-radius: 2px;
 }
 
 .menu_option:hover
 {
     color: #FFFFFF;
-    background-color: #50748bb3;
+    background-color: #203441ed;
 }
 
 .menu_option_disabled
 {
-    background-color: #4777764f !important;
+    color: #bbbbbb !important;
+    background-color: #477776c9 !important;
 }
 
 .gui
@@ -707,9 +704,14 @@ option
 
 .service_icons_area
 {
-    background-color: #0114162b !important;
-    border-color: #ffffff17 !important;
+    background-color: #02131ac9 !important;
+    border: 2px solid #0b1e2742 !important;
     border-radius: 12px;
+}
+
+.svc_default:hover
+{
+    filter: hue-rotate(338deg);
 }
 
 .infinity
@@ -720,6 +722,12 @@ option
 .progress_indicator
 {
     filter: invert(1);
+}
+
+.coyote_meta_info
+{
+    color: #ffffff !important;
+    background-color: #122225 !important;
 }
 
 #xmas
