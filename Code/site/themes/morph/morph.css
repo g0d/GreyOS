@@ -5,7 +5,7 @@
     Description: This file contains the GreyOS - Morph CSS theme.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2024
+    Copyright © 2024 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -94,6 +94,11 @@ option
     mix-blend-mode: screen;
 }
 
+.favorites
+{
+    filter: grayscale(1);
+}
+
 .notifications_num
 {
     background-color: #2beeffa8 !important;
@@ -169,7 +174,7 @@ option
 
 .notification_list_item:hover
 {
-    color: #2dffe4 !important;
+    color: #ceff81 !important;
     background-color: #ebebeb59 !important;
 }
 

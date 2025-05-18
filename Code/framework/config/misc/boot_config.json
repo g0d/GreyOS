@@ -5,7 +5,7 @@
                             "os_version"        :   "5.2 (alpha)"
                         },
     "session"       :   {
-                            "theme"             :   "space_age",
+                            "theme"             :   "morph",
                             "max_apps"          :   50,
                             "max_services"      :   100,
                             "apps_per_view"     :   10,
@@ -14,7 +14,15 @@
     "app_settings"  :   {
                             "cloud_edit"        :   {
                                                         "theme"     :   {
+                                                                            "bubble_gum"    :   {
+                                                                                                    "name"      :   "crimson_editor",
+                                                                                                    "strict"    :   true
+                                                                                                },
                                                                             "tomorrow"      :   {
+                                                                                                    "name"      :   "merbivore",
+                                                                                                    "strict"    :   true
+                                                                                                },
+                                                                            "morph"         :   {
                                                                                                     "name"      :   "tomorrow_night",
                                                                                                     "strict"    :   false
                                                                                                 },

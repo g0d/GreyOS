@@ -5,7 +5,7 @@
     Description: This file contains the GreyOS - Bubble Gum (default) CSS theme.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2013 - 2024
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -215,6 +215,21 @@ option
     mix-blend-mode: darken !important;
 }
 
+.favorites
+{
+    filter: brightness(0.8);
+}
+
+.instances
+{
+    background-color: #f170d5c2 !important;
+}
+
+.top_list, .cat_list
+{
+    background-color: #4a464deb !important;
+}
+
 .cat_list .cat a:hover .cat_text
 {
     color: white !important;
@@ -252,6 +267,16 @@ option
     background-color: #51a766c2 !important;
     border: 2px solid #589c75d1 !important;
     margin-top: 54px !important;
+}
+
+.list_item_icon
+{
+    filter: contrast(0.5);
+}
+
+.honeycomb
+{
+    background-color: #b5bfbf9c !important;
 }
 
 .status_msg
