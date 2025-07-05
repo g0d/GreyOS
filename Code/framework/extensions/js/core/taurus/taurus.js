@@ -1,7 +1,7 @@
 /*
     Taurus (Advanced AJAX System/Framework)
 
-    File name: taurus.js (Version: 1.3)
+    File name: taurus.js (Version: 1.4)
     Description: This file contains the Taurus extension.
     Dependencies: Vulcan, JAP and BULL.
 
@@ -255,8 +255,8 @@ function taurus()
                     {
                         user_config.method = user_config.method.toLowerCase();
 
-                        if (user_config.method === 'get')
-                            return false;
+                        if (user_config.method === 'get')       // Fetch does not support GET method for asynchronous operations, use BULL instead
+                            return new bull().run(user_config);
                     }
                     
                     return new ajax_core().request(user_config.url, user_config.data, user_config.method, 
