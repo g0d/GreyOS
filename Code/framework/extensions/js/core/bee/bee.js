@@ -1,11 +1,11 @@
 /*
-    GreyOS - Bee (Version: 6.0)
+    GreyOS - Bee (Version: 6.1)
 
     File name: bee.js
     Description: This file contains the Bee - Floating window development module.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2013 - 2024
+    Copyright © 2013 - 2025
     Open Software License (OSL 3.0)
 */
 
@@ -3988,7 +3988,7 @@ function bee()
 
                 var __child_bee = null;
 
-                for (__child_bee in child_bees)
+                for (__child_bee of child_bees)
                 {
                     if (!colony.is_bee(__child_bee))
                     {
@@ -4037,8 +4037,8 @@ function bee()
 
                 morpheus.execute(my_bee_id, 'system', 'running');
 
-                for (__child_bee in child_bees)
-                    __child_bee.show();
+                for (__child_bee of child_bees)
+                    __child_bee.run();
 
                 owl.status.applications.set(my_bee_id, my_bee_app_id, 'RUN');
 
@@ -4114,7 +4114,7 @@ function bee()
                     {
                         var __child_bee = null;
 
-                        for (__child_bee in my_child_bees)
+                        for (__child_bee of my_child_bees)
                             __child_bee.quit(null);
 
                         try
@@ -4969,6 +4969,8 @@ function bee()
     {
         if (is_init === false)
             return false;
+
+        self.settings.actions.can_close(true);
 
         return self.gui.actions.close(null);
     };
