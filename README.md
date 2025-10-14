@@ -10,7 +10,7 @@ GreyOS is based on the latest [micro-MVC](https://github.com/g0d/micro-MVC) and 
 
 For a detailed introduction to GreyOS please check the [Introductory Document](https://github.com/g0d/GreyOS/blob/master/Documents/GreyOS%20-%20Introductory%20Document.pdf) or alternatively check the [White Paper](https://github.com/g0d/GreyOS/blob/master/Documents/GreyOS%20-%20Era%20of%20the%20Cloud%20Computer%20(White%20Paper).pdf) and the [Architecture](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Cloud%20Architecture.png). Finally, you can check a [comparsion](https://github.com/g0d/GreyOS/blob/master/Documents/Web-OS-Comparison.pdf) of GreyOS among other systems & platforms.
 
-You can run GreyOS wth two ways:
+You can run GreyOS in two ways:
 1. Over your browser from https://greyos.gr/ (Credentials: demo@greyos.gr / password)
 2. Boot your computer with GreyOS directly using the [Meta-USB ISO](https://mega.nz/file/8iIBXJTb#tnYs7NzaPT8vDcP9KN5lPgEiMyi0BHhROXiZT3fDgL8)
 (You have to burn the ISO image in a USB that is at least 32GiB or more, using Rufus)
