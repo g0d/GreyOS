@@ -8,7 +8,7 @@ GreyOS introduces a new era of unlimited possibilities with the concept of Cloud
 and not a final system to be deployed for business purposes. Ths CC is the next generation of computing but highly experimental for now.
 GreyOS is based on the latest [micro-MVC](https://github.com/g0d/micro-MVC) and supported by various developers across the globe.
 
-For a detailed introduction to GreyOS please check the [Introductory Document](https://github.com/g0d/GreyOS/blob/master/Documents/GreyOS%20-%20Introductory%20Document.pdf) or alternatively check the [White Paper](https://github.com/g0d/GreyOS/blob/master/Documents/GreyOS%20-%20Era%20of%20the%20Cloud%20Computer%20(White%20Paper).pdf) and the [Architecture](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Cloud%20Architecture.png).
+For a detailed introduction to GreyOS please check the [Introductory Document](https://github.com/g0d/GreyOS/blob/master/Documents/GreyOS%20-%20Introductory%20Document.pdf) or alternatively check the [White Paper](https://github.com/g0d/GreyOS/blob/master/Documents/GreyOS%20-%20Era%20of%20the%20Cloud%20Computer%20(White%20Paper).pdf) and the [Architecture](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Cloud%20Architecture.png). Finally, you can check a [comparsion](https://github.com/g0d/GreyOS/blob/master/Documents/Web-OS-Comparison.pdf) of GreyOS among other systems & platforms.
 
 Also, you may give it a try at https://greyos.gr/ (Credentials: demo@greyos.gr / password)
 
