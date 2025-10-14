@@ -2,7 +2,7 @@
 
 ![alt tag](https://raw.githubusercontent.com/g0d/GreyOS/master/Misc/GreyOS%20-%20Logo.png)
 
-GreyOS is a new kind of OS, a Meta-OS. (500K registered users and counting...)
+GreyOS is a new kind of OS, a Meta-OS. (750K registered users and counting... / 20K monthly users)
 
 GreyOS introduces a new era of unlimited possibilities with the concept of Cloud Computer (CC). GreyOS is still under rigorous development 
 and not a final system to be deployed for business purposes. Ths CC is the next generation of computing but highly experimental for now.
