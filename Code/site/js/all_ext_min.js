@@ -2056,8 +2056,8 @@ function taurus()
  else
  {
  user_config.method = user_config.method.toLowerCase();
- if (user_config.method === 'get')
- return false;
+ if (user_config.method === 'get') // Fetch does not support GET method for asynchronous operations, use BULL instead
+ return new bull().run(user_config);
  }
  return new ajax_core().request(user_config.url, user_config.data, user_config.method,
  user_config.on_success, user_config.on_fail,
@@ -10068,14 +10068,10 @@ function user_profile()
  __boot_config = boot_config_loader();
  if (!__boot_config)
  return;
- __is_strict = __boot_config['app_settings']['cloud_edit']['theme'][__boot_config['session']['theme']]['strict'];
- if (!__is_strict)
- {
  if (user_profile_data.wallpaper === '')
  document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
  else
  document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
- }
  },
  function()
  {
@@ -17749,7 +17745,7 @@ function bee()
  if (!utils_sys.validation.misc.is_array(child_bees))
  return false;
  var __child_bee = null;
- for (__child_bee in child_bees)
+ for (__child_bee of child_bees)
  {
  if (!colony.is_bee(__child_bee))
  {
@@ -17784,8 +17780,8 @@ function bee()
  bee_statuses.running(true);
  bee_statuses.active(true);
  morpheus.execute(my_bee_id, 'system', 'running');
- for (__child_bee in child_bees)
- __child_bee.show();
+ for (__child_bee of child_bees)
+ __child_bee.run();
  owl.status.applications.set(my_bee_id, my_bee_app_id, 'RUN');
  if (headless === false)
  utils_int.log('Show', 'OK');
@@ -17839,7 +17835,7 @@ function bee()
  function()
  {
  var __child_bee = null;
- for (__child_bee in my_child_bees)
+ for (__child_bee of my_child_bees)
  __child_bee.quit(null);
  try
  {
@@ -18506,6 +18502,7 @@ function bee()
  {
  if (is_init === false)
  return false;
+ self.settings.actions.can_close(true);
  return self.gui.actions.close(null);
  };
  this.init = function(bee_id, icon = null)

@@ -1,5 +1,5 @@
 /*
-    GreyOS - Bootstrap facility (Version: 4.6)
+    GreyOS - Bootstrap facility (Version: 4.7)
 
     File name: boot.js
     Description: This file contains the bootstrap facility.
@@ -9,7 +9,7 @@
     Open Software License (OSL 3.0)
 */
 
-// Parse JS always in strict mode
+// Always parse JS in strict mode
 "use strict";
 
 // GreyOS - Bootstrap script
@@ -477,7 +477,7 @@ function boot_script()
                                       console.log('Browser speed quality: ' + speed_index + '%');
                                   }, true);
 
-            if (window.innerWidth !== screen.width || window.innerHeight !== screen.height)
+            if (screen.width !== (window.outerWidth + 14) || screen.height !== (window.outerHeight + 14))
             {
                 new_msgbox.show(os_settings.get('name'), 'Your active screen is small.<br>For better results, ' + 
                                 os_settings.get('name') + ' will now go fullscreen!', 

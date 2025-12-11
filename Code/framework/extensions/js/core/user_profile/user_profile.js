@@ -109,15 +109,15 @@ function user_profile()
                                             if (!__boot_config)
                                                 return;
 
-                                            __is_strict = __boot_config['app_settings']['cloud_edit']['theme'][__boot_config['session']['theme']]['strict'];
+                                            //__is_strict = __boot_config['app_settings']['cloud_edit']['theme'][__boot_config['session']['theme']]['strict'];
 
-                                            if (!__is_strict)
-                                            {
+                                            //if (!__is_strict)
+                                            //{
                                                 if (user_profile_data.wallpaper === '')
                                                     document.body.style.backgroundImage = 'url(/site/pix/wallpapers/default.png)';
                                                 else
                                                     document.body.style.backgroundImage = 'url(/site/pix/wallpapers/' + user_profile_data.wallpaper + ')';
-                                            }
+                                            //}
                                          },
                                          function()
                                          {

@@ -13,7 +13,7 @@
 // Template Svc
 function template_svc()
 {
-    var self = this; // Use "self" to referense the whole class module easily so that you do no confuse "this" in various scopes
+    var self = this; // Use "self" to referense the whole class module easily so that you do not confuse "this" in various scopes
 
     function template_svc_config_model() // Always use one or more "xxx_config_model" model to keep internal status information
     {
