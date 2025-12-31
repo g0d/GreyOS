@@ -1,11 +1,11 @@
 /*
-    GreyOS - User Profile (Version: 2.9)
+    GreyOS - User Profile (Version: 3.0)
 
     File name: user_profile.js
     Description: This file contains the User Profile module.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2013 - 2025
+    Copyright © 2013 - 2026
     Open Software License (OSL 3.0)
 */
 
@@ -16,10 +16,12 @@ function user_profile()
 
     function user_profile_model()
     {
+        this.ip = null;
         this.full_name = null;
         this.email = null;
         this.role = null;
         this.wallpaper = null;
+        this.last_activity = null;
     }
 
     function utilities()
@@ -96,10 +98,12 @@ function user_profile()
                                          {
                                             var __auth_details = JSON.parse(result);
 
+                                            user_profile_data.ip = __auth_details.security.ip;
                                             user_profile_data.full_name = __auth_details.profile;
                                             user_profile_data.email = __auth_details.email;
                                             user_profile_data.role = __auth_details.role;
                                             user_profile_data.wallpaper = __auth_details.ui.wallpaper;
+                                            user_profile_data.last_activity = __auth_details.security.last_activity;
 
                                             utils_sys.objects.by_id(user_profile_id + '_user_profile_name').innerHTML = user_profile_data.full_name;
                                             utils_sys.objects.by_id(user_profile_id + '_user_email').innerHTML = user_profile_data.email;

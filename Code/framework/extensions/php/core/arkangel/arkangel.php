@@ -2,11 +2,11 @@
     /*
         /ARK|ANG[e]L\ (User credentials & profile manager for GreyOS)
         
-        File name: arkangel.php (Version: 1.2)
+        File name: arkangel.php (Version: 1.3)
         Description: This file contains the ARKANGEL - User credentials & profile manager extension.
         
         Coded by George Delaportas (G0D/ViR4X)
-        Copyright (C) 2024
+        Copyright (C) 2024 - 2026
         Open Software License (OSL 3.0)
     */
     
@@ -108,8 +108,13 @@
             if (!$user_profile)
                 return false;
             
+            $server_ip = $_SERVER['REMOTE_ADDR'];
+            
+            if (!filter_var($server_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+                $server_ip = gethostbyname(gethostname());
+            
             $user_profile['online'] = true;
-            $user_profile['security']['ip'] = $_SERVER['REMOTE_ADDR'];
+            $user_profile['security']['ip'] = $server_ip;
             $user_profile['security']['agent'] = $_SERVER['HTTP_USER_AGENT'];
             $user_profile['security']['last_activity'] = time();
             
