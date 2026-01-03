@@ -1,11 +1,11 @@
 /*
     Vulcan (General JS Programming Utilities)
 
-    File name: vulcan.js (Version: 2.7)
+    File name: vulcan.js (Version: 2.8)
     Description: This file contains the Vulcan library.
 
-    Coded by George Delaportas (G0D/ViR4X)
-    Copyright (C) 2014 - 2025
+    Coded by George Delaportas (G0D)
+    Copyright (C) 2014 - 2026
     Open Software License (OSL 3.0)
 */
 
@@ -127,7 +127,7 @@ function vulcan()
 
             this.reg_exp = function(pattern, expression)
             {
-                return pattern.test(String(expression)).toLowerCase();
+                return pattern.test(String(expression));
             };
         }
 
