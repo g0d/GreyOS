@@ -1,5 +1,5 @@
 /*
-    GreyOS - Search [Eureka & Philos] (Version: 1.3)
+    GreyOS - Search [Eureka & Philos] (Version: 1.4)
 
     File name: search.js
     Description: This file contains the Search - OS wide search engine and AI assistant module.
@@ -266,6 +266,7 @@ function search()
         utils_sys = new vulcan(),
         random = new pythia(),
         key_control = new key_manager(),
-        settings = new settings();
         utils_int = new utilities();
+
+    this.settings = new settings();
 }
