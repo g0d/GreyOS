@@ -5,7 +5,7 @@
     Description: This file contains the Search - OS wide search engine and AI assistant module.
 
     Coded by George Delaportas (G0D/ViR4X)
-    Copyright © 2013 - 2024
+    Copyright © 2013 - 2026
     Open Software License (OSL 3.0)
 */
 
@@ -266,7 +266,6 @@ function search()
         utils_sys = new vulcan(),
         random = new pythia(),
         key_control = new key_manager(),
+        settings = new settings();
         utils_int = new utilities();
-
-        this.settings = new settings();
 }

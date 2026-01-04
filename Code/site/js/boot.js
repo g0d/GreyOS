@@ -21,7 +21,7 @@ function boot_script()
     // Boot config
     var boot_config = null;
 
-    // Initialize required OS infrastructure for this script
+    // Initialize required OS infrastructure
     var os_boot = greyos.boot.start();
     var os_loader = greyos.boot.loader();
     var os_environment = greyos.boot.environment();

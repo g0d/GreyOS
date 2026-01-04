@@ -1,17 +1,19 @@
 <?php
     /*
-        GreyOS Inc. - CHAOS (GreyOS Kernel)
+        CHAOS (GreyOS Kernel)
 
-        Version: 1.0
-        File name: chaos.php
+        File name: chaos.php  (Version: 1.0)
         Description: This file contains the CHAOS - GreyOS Kernel.
 
         Coded by George Delaportas (G0D/ViR4X)
-
-        GreyOS Inc.
-        Copyright (C) 2013
+        Copyright (C) 2013 - 2026
+        Open Software License (OSL 3.0)
     */
     
+    // Check for direct access
+    if (!defined('micro_mvc'))
+        exit();
+
     // Include RAM class
     require_once('ram/ram.php');
     
@@ -30,7 +32,6 @@
     // CHAOS Class
     class CHAOS
     {
-    
         public static function RAM()
         {
             RAM::Info();
