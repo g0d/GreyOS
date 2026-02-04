@@ -6,7 +6,7 @@
 		Description: This file contains the authentication gate (AJAX).
 
 		Coded by George Delaportas (G0D/ViR4X)
-		Copyright (C) 2019 - 2024
+		Copyright (C) 2019 - 2026
 		Open Software License (OSL 3.0)
 	*/
 
@@ -135,6 +135,7 @@
 		$user_profile = ARKANGEL::Fetch_Profile($user_profile['uid']);
 
 		$user_profile['online'] = false;
+		$user_profile['security']['last_activity'] = time();
 
 		$result = ARKANGEL::Update_Profile($user_profile);
 
