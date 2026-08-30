@@ -30,5 +30,5 @@ Enjoy!
 
 George Delaportas (G0D/ViR4X)  
 Copyright (C) 2014 - 2026 GreyOS  
-Open Software License (OSL 3.0)  
+Business Source License (BSL-1.1)  
 Supported by [PROBOTEK](https://probotek.eu/)
