@@ -31,4 +31,4 @@ Enjoy!
 George Delaportas (G0D/ViR4X)  
 Copyright (C) 2014 - 2026 GreyOS  
 Business Source License (BSL-1.1)  
-Supported by [PROBOTEK](https://probotek.eu/)
+Supports all of the core infrastructure and ecosystem of [PROBOTEK](https://probotek.eu/) under a licensed scheme
